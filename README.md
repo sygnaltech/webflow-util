@@ -36,9 +36,9 @@ Important notes;
 <script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@1.0/dist/webflow-data.js"></script>
 ```
 
-*Currently I am using [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) but you can use any CDN that support GIT.*
+*Currently we are using [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) but you can use any CDN that support GIT.*
 
-*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, I'll update the major version number so that it does not affect production sites.*
+*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, we'll update the **minor** [version number](https://gitversion.readthedocs.io/en/latest/more-info/version-increments/) so that it does not affect production sites. Therefor for simplicity, specify the major and minor version you want as in the example above.*
 
 1. Create a Webflow `Collection List`.
 
