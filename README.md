@@ -33,16 +33,20 @@ Important notes;
 1. In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section.
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/dist/webflow-data.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@1.0/dist/webflow-data.js"></script>
 ```
+
+*Currently I am using [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) but you can use any CDN that support GIT.*
+
+*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, I'll update the major version number so that it does not affect production sites.*
 
 1. Create a Webflow `Collection List`.
 
     1. Bind it to the `Collection` you want.
     1. Set sorting and filtering as you want.
-    1. In the Item, create an HTML embed
+    1. In the Item, create an `HTML Embed` element
 
-Paste in the Embed.
+Paste the following code into the `HTML Embed`.
 
 ```
 <script type="application/json" data="mydata">
