@@ -30,6 +30,12 @@ Important notes;
 
 ### How to use
 
+1. In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section.
+
+```
+<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/dist/webflow-data.js"></script>
+```
+
 1. Create a Webflow `Collection List`.
 
     1. Bind it to the `Collection` you want.
@@ -39,7 +45,7 @@ Important notes;
 Paste in the Embed.
 
 ```
-<script type="application/json" data="coaches">
+<script type="application/json" data="mydata">
 {
   "id": " (your item goes here) ",
   "text": " ( text item goes here) "
@@ -49,15 +55,18 @@ Paste in the Embed.
 
 1. Configure the `Embed` code as follows;
 
-    1. set the `data` attribute to the name you want
+    1. set the `data` attribute to the name you want for your datasource. You can have create several different datasources on the same page if you like.
 
-    1. for the `id`, use whatever *Add Field* item you want, generally `Slug` is the right unique field to use.
+    1. for the `id`, use whatever **Add Field** item you want, generally `Slug` is the best field to use.
 
-    1. for the Text, use whatever *Add Field* item you want displayed as the text in the SELECT.
+    1. for the Text, use whatever **Add Field** item you want displayed as the text in the SELECT.
 
-    1. Make the Collection List invisible, if you want it hidden in the designer (this will not affect displayed output)
+    1. Make the Collection List invisible, if you want it hidden in the designer (this will not affect displayed output).  If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
 
-1. Add a `Select` element in the Webflow designer.  Apply a `data-source` attribute, specifying your custom source.
+1. Add a `Form` and a `Select` element in the Webflow designer.  
+
+    1. Apply a `data-source` attribute, specifying your custom source.
+
 
 
 
