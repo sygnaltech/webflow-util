@@ -18,10 +18,16 @@ Current core features;
 
 ## Using Webflow Data
 
-This simple databinding utility has does two things;
+`webflow-data.js` is a simple **databinding utility** has does two things;
 
 1. It composes a JSON-based data source from a Webflow Collection List.
 2. It searches for any **Select** elements which have a `data-source` attribute, and it populates them from the matching JSON data.
+
+Video overview of how to use `webflow-data`;
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xc7vx7YdK5I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+https://www.youtube.com/watch?v=xc7vx7YdK5I
 
 Important notes;
 
