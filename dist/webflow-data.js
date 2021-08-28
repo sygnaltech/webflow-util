@@ -1,8 +1,11 @@
 
 $(function() {
 
-    // Automatic in 1.x, will be explicit later
-//    dataBindAll();
+    // No automated tasks in 2.x
+    // Call the function you need, e.g.
+    // dataBindAll();
+    // or
+    // applyDynamicAttributes();
 
 });
 
