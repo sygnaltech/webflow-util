@@ -37,12 +37,12 @@ Important notes;
 1. In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section.
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@1.0/dist/webflow-data.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@1.1/dist/webflow-data.min.js"></script>
 ```
 
-*Currently we are using [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) but you can use any CDN that support GIT.*
+*Currently we are using [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) but you can use any CDN that supports GIT.*
 
-*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, we'll update the **minor** [version number](https://gitversion.readthedocs.io/en/latest/more-info/version-increments/) so that it does not affect production sites. Therefor for simplicity, specify the major and minor version you want as in the example above.*
+*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, we'll update the **minor** [version number](https://gitversion.readthedocs.io/en/latest/more-info/version-increments/) so that it does not affect production sites. Therefore for simplicity, specify the major and minor version you want as in the example above.*
 
 1. Create a Webflow `Collection List`.
 
