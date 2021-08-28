@@ -1,12 +1,14 @@
 
 $(document).ready(function() {
 
-   dataBindAll();
+    dataBindAll();
 
 });
 
 function dataBindAll()
 {
+
+    console.log("Sygnal Databinding v2.0");
 
    // Find all elements with attr data-source="..."
 //  var dataBoundElements = $('*').filter(function() {
@@ -51,7 +53,13 @@ function dataBind(elem)
          var opt = document.createElement('option');
 
          // create text node to add to option element (opt)
-         opt.appendChild( document.createTextNode(entry.text) );
+          console.log(entry.text);
+
+          // HTML Decode JSON for Select Option element
+          var decodedText = $("<textarea/>").html(entry.text).val();
+          console.log(decodedText);
+
+          opt.appendChild(document.createTextNode(decodedText));
 
          // set value property of opt
          opt.value = entry.id; 
@@ -90,12 +98,14 @@ function getDataSource(name)
 function getElemType(elem)
 {
 
-   // <select>
-   if (elem instanceof HTMLSelectElement) {
-      return 'select';
-   }
+    // <select> element
+    // listbox or drop-down list
+    if (elem instanceof HTMLSelectElement) {
+        return 'select';
+    }
 
-   // Unknown and unsupported element type
-   return 'unknown';
+    // This is an unknown and unsupported element type
+    // for databinding
+    return 'unknown';
 }
 
