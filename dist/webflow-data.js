@@ -1,4 +1,8 @@
 
+// v2.0
+// Sygnal Technology Group
+// http://sygnal.com
+
 $(function() {
 
     // No automated tasks in 2.x
