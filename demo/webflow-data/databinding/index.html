@@ -119,14 +119,14 @@
 
     <script>
 
-        // Instantiate WebflowDataUtil object
+        // Instantiate util
         var webflowDataUtil = new WebflowDataUtil({
             logging: true, // enable logging to console
         });
 
         $(function () {
 
-            // Display MailerLiteUtil version
+            // Display version
             $("*[data-value='ver']").text(
                 webflowDataUtil.getVersion()
             );

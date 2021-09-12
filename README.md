@@ -1,6 +1,4 @@
-# webflow-util
-
-## Webflow Utilities
+# Webflow Utilities
 
 This library provides a set of helper functions to simplify and streamline 
 [Webflow](https://webflow.com/)
@@ -8,30 +6,31 @@ development.
 
 It's designed specifically to assist with overcoming certain limitations of Webflow, and add certain functionality.
 
-Current core features;
-
-1. Data-binding form controls ( dropdowns & listboxes ) to Webflow **Collections**.
-2. The ability to add dynamic attributes to Webflow-generated elements.
-
-
 *This library will be expanded as needed, and broken into modules for convenient selection of the parts you need.*
 
 
 ## Using Webflow Data
 
-`webflow-data.js` is a simple **databinding utility** has does two things;
+`webflow-data.js` is a simple **databinding utility** which is designed 
+to use a Webflow Collection List as a data-source, extract data, 
+and allow you to bind it in two ways;
 
-1. It composes a JSON-based data source from a Webflow Collection List.
-2. It searches for any **Select** elements which have a `data-source` attribute, and it populates them from the matching JSON data.
+1. To form SELECT controls ( dropdowns & listboxes ), so that users can pick from a CMS-generated list.
+2. As dynamic attributes to Webflow-generated elements.
 
-Here is a video overview of how to use `webflow-data`;
+Here is a video overview of how to use `webflow-data` ( current as of v2.0 );
 
 https://www.youtube.com/watch?v=xc7vx7YdK5I
 
-Important notes;
+Notes;
 
-1. Can work with any Collection, filtered and sorted as you choose, via a Collection List.
-2. Currently only works with SELECTS. If you have some kind of non-standard HTML component, you can use the JSON directly.
+- `webflow-data` works with any Collection List, filtered and sorted as you choose, so you get complete control.
+- You choose what to extract and use from the Collection List, and how to name it.
+- The datasource is prepared as JSON, so it is available to your other scripts as well.
+- The databinding routines can then bind that to a form SELECT element.
+- The example HTML is "dirty" in that it is full of Webflow markup. This demonstrates how we navigate the Webflow-generated content structures such as Collection Lists.
+
+*Use the examples as a reference for using each feature.*
 
 ### STEP 1 - Add the Library
 
@@ -40,11 +39,15 @@ You can embed our library directly from the [JSDelivr](https://en.wikipedia.org/
 In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section.
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@2.0/dist/webflow-data.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/webflow-data.min.js"></script>
 ```
 
+*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support.*
 
-*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support- if we introduce a breaking change, we'll update the **minor** [version number](https://gitversion.readthedocs.io/en/latest/more-info/version-increments/) so that it does not affect production sites. Therefore for simplicity, specify the major and minor version you want as in the example above.*
+We recommend that you specify the **major** and **minor** version numbers in your script reference.
+Replace `@latest` with e.g. `@1.2` or the library version you want to use.
+
+*This will protect you from breaking changes in new versions we release.*
 
 ### STEP 2 - Setup your Data Source
 
@@ -90,14 +93,37 @@ In your Page *settings* (click the gear icon), add the script reference to the *
 
 ```
     <script>
+
+        // Instantiate WebflowDataUtil object
+        var webflowDataUtil = new WebflowDataUtil();
+
         $(function () {
 
-            dataBindAll();
+            // Databind
+            webflowDataUtil.dataBindAll();
 
         });
+
     </script>
 ```
 
 
-Done!
+# Options
+
+WebflowDataUtil can be instantiated with options, as in;
+
+```
+// Instantiate MailerLiteUtil object
+var webflowDataUtil = new WebflowDataUtil({
+    logging: true, // enable logging to console
+});
+```
+
+## `logging = true | false`
+
+*Defaults to false.*
+
+Enables or disables logging activity output to the console.
+
+
 
