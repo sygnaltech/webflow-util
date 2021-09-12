@@ -19,7 +19,7 @@
     <div class="section blog-intro-section wf-section">
         <div class="container w-container">
             <div class="subsection-title-area">
-                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Create JSON Datasource demo</h2>
+                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Create JSON Datasource demo <span data-value="ver"></span></h2>
                 <pre id="jsonCode">
                     Code goes here
                 </pre>
@@ -166,19 +166,31 @@
     <script src="../../../dist/webflow-data.js"></script>
 
     <script>
+
+        // Instantiate WebflowDataUtil object
+        var webflowDataUtil = new WebflowDataUtil({
+            logging: true, // enable logging to console
+        });
+
         $(function () {
 
-            var json = getDataSource('blogposts');
-            console.log("foo");
+            // Display MailerLiteUtil version
+            $("*[data-value='ver']").text(
+                webflowDataUtil.getVersion()
+            );
+
+            // Get datasource
+            var json = webflowDataUtil.getDataSource('blogposts');
+
             console.log(json);
 
+            // Display JSON content for review
             $('#jsonCode').html(
                 $('<blockquote/>').html(JSON.stringify(json, null, 4)).text()
             );
 
-            console.log("done");
-
         });
+
     </script>
 
 </body>

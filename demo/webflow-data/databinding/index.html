@@ -19,7 +19,7 @@
     <div class="section blog-intro-section wf-section">
         <div class="container w-container">
             <div class="subsection-title-area">
-                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Dynamic attributes demo</h2>
+                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Dynamic attributes demo <span data-value="ver"></span></h2>
             </div>
             <div class="w-form">
                 <form id="email-form" name="email-form" data-name="Email Form">
@@ -118,11 +118,24 @@
     <script src="../../../dist/webflow-data.js"></script>
 
     <script>
+
+        // Instantiate WebflowDataUtil object
+        var webflowDataUtil = new WebflowDataUtil({
+            logging: true, // enable logging to console
+        });
+
         $(function () {
 
-            dataBindAll();
+            // Display MailerLiteUtil version
+            $("*[data-value='ver']").text(
+                webflowDataUtil.getVersion()
+            );
+
+            // Databind
+            webflowDataUtil.dataBindAll();
 
         });
+
     </script>
 
 </body>
