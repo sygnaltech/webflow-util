@@ -3,7 +3,7 @@
 // Sygnal Technology Group
 // http://sygnal.com
 
-var WebflowDataUtil = function (options) {
+export var WebflowDataUtil = function (options) {
 
     const version = 'v2.1';
 

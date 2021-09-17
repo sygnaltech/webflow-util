@@ -58,9 +58,11 @@
     <script src="../../dist/lib/jquery.csv.js"></script>
     <!--<script type="module" src="../../dist/lib/test.js"></script>-->
     <script src="../../dist/webflow-table.js"></script>
-    <script src="../../dist/webflow-data.js"></script>
+    <!--<script src="../../dist/webflow-data.js"></script>-->
 
     <script type="module">
+
+        import { WebflowDataUtil } from '../../src/modules/webflow-data.js';
 
         /*import { testVar } from '../../dist/lib/test.js';*/
 
@@ -99,7 +101,7 @@
             // Apply dynamic attributes
             webflowTableUtil.BuildTable(
                 $("#table1"),
-//                json
+                //                json
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
             );
 
