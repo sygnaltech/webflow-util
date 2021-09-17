@@ -2,9 +2,9 @@
 
 This library provides a set of helper functions to simplify and streamline 
 [Webflow](https://webflow.com/)
-development.
+development. It's designed specifically to assist with overcoming certain limitations of Webflow, and add certain functionality.
 
-It's designed specifically to assist with overcoming certain limitations of Webflow, and add certain functionality.
+It is also a practical exploration into the use of Javascript ES6 modules, NPM, and other state-of-the art web dev technologies, and how they can be used with Webflow.
 
 *This library will be expanded as needed, and broken into modules for convenient selection of the parts you need.*
 
@@ -127,3 +127,32 @@ Enables or disables logging activity output to the console.
 
 
 
+# Technical Notes
+
+**Webflow Utilities (WFU)** is an experimental project as much as a practical toolset. 
+The team developing WFU is applying the most current javascript technolgoies where possible 
+as a practical implementation exercise.
+
+### jQuery
+
+WFU is requires jQuery, which is already embedded in all Webflow-hosted sites.
+
+### Object-Oriented patterns
+
+As much as possible, our library is designed using OO patterns.
+
+### JavaScript modules
+
+As of 2.2, WFU uses 
+[JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+as a way to better define and separate code. 
+These are widely supported across modern browsers, however are not supported by Internet Explorer.
+
+### Node Package Manager (NPM)
+
+Ideally, we'd like to build this toolset as a proper NPM package, 
+as it would allow for much richer scripting options, a plug-in style architecture, easy script updating and dependency management.
+
+However to our knowledge there is currently no native way to make this work with Webflow's hosting environment.
+At the moment any NPM-style functionality such as the `package.json` only exist as a placeholder
+for these future goals.
