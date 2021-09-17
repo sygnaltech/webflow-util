@@ -112,7 +112,7 @@ export var WebflowTableUtil = function (options) {
 
         webflowDataUtil.getCSV(url).then(function (response) {
 
-            root.BuildTableFromArray(elem, response);
+            root.BuildTableFromCSV(elem, response);
 
         }, function (error) {
             console.error(error);
@@ -120,9 +120,10 @@ export var WebflowTableUtil = function (options) {
 
     }
 
-    this.BuildTableFromArray = function (elem, dataArray) {
+    this.BuildTableFromCSV = function (elem, csv) {
 
-        var allRows = dataArray.split(/\r?\n|\r/).filter(isNotEmpty);
+        // Split rows
+        var allRows = csv.split(/\r?\n|\r/).filter(isNotEmpty);
 
         var table = '<table>';
         for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
@@ -132,7 +133,10 @@ export var WebflowTableUtil = function (options) {
             } else {
                 table += '<tr>';
             }
+
+            // Split fields
             var rowCells = allRows[singleRow].split(',');
+
             for (var rowCell = 0; rowCell < rowCells.length; rowCell++) {
                 if (singleRow === 0) {
                     table += '<th>';
@@ -155,6 +159,7 @@ export var WebflowTableUtil = function (options) {
         table += '</tbody>';
         table += '</table>';
 
+        // Apply HTML to element
         elem.html(table);
 
     }
