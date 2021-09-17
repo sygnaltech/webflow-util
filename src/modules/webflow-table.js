@@ -5,6 +5,8 @@
 // Sygnal Technology Group
 // http://sygnal.com
 
+import { WebflowDataUtil } from './webflow-data.js';
+
 export var WebflowTableUtil = function (options) {
 
     const version = 'v2.1';
@@ -71,40 +73,38 @@ export var WebflowTableUtil = function (options) {
         };
     }
 
-    function getCSV(url) {
+    //function getCSV(url) {
 
-        if (vars.logging)
-            console.log("Loading CSV file " + url);
+    //    if (vars.logging)
+    //        console.log("Loading CSV file " + url);
 
-        try {
-            var csvfile = url; // vars.csvFile;
-            return new Promise(function (resolve, reject) {
-                var request = new XMLHttpRequest();
-                request.open("GET", url, true);
-                request.onload = function () {
-                    if (request.status == 200) {
-                        resolve(request.response);
-                    } else {
-                        reject(Error(request.statusText));
-                    }
-                };
+    //    try {
+    //        var csvfile = url; // vars.csvFile;
+    //        return new Promise(function (resolve, reject) {
+    //            var request = new XMLHttpRequest();
+    //            request.open("GET", url, true);
+    //            request.onload = function () {
+    //                if (request.status == 200) {
+    //                    resolve(request.response);
+    //                } else {
+    //                    reject(Error(request.statusText));
+    //                }
+    //            };
 
-                request.onerror = function () {
-                    reject(Error('Error fetching data.'));
-                };
-                request.send();
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    //            request.onerror = function () {
+    //                reject(Error('Error fetching data.'));
+    //            };
+    //            request.send();
+    //        });
+    //    } catch (err) {
+    //        console.error(err);
+    //    }
+    //}
 
     this.BuildTable = function (elem, url) {
 
         if (vars.logging)
             console.log("GuildTable");
-
-        
 
         //// Find all elements which specify a data-source
         //// for data binding
@@ -115,17 +115,11 @@ export var WebflowTableUtil = function (options) {
         //    root.dataBind(elem);
         //})
 
-        //        getCSV.call(this).then(function (response) {
+        var webflowDataUtil = new WebflowDataUtil({
+            logging: true, // enable logging to console
+        });
 
-//        console.log(elem);
-
-//        elem.html("<p>TESTING 1</p>");
-//        elem.innerHTML = "<p>TESTING 1</p>";
-
-        getCSV(url).then(function (response) {
-
-//            console.log(response);
-
+        webflowDataUtil.getCSV(url).then(function (response) {
 
             var allRows = response.split(/\r?\n|\r/).filter(isNotEmpty);
 
