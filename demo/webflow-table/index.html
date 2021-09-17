@@ -4,10 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title>Webflow Table Util</title>
-
+    <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
-    
 </head>
 <body>
 
@@ -26,9 +25,20 @@
         <div class="container">
             <div class="content">
 
+                <h2>Demo JSON content</h2>
+
+                <p>Retrieved from a Google Sheet source as JSON.</p>
+
+                <pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">No data.</pre>
+
+                <ul>
+                    <li>Retrieved from a Google Sheet source as CSV.</li>
+                    <li>Converted to JSON.</li>
+                </ul>
+
                 <h2>Demo table content</h2>
 
-                <div style="background-color: lightyellow; padding: 40px;">
+                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
 
                     <div id="table1"></div>
 
@@ -45,15 +55,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
     <!--<script src="../../dist/mailerlite-util.js"></script>-->
     <!--<script src="../../dist/webflow-table.js"></script>-->
-    <!--<script src="../../dist/lib/jquery.csv.js"></script>-->
+    <script src="../../dist/lib/jquery.csv.js"></script>
+    <!--<script type="module" src="../../dist/lib/test.js"></script>-->
     <script src="../../dist/webflow-table.js"></script>
+    <script src="../../dist/webflow-data.js"></script>
 
-    <script>
+    <script type="module">
+
+        /*import { testVar } from '../../dist/lib/test.js';*/
+
+
 
         // Instantiate util
         var webflowTableUtil = new WebflowTableUtil({
             logging: true, // enable logging to console
             csvFile: 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
+        });
+
+        var webflowDataUtil = new WebflowDataUtil({
+            logging: true, // enable logging to console
         });
 
         $(function () {
@@ -63,11 +83,23 @@
                 webflowTableUtil.getVersion()
             );
 
-            console.log("test");
+            var json;
+
+            // Get JSON data
+            json = webflowDataUtil.getCSVasJSON(
+                'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
+                true // pretty print
+            )
+
+            // Display JSON data
+            $("#json1").text(
+                json
+            );
 
             // Apply dynamic attributes
             webflowTableUtil.BuildTable(
                 $("#table1"),
+//                json
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
             );
 

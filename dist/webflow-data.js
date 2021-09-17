@@ -183,4 +183,64 @@ var WebflowDataUtil = function (options) {
 
     }
 
+
+
+    this.getCSV = function getCSV(url) {
+
+        if (vars.logging)
+            console.log("Loading CSV file " + url); // vars.csvFile);
+
+        try {
+            var csvfile = url; // vars.csvFile;
+            return new Promise(function (resolve, reject) {
+                var request = new XMLHttpRequest();
+                request.open("GET", url, true);
+                request.onload = function () {
+                    if (request.status == 200) {
+                        resolve(request.response);
+                    } else {
+                        reject(Error(request.statusText));
+                    }
+                };
+
+                request.onerror = function () {
+                    reject(Error('Error fetching data.'));
+                };
+                request.send();
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    this.getCSVasJSON = function(url, prettyprint = false) {
+
+        console.log('getCSVasJSON()');
+        console.log(url);
+
+        var json = null;
+
+        $.ajax({
+            url: url,
+            async: false,
+            success: function (csvd) {
+                
+                var items = $.csv.toObjects(csvd);
+
+                json = JSON.stringify(
+                    items,
+                    null,
+                    prettyprint ? 2 : 0 // pretty print
+                ); 
+
+            },
+            dataType: "text",
+            complete: function () {
+                // call a function on complete
+            }
+        });
+
+        return json;
+    }
+
 }
