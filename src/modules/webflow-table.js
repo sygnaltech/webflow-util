@@ -120,6 +120,110 @@ export var WebflowTableUtil = function (options) {
 
     }
 
+    this.BuildTableFromJSON = function (elem, json) {
+
+        root.BuildTableFromArray(
+            elem,
+            JSON.parse(json)
+        );
+    }
+
+    // Assumes array is uniform, with the same fields in each item.
+    this.BuildTableFromArray = function (elem, arr, headers = null) {
+
+        // If no header specified, 
+        // infer Header Row automatically from first array item
+        if (headers === null) {
+            var headers = [];
+
+            for (var key in arr[0]) {
+                if (arr[0].hasOwnProperty(key)) {
+                    console.log($`{key} = {val}`, key, arr[0][key]);
+                    headers.push(key);
+                }
+            }
+        }
+
+        console.log($`Headers = {val}`, headers);
+
+        var html = '<table>';
+
+        // Header
+        html += '<thead>';
+        html += '<tr>';
+        for (var key in headers) {
+            html += '<th>';
+            html += headers[key]; // BUG: HTML-encode
+            html += '</th>';
+        }
+        html += '</tr>';
+        html += '</thead>';
+
+
+        html += '<tbody>';
+        for (var row = 1; row < arr.length; row++) {
+
+            html += '<tr>';
+            for (var key in headers) {
+                html += '<td>';
+                html += arr[row][headers[key]]; // BUG: HTML-encode
+                html += '</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody>';
+
+        html += '</table>';
+
+        // Apply HTML to element
+        elem.html(html);
+
+    }
+
+    //this.BuildTableFromArray = function (elem, arr) {
+
+    //    // Split rows
+    //    var allRows = csv.split(/\r?\n|\r/).filter(isNotEmpty);
+
+    //    var table = '<table>';
+    //    for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
+    //        if (singleRow === 0) {
+    //            table += '<thead>';
+    //            table += '<tr>';
+    //        } else {
+    //            table += '<tr>';
+    //        }
+
+    //        // Split fields
+    //        var rowCells = allRows[singleRow].split(',');
+
+    //        for (var rowCell = 0; rowCell < rowCells.length; rowCell++) {
+    //            if (singleRow === 0) {
+    //                table += '<th>';
+    //                table += rowCells[rowCell];
+    //                table += '</th>';
+    //            } else {
+    //                table += '<td>';
+    //                table += rowCells[rowCell];
+    //                table += '</td>';
+    //            }
+    //        }
+    //        if (singleRow === 0) {
+    //            table += '</tr>';
+    //            table += '</thead>';
+    //            table += '<tbody>';
+    //        } else {
+    //            table += '</tr>';
+    //        }
+    //    }
+    //    table += '</tbody>';
+    //    table += '</table>';
+
+    //    // Apply HTML to element
+    //    elem.html(table);
+
+    //}
+
     this.BuildTableFromCSV = function (elem, csv) {
 
         // Split rows

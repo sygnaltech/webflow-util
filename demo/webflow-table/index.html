@@ -38,6 +38,10 @@
 
                 <h2>Demo table content</h2>
 
+                <ul>
+                    <li>Built from CSV directly (buggy)</li>
+                </ul>
+
                 <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
 
                     <div id="table1"></div>
@@ -47,6 +51,18 @@
                 <ol>
                     <li>This table content is sourced from a Google Sheet</li>
                 </ol>
+
+                <h2>Demo table content</h2>
+
+                <ul>
+                    <li>Built from JSON</li>
+                </ul>
+
+                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+
+                    <div id="table2"></div>
+
+                </div>
 
             </div>
         </div>
@@ -96,6 +112,13 @@
                 $("#table1"),
                 //                json
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
+            );
+
+
+            // Apply dynamic attributes
+            webflowTableUtil.BuildTableFromJSON(
+                $("#table2"),
+                json
             );
 
             //            var dataBoundElements = $('[data-source]');

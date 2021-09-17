@@ -188,7 +188,27 @@ export var WebflowDataUtil = function (options) {
     this.getCSV = function getCSV(url) {
 
         if (vars.logging)
-            console.log("Loading CSV file " + url); // vars.csvFile);
+            console.log("getCSV() - " + url);
+
+        //$.ajax({
+        //    url: url,
+        //    async: false, // deprecated
+        //    success: function (csvd) {
+
+        //        var items = $.csv.toObjects(csvd);
+
+        //        json = JSON.stringify(
+        //            items,
+        //            null,
+        //            prettyprint ? 2 : 0 // pretty print
+        //        );
+
+        //    },
+        //    dataType: "text",
+        //    complete: function () {
+        //        // call a function on complete
+        //    }
+        //});
 
         try {
             var csvfile = url; // vars.csvFile;
@@ -215,14 +235,14 @@ export var WebflowDataUtil = function (options) {
 
     this.getCSVasJSON = function(url, prettyprint = false) {
 
-        console.log('getCSVasJSON()');
-        console.log(url);
+        if (vars.logging)
+            console.log('getCSVasJSON() - ' + url);
 
         var json = null;
 
         $.ajax({
             url: url,
-            async: false,
+            async: false, // deprecated
             success: function (csvd) {
                 
                 var items = $.csv.toObjects(csvd);
