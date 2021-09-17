@@ -5,7 +5,7 @@
 // Sygnal Technology Group
 // http://sygnal.com
 
-var WebflowTableUtil = function (options) {
+export var WebflowTableUtil = function (options) {
 
     const version = 'v2.1';
 
@@ -74,7 +74,7 @@ var WebflowTableUtil = function (options) {
     function getCSV(url) {
 
         if (vars.logging)
-            console.log("Loading CSV file " + url); // vars.csvFile);
+            console.log("Loading CSV file " + url);
 
         try {
             var csvfile = url; // vars.csvFile;
