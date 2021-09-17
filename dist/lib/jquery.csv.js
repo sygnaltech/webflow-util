@@ -27,11 +27,8 @@
  * Copyrighted 2012 by Evan Plaice.
  */
 
-//module.exports = 42;
-
-//export function hello(text) {
-//    console.log(text);
-//}
+// Embedding this directly, until q Webflow-compatible NPM solution
+// can be used to reference external packages.
 
 RegExp.escape = function (s) {
     return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
