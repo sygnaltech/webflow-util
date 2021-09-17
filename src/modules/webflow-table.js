@@ -106,62 +106,56 @@ export var WebflowTableUtil = function (options) {
         if (vars.logging)
             console.log("GuildTable");
 
-        //// Find all elements which specify a data-source
-        //// for data binding
-        //var dataBoundElements = $('[data-source]');
-
-        //// Iterate and bind each individually
-        //$.each(dataBoundElements, function (i, elem) {
-        //    root.dataBind(elem);
-        //})
-
         var webflowDataUtil = new WebflowDataUtil({
             logging: true, // enable logging to console
         });
 
         webflowDataUtil.getCSV(url).then(function (response) {
 
-            var allRows = response.split(/\r?\n|\r/).filter(isNotEmpty);
-
-            var table = '<table>';
-            for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
-                if (singleRow === 0) {
-                    table += '<thead>';
-                    table += '<tr>';
-                } else {
-                    table += '<tr>';
-                }
-                var rowCells = allRows[singleRow].split(',');
-                for (var rowCell = 0; rowCell < rowCells.length; rowCell++) {
-                    if (singleRow === 0) {
-                        table += '<th>';
-                        table += rowCells[rowCell];
-                        table += '</th>';
-                    } else {
-                        table += '<td>';
-                        table += rowCells[rowCell];
-                        table += '</td>';
-                    }
-                }
-                if (singleRow === 0) {
-                    table += '</tr>';
-                    table += '</thead>';
-                    table += '<tbody>';
-                } else {
-                    table += '</tr>';
-                }
-            }
-            table += '</tbody>';
-            table += '</table>';
-
-            elem.html(table);
-//            elem.innerHTML = table;
+            root.BuildTableFromArray(elem, response);
 
         }, function (error) {
             console.error(error);
         });
 
+    }
 
+    this.BuildTableFromArray = function (elem, dataArray) {
+
+        var allRows = dataArray.split(/\r?\n|\r/).filter(isNotEmpty);
+
+        var table = '<table>';
+        for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
+            if (singleRow === 0) {
+                table += '<thead>';
+                table += '<tr>';
+            } else {
+                table += '<tr>';
+            }
+            var rowCells = allRows[singleRow].split(',');
+            for (var rowCell = 0; rowCell < rowCells.length; rowCell++) {
+                if (singleRow === 0) {
+                    table += '<th>';
+                    table += rowCells[rowCell];
+                    table += '</th>';
+                } else {
+                    table += '<td>';
+                    table += rowCells[rowCell];
+                    table += '</td>';
+                }
+            }
+            if (singleRow === 0) {
+                table += '</tr>';
+                table += '</thead>';
+                table += '<tbody>';
+            } else {
+                table += '</tr>';
+            }
+        }
+        table += '</tbody>';
+        table += '</table>';
+
+        elem.html(table);
 
     }
 
