@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Webflow Table Util</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Sygnal Webflow Table demo <span data-value="ver"></span>
+            </h1>
+            <p class="subtitle">
+                by Sygnal Technology Group
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
+                <h2>Demo table content</h2>
+
+                <div style="background-color: lightyellow; padding: 40px;">
+
+                    <div id="table1"></div>
+
+                </div>
+
+                <ol>
+                    <li>This table content is sourced from a Google Sheet</li>
+                </ol>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+    <!--<script src="../../dist/mailerlite-util.js"></script>-->
+    <!--<script src="../../dist/webflow-table.js"></script>-->
+    <!--<script src="../../dist/lib/jquery.csv.js"></script>-->
+    <script src="../../dist/webflow-table.js"></script>
+
+    <script>
+
+        // Instantiate util
+        var webflowTableUtil = new WebflowTableUtil({
+            logging: true, // enable logging to console
+            csvFile: 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
+        });
+
+        $(function () {
+
+            // Display version
+            $("*[data-value='ver']").text(
+                webflowTableUtil.getVersion()
+            );
+
+            console.log("test");
+
+            // Apply dynamic attributes
+            webflowTableUtil.BuildTable(
+                $("#table1"),
+                'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
+            );
+
+            //            var dataBoundElements = $('[data-source]');
+
+        });
+
+    </script>
+
+</body>
+</html>
+
