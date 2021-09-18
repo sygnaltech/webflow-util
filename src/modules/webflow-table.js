@@ -4,6 +4,7 @@
 // http://sygnal.com
 
 import { getCsv, csvToJson } from './webflow-data.js';
+import { encodeHtml } from './webflow-html.js';
 
     //function isNotEmpty(row) {
     //    return row !== "";
@@ -71,7 +72,7 @@ export var renderTableFromArray = function (elem, arr, headers = null) {
     html += '<tr>';
     for (var key in headers) {
         html += '<th>';
-        html += headers[key]; // HTML-encoded
+        html += encodeHtml(headers[key]); // HTML-encoded
         html += '</th>';
     }
     html += '</tr>';
@@ -79,12 +80,12 @@ export var renderTableFromArray = function (elem, arr, headers = null) {
 
 
     html += '<tbody>';
-    for (var row = 1; row < arr.length; row++) {
+    for (var row = 0; row < arr.length; row++) {
 
         html += '<tr>';
         for (var key in headers) {
             html += '<td>';
-            html += arr[row][headers[key]]; // HTML-encoded
+            html += encodeHtml(arr[row][headers[key]]); // HTML-encoded
             html += '</td>';
         }
         html += '</tr>';
