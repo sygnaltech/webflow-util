@@ -1,6 +1,4 @@
 
-// import { hello } from './lib/jquery.csv.js';
-
 // v2.1
 // Sygnal Technology Group
 // http://sygnal.com
@@ -11,7 +9,7 @@ import { getCsv, csvToJson } from './webflow-data.js';
     //    return row !== "";
     //}
 
-export var buildTableFromCsvUrl = function (elem, url) {
+export var renderTableFromCsvUrl = function (elem, url) {
 
     //var webflowDataUtil = new WebflowDataUtil({
     //    logging: true, // enable logging to console
@@ -20,7 +18,7 @@ export var buildTableFromCsvUrl = function (elem, url) {
     var csv = getCsv(url);
     //.then(function (response) {
 
-        buildTableFromCsv(elem, csv);
+        renderTableFromCsv(elem, csv);
 
     //}, function (error) {
     //    console.error(error);
@@ -28,7 +26,7 @@ export var buildTableFromCsvUrl = function (elem, url) {
 
 }
 
-export var buildTableFromCsv = function (elem, csv) {
+export var renderTableFromCsv = function (elem, csv) {
 
     //var webflowDataUtil = new WebflowDataUtil({
     //    logging: true, // enable logging to console
@@ -36,20 +34,20 @@ export var buildTableFromCsv = function (elem, csv) {
 
     var json = csvToJson(csv);
 
-    buildTableFromJson(elem, json);
+    renderTableFromJson(elem, json);
 
 }
 
-export var buildTableFromJson = function (elem, json) {
+export var renderTableFromJson = function (elem, json) {
 
-    buildTableFromArray(
+    renderTableFromArray(
         elem,
         JSON.parse(json)
     );
 }
 
 // Assumes array is uniform, with the same fields in each item.
-export var buildTableFromArray = function (elem, arr, headers = null) {
+export var renderTableFromArray = function (elem, arr, headers = null) {
 
     // If no header specified, 
     // infer Header Row automatically from first array item

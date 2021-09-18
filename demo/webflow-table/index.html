@@ -84,9 +84,9 @@
     <script type="module">
 
         import { getCsvAsJson } from '../../src/modules/webflow-data.js';
-        import { buildTableFromCsvUrl, buildTableFromJson } from '../../src/modules/webflow-table.js';
+        import { renderTableFromJson } from '../../src/modules/webflow-table.js';
         import { getGoogleSheetCsvUrl } from '../../src/modules/google-sheet-data.js';
-        import { buildTableFromGoogleSheet } from '../../src/webflow-table-helper.js';
+        import { renderTableFromGoogleSheet } from '../../src/webflow-table-helper.js';
 
         $(function () {
 
@@ -113,7 +113,7 @@
             // TEST #2 - Create an HTML table from the JSON
 
             // Create HTML table
-            buildTableFromJson(
+            renderTableFromJson(
                 $("#table1"),
                 json
             );
@@ -128,7 +128,7 @@
             );
 
             // Create HTML table
-            buildTableFromJson(
+            renderTableFromJson(
                 $("#table3"),
                 json
             );
@@ -136,7 +136,7 @@
             // TEST #4 - USING HELPER METHODS
 
             // Do everything in one call, using default options
-            buildTableFromGoogleSheet(
+            renderTableFromGoogleSheet(
                 $("#table4"),
                 "16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0"
             );

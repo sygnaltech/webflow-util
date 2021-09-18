@@ -4,10 +4,10 @@
 // http://sygnal.com
 
 import { getCsvAsJson } from './modules/webflow-data.js';
-import { buildTableFromJson } from './modules/webflow-table.js';
+import { renderTableFromJson } from './modules/webflow-table.js';
 import { getGoogleSheetCsvUrl } from './modules/google-sheet-data.js';
 
-export var buildTableFromGoogleSheet = function (elem, googleSheetId) {
+export var renderTableFromGoogleSheet = function (elem, googleSheetId) {
 
     // Construct Google Sheet CSV URL
     const url = getGoogleSheetCsvUrl(googleSheetId);
@@ -24,7 +24,7 @@ export var buildTableFromGoogleSheet = function (elem, googleSheetId) {
     );
 
     // Create HTML table
-    buildTableFromJson(
+    renderTableFromJson(
         elem,
         json
     );
