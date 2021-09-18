@@ -45,71 +45,71 @@ export var WebflowDatabindUtil = function (options) {
 
     this.dataBind = function (elem) {
 
-       // Determine element type
+        // Determine element type
         var elemType = root.getElemType(elem);
 
-       // Get the data-source name
-       var dataSource = elem.getAttribute('data-source');
+        // Get the data-source name
+        var dataSource = elem.getAttribute('data-source');
 
-       // Handle missing source specification
-       if (!dataSource) {
-          console.warn ('dataBound element found with no datasource specified.');
-          return;
-       }
+        // Handle missing source specification
+        if (!dataSource) {
+            console.warn('dataBound element found with no datasource specified.');
+            return;
+        }
 
-       // Get data (build data source)
+        // Get data (build data source)
         var data = root.getDataSource(dataSource);
 
-       // Do data binding
-       switch (elemType) {
-       case 'select': 
-          $.each(data, function (key, entry) {
-         
-             // create new option element
-             var opt = document.createElement('option');
+        // Do data binding
+        switch (elemType) {
+            case 'select':
+                $.each(data, function (key, entry) {
 
-             // create text node to add to option element (opt)
-              console.log(entry.text);
+                    // create new option element
+                    var opt = document.createElement('option');
 
-              // HTML Decode JSON for Select Option element
-              var decodedText = $("<textarea/>").html(entry.text).val();
-              console.log(decodedText);
+                    // create text node to add to option element (opt)
+                    console.log(entry.text);
 
-              opt.appendChild(document.createTextNode(decodedText));
+                    // HTML Decode JSON for Select Option element
+                    var decodedText = $("<textarea/>").html(entry.text).val();
+                    console.log(decodedText);
 
-             // set value property of opt
-             opt.value = entry.id; 
+                    opt.appendChild(document.createTextNode(decodedText));
 
-             // add opt to end of select box (sel)
-             elem.appendChild(opt);         
-         
-          })
-   
-          break;
-       default: 
+                    // set value property of opt
+                    opt.value = entry.id;
 
-        if (vars.logging)
-             console.warn ('Unable to databind unknown element type.');
-      
-          break;
-       }
+                    // add opt to end of select box (sel)
+                    elem.appendChild(opt);
+
+                })
+
+                break;
+            default:
+
+                if (vars.logging)
+                    console.warn('Unable to databind unknown element type.');
+
+                break;
+        }
 
     }
 
     // Amalgamates from internally tagged DIVs
     this.getDataSource = function (name) {
 
-       // Aggregate JSON Data
-       var data = $('*[data="' + name + '"]'); 
+        // Aggregate JSON Data
+        var data = $('*[data="' + name + '"]');
 
-       var items = []  // place to store the pairs
-       data.each(function(index, elem){ //loop over the keys
-          items.push(elem.textContent);
-       })
+        var items = []  // place to store the pairs
+        data.each(function (index, elem) { //loop over the keys
+            items.push(elem.textContent);
+        })
 
-       var json = '[' + items.join() + ']';
+        var json = '[' + items.join() + ']';
 
-       return JSON.parse(json); 
+        return JSON.parse(json);
     }
 
     this.getElemType = function (elem) {
@@ -125,7 +125,7 @@ export var WebflowDatabindUtil = function (options) {
         return 'unknown';
     }
 
-    this.applyDynamicAttributes = function() {
+    this.applyDynamicAttributes = function () {
 
         if (vars.logging)
             console.log("Sygnal Dynamic Attributes");
@@ -145,7 +145,7 @@ export var WebflowDatabindUtil = function (options) {
             // hide this node
             $(dataContainer).attr("style", "display: none;");
 
-    //        console.log("Found Data " + $(data).html());
+            //        console.log("Found Data " + $(data).html());
 
             // if "prior"
 
@@ -168,109 +168,19 @@ export var WebflowDatabindUtil = function (options) {
                         console.warn("Unknown apply setting for param.");
             }
 
-    //        var target = $(dataContainer).prev();
+            //        var target = $(dataContainer).prev();
 
             // Iterate through attributes, and apply them
             $(this).children().each(function (cindex) {
                 var dataItem = this;
 
-    //            console.log("Adding attr: " + $(dataItem).attr("attr") + " = " + $(dataItem).attr("value"));
+                //            console.log("Adding attr: " + $(dataItem).attr("attr") + " = " + $(dataItem).attr("value"));
 
                 $(target).attr($(dataItem).attr("attr"), $(dataItem).attr("value"));
             });
 
         });
 
-    }
-
-
-
-    this.getCSV = function getCSV(url) {
-
-        //$.ajax({
-        //    url: url,
-        //    async: false, // deprecated
-        //    success: function (csvd) {
-
-        //        var items = $.csv.toObjects(csvd);
-
-        //        json = JSON.stringify(
-        //            items,
-        //            null,
-        //            prettyprint ? 2 : 0 // pretty print
-        //        );
-
-        //    },
-        //    dataType: "text",
-        //    complete: function () {
-        //        // call a function on complete
-        //    }
-        //});
-
-        try {
-            var csvfile = url; // vars.csvFile;
-            return new Promise(function (resolve, reject) {
-                var request = new XMLHttpRequest();
-                request.open("GET", url, true);
-                request.onload = function () {
-                    if (request.status == 200) {
-                        resolve(request.response);
-                    } else {
-                        reject(Error(request.statusText));
-                    }
-                };
-
-                request.onerror = function () {
-                    reject(Error('Error fetching data.'));
-                };
-                request.send();
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    this.csvToJson = function (csvd, prettyprint = false) {
-
-        var items = $.csv.toObjects(csvd);
-
-        var json = JSON.stringify(
-            items,
-            null,
-            prettyprint ? 2 : 0 // pretty print
-        );
-
-        return json;
-    }
-
-    this.getCSVasJSON = function(url, prettyprint = false) {
-
-        if (vars.logging)
-            console.log('getCSVasJSON() - ' + url);
-
-        var json = null;
-
-        $.ajax({
-            url: url,
-            async: false, // deprecated
-            success: function (csvd) {
-                
-                var items = $.csv.toObjects(csvd);
-
-                json = JSON.stringify(
-                    items,
-                    null,
-                    prettyprint ? 2 : 0 // pretty print
-                ); 
-
-            },
-            dataType: "text",
-            complete: function () {
-                // call a function on complete
-            }
-        });
-
-        return json;
     }
 
 }
