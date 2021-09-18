@@ -94,38 +94,27 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
     <script src="../../dist/lib/jquery.csv.js"></script>
-    <!--<script src="../../dist/webflow-table.js"></script>-->
 
     <script type="module">
 
-        import { WebflowDataUtil } from '../../src/modules/webflow-data.js';
-        import { WebflowTableUtil } from '../../src/modules/webflow-table.js';
+        import { getCsvAsJson } from '../../src/modules/webflow-data.js';
+        import { buildTableFromCsvUrl, buildTableFromJson } from '../../src/modules/webflow-table.js';
         import { getGoogleSheetCsvUrl } from '../../src/modules/google-sheet-data.js';
         import { buildTableFromGoogleSheet } from '../../src/webflow-table-helper.js';
 
-        // Instantiate util
-        var webflowTableUtil = new WebflowTableUtil({
-            logging: true, // enable logging to console
-            csvFile: 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
-        });
-
-        var webflowDataUtil = new WebflowDataUtil({
-            logging: true, // enable logging to console
-        });
-
         $(function () {
 
-            // Display version
-            $("*[data-value='ver']").text(
-                webflowTableUtil.getVersion()
-            );
+            //// Display version
+            //$("*[data-value='ver']").text(
+            //    webflowTableUtil.getVersion()
+            //);
 
             var json;
 
             // TEST #1 - retrieve CSV as JSON
 
             // Get JSON data
-            json = webflowDataUtil.getCSVasJSON(
+            json = getCsvAsJson(
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
                 true // pretty print
             )
@@ -138,13 +127,13 @@
             // TEST #2 - Create an HTML table from the JSON
 
             // Create HTML table
-            webflowTableUtil.BuildTableFromCSVUrl(
+            buildTableFromCsvUrl(
                 $("#table1"),
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
             );
 
             // Create HTML table
-            webflowTableUtil.BuildTableFromJSON(
+            buildTableFromJson(
                 $("#table2"),
                 json
             );
@@ -153,13 +142,13 @@
 
             // Get JSON data to Google Sheet
             // This version uses the google-sheet-data module to construct the CSV url
-            json = webflowDataUtil.getCSVasJSON(
+            json = getCsvAsJson(
                 getGoogleSheetCsvUrl("1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI"),
                 true // pretty print
             );
 
             // Create HTML table
-            webflowTableUtil.BuildTableFromJSON(
+            buildTableFromJson(
                 $("#table3"),
                 json
             );
