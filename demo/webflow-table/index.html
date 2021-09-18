@@ -64,6 +64,30 @@
 
                 </div>
 
+                <h2>TEST #3 - Encoding HTML Entities</h2>
+
+                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+
+                    <div id="table3"></div>
+
+                </div>
+
+                <ul>
+                    <li>Google spreadsheet source - <a href="https://docs.google.com/spreadsheets/d/1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI/edit#gid=0" target="_blank">link</a></li>
+                </ul>
+
+                <h2>TEST #4 - Using Webflow Table Helper</h2>
+
+                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+
+                    <div id="table4"></div>
+
+                </div>
+
+                <ul>
+                    <li>Google spreadsheet source - <a href="https://docs.google.com/spreadsheets/d/1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI/edit#gid=0" target="_blank">link</a></li>
+                </ul>
+
             </div>
         </div>
     </section>
@@ -76,6 +100,8 @@
 
         import { WebflowDataUtil } from '../../src/modules/webflow-data.js';
         import { WebflowTableUtil } from '../../src/modules/webflow-table.js';
+        import { getGoogleSheetCsvUrl } from '../../src/modules/google-sheet-data.js';
+        import { buildTableFromGoogleSheet } from '../../src/webflow-table-helper.js';
 
         // Instantiate util
         var webflowTableUtil = new WebflowTableUtil({
@@ -96,6 +122,8 @@
 
             var json;
 
+            // TEST #1 - retrieve CSV as JSON
+
             // Get JSON data
             json = webflowDataUtil.getCSVasJSON(
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
@@ -107,21 +135,42 @@
                 json
             );
 
-            // Apply dynamic attributes
+            // TEST #2 - Create an HTML table from the JSON
+
+            // Create HTML table
             webflowTableUtil.BuildTable(
                 $("#table1"),
-                //                json
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
             );
 
-
-            // Apply dynamic attributes
+            // Create HTML table
             webflowTableUtil.BuildTableFromJSON(
                 $("#table2"),
                 json
             );
 
-            //            var dataBoundElements = $('[data-source]');
+            // TEST #3 - ENCODING HTML ENTITIES
+
+            // Get JSON data to Google Sheet
+            // This version uses the google-sheet-data module to construct the CSV url
+            json = webflowDataUtil.getCSVasJSON(
+                getGoogleSheetCsvUrl("1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI"),
+                true // pretty print
+            );
+
+            // Create HTML table
+            webflowTableUtil.BuildTableFromJSON(
+                $("#table3"),
+                json
+            );
+
+            // TEST #4 - USING HELPER METHODS
+
+            // Do everything in one call, using default options
+            buildTableFromGoogleSheet(
+                $("#table4"),
+                "16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0"
+            );
 
         });
 
