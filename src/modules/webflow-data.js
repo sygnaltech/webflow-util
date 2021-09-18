@@ -187,9 +187,6 @@ export var WebflowDataUtil = function (options) {
 
     this.getCSV = function getCSV(url) {
 
-        if (vars.logging)
-            console.log("getCSV() - " + url);
-
         //$.ajax({
         //    url: url,
         //    async: false, // deprecated
@@ -231,6 +228,19 @@ export var WebflowDataUtil = function (options) {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    this.csvToJson = function (csvd, prettyprint = false) {
+
+        var items = $.csv.toObjects(csvd);
+
+        var json = JSON.stringify(
+            items,
+            null,
+            prettyprint ? 2 : 0 // pretty print
+        );
+
+        return json;
     }
 
     this.getCSVasJSON = function(url, prettyprint = false) {
