@@ -27,7 +27,7 @@
 
                 <h2>Demo JSON content</h2>
 
-                <p>Retrieved from a Google Sheet source as JSON.</p>
+                <p>Retrieve data from a Google sheet, and convert it to JSON.</p>
 
                 <pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">No data.</pre>
 
@@ -38,9 +38,7 @@
 
                 <h2>Demo table content</h2>
 
-                <ul>
-                    <li>Built from CSV directly (buggy)</li>
-                </ul>
+                <p>Retrieve data from an online source, and create an HTML table.</p>
 
                 <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
 
@@ -48,23 +46,13 @@
 
                 </div>
 
-                <ol>
-                    <li>This table content is sourced from a Google Sheet</li>
-                </ol>
-
-                <h2>Demo table content</h2>
-
                 <ul>
-                    <li>Built from JSON</li>
+                    <li>This table content is sourced live from a Google Sheet</li>
                 </ul>
 
-                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
-
-                    <div id="table2"></div>
-
-                </div>
-
                 <h2>TEST #3 - Encoding HTML Entities</h2>
+
+                <p>Retrieve data that contains HTML markup characters, to test encoding.</p>
 
                 <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
 
@@ -72,11 +60,9 @@
 
                 </div>
 
-                <ul>
-                    <li>Google spreadsheet source - <a href="https://docs.google.com/spreadsheets/d/1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI/edit#gid=0" target="_blank">link</a></li>
-                </ul>
-
                 <h2>TEST #4 - Using Webflow Table Helper</h2>
+
+                <p>Performs both the data retrieval and binding in a single call using a helper method.</p>
 
                 <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
 
@@ -127,14 +113,8 @@
             // TEST #2 - Create an HTML table from the JSON
 
             // Create HTML table
-            buildTableFromCsvUrl(
-                $("#table1"),
-                'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
-            );
-
-            // Create HTML table
             buildTableFromJson(
-                $("#table2"),
+                $("#table1"),
                 json
             );
 
