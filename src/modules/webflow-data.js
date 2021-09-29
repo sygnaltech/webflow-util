@@ -3,6 +3,8 @@
 // Sygnal Technology Group
 // http://sygnal.com
 
+import { csvToObjects } from './webflow-data-csv.js';
+
 export var getCsv = function (url) {
 
     var csv = null;
@@ -58,7 +60,8 @@ export var getCsv = function (url) {
 
 export var csvToJson = function (csvd, prettyprint = false) {
 
-    var items = $.csv.toObjects(csvd);
+//    var items = $.csv.toObjects(csvd);
+    var items = csvToObjects(csvd);
 
     var json = JSON.stringify(
         items,
@@ -78,7 +81,8 @@ export var getCsvAsJson = function (url, prettyprint = false) {
         async: false, // deprecated
         success: function (csvd) {
 
-            var items = $.csv.toObjects(csvd);
+//            var items = $.csv.toObjects(csvd);
+            var items = csvToObjects(csvd);
 
             json = JSON.stringify(
                 items,
