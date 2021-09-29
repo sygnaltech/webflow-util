@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Webflow Util | Tables</title>
+    <link rel="icon" href="data:;base64,=">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Sygnal Webflow Content | Lipsum Generator <span data-value="ver"></span>
+            </h1>
+            <p class="subtitle">
+                by Sygnal Technology Group
+            </p>
+
+            <div class="block">
+                <span class="tag is-danger is-medium">Demonstration</span>
+            </div>
+
+            <div class="block">
+                <p>
+                    <b>Lipsum</b> is a popular abbreviaton of the term <i>Lorem Ipsum</i>, which refers to
+                    Latin-looking text that approximates English in text layouts.
+                </p>
+                <p>
+                    Sygnal's '<b>Lipsum</b> generator allows you to dynamically and randomly create lipsum text
+                    directly in your page, to examine the impact on layout and content flow.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
+                <h2>Lipsum Words (array)</h2>
+
+                <p>Generates an randum number of lipsum words.</p>
+
+                <div class="block" style="background-color: lightyellow; padding: 40px; overflow: auto;">
+
+                    <div id="words"></div>
+
+                </div>
+
+                <div class="block">
+                    <button class="button is-dark" id="btnWords">Re-Generate</button>
+                </div>
+
+                <h2>Lipsum Sentences (array)</h2>
+
+                <p>Generates a random number of lipsum sentences.</p>
+
+                <div class="block" style="background-color: lightyellow; padding: 40px; overflow: auto;">
+
+                    <div id="sentences"></div>
+
+                </div>
+
+                <div class="block">
+                    <button class="button is-dark" id="btnSentences">Re-Generate</button>
+                </div>
+
+                <p>Retrieve data from an online source, and create an HTML table.</p>
+
+                <h2>Lipsum Text</h2>
+
+                <p>Generates a random number of lipsum paragraphs.</p>
+
+                <div class="block" style="background-color: lightyellow; padding: 40px; overflow: auto;">
+
+                    <div id="text"></div>
+
+                </div>
+
+                <div class="block">
+                    <button class="button is-dark" id="btnText">Re-Generate</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+    <script type="module">
+
+        import { genLipsumWords, genLipsumSentences, genLipsumParagraphs, genLipsumText } from '../../../src/modules/webflow-content-lipsum.js';
+
+        function genWords() {
+            $("#words").text(
+                genLipsumWords(1, 10)
+            );
+        }
+
+        function genSentences() {
+            $("#sentences").text(
+                genLipsumSentences(1, 10)
+            );
+        }
+
+        function genText() {
+            $("#text").html(
+                genLipsumText(1, 10, '<p>', '</p>')
+            );
+        }
+
+        $(function () {
+
+            // Generate Lipsum text
+            genWords();
+            genSentences();
+            genText();
+
+            $("#btnWords").click(function () {
+                genWords();
+            });
+
+            $("#btnSentences").click(function () {
+                genSentences();
+            });
+
+            $("#btnText").click(function () {
+                genText();
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
+
