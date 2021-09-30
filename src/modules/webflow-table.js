@@ -10,7 +10,20 @@ import { encodeHtml } from './webflow-html.js';
     //    return row !== "";
     //}
 
-export var renderTableFromCsvUrl = function (elem, url) {
+// https://www.w3.org/wiki/JavaScript_best_practices#Allow_for_configuration_and_translation
+//let renderOptions = {
+//    allowHtml: false,
+//    headers: null
+//}
+
+var tableRenderOptions = {
+    encodeHtml: true,
+    theme: 'table1',
+    headers: null,
+    responsive: true
+}
+
+export var renderTableFromCsvUrl = function (elem, url, options = {}) {
 
     //var webflowDataUtil = new WebflowDataUtil({
     //    logging: true, // enable logging to console
@@ -19,7 +32,7 @@ export var renderTableFromCsvUrl = function (elem, url) {
     var csv = getCsv(url);
     //.then(function (response) {
 
-        renderTableFromCsv(elem, csv);
+        renderTableFromCsv(elem, csv, options);
 
     //}, function (error) {
     //    console.error(error);
@@ -27,7 +40,7 @@ export var renderTableFromCsvUrl = function (elem, url) {
 
 }
 
-export var renderTableFromCsv = function (elem, csv) {
+export var renderTableFromCsv = function (elem, csv, options = {}) {
 
     //var webflowDataUtil = new WebflowDataUtil({
     //    logging: true, // enable logging to console
@@ -35,24 +48,27 @@ export var renderTableFromCsv = function (elem, csv) {
 
     var json = csvToJson(csv);
 
-    renderTableFromJson(elem, json);
+    renderTableFromJson(elem, json, options);
 
 }
 
-export var renderTableFromJson = function (elem, json) {
+export var renderTableFromJson = function (elem, json, options = {}) {
 
     renderTableFromArray(
         elem,
-        JSON.parse(json)
+        JSON.parse(json),
+        options
     );
 }
 
 // Assumes array is uniform, with the same fields in each item.
-export var renderTableFromArray = function (elem, arr, headers = null) {
+export var renderTableFromArray = function (elem, arr, options = {}) {
+
+    var settings = $.extend({}, tableRenderOptions, options);
 
     // If no header specified, 
     // infer Header Row automatically from first array item
-    if (headers === null) {
+    if (settings.headers === null) {
         var headers = [];
 
         for (var key in arr[0]) {
@@ -63,39 +79,52 @@ export var renderTableFromArray = function (elem, arr, headers = null) {
         }
     }
 
+    console.log(settings);
+
     console.log($`Headers = {val}`, headers);
 
-    var html = '<table>';
+    var html = [];
+    html.push('<div>');
+
+    settings
+
+    //if (options.responsive ?? tableRenderOptions.responsive)
+    //if (options.theme ?? tableRenderOptions.theme)
+    //if (options.encodeHtml ?? tableRenderOptions.encodeHtml)
+
+    html.push('<table>');
 
     // Header
-    html += '<thead>';
-    html += '<tr>';
+    html.push('<thead>');
+    html.push('<tr>');
     for (var key in headers) {
-        html += '<th>';
-        html += encodeHtml(headers[key]); // HTML-encoded
-        html += '</th>';
+        html.push('<th>');
+        html.push(encodeHtml(headers[key])); // HTML-encoded
+        html.push('</th>');
     }
-    html += '</tr>';
-    html += '</thead>';
+    html.push('</tr>');
+    html.push('</thead>');
 
 
-    html += '<tbody>';
+    html.push('<tbody>');
     for (var row = 0; row < arr.length; row++) {
 
-        html += '<tr>';
+        html.push('<tr>');
         for (var key in headers) {
-            html += '<td>';
-            html += encodeHtml(arr[row][headers[key]]); // HTML-encoded
-            html += '</td>';
+            html.push('<td>');
+            html.push(encodeHtml(arr[row][headers[key]])); // HTML-encoded
+            html.push('</td>');
         }
-        html += '</tr>';
+        html.push('</tr>');
     }
-    html += '</tbody>';
+    html.push('</tbody>');
 
-    html += '</table>';
+    html.push('</table>');
+
+    html.push('</div>');
 
     // Apply HTML to element
-    elem.html(html);
+    elem.html(html.join(''));
 
 }
 
