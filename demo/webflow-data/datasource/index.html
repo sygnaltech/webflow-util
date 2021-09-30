@@ -20,8 +20,8 @@
     <div class="section blog-intro-section wf-section">
         <div class="container w-container">
             <div class="subsection-title-area">
-                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Create JSON Datasource demo <span data-value="ver"></span></h2>
-                <pre id="jsonCode" style="height: 400px; overflow: auto;">
+                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Collection List Datasource demo <span data-value="ver"></span></h2>
+                <pre id="json1" style="height: 400px; overflow: auto;">
                     Code goes here
                 </pre>
             </div>
@@ -167,28 +167,20 @@
 
     <script type="module">
 
-        import { WebflowDatabindUtil } from '../../../src/modules/webflow-databind.js';
-
-        // Instantiate util
-        var webflowDatabindUtil = new WebflowDatabindUtil({
-            logging: true, // enable logging to console
-        });
+        import { getDataSource } from '../../../src/modules/webflow-data-collectionlist.js';
 
         $(function () {
 
-            // Display version
-            $("*[data-value='ver']").text(
-                webflowDatabindUtil.getVersion()
-            );
-
             // Get datasource
-            var json = webflowDatabindUtil.getDataSource('blogposts');
+            var json = getDataSource('blogposts');
 
-            console.log(json);
-
-            // Display JSON content for review
-            $('#jsonCode').html(
-                $('<blockquote/>').html(JSON.stringify(json, null, 4)).text()
+            // Display JSON data
+            $("#json1").text(
+                JSON.stringify(
+                    json,
+                    null,
+                    2 // pretty print
+                )
             );
 
         });

@@ -13,11 +13,16 @@
     <section class="section">
         <div class="container">
             <h1 class="title">
-                Sygnal Webflow Table demo <span data-value="ver"></span>
+                Sygnal Webflow Table | Create Table <span data-value="ver"></span>
             </h1>
             <p class="subtitle">
                 by Sygnal Technology Group
             </p>
+
+            <div class="block">
+                <span class="tag is-danger is-medium">Demonstration</span>
+            </div>
+
         </div>
     </section>
 
@@ -29,7 +34,7 @@
 
                 <p>Retrieve data from a Google sheet, and convert it to JSON.</p>
 
-                <pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">No data.</pre>
+                <pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">Loading...</pre>
 
                 <ul>
                     <li>Retrieved from a Google Sheet source as CSV.</li>
@@ -82,10 +87,11 @@
 
     <script type="module">
 
-        import { getCsvAsJson } from '../../src/modules/webflow-data.js';
-        import { renderTableFromJson } from '../../src/modules/webflow-table.js';
-        import { getGoogleSheetCsvUrl } from '../../src/modules/google-sheet-data.js';
-        import { renderTableFromGoogleSheet } from '../../src/webflow-table-helper.js';
+        import { getCsvAsJson } from '../../../src/modules/webflow-data.js';
+        import { renderTableFromJson } from '../../../src/modules/webflow-table.js';
+        import { getGoogleSheetCsvUrl } from '../../../src/modules/google-sheet-data.js';
+
+        import { renderTableFromGoogleSheet } from '../../../src/locode/webflow-table-helper.js';
 
         $(function () {
 
