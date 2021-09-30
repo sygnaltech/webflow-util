@@ -1,0 +1,55 @@
+@import "../table-base.css";
+
+.wfu-table, .wfu-table-all {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    display: table
+}
+
+.wfu-table-all {
+    border: 1px solid #ccc
+}
+
+    .wfu-bordered tr, .wfu-table-all tr {
+        border-bottom: 1px solid #ddd
+    }
+
+.wfu-striped tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1) 
+}
+
+.wfu-table-all tr:nth-child(odd) {
+    background-color: #fff
+}
+
+.wfu-table-all tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1) 
+}
+
+.wfu-hoverable tbody tr:hover, .wfu-ul.wfu-hoverable li:hover {
+    background-color: #ccc
+}
+
+.wfu-centered tr th, .wfu-centered tr td {
+    text-align: center
+}
+
+.wfu-table td, .wfu-table th, .wfu-table-all td, .wfu-table-all th {
+    padding: 8px 8px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: top
+}
+
+    .wfu-table th:first-child, .wfu-table td:first-child, .wfu-table-all th:first-child, .wfu-table-all td:first-child {
+        padding-left: 16px
+    }
+
+.wfu-table thead tr {
+    background-color: rgba(0, 0, 0, 0.8) 
+}
+
+.wfu-table thead tr th {
+    color: white
+}

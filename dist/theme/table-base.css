@@ -14,7 +14,7 @@
     }
 
 .wfu-striped tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.1) /*#f1f1f1*/
+    background-color: #f1f1f1
 }
 
 .wfu-table-all tr:nth-child(odd) {
@@ -22,7 +22,7 @@
 }
 
 .wfu-table-all tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.1) /*#f1f1f1*/
+    background-color: #f1f1f1
 }
 
 .wfu-hoverable tbody tr:hover, .wfu-ul.wfu-hoverable li:hover {
@@ -45,9 +45,14 @@
     }
 
 .wfu-table thead tr {
-    background-color: rgba(0, 0, 0, 0.8) /*#f1f1f1*/
+    background-color: #f1f1f1
 }
 
 .wfu-table thead tr th {
     color: white
+}
+
+.wfu-table-responsive {
+    display: block !important;
+    overflow-x: auto;
 }
