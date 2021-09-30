@@ -1,11 +1,16 @@
 
-// v2.1
-// Sygnal Technology Group
-// http://sygnal.com
+/*
+ * webflow-table-helper
+ *
+ * Sygnal Technology Group
+ * http://sygnal.com
+ *
+ * LO-CODE Helper class to simplify table functions.
+ */
 
-import { getCsvAsJson } from './modules/webflow-data.js';
-import { renderTableFromJson } from './modules/webflow-table.js';
-import { getGoogleSheetCsvUrl } from './modules/google-sheet-data.js';
+import { getCsvAsJson } from '../modules/webflow-data.js';
+import { renderTableFromJson } from '../modules/webflow-table.js';
+import { getGoogleSheetCsvUrl } from '../modules/google-sheet-data.js';
 
 export var renderTableFromGoogleSheet = function (elem, googleSheetId) {
 
