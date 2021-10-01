@@ -7,6 +7,7 @@
     <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    <link href="/demo/demo.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
@@ -34,7 +35,13 @@
 
                 <p>Retrieve data from a Google sheet, and convert it to JSON.</p>
 
-                <pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">Loading...</pre>
+                <div class="demo area grey large">
+
+                    <pre id="json1">Loading...</pre>
+
+                </div>
+
+                <!--<pre id="json1" style="padding: 40px; height: 400px; overflow: auto;">Loading...</pre>-->
 
                 <ul>
                     <li>Retrieved from a Google Sheet source as CSV.</li>
@@ -45,7 +52,7 @@
 
                 <p>Retrieve data from an online source, and create an HTML table.</p>
 
-                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+                <div class="demo yellow large">
 
                     <div id="table1"></div>
 
@@ -59,7 +66,7 @@
 
                 <p>Retrieve data that contains HTML markup characters, to test encoding.</p>
 
-                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+                <div class="demo yellow large">
 
                     <div id="table3"></div>
 
@@ -69,7 +76,7 @@
 
                 <p>Performs both the data retrieval and binding in a single call using a helper method.</p>
 
-                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+                <div class="demo yellow large">
 
                     <div id="table4"></div>
 
