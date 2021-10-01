@@ -36,6 +36,7 @@ export var generateHtmlId = function () {
 
 // Generates a UUID v4
 // Using the cryptographic API 
+// Adapted from:
 // https://stackoverflow.com/a/2117523/1849956
 export var generateUuid = function () {
 
@@ -50,4 +51,8 @@ export var generateUuid = function () {
 //        return v.toString(16);
 //    });
 //}
+
+
+
+
 
