@@ -9,8 +9,8 @@
  * Inline SVG files from external reference and apply relevant CSS styling
  */
 
-import { generateHtmlId } from '/src/modules/webflow-id.js';
-import { getColor, getBgColor } from '/src/modules/webflow-css.js';
+import { generateHtmlId } from './webflow-id.js';
+import { getColor, getBgColor } from './webflow-css.js';
 
 // Gets the computed style for a particular element
 // Including classes, styles, and locally-applied styles 
