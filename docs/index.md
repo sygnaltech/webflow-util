@@ -3,6 +3,10 @@ title: Webflow Utils (WFU)
 sidebar: toc
 ---
 
+- [Main](/webflow-util)
+- [What's New?](/webflow-util/whats-new.md)
+- [Databinding](/webflow-util/databinding.md)
+
 # What is WFU?
 
 This library is a collection of utilities that add capability to 
