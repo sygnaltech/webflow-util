@@ -1,3 +1,8 @@
+---
+title: Webflow Utils (WFU)
+sidebar: toc
+---
+
 # What is WFU?
 
 This library is a collection of utilities that add capability to 
