@@ -10,23 +10,6 @@
 
 import { getDataSource } from './webflow-data-collectionlist.js';
 
-export var getElemType = function (elem) {
-
-    // <select> element
-    // listbox or drop-down list
-    if (elem instanceof HTMLSelectElement) {
-        return 'select';
-    }
-
-    if (elem instanceof HTMLInputElement) {
-        return 'input';
-    }
-
-    // This is an unknown and unsupported element type
-    // for databinding
-    return 'unknown';
-}
-
 // Creates an HTML <DATALIST> for binding.
 // Data source assumes array of objects, with a per-item value of 'name'
 export var createHtmlDataList = function (dataSourceName, data) {
@@ -74,16 +57,26 @@ export var createHtmlDataList = function (dataSourceName, data) {
 
 export var dataBindAllForms = function (db) {
 
+    // Create datalists from all data sources
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach
+    db.data.forEach((data, dataSourceName) => {
+
+        // Create datalists of all data sources
+        createHtmlDataList(dataSourceName, data);
+    });
+
+    // Bind all SELECTS with [wfu-bind] specified
     dataBindAllFormSelects(db);
+
+    // Bind all INPUTS with [wfu-bind] specified
     dataBindAllFormInputs(db);
 
 }
 
+// Bind all INPUTS with [wfu-bind] specified
 export var dataBindAllFormInputs = function (db) {
 
-    // Find all elements which specify a data-source
-    // for data binding
-    //    var dataBoundElements = $('input[data-source]');
+    // Find all INPUTS with [wfu-bind] specified
     var dataBoundElements = $('input[wfu-bind]');
 
     // Iterate and bind each individually
@@ -93,11 +86,10 @@ export var dataBindAllFormInputs = function (db) {
 
 }
 
+// Bind all SELECTS with [wfu-bind] specified
 export var dataBindAllFormSelects = function (db) {
 
-    // Find all elements which specify a data-source
-    // for data binding
-    //    var dataBoundElements = $('[data-source]');
+    // Find all SELECTS with [wfu-bind] specified
     var dataBoundElements = $('select[wfu-bind]');
 
     // Iterate and bind each individually
@@ -107,17 +99,19 @@ export var dataBindAllFormSelects = function (db) {
 
 }
 
-// Note, db note really needed, kept for consistency
+// Note, db not really needed for INPUT binding,
+// since they are bound to the DATALIST elements already created.
+// However kept in the call for pattern consistency
 export var dataBindFormInput = function (elem, db) {
 
-    console.log('binding form INPUT.');
-
-    // Determine element type
-//    var elemType = getElemType(elem);
+    // Validate element type
+    if (!(elem instanceof HTMLInputElement)) {
+        console.error(`Attempted to INPUT databind a non-INPUT element.`);
+        return;
+    }
 
     // Get the data-source name
-    var dataSourceName = elem.getAttribute('wfu-bind'); // wfu-bind
-//    var dataSource = elem.getAttribute('data-source'); // wfu-bind
+    var dataSourceName = elem.getAttribute('wfu-bind');
     console.log(`wfu-bind = ${dataSourceName}`);
 
     // Handle missing source specification
@@ -126,21 +120,22 @@ export var dataBindFormInput = function (elem, db) {
         return;
     }
 
-    // Validate that it's an INPUT?
-
-
+    // Add HTML attribute that connects the INPUT
+    // to the DATALIST
     elem.setAttribute("list", dataSourceName);
 
 }
 
 export var dataBindFormSelect = function (elem, db) {
 
-    // Determine element type
-    var elemType = getElemType(elem);
+    // Validate element type
+    if (!(elem instanceof HTMLSelectElement)) {
+        console.error(`Attempted to SELECT databind a non-SELECT element.`);
+        return;
+    }
 
     // Get the data-source name
     var dataSourceName = elem.getAttribute('wfu-bind');
-//    var dataSource = elem.getAttribute('data-source');
 
     // Handle missing source specification
     if (!dataSourceName) {
@@ -148,24 +143,15 @@ export var dataBindFormSelect = function (elem, db) {
         return;
     }
 
-    // Get data (build data source)
-    var data = getDataSource(dataSourceName);
-
-    // Validate it's a SELECT?
-
     // Do data binding
-    $.each(data, function (key, entry) {
+    $.each((db.data.get(dataSourceName)), function (key, entry) {
 
         // create new option element
         var opt = document.createElement('option');
 
         // create text node to add to option element (opt)
-//        console.log(entry.text);
-
         // HTML Decode JSON for Select Option element
-        var decodedText = $("<textarea/>").html(entry.text).val();
-//        console.log(decodedText);
-
+        var decodedText = $("<textarea/>").html(entry.text).val(); // HTML Decode text
         opt.appendChild(document.createTextNode(decodedText));
 
         // set value property of opt
@@ -174,6 +160,6 @@ export var dataBindFormSelect = function (elem, db) {
         // add opt to end of select box (sel)
         elem.appendChild(opt);
 
-    })
+    });
 
 }
