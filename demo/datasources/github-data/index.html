@@ -30,7 +30,39 @@
         <div class="container">
             <div class="content">
 
+                <h2>Enter a Repo</h2>
+
+                <div class="block">
+
+                    <div class="field">
+                        <label class="label">Github User or Organization</label>
+                        <div class="control">
+                            <input id="userOrg" class="input" type="text" placeholder="Github User or Org" value="sygnaltech">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Repository</label>
+                        <div class="control">
+                            <input id="repo" class="input" type="text" placeholder="Github repo" value="webflow-util" >
+                        </div>
+                    </div>
+
+                    <button class="button is-dark" id="refresh">Retrieve Info</button>
+
+                </div>
+
+            </div>
+            </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
                 <h2>Demo JSON content</h2>
+
+                <p>Latest version: <b id="latest1"></b></p>
 
                 <div class="demo area grey large">
 
@@ -42,61 +74,51 @@
         </div>
     </section>
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
     <script type="module">
 
         import {
-        //    //tableRenderOptions, tableRenderOptionsObj,
-            getGithubRepoTagsUrl
+            getGithubRepoTagsUrl,
+            getGithubRepoTags, getGithubRepoTagLatest
         } from '/src/datasources/github-data.js';
+
 
         $(function () {
 
-//            const gitHubPath = 'sygnaltech/webflow-util';  // example repo
-//            const url = 'https://api.github.com/repos/' + gitHubPath + '/tags';
-
-            var url = getGithubRepoTagsUrl('sygnaltech', 'webflow-util');
-
-            console.log(url);
-
-            $.get(url).done(json => {
-//                const versions = data.sort((v1, v2) => semver.compare(v2.name, v1.name));
-//                $('#result').html(versions[0].name);
-//                $('#json1').text(JSON.stringify(data));
-
-                // Display JSON data
-                $("#json1").text(
-                    JSON.stringify(
-                        json,
-                        null,
-                        2 // pretty print
-                    )
-                );
-
+            $("#refresh").click(function () {
+                refresh();
             });
 
-
-            //const options = {};  // tableRenderOptions;
-            //options.responsive = false;
-
-            //console.log(`TEST 1: initialized object resp = false`);
-            //test(options);
-
-            //console.log(`TEST 2: initialized direct {} resp = false, theme = foo`);
-            //test({ responsive: false, theme: 'foo' });
-
-            //console.log(`TEST 3: initialized null`);
-            //test();
-
-            //const optionsObj = new tableRenderOptionsObj();
-            //optionsObj.responsive = false;
-
-            //testObj(optionsObj);
-            //testObj();
-
         });
+
+        function refresh() {
+
+            getGithubRepoTags($("#userOrg").val(), $("#repo").val())
+                .then((res) => {
+
+                    $("#json1").text(
+                        JSON.stringify(
+                            res,
+                            null,
+                            2 // pretty print
+                        )
+                    );
+
+                }, (err) => {
+                    console.log(err);
+                });
+
+            getGithubRepoTagLatest($("#userOrg").val(), $("#repo").val())
+                .then((res) => {
+                    $("#latest1").text(
+                        res
+                    );
+                }, (err) => {
+                    console.log(err);
+                });
+
+        }
 
     </script>
 
