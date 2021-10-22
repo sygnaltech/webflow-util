@@ -16,14 +16,6 @@ export var getCsv = function (url) {
 
             csv = csvd;
 
-            //var items = $.csv.toObjects(csvd);
-
-            //json = JSON.stringify(
-            //    items,
-            //    null,
-            //    prettyprint ? 2 : 0 // pretty print
-            //);
-
         },
         dataType: "text",
         complete: function () {
@@ -32,35 +24,10 @@ export var getCsv = function (url) {
     });
 
     return csv;
-
-    // Consider Promise approach
-    //try {
-    //    var csvfile = url; // vars.csvFile;
-    //    return new Promise(function (resolve, reject) {
-    //        var request = new XMLHttpRequest();
-    //        request.open("GET", url, true);
-    //        request.onload = function () {
-    //            if (request.status == 200) {
-    //                resolve(request.response);
-    //            } else {
-    //                reject(Error(request.statusText));
-    //            }
-    //        };
-
-    //        request.onerror = function () {
-    //            reject(Error('Error fetching data.'));
-    //        };
-    //        request.send();
-    //    });
-    //} catch (err) {
-    //    console.error(err);
-    //}
-
 }
 
 export var csvToJson = function (csvd, prettyprint = false) {
 
-//    var items = $.csv.toObjects(csvd);
     var items = csvToObjects(csvd);
 
     var json = JSON.stringify(
@@ -81,7 +48,6 @@ export var getCsvAsJson = function (url, prettyprint = false) {
         async: false, // deprecated
         success: function (csvd) {
 
-//            var items = $.csv.toObjects(csvd);
             var items = csvToObjects(csvd);
 
             json = JSON.stringify(
