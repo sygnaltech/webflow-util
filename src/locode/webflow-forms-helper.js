@@ -8,11 +8,12 @@
  * LO-CODE Helper class to simplify form functions.
  */
 
-import { dataBindAllFormSelects } from '../modules/webflow-form.js';
+import { dataBindAllFormSelects, dataBindAllFormInputs } from '../modules/webflow-form.js';
 
 export var dataBindAllForms = function () {
 
     dataBindAllFormSelects();
+    dataBindAllFormInputs();
 
 }
 
