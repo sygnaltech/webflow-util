@@ -1,37 +1,18 @@
-## Welcome to GitHub Pages
+# Webflow Utilities v3.0
 
-You can use the [editor on GitHub](https://github.com/sygnaltech/webflow-util/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+This library is a collection of utilities that add capability to 
+[Webflow](https://webflow.com/)
+sites. It focuses on overcoming certain limitations of Webflow, and adding certain functionality.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Some of the most popular features include;
 
-### Markdown
+- Data-binding form INPUT and SELECT elements to your collection lists
+- Adding custom attributes dynamically to elements within a collection list.
+- Adding tables support, with data sourced from Google Sheets
+- Multilingual support through language-detection and a dynamic content-switcher
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+All of these features are focused on creating as much capability within Webflow as possible, without relying on 3rd party plug-ins and monthly service fees.
 
-```markdown
-Syntax highlighted code block
+This project is also a practical exploration into the use of Javascript ES6 modules, NPM, and other state-of-the art web dev technologies, and how they can be used to enhance Webflow sites.
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/sygnaltech/webflow-util/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+*This library will be expanded as needed, and broken into modules for convenient selection of the parts you need.*
