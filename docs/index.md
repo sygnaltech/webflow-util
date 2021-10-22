@@ -3,9 +3,10 @@ title: Webflow Utils (WFU)
 sidebar: toc
 ---
 
-- [Main](/webflow-util)
-- [What's New?](/webflow-util/whats-new.md)
-- [Databinding](/webflow-util/databinding.md)
+- [Home](/webflow-util)
+- [What's New?](/webflow-util/whats-new)
+- [Technical Notes](/webflow-util/tech)
+- [Databinding](/webflow-util/databinding)
 
 # What is WFU?
 
