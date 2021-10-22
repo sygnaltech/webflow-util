@@ -1,0 +1,11 @@
+podcast_list_title: Favorite Podcasts
+podcasts:
+
+- title: Home
+  url: https://sygnaltech.github.io/webflow-util/
+
+- title: Data-binding
+  url: https://sygnaltech.github.io/webflow-util/databinding.md
+
+- title: What's New?
+  url: https://sygnaltech.github.io/webflow-util/whats-new.md
