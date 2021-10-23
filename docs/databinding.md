@@ -80,6 +80,9 @@ Paste this code, exactly, into the **Before `</body>` tag** script area of your 
 
 *You have a data source!*
 
+You can create as many collection data-sources as you need, but make certain they are each named differently.
+
+
 ### STEP 3 - Setup your Form
 
 1. Now scroll to your form, and select the INPUT Textbox or SELECT List that you're wanting to data-bind.
@@ -93,7 +96,7 @@ Paste this code, exactly, into the **Before `</body>` tag** script area of your 
 
 To see data-binding in action, you'll need to publish your site, and view the published results. Scripts won't run in the Webflow designer.
 
-## Troubleshooting
+# Troubleshooting
 
 ### It's not binding at all
 
@@ -106,9 +109,20 @@ If you're not seeing anything in your dropdown when you open your SELECT, or whe
 + Make sure that your filter, sort, and item limit settings on your Collection List actually retrieve the data you want. If you need you can put a temporary text field and bind to that to double-check what items you're pulling from your Collection. I recommend removing that test data before you publish to production.
 + Run through the instructions above again and re-verify everything.
 
-### Something weird in the data on Form Posts
+### Something's weird in the data on Form Posts
 
 For INPUT elements, the value posted is whatever the user types in that textbox. Pretty simple.
 
 For SELECTS, the value posted is the `id` you specified in your script block. Make sure you chose the right field for that, and that you have no extraneous spaces.
+
+# Advanced Notes
+
+You can create as many collection data-sources as you want, but make certain they are each named differently. Webflow does have a limit on the number of Collection Lists per page, and these will count towards that.
+
+If you happen to already have a collection list on the page that displays exactly the data you want, you can use that Collection List as your datasource. Simply put your Embed block there, and apply the `wfu-data` attribute to the Collection List. Don't mark the Collection List as invisible, however you can mark the Embed element as invisible to avoid a messy look in your Designer.
+
+If you've hidden your Collection List, or your Embed, remember they're always available in your left-side navigation.
+
+If you use your data-source on multiple pages, you can build your Collection List into a Symbol. Wrap your Collection list in a DIV, and turn the DIV into a Symbol. This will allow you to more easily access that outmost Collection List element if you need to.
+
 
