@@ -91,6 +91,7 @@ You can create as many collection data-sources as you need, but make certain the
 
 3. For the value, enter the data source name that you chose above.
 
+NOTE: If you are binding a SELECT you may wish to remove the default values that Webflow has created. WFU will not delete them.
 
 *You're done.*
 
