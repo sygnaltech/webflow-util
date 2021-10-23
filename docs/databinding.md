@@ -1,62 +1,58 @@
 
 - [Home](/webflow-util)
 
-# Databinding Form INPUTs & SELECTs
+# Data-binding Form INPUTs & SELECTs
 
-The original feature that WFU was built around is the ability to data-bind Form INPUTs & SELECTs to Collection Lists.
+Data-binding is the original feature that WFU was built around. It developed out of a need to populate Form SELECTs with dynamic data from Webflow Collection Lists.
 
-`webflow-data.js` is a simple **databinding utility** which is designed 
-to use a Webflow Collection List as a data-source, extract data, 
-and allow you to bind it in two ways;
+In this latest version, support for form INPUTs ( textboxes ) has been added, using HTML5's autocomplete features.
 
-1. To form SELECT controls ( dropdowns & listboxes ), so that users can pick from a CMS-generated list.
-2. As dynamic attributes to Webflow-generated elements.
+## How it Works
 
-Here is a video overview of how to use `webflow-data` ( current as of v2.0 );
+In WFU, data-binding involves two steps;
+
+1. Creating a JSON datasource using a Webflow Collection List.
+2. Processing that JSON into HTML and linking it to the INPUTs and SELECTs you designate.
+
+Setup is relatively simple, and you can use the Collection List's built-in sorting and filtering options to precisely control the data you want in your Form controls.
+
+## Getting Started
+
+Here is a **outdated** v2.0 video overview, which I'll re-record soon. For now I'm leaving it as it will show you some of the internals on how the setup works.;
 
 https://www.youtube.com/watch?v=xc7vx7YdK5I
 
-Notes;
+*Use the [demo examples](https://github.com/sygnaltech/webflow-util/tree/master/demo/webflow-forms/databinding) as a current reference for using each feature.*
 
-- `webflow-data` works with any Collection List, filtered and sorted as you choose, so you get complete control.
-- You choose what to extract and use from the Collection List, and how to name it.
-- The datasource is prepared as JSON, so it is available to your other scripts as well.
-- The databinding routines can then bind that to a form SELECT element.
-- The example HTML is "dirty" in that it is full of Webflow markup. This demonstrates how we navigate the Webflow-generated content structures such as Collection Lists.
+### STEP 1 - Add the Library
 
-*Use the examples as a reference for using each feature.*
+There are currently no configuration options for the data-binding feature, so we'll use a *lo-code* integration approach.
 
-## STEP 1 - Add the Library
-
-You can embed our library directly from the [JSDelivr](https://en.wikipedia.org/wiki/JSDelivr) CDN.
-
-In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section.
+Paste this code, exactly, into the **Before `</body>` tag** script area of your Page settings. If you are using data-binding on multiple pages, you might choose to do this in your site-wide settings.
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/webflow-data.min.js"></script>
+<script type="module">
+    import { dataBindAll } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/locode/webflow-forms-helper.js';
+    $(function () {
+        dataBindAll();
+    });
+</script>
 ```
 
-*Note JSDelivr's [versioning](https://www.jsdelivr.com/features) support.*
 
-We recommend that you specify the **major** and **minor** version numbers in your script reference.
-Replace `@latest` with e.g. `@1.2` or the library version you want to use.
 
-*This will protect you from breaking changes in new versions we release.*
+### STEP 2 - Create a Collection List Data Source
 
-## STEP 2 - Setup your Data Source
+1. Create a Webflow `Collection List`, usually at the bottom of your page.
 
-1. Create a Webflow `Collection List`.
+2. Bind it to the `Collection` you want to access data from.
 
-    1. Bind it to the `Collection` you want.
-    1. Set sorting and filtering as you want.
-    1. In the Item, create an `HTML Embed` element
+3. In the Collection List Item, add an `HTML Embed` element.
 
-2. Add an `HTML Embed` element to the Collection
-
-3. Paste the following code into the `HTML Embed`.
+4. Paste the following code into the `HTML Embed`.
 
 ```
-<script type="application/json" data="mydata">
+<script type="application/json">
 {
   "id": " (your item goes here) ",
   "text": " ( text item goes here) "
@@ -64,59 +60,55 @@ Replace `@latest` with e.g. `@1.2` or the library version you want to use.
 </script>
 ```
 
-4. Configure the `Embed` code as follows;
-
-    1. set the script's `data` attribute to the name you want for your datasource. You can have create several different datasources on the same page if you like.
-
-    1. for the `id`, use whatever **Add Field** item you want, generally `Slug` is the best field to use.
-
-    1. for the `text`, use whatever **Add Field** item you want displayed as the text in the SELECT.
-
-    1. Make the Collection List invisible, if you want it hidden in the designer ( this will not affect displayed output ).  If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
-
-## STEP 3 - Setup your Form
-
-1. Add a `Form` and a `Select` element in the Webflow designer.  
-
-1. Apply a `data-source` custom attribute, which has the same name that you've given your datasource.
-
-## STEP 4 - Setup the Databinding
-
-In your Page *settings* (click the gear icon), add the script reference to the **Before </body> tag** section, right after your script.
++ Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
++ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
++ The name is whatever field you want visible to the user.
++ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
++ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
 
 
-```
-    <script>
 
-        // Instantiate WebflowDataUtil object
-        var webflowDataUtil = new WebflowDataUtil();
+5. Name your data source. We do this with a custom attribute on the Collection List itself;
 
-        $(function () {
-
-            // Databind
-            webflowDataUtil.dataBindAll();
-
-        });
-
-    </script>
-```
++ Select your outermost Collection List element.
++ Add a custom attribute named `wfu-data`.
++ In the value, give it a unique name. I recommend all lowercase letters, no spaces or special characters. For example `blogposts` and `products` are good names.
++ *Remember this name*, you'll need it later.
 
 
-# Options
+6. Once you're all setup, you can make the Collection List invisible. Simply select the outermost Collection List element and mark it as invisible on all devices. If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
 
-WebflowDataUtil can be instantiated with options, as in;
+*You have a data source!*
 
-```
-// Instantiate MailerLiteUtil object
-var webflowDataUtil = new WebflowDataUtil({
-    logging: true, // enable logging to console
-});
-```
+### STEP 3 - Setup your Form
 
-## `logging = true | false`
+1. Now scroll to your form, and select the INPUT Textbox or SELECT List that you're wanting to data-bind.
 
-*Defaults to false.*
+2. Add a custom attribute directly to that form control, with the name `wfu-bind`. This tells WFU that you want to bind this control to a datasource.
 
-Enables or disables logging activity output to the console.
+3. For the value, enter the data source name that you chose above.
 
+
+*You're done.*
+
+To see data-binding in action, you'll need to publish your site, and view the published results. Scripts won't run in the Webflow designer.
+
+## Troubleshooting
+
+### It's not binding at all
+
+If you're not seeing anything in your dropdown when you open your SELECT, or when you click on your INPUT field, here are some things you can check;
+
++ Double-check that you have the custom attribute `wfu-data` = (your data source name) on the outermost part of the Collection List.
++ Double-check that you have the custom attribute `wfu-bind` = (your data source name) on the INPUT or SELECT that you're wanting to data-bind.
++ Double-check that your datasource name is exactly the same on both.
++ Double-check that you have the script inserted in the right place in your page or site configuration.
++ Make sure that your filter, sort, and item limit settings on your Collection List actually retrieve the data you want. If you need you can put a temporary text field and bind to that to double-check what items you're pulling from your Collection. I recommend removing that test data before you publish to production.
++ Run through the instructions above again and re-verify everything.
+
+### Something weird in the data on Form Posts
+
+For INPUT elements, the value posted is whatever the user types in that textbox. Pretty simple.
+
+For SELECTS, the value posted is the `id` you specified in your script block. Make sure you chose the right field for that, and that you have no extraneous spaces.
 

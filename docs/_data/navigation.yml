@@ -1,0 +1,16 @@
+# TEST
+# Belongs at: /_data/navigation.yml
+# https://gist.github.com/pdarragh/c7ca120604c1a1d8b8de
+
+- title: Home
+  url: /
+
+- title: Group of Things
+  url: /group/
+  sublinks:
+    - title: Sub-item 1
+      url: /group/si1
+    - title: Sub-item 2
+      url: /group/si2
+    - title: Sub-item 3
+      url: /group/si3

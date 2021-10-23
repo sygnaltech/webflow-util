@@ -1,4 +1,4 @@
-# Webflow Utilities v3.0
+# Webflow Utils [WFU] v3.0
 
 The **WFU** library is a collection of utilities that add capability to 
 [Webflow](https://webflow.com/)
