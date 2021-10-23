@@ -10,7 +10,7 @@
 
 import { getCsvAsJson } from '../modules/webflow-data.js';
 import { renderTableFromJson } from '../modules/webflow-table.js';
-import { getGoogleSheetCsvUrl } from '../modules/google-sheet-data.js';
+import { getGoogleSheetCsvUrl } from '../datasources/google-sheet-data.js';
 
 export var renderTableFromGoogleSheet = function (elem, googleSheetId) {
 
