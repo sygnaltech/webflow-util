@@ -43,44 +43,15 @@ Paste this code, exactly, into the **Before `</body>` tag** script area of your 
 
 ### STEP 2 - Create a Collection List Data Source
 
-1. Create a Webflow `Collection List`, usually at the bottom of your page.
+First you need to setup your Collection List Data Source. 
 
-2. Bind it to the `Collection` you want to access data from.
-
-3. In the Collection List Item, add an `HTML Embed` element.
-
-4. Paste the following code into the `HTML Embed`.
-
-```
-<script type="application/json">
-{
-  "id": " (your item goes here) ",
-  "text": " ( text item goes here) "
-}
-</script>
-```
-
-+ Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
-+ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
-+ The name is whatever field you want visible to the user.
-+ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
-+ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
+Follow the [instructions here](datasources), and return to this document when you've completed.
 
 
 
-5. Name your data source. We do this with a custom attribute on the Collection List itself;
 
-+ Select your outermost Collection List element.
-+ Add a custom attribute named `wfu-data`.
-+ In the value, give it a unique name. I recommend all lowercase letters, no spaces or special characters. For example `blogposts` and `products` are good names.
-+ *Remember this name*, you'll need it later.
+This needs to be accessible on any page(s) that you'll be doing data-binding, so if you're 
 
-
-6. Once you're all setup, you can make the Collection List invisible. Simply select the outermost Collection List element and mark it as invisible on all devices. If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
-
-*You have a data source!*
-
-You can create as many collection data-sources as you need, but make certain they are each named differently.
 
 
 ### STEP 3 - Setup your Form
@@ -116,14 +87,6 @@ For INPUT elements, the value posted is whatever the user types in that textbox.
 
 For SELECTS, the value posted is the `id` you specified in your script block. Make sure you chose the right field for that, and that you have no extraneous spaces.
 
-# Advanced Notes
 
-You can create as many collection data-sources as you want, but make certain they are each named differently. Webflow does have a limit on the number of Collection Lists per page, and these will count towards that.
-
-If you happen to already have a collection list on the page that displays exactly the data you want, you can use that Collection List as your datasource. Simply put your Embed block there, and apply the `wfu-data` attribute to the Collection List. Don't mark the Collection List as invisible, however you can mark the Embed element as invisible to avoid a messy look in your Designer.
-
-If you've hidden your Collection List, or your Embed, remember they're always available in your left-side navigation.
-
-If you use your data-source on multiple pages, you can build your Collection List into a Symbol. Wrap your Collection list in a DIV, and turn the DIV into a Symbol. This will allow you to more easily access that outmost Collection List element if you need to.
 
 

@@ -7,6 +7,7 @@ sidebar: toc
 - [What's New?](/webflow-util/whats-new)
 - [Technical Notes](/webflow-util/tech)
 - [Databinding](/webflow-util/databinding)
+- [Datasources](/webflow-util/datasources)
 
 # What is WFU?
 
