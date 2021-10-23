@@ -18,11 +18,11 @@ Setup is relatively simple, and you can use the Collection List's built-in sorti
 
 ## Getting Started
 
-Here is a **outdated** v2.0 video overview, which I'll re-record soon. For now I'm leaving it as it will show you some of the internals on how the setup works.;
-
-https://www.youtube.com/watch?v=xc7vx7YdK5I
-
 *Use the [demo examples](https://github.com/sygnaltech/webflow-util/tree/master/demo/webflow-forms/databinding) as a current reference for using each feature.*
+
+**NOTE:** Here is a *outdated* [video overview](https://www.youtube.com/watch?v=xc7vx7YdK5I) of setting up databinding in WFU v2.0. I'll re-record soon. For now I'm leaving it as it will show you some of the internals on how the setup works.
+
+
 
 ### STEP 1 - Add the Library
 
