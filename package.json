@@ -1,6 +1,6 @@
 {
   "name": "webflow-util",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "A utility library for websites designed & hosted on Webflow",
   "homepage": "https://sygnal-webflow-utils.webflow.io/",
   "license": "MIT",
