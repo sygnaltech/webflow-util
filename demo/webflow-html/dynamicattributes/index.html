@@ -146,22 +146,12 @@
 
     <script type="module">
 
-        import { WebflowDatabindUtil } from '../../../src/modules/webflow-databind.js';
-
-        // Instantiate util
-        var webflowDatabindUtil = new WebflowDatabindUtil({
-            logging: true, // enable logging to console
-        });
+        import { applyDynamicAttributes } from '/src/modules/webflow-html.js';
 
         $(function () {
 
-            // Display version
-            $("*[data-value='ver']").text(
-                webflowDatabindUtil.getVersion()
-            );
-
             // Apply dynamic attributes
-            webflowDatabindUtil.applyDynamicAttributes();
+            applyDynamicAttributes();
 
         });
 
