@@ -62,7 +62,10 @@ export var dataBindAllForms = function (db) {
     db.data.forEach((data, dataSourceName) => {
 
         // Create datalists of all data sources
-        createHtmlDataList(dataSourceName, data);
+        createHtmlDataList(
+            createDsnMoniker(dataSourceName), // creates a more unique name to avoid element ID conflicts
+            data
+        );
     });
 
     // Bind all SELECTS with [wfu-bind] specified
@@ -71,6 +74,12 @@ export var dataBindAllForms = function (db) {
     // Bind all INPUTS with [wfu-bind] specified
     dataBindAllFormInputs(db);
 
+}
+
+// Creates a more unique version of a DataSource name (DSN)
+// to ensure it won't conflict with element IDs
+export var createDsnMoniker = function (dsn) {
+    return `wfu-dsn__${dsn}`;
 }
 
 // Bind all INPUTS with [wfu-bind] specified
@@ -122,7 +131,10 @@ export var dataBindFormInput = function (elem, db) {
 
     // Add HTML attribute that connects the INPUT
     // to the DATALIST
-    elem.setAttribute("list", dataSourceName);
+    elem.setAttribute(
+        "list",
+        createDsnMoniker(dataSourceName)
+    );
 
 }
 
