@@ -19,7 +19,7 @@
     <div class="section blog-intro-section wf-section">
         <div class="container w-container">
             <div class="subsection-title-area">
-                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Data binding demo <span data-value="ver"></span></h2>
+                <h2 data-ix="fade-in-on-load" class="subsection-title" style="color: black; opacity: 100%; margin-bottom: 80px;">Count Collection Items <span data-value="ver"></span></h2>
             </div>
             <h1>Count of items: <span id="cnt1"></span></h1>
         </div>
@@ -136,7 +136,9 @@
             var db = loadAllDataSources();
 
             // Count items
-            $("#cnt1").text(db.data.get("blogposts").length);
+            $("#cnt1").text(
+                db.getCountOfRecords("blogposts")
+            );
 
         });
 

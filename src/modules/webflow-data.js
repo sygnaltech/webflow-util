@@ -1,9 +1,26 @@
 
-// v2.1
-// Sygnal Technology Group
-// http://sygnal.com
+/*
+ * Sygnal Technology Group
+ * http://sygnal.com
+ *
+ * Data-processing functions.
+ */
 
 import { csvToObjects } from './webflow-data-csv.js';
+
+export class Database {
+    data = new Map();
+
+    getDataSource = function (dataSourceName) {
+        return this.data.get(dataSourceName);
+    }
+
+    getCountOfRecords = function (dataSourceName) {
+        return this.getDataSource(dataSourceName).length;
+    }
+
+}
+
 
 export var getCsv = function (url) {
 

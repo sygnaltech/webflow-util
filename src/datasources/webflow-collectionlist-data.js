@@ -6,9 +6,7 @@
  * Creates a data source from a Webflow Collection list.
  */
 
-export class Database {
-    data = new Map();
-}
+import { Database } from '../modules/webflow-data.js';
 
 export var loadAllDataSources = function () {
 
