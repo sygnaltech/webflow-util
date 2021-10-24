@@ -82,7 +82,7 @@ Want to display the number of items in a collection?
     
 ```
 <script type="module">
-import { dataBindAll } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/datasources/webflow-collectionlist-data.js';
+import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/datasources/webflow-collectionlist-data.js';
 $(function () {
 
     // Create database
