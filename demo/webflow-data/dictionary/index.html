@@ -67,14 +67,15 @@
 
                 <p>Once the dictionary is created, you can use it.</p>
 
+                <h1>Loaded Data Examples</h1>
+
+                <h2><b>Option 1:</b> Tagged Elements</h2>
+
                 <p>
-                    Identify which data you want data loaded where, using the <code>wfu-map-dict</code> custom attribute.
-                    e.g.;
+                    Identify elements in which you want data loaded where, using the <code>wfu-map-dict</code> custom attribute.
                 </p>
 
-                <p><code>&lt;span wfu-map-dict="Countries"&gt;&lt;/span&gt;</code></p>
-
-                <h1>Loaded Data Examples</h1>
+                <p>e.g. <code>&lt;span wfu-map-dict="Countries"&gt;&lt;/span&gt;</code></p>
 
                 <p>Each of the bolded values in this list are loaded dynamically from the Google Sheet.</p>
 
@@ -96,26 +97,28 @@
                     </li>
                 </ul>
 
-                <h2>In-paragraph text example</h2>
+                <h2><b>Option 2:</b> Macro Expansion</h2>
 
-                <p>Here values are embedded in paragraph text.</p>
+                <p>WFU also provides for tag expansion.
+                In your text, use the construction <code>{{ Key Name }}</code>
+                to identify where you want values inserted.
+                This is particularly of use in Rich Text Elements.</p>
 
-                <div class="container" style="width: 50%; justify-content: left;">
-                    <div class="notification is-primary">
+                <p>Text or Rich Text element itself must be tagged with the custom attribute
+                    <code> wfu-data-macros="datasourceName"</code>.</p>
 
-                        <p>Global population is growing! </p>
-                        <p>
-                            Currently, there are <span wfu-map-dict="Countries"></span> countries in the world,
-                            of which <span wfu-map-dict="Europe"></span> are in Europe.
-                        </p>
-                        <p>
-                            Of a total global population of <span wfu-map-dict="Population"></span>,
-                            <span wfu-map-dict="Size100Million"></span> of our contries are over 100 million population,
-                            with <span wfu-map-dict="SizeBillion"></span> over 1 billion.
-                        </p>
+                <pre>
+Global population is growing!
+                    
+Currently, there are {{ Countries }} countries in the world,
+of which {{ Europe }} are in Europe.
+                    
+Of a total global population of {{ Population }},
+{{ Size100Million }} of our contries are over 100 million population,
+with {{ SizeBillion }} over 1 billion.
+                </pre>
 
-                    </div>
-                </div>
+<p>Here's an example of tag-expanded content.</p>
 
                 <div class="container" style="width: 50%; justify-content: left;" wfu-data-macros="datasourceName">
                     <div class="notification is-primary">
@@ -203,7 +206,7 @@
 
                 html = html.replace(
                     /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
-                    "foo"
+                    replacer
                     );
 
                     // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
@@ -214,18 +217,15 @@
 
                 $(obj).html(
                     html
-//                    dict.get(obj.getAttribute("wfu-map-dict"))
                 );
 
             });
 
+            // https://regexr.com/
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
             function replacer(match, p1, p2, p3, offset, string) {
-                // p1 is nondigits, p2 digits, and p3 non-alphanumerics
-                return [p1, p2, p3].join(' - ');
+                return dict.get(p2);
             }
-
-//            let newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
-//            console.log(newString);  // abc - 12345 - #$*%
 
         });
 
