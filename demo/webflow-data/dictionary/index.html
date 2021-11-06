@@ -14,7 +14,7 @@
     <section class="section">
         <div class="container">
             <h1 class="title">
-                Sygnal Webflow Table | Dictionary <span data-value="ver"></span>
+                Sygnal Webflow Data | Dictionary <span data-value="ver"></span>
             </h1>
             <p class="subtitle">
                 by Sygnal Technology Group
@@ -32,6 +32,24 @@
         <div class="container">
             <div class="content">
 
+                <p>Populate specific values on a page, from a remote data source.</p>
+                <ol>
+                    <li>
+                        Load data from an external data source.
+                        Here we're using a Google Sheet with calculated fields.
+                    </li>
+                    <li>
+                        Must have 2 identified columns - a unique Key column, and Value column.
+                        In this demo we are using <code>Name</code> and <code>Value</code>.
+                    </li>
+                    <li>
+                        Constructs a dictionary structure.
+                    </li>
+                    <li>
+                        Find elements tagged to a specific Key, and load that Value.
+                    </li>
+                </ol>
+
                 <h2>Demo JSON content</h2>
 
                 <div class="demo area grey large">
@@ -40,30 +58,45 @@
 
                 </div>
 
-                <p>Retrieve data from a Google sheet, and convert it to JSON.</p>
-                <h1>Data</h1>
+                <p>Data is prepped, now let's load it.</p>
+
+                <h1>Loaded Data Examples</h1>
                 <ul>
                     <li>
-                        Countries: <span id="cnt1"></span>
+                        Countries: <span wfu-map-dict="Countries"></span>
                     </li>
                     <li>
-                        Europe: <span id="cnt2"></span>
+                        Europe: <span wfu-map-dict="Europe"></span>
                     </li>
                     <li>
-                        Population: <span id="cnt3"></span>
+                        Population: <span wfu-map-dict="Population"></span>
                     </li>
                     <li>
-                        SizeBillion: <span id="cnt4"></span>
+                        Size &gt; Billion: <span wfu-map-dict="SizeBillion"></span>
                     </li>
                     <li>
-                        Size100Million: <span id="cnt5"></span>
+                        Size &gt; 100 Million: <span wfu-map-dict="Size100Million"></span>
                     </li>
                 </ul>
 
-                <ul>
-                    <li>Retrieved from a Google Sheet source as CSV.</li>
-                    <li>Converted to JSON.</li>
-                </ul>
+                <h2>In-line text</h2>
+
+                <div class="container" style="width: 50%; justify-content: left;">
+                    <div class="notification is-primary">
+
+                        <p>Global population is growing! </p>
+                        <p>
+                            Currently, there are <span wfu-map-dict="Countries"></span> countries in the world,
+                            of which <span wfu-map-dict="Europe"></span> are in Europe.
+                        </p>
+                        <p>
+                            Of a total global population of <span wfu-map-dict="Population"></span>,
+                            <span wfu-map-dict="Size100Million"></span> of our contries are over 100 million population,
+                            with <span wfu-map-dict="SizeBillion"></span> over 1 billion.
+                        </p>
+
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -86,6 +119,7 @@
             // TEST #1 - retrieve CSV as JSON
 
             // Get JSON data
+            // retrieve from Google Sheet
             json = getCsvAsJson(
                 'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv&gid=118669749',
                 true // pretty print
@@ -96,32 +130,34 @@
                 json
             );
 
-            // Create database
-//            var db = new Database(); // loadAllDataSources();
-
+            // Create Dictionary
             var dict = new Map();
 
             var ds = JSON.parse(json);
 
-            console.log(`length: ${ds.length}`);
+            console.log(`length: ${ds.length}`); // # rows
+
+            var keyField = "Name";
+            var valueField = "Value";
 
             for (var i = 0; i < ds.length; i++) {
 
-                console.log(`key ${ds[i]["Name"]} = ${ds[i]["Value"]}`);
+                console.log(`key ${ds[i][keyField]} = ${ds[i][valueField]}`);
 
                 dict.set(
-                    ds[i]["Name"],
-                    ds[i]["Value"]
+                    ds[i][keyField],
+                    ds[i][valueField]
                 );
             }
 
-            // Count items
-            $("#cnt1").text(
-                dict.get("Countries")
-            );
-            $("#cnt2").text(
-                dict.get("Europe")
-            );
+            // Apply data to all elements
+            $("*[wfu-map-dict]").each(function (i, obj) {
+
+                $(obj).text(
+                    dict.get(obj.getAttribute("wfu-map-dict"))
+                );
+
+            });
 
         });
 
