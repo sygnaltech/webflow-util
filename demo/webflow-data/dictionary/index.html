@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Webflow Util | Dictionary</title>
+    <link rel="icon" href="data:;base64,=">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    <link href="/demo/demo.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Sygnal Webflow Table | Dictionary <span data-value="ver"></span>
+            </h1>
+            <p class="subtitle">
+                by Sygnal Technology Group
+            </p>
+
+            <div class="block">
+                <span class="tag is-info is-medium">Demonstration</span>
+                <span class="tag is-danger is-medium">Experimental</span>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
+                <h2>Demo JSON content</h2>
+
+                <div class="demo area grey large">
+
+                    <pre id="json1">Loading...</pre>
+
+                </div>
+
+                <p>Retrieve data from a Google sheet, and convert it to JSON.</p>
+                <h1>Data</h1>
+                <ul>
+                    <li>
+                        Countries: <span id="cnt1"></span>
+                    </li>
+                    <li>
+                        Europe: <span id="cnt2"></span>
+                    </li>
+                    <li>
+                        Population: <span id="cnt3"></span>
+                    </li>
+                    <li>
+                        SizeBillion: <span id="cnt4"></span>
+                    </li>
+                    <li>
+                        Size100Million: <span id="cnt5"></span>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li>Retrieved from a Google Sheet source as CSV.</li>
+                    <li>Converted to JSON.</li>
+                </ul>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+    <script type="module">
+
+        import { Database, getCsvAsJson } from '/src/modules/webflow-data.js';
+        import { renderTableFromJson } from '/src/modules/webflow-table.js';
+        import { getGoogleSheetCsvUrl } from '/src/datasources/google-sheet-data.js';
+
+        import { renderTableFromGoogleSheet } from '/src/locode/webflow-table-helper.js';
+
+        $(function () {
+
+            var json;
+
+            // TEST #1 - retrieve CSV as JSON
+
+            // Get JSON data
+            json = getCsvAsJson(
+                'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv&gid=118669749',
+                true // pretty print
+            )
+
+            // Display JSON data
+            $("#json1").text(
+                json
+            );
+
+            // Create database
+//            var db = new Database(); // loadAllDataSources();
+
+            var dict = new Map();
+
+            var ds = JSON.parse(json);
+
+            console.log(`length: ${ds.length}`);
+
+            for (var i = 0; i < ds.length; i++) {
+
+                console.log(`key ${ds[i]["Name"]} = ${ds[i]["Value"]}`);
+
+                dict.set(
+                    ds[i]["Name"],
+                    ds[i]["Value"]
+                );
+            }
+
+            // Count items
+            $("#cnt1").text(
+                dict.get("Countries")
+            );
+            $("#cnt2").text(
+                dict.get("Europe")
+            );
+
+        });
+
+    </script>
+
+</body>
+</html>
+
