@@ -36,21 +36,28 @@
                 <ol>
                     <li>
                         Load data from an external data source.
-                        Here we're using a Google Sheet with calculated fields.
+                        Here we're using a <a href="https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/edit#gid=118669749" target="_blank">Google Sheet</a> with calculated fields.
                     </li>
                     <li>
-                        Must have 2 identified columns - a unique Key column, and Value column.
+                        The data source must have 2 identified columns - a unique Key column, and Value column.
+                        In a Google Sheet source, those are unique column header names.
                         In this demo we are using <code>Name</code> and <code>Value</code>.
                     </li>
                     <li>
-                        Constructs a dictionary structure.
+                        Construct a dictionary structure with those key-value pairs.
+                        This is a javascript <code>Map</code> element.
                     </li>
                     <li>
-                        Find elements tagged to a specific Key, and load that Value.
+                        Find all HTML elements tagged to a specific Key, and load that Value.
                     </li>
                 </ol>
 
                 <h2>Demo JSON content</h2>
+
+                <p>
+                    This is the Google Sheet content, after it has been converted to JSON.
+                    Note the <code>Key</code> and <code>Value</code> column names become field keys in the JSON.
+                </p>
 
                 <div class="demo area grey large">
 
@@ -58,28 +65,40 @@
 
                 </div>
 
-                <p>Data is prepped, now let's load it.</p>
+                <p>Once the dictionary is created, you can use it.</p>
+
+                <p>
+                    Identify which data you want data loaded where, using the <code>wfu-map-dict</code> custom attribute.
+                    e.g.;
+                </p>
+
+                <p><code>&lt;span wfu-map-dict="Countries"&gt;&lt;/span&gt;</code></p>
 
                 <h1>Loaded Data Examples</h1>
+
+                <p>Each of the bolded values in this list are loaded dynamically from the Google Sheet.</p>
+
                 <ul>
                     <li>
-                        Countries: <span wfu-map-dict="Countries"></span>
+                        Countries: <b><span wfu-map-dict="Countries"></span></b>
                     </li>
                     <li>
-                        Europe: <span wfu-map-dict="Europe"></span>
+                        Europe: <b><span wfu-map-dict="Europe"></span></b>
                     </li>
                     <li>
-                        Population: <span wfu-map-dict="Population"></span>
+                        Population: <b><span wfu-map-dict="Population"></span></b>
                     </li>
                     <li>
-                        Size &gt; Billion: <span wfu-map-dict="SizeBillion"></span>
+                        Size &gt; Billion: <b><span wfu-map-dict="SizeBillion"></span></b>
                     </li>
                     <li>
-                        Size &gt; 100 Million: <span wfu-map-dict="Size100Million"></span>
+                        Size &gt; 100 Million: <b><span wfu-map-dict="Size100Million"></span></b>
                     </li>
                 </ul>
 
-                <h2>In-line text</h2>
+                <h2>In-paragraph text example</h2>
+
+                <p>Here values are embedded in paragraph text.</p>
 
                 <div class="container" style="width: 50%; justify-content: left;">
                     <div class="notification is-primary">
@@ -93,6 +112,23 @@
                             Of a total global population of <span wfu-map-dict="Population"></span>,
                             <span wfu-map-dict="Size100Million"></span> of our contries are over 100 million population,
                             with <span wfu-map-dict="SizeBillion"></span> over 1 billion.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="container" style="width: 50%; justify-content: left;" wfu-data-macros="datasourceName">
+                    <div class="notification is-primary">
+
+                        <p>Global population is growing! </p>
+                        <p>
+                            Currently, there are {{Countries}} countries in the world,
+                            of which {{Europe}} are in Europe.
+                        </p>
+                        <p>
+                            Of a total global population of {{Population}},
+                            {{Size100Million}} of our contries are over 100 million population,
+                            with {{SizeBillion}} over 1 billion.
                         </p>
 
                     </div>
@@ -158,6 +194,38 @@
                 );
 
             });
+
+            // Expand macros
+            $("*[wfu-data-macros]").each(function (i, obj) {
+
+                var html = $(obj).html();
+//                    dict.get(obj.getAttribute("wfu-map-dict"))
+
+                html = html.replace(
+                    /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+                    "foo"
+                    );
+
+                    // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
+
+//                var newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
+
+                // [$<params>]
+
+                $(obj).html(
+                    html
+//                    dict.get(obj.getAttribute("wfu-map-dict"))
+                );
+
+            });
+
+            function replacer(match, p1, p2, p3, offset, string) {
+                // p1 is nondigits, p2 digits, and p3 non-alphanumerics
+                return [p1, p2, p3].join(' - ');
+            }
+
+//            let newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
+//            console.log(newString);  // abc - 12345 - #$*%
 
         });
 
