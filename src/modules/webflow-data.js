@@ -14,9 +14,26 @@ export class Database {
     getDataSource = function (dataSourceName) {
         return this.data.get(dataSourceName);
     }
-
+    
     getCountOfRecords = function (dataSourceName) {
         return this.getDataSource(dataSourceName).length;
+    }
+
+    // TEST:
+    getDictionary = function (dataSourceName, keyField, valueField) {
+        var dict = new Map();
+
+        var ds = this.getDataSource(dataSourceName);
+
+        for (var i = 0; i < ds.length; i++)
+        {
+            dict.set(
+                ds[i].keyField,
+                ds[i].valueField
+            );
+        }
+
+        return dict;
     }
 
 }
