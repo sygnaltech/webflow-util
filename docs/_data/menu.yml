@@ -5,14 +5,18 @@
       link: /
     - name: What's New
       link: /whats-new
-    - name: Features
-      link: #
-      items:
-        - name: Databinding
-          link: /databinding
-        - name: Datasources
-          link: /datasources
+    - name: Library Modules
+      link: /modules
     - name: Demos
       link: /demo
     - name: Technical Notes
       link: /tech
+
+- label: Webflow-Data
+  items:
+    - name: Overview
+      link: /webflow-data
+    - name: Data sources
+      link: /datasources
+    - name: Data-binding
+      link: /databinding

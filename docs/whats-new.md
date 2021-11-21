@@ -41,7 +41,9 @@ Notes;
 
 I'll give specific examples of script you can use with each library.
 
-## Separation of Functionality
+## Design Philosophy
+
+### Separation of Functionality
 
 As the library grows, I found the need to partition the code better for accessibility & reusability. 
 
@@ -51,7 +53,7 @@ As the library grows, I found the need to partition the code better for accessib
 and the platforms they pertain to.
 - This means that much of the functionality here can be used in non-Webflow sites, or in sites that you are hosting separately. Around that capability is a Webflow-specific wrapper that applies those features in Webflow's unique HTML-generation and hosting-environment context.
 
-## 3 Distinct Integration Approaches
+### 3 Distinct Integration Approaches
 
 I want to embrace the reality that many Webflow designers are unfamiliar with programming,
 while others need maximum functionality.
