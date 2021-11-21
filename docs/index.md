@@ -1,13 +1,11 @@
 ---
-title: Webflow Utils (WFU)
-sidebar: toc
+layout: page
+title: Webflow Utils 3.0
+subtitle: Make your webflow site awesome
+menubar: menu
+hero_height: is-small
+toc: false
 ---
-
-- [Home](/webflow-util)
-- [What's New?](/webflow-util/whats-new)
-- [Technical Notes](/webflow-util/tech)
-- [Databinding](/webflow-util/databinding)
-- [Datasources](/webflow-util/datasources)
 
 # What is WFU?
 

@@ -1,9 +1,11 @@
 ---
-title: What's New?
-sidebar: toc
+layout: page
+title: What's New
+#subtitle: Make your webflow site awesome
+menubar: menu
+hero_height: is-small
+toc: true
 ---
-
-- [Home](/webflow-util)
 
 
 # What's New?

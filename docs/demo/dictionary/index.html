@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Webflow Util | Dictionary</title>
+    <link rel="icon" href="data:;base64,=">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    <link href="/demo/demo.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Sygnal Webflow Data | Dictionary <span data-value="ver"></span>
+            </h1>
+            <p class="subtitle">
+                by Sygnal Technology Group
+            </p>
+
+            <div class="block">
+                <span class="tag is-info is-medium">Demonstration</span>
+                <span class="tag is-danger is-medium">Experimental</span>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
+                <p>Populate specific values on a page, from a remote data source.</p>
+                <ol>
+                    <li>
+                        Load data from an external data source.
+                        Here we're using a <a href="https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/edit#gid=118669749" target="_blank">Google Sheet</a> with calculated fields.
+                    </li>
+                    <li>
+                        The data source must have 2 identified columns - a unique Key column, and Value column.
+                        In a Google Sheet source, those are unique column header names.
+                        In this demo we are using <code>Name</code> and <code>Value</code>.
+                    </li>
+                    <li>
+                        Construct a dictionary structure with those key-value pairs.
+                        This is a javascript <code>Map</code> element.
+                    </li>
+                    <li>
+                        Find all HTML elements tagged to a specific Key, and load that Value.
+                    </li>
+                </ol>
+
+                <h2>Demo JSON content</h2>
+
+                <p>
+                    This is the Google Sheet content, after it has been converted to JSON.
+                    Note the <code>Key</code> and <code>Value</code> column names become field keys in the JSON.
+                </p>
+
+                <div class="demo area grey large">
+
+                    <pre id="json1">Loading...</pre>
+
+                </div>
+
+                <p>Once the dictionary is created, you can use it.</p>
+
+                <h1>Loaded Data Examples</h1>
+
+                <h2><b>Option 1:</b> Tagged Elements</h2>
+
+                <p>
+                    Identify elements in which you want data loaded where, using the <code>wfu-map-dict</code> custom attribute.
+                </p>
+
+                <p>e.g. <code>&lt;span wfu-map-dict="Countries"&gt;&lt;/span&gt;</code></p>
+
+                <p>Each of the bolded values in this list are loaded dynamically from the Google Sheet.</p>
+
+                <ul>
+                    <li>
+                        Countries: <b><span wfu-map-dict="Countries"></span></b>
+                    </li>
+                    <li>
+                        Europe: <b><span wfu-map-dict="Europe"></span></b>
+                    </li>
+                    <li>
+                        Population: <b><span wfu-map-dict="Population"></span></b>
+                    </li>
+                    <li>
+                        Size &gt; Billion: <b><span wfu-map-dict="SizeBillion"></span></b>
+                    </li>
+                    <li>
+                        Size &gt; 100 Million: <b><span wfu-map-dict="Size100Million"></span></b>
+                    </li>
+                </ul>
+
+                <h2><b>Option 2:</b> Macro Expansion</h2>
+
+                <p>WFU also provides for tag expansion.
+                In your text, use the construction <code>{{ Key Name }}</code>
+                to identify where you want values inserted.
+                This is particularly of use in Rich Text Elements.</p>
+
+                <p>Text or Rich Text element itself must be tagged with the custom attribute
+                    <code> wfu-data-macros="datasourceName"</code>.</p>
+
+                <pre>
+Global population is growing!
+                    
+Currently, there are {{ Countries }} countries in the world,
+of which {{ Europe }} are in Europe.
+                    
+Of a total global population of {{ Population }},
+{{ Size100Million }} of our contries are over 100 million population,
+with {{ SizeBillion }} over 1 billion.
+                </pre>
+
+<p>Here's an example of tag-expanded content.</p>
+
+                <div class="container" style="width: 50%; justify-content: left;" wfu-data-macros="datasourceName">
+                    <div class="notification is-primary">
+
+                        <p>Global population is growing! </p>
+                        <p>
+                            Currently, there are {{Countries}} countries in the world,
+                            of which {{Europe}} are in Europe.
+                        </p>
+                        <p>
+                            Of a total global population of {{Population}},
+                            {{Size100Million}} of our contries are over 100 million population,
+                            with {{SizeBillion}} over 1 billion.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+    <script type="module">
+
+        import { Database, getCsvAsJson } from '/src/modules/webflow-data.js';
+        import { renderTableFromJson } from '/src/modules/webflow-table.js';
+        import { getGoogleSheetCsvUrl } from '/src/datasources/google-sheet-data.js';
+
+        import { renderTableFromGoogleSheet } from '/src/locode/webflow-table-helper.js';
+
+        $(function () {
+
+            var json;
+
+            // TEST #1 - retrieve CSV as JSON
+
+            // Get JSON data
+            // retrieve from Google Sheet
+            json = getCsvAsJson(
+                'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv&gid=118669749',
+                true // pretty print
+            )
+
+            // Display JSON data
+            $("#json1").text(
+                json
+            );
+
+            // Create Dictionary
+            var dict = new Map();
+
+            var ds = JSON.parse(json);
+
+            console.log(`length: ${ds.length}`); // # rows
+
+            var keyField = "Name";
+            var valueField = "Value";
+
+            for (var i = 0; i < ds.length; i++) {
+
+                console.log(`key ${ds[i][keyField]} = ${ds[i][valueField]}`);
+
+                dict.set(
+                    ds[i][keyField],
+                    ds[i][valueField]
+                );
+            }
+
+            // Apply data to all elements
+            $("*[wfu-map-dict]").each(function (i, obj) {
+
+                $(obj).text(
+                    dict.get(obj.getAttribute("wfu-map-dict"))
+                );
+
+            });
+
+            // Expand macros
+            $("*[wfu-data-macros]").each(function (i, obj) {
+
+                var html = $(obj).html();
+//                    dict.get(obj.getAttribute("wfu-map-dict"))
+
+                html = html.replace(
+                    /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+                    replacer
+                    );
+
+                    // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
+
+//                var newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
+
+                // [$<params>]
+
+                $(obj).html(
+                    html
+                );
+
+            });
+
+            // https://regexr.com/
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+            function replacer(match, p1, p2, p3, offset, string) {
+                return dict.get(p2);
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
+
