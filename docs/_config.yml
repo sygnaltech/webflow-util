@@ -23,7 +23,7 @@ email: web@sygnal.com
 description: >- # this means to ignore newlines until "baseurl:"
   Make your Webflow site awesome.
   Tools to add dynamic capabilities.
-baseurl: "/githubpages" # the subpath of your site, e.g. /blog
+baseurl: "/webflow-util" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  sygnaltech
