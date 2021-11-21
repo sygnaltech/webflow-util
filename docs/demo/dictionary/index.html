@@ -7,7 +7,7 @@
     <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
-    <link href="/demo/demo.css" rel="stylesheet" type="text/css" />
+    <link href="/webflow-util/demo/demo.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
@@ -145,11 +145,11 @@ with {{ SizeBillion }} over 1 billion.
 
     <script type="module">
 
-        import { Database, getCsvAsJson } from '/src/modules/webflow-data.js';
-        import { renderTableFromJson } from '/src/modules/webflow-table.js';
-        import { getGoogleSheetCsvUrl } from '/src/datasources/google-sheet-data.js';
+        import { Database, getCsvAsJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
+        import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
+        import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
 
-        import { renderTableFromGoogleSheet } from '/src/locode/webflow-table-helper.js';
+        import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
 
         $(function () {
 
