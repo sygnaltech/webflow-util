@@ -1,0 +1,12 @@
+# TABS
+
+alignment: is-left
+style: is-boxed
+size: is-medium
+items:
+  - name: Documentation
+    link: /webflow-table/
+    icon: fa-file-alt
+  - name: Demo
+    link: /demo/webflow-table/create-table/
+    icon: fa-image

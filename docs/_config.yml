@@ -30,7 +30,8 @@ github_username:  sygnaltech
 
 # Build settings
 # theme: minima
-remote_theme: chrisrhymes/bulma-clean-theme
+# remote_theme: chrisrhymes/bulma-clean-theme
+remote_theme: sygnaltech/bulma-clean-theme
 plugins:
   - jekyll-feed
   - github-pages
