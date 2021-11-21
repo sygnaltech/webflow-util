@@ -12,5 +12,10 @@
           link: /databinding
         - name: Datasources
           link: /datasources
+    - name: Demo
+      link: #
+      items:
+        - name: Webflow-Data | Dictionary
+          link: /demo/webflow-data/dictionary
     - name: Technical Notes
       link: /tech
