@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Webflow Util | Tables</title>
+    <link rel="icon" href="data:;base64,=">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #demo {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: calc(100vw - 280px);
+            overflow: hidden;
+        }
+        iframe {
+            min-height: 100%;
+            width: 100%;
+            border: none;
+        }
+        body {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow: hidden;
+
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        aside {
+            width: 200px;
+        }
+        .menu-frame {
+            padding: 40px 30px;
+            width: 280px;
+            background-color: #EAEAEA;
+        }
+
+        .menu-label {
+            color: #1CB2FF;
+            font-weight: 600;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="menu-frame">
+
+        <aside class="menu">
+
+            <ul class="menu-list">
+                <li><a href="/webflow-util/"><b>HOME</b></a></li>
+            </ul>
+
+            <!-- General -->
+            <p class="menu-label">
+                General
+            </p>
+            <ul class="menu-list">
+                <li><a href="welcome.html" target="demo">Welcome</a></li>
+                <li><a href="https://sygnal-webflow-utils.webflow.io/" target="_blank"><b>Official Site</b></a></li>
+                <li><a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo</b></a></li>
+            </ul>
+
+            <!-- Lib: datasources -->
+            <p class="menu-label">
+                datasources
+            </p>
+            <ul class="menu-list">
+                <li><a href="./datasources/google-sheet-data" target="demo">Google Sheet Data</a></li>
+                <li><a href="./datasources/github-data" target="demo">Github Data</a></li>
+            </ul>
+
+            <!-- Lib: webflow-content -->
+            <p class="menu-label">
+                webflow-content
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-content/lipsum" target="demo">Lorem-Ipsum Generator</a></li>
+                <!--<li>
+            <a>Placeholder Content</a>
+            <ul>
+                <li><a href="./webflow-content/lipsum" target="demo">Lorem-Ipsum Generator</a></li>
+            </ul>
+        </li>-->
+            </ul>
+
+            <!-- Lib: webflow-data -->
+            <p class="menu-label">
+                webflow-data
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-data/datasource" target="demo">Collection List Datasource</a></li>
+                <li><a href="./webflow-data/count-collection-items" target="demo">Count Collection Items</a></li>
+                <li><a href="./webflow-data/dictionary" target="demo">Dictionary</a></li>
+            </ul>
+
+            <!-- Lib: webflow-forms -->
+            <p class="menu-label">
+                webflow-forms
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-forms/databinding" target="demo">Form INPUT &amp; SELECT databinding</a></li>
+            </ul>
+
+            <!-- Lib: webflow-html -->
+            <p class="menu-label">
+                webflow-html
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-html/autosizeiframes" target="demo">Autosize IFrames</a></li>
+                <li><a href="./webflow-html/dynamicattributes" target="demo">Dynamic Attributes</a></li>
+            </ul>
+
+            <!-- Lib: webflow-multilingual -->
+            <p class="menu-label">
+                webflow-multilingual
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-multilingual/language-switcher" target="demo">Language Switcher</a></li>
+            </ul>
+
+            <!-- Lib: webflow-table -->
+            <p class="menu-label">
+                webflow-table
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-table/create-table" target="demo">Create Table</a></li>
+                <li><a href="./webflow-table/theme-table" target="demo">Themed Tables</a></li>
+            </ul>
+
+            <!-- Lib: webflow-id -->
+            <p class="menu-label">
+                webflow-id
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-id/html-ids" target="demo">HTML Entity ID</a></li>
+                <li><a href="./webflow-id/uuids" target="demo">UUID v4</a></li>
+                <li><a href="./webflow-id/muids" target="demo">MUIDs ( Micro-UUIDs )</a></li>
+            </ul>
+
+
+            <!-- Lib: webflow-svg -->
+            <p class="menu-label">
+                webflow-svg [EXPERIMENTAL]
+            </p>
+            <ul class="menu-list">
+                <li><a href="./webflow-svg/icons" target="demo">Icons</a></li>
+                <li><a href="./webflow-svg/preloaders" target="demo">Preloaders</a></li>
+            </ul>
+
+        </aside>
+
+    </section>
+
+    <div id="demo">
+
+        <iframe width="100%"
+                height="100%"
+                frameborder="0"
+                name="demo"
+                src="welcome.html">
+        </iframe>
+
+    </div>
+
+</body>
+</html>
+

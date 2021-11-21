@@ -1,5 +1,16 @@
+---
+layout: page
+title: Webflow Util | Dictionary
+subtitle: DEMO
+menubar: menu
+hero_height: is-small
+toc: true
+output:
+  html_document:
+    css: ../demo.css
+---
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,9 +18,9 @@
     <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
-    <link href="../../demo.css" rel="stylesheet" type="text/css" />
+    <link href="/webflow-util/demo/demo.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body>-->
 
     <section class="section">
         <div class="container">
@@ -99,15 +110,24 @@
 
                 <h2><b>Option 2:</b> Macro Expansion</h2>
 
-                <p>WFU also provides for tag expansion.
-                In your text, use the construction <code>{{ Key Name }}</code>
-                to identify where you want values inserted.
-                This is particularly of use in Rich Text Elements.</p>
+                <p>
+                    {% raw %}
+                    WFU also provides for tag expansion.
+                    In your text, use the construction <code>{{ Key Name }}</code>
+                    to identify where you want values inserted.
+                    This is particularly of use in Rich Text Elements.
+                    {% endraw %}
+                </p>
 
-                <p>Text or Rich Text element itself must be tagged with the custom attribute
-                    <code> wfu-data-macros="datasourceName"</code>.</p>
+                <p>
+                    {% raw %}
+                    Text or Rich Text element itself must be tagged with the custom attribute
+                    <code> wfu-data-macros="datasourceName"</code>.
+                    {% endraw %}
+                </p>
 
                 <pre>
+                    {% raw %}
 Global population is growing!
                     
 Currently, there are {{ Countries }} countries in the world,
@@ -116,13 +136,14 @@ of which {{ Europe }} are in Europe.
 Of a total global population of {{ Population }},
 {{ Size100Million }} of our contries are over 100 million population,
 with {{ SizeBillion }} over 1 billion.
+                    {% endraw %}
                 </pre>
 
-<p>Here's an example of tag-expanded content.</p>
+                <p>Here's an example of tag-expanded content.</p>
 
                 <div class="container" style="width: 50%; justify-content: left;" wfu-data-macros="datasourceName">
                     <div class="notification is-primary">
-
+                        {% raw %}
                         <p>Global population is growing! </p>
                         <p>
                             Currently, there are {{Countries}} countries in the world,
@@ -133,7 +154,7 @@ with {{ SizeBillion }} over 1 billion.
                             {{Size100Million}} of our contries are over 100 million population,
                             with {{SizeBillion}} over 1 billion.
                         </p>
-
+                        {% endraw %}
                     </div>
                 </div>
 
@@ -202,16 +223,16 @@ with {{ SizeBillion }} over 1 billion.
             $("*[wfu-data-macros]").each(function (i, obj) {
 
                 var html = $(obj).html();
-//                    dict.get(obj.getAttribute("wfu-map-dict"))
+                //                    dict.get(obj.getAttribute("wfu-map-dict"))
 
                 html = html.replace(
                     /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
                     replacer
-                    );
+                );
 
-                    // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
+                // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
 
-//                var newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
+                //                var newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
 
                 // [$<params>]
 
@@ -231,6 +252,6 @@ with {{ SizeBillion }} over 1 billion.
 
     </script>
 
-</body>
-</html>
+<!--</body>
+</html>-->
 
