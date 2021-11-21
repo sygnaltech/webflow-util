@@ -8,9 +8,9 @@
  * Extracts information from Google Sheets, and returns as JSON
  */
 
-import { csvToJson } from '/src/modules/webflow-data.js';
-import { csvToObjects } from '/src/modules/webflow-data-csv.js';
-import { getCsvAsJson } from '/src/modules/webflow-data.js';
+import { csvToJson } from '../modules/webflow-data.js';
+import { csvToObjects } from '../modules/webflow-data-csv.js';
+import { getCsvAsJson } from '../modules/webflow-data.js';
 
 // Returns a Url to retrieve the CSV version of a Google Sheet
 // The sheet must be publicly accessible.
