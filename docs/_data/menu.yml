@@ -4,11 +4,11 @@
     - name: Home
       link: /
     - name: What's New
-      link: /whats-new/
+      link: /whats-new
     - name: Library Modules
-      link: /modules/
+      link: /modules
     - name: Technical Notes
-      link: /tech/
+      link: /tech
 
 - label: DataSources
   items:
