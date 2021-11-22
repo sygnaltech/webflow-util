@@ -10,13 +10,13 @@ hero_height: is-small
 
 # Google Sheet Data
 
-<span class="tag is-danger is-medium">Demonstration</span>
-
-## Google Sheet to JSON
+## DEMO - Google Sheet to JSON
 
 Retrieve data from a Google sheet, and convert it to JSON.
 
 *Requires a Google Sheet ID which is configured for public read access.*
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
 
 <div class="demo area grey large">
     <pre id="json1">Loading...</pre>

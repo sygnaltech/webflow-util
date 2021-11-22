@@ -6,9 +6,7 @@ hero_height: is-small
 toc: true
 ---
 
-# Overview
-
-Data makes your website interesting. 
+**Data makes your website interesting.**
 
 Webflow's CMS and Collection Lists offer some great capabilities but they also have limitations-
 
@@ -40,4 +38,10 @@ Data-binding Webflow elements to those sources;
 
 WFU **data sources** are simple JSON arrays built from Collection Lists that you prepare. These are stored in a Map collection that I refer database, which enables you to retrieve multiple data sources
 
+## Data Shapes
 
+WFU utilizes 3 types of JSON structural patterns which I refer to as **data shapes**;
+
+1. **Table.** A JSON array in which each element contains the same set of keys. Typically constructed from a tabular source such as a Webflow Collection List, or a CSV file.
+2. **List.** A Table with only two fields per element. Used for data-binding to FORM controls.
+3. **Dictionary.** A Javascript `map` structure containing key-value pairs.

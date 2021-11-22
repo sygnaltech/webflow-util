@@ -8,8 +8,6 @@ hero_height: is-small
 # tabs: webflow-table
 ---
 
-# Github Repo Info
-
 This module wraps the Github API to extract basic tag information about the specified repository.
 
 The main purpose is to simply;
@@ -18,10 +16,9 @@ The main purpose is to simply;
 2. Identifying the most recent tag, for reference in documentation
 
 
-<span class="tag is-danger is-medium">Demonstration</span>
+## DEMO - Get Github Repo Tags
 
-
-## Enter a Repo
+<span class="tag is-danger is-medium is-light">Demonstration</span>
 
 <div class="block">
 
@@ -44,7 +41,7 @@ The main purpose is to simply;
 </div>
 
 
-## Demo JSON content
+### Results
 
 <p>Latest version: <b id="latest1"></b></p>
 

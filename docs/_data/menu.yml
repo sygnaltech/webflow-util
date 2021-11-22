@@ -7,38 +7,38 @@
       link: /whats-new/
     - name: Library Modules
       link: /modules/
-    - name: Demos
-      link: /demo/
     - name: Technical Notes
       link: /tech/
 
 - label: DataSources
   items:
     - name: Webflow Collection List
-      link: /cms-datasource/
+      link: /datasources/datasource/
     - name: Google Sheet Data
-      link: /demo/datasources/google-sheet-data/
+      link: /datasources/google-sheet-data/
     - name: Github Data
-      link: /demo/datasources/github-data/
+      link: /datasources/github-data/
 
 - label: Webflow-Data
   items:
     - name: Overview
       link: /webflow-data/
-    - name: Collection List Data Sources
-      link: /cms-datasource/
+    - name: Dictionary
+      link: /webflow-data/dictionary/
+    - name: Count Items
+      link: /webflow-data/count-collection-items/
 
 - label: Webflow-Forms
   items:
     - name: Data-binding Form INPUTs & SELECTs
-      link: /databinding/
+      link: /webflow-forms/databinding/
 
 - label: Webflow-Table
   items:
     - name: HTML Tables
-      link: /webflow-table/
+      link: /webflow-table/create-table/
 
 - label: Webflow-Content
   items:
     - name: Lorem-Ipsum Generator
-      link: /demo/webflow-content/lipsum/
+      link: /webflow-content/lipsum/

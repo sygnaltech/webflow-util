@@ -7,7 +7,7 @@ hero_height: is-small
 toc: true
 ---
 
-<a class="button is-danger" href="/webflow-util/demo/webflow-data/datasource/" target="_blank">View Webflow Demonstration</a>
+<a class="button is-danger" href="/webflow-util/datasources/datasource/demo.html" target="_blank">View Webflow Demonstration</a>
 
 # Collection List Data Sources
 

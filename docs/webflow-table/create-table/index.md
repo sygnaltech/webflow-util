@@ -5,14 +5,16 @@ title: Webflow Util | Tables
 menubar: menu
 hero_height: is-small
 toc: true
-tabs: webflow-table
+# tabs: webflow-table
 output:
   html_document:
     css: ../../demo.css
 ---
 
 
+While DIVs are superior for layout, HTML Tables can offer a simplicity of data-presentation that is tough to beat.
 
+Webflow does not have a Table element, so we've added the ability to generate an HTML table anywhere you like, from tabular JSON data.
 
 ## DEMO - Google Sheet as JSON
 
