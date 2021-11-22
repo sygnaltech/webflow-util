@@ -4,25 +4,23 @@ title: Webflow Util | Tables
 # subtitle: DEMO
 menubar: menu
 hero_height: is-small
-# toc: true
+toc: true
 tabs: webflow-table
 output:
   html_document:
     css: ../../demo.css
 ---
 
-# Create Table
-
-<span class="tag is-danger is-medium">Demonstration</span>
 
 
 
-
-## Demo JSON content
+## DEMO - Google Sheet as JSON
 
 Retrieve data from a Google sheet, and convert it to JSON.
 
-<div class="demo area grey large">
+<span class="tag is-danger is-medium is-light">Demonstration</span>
+
+<div class="demo grey large">
     <pre id="json1">Loading...</pre>
 </div>
 
@@ -31,9 +29,12 @@ Retrieve data from a Google sheet, and convert it to JSON.
 - Retrieved from a Google Sheet source as CSV.
 - Converted to JSON.
 
-## Demo table content
+
+## DEMO - Generate HTML Table from JSON
 
 Retrieve data from an online source, and create an HTML table.
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
 
 <div class="demo yellow large">
     <div id="table1"></div>
@@ -41,17 +42,23 @@ Retrieve data from an online source, and create an HTML table.
 
 - This table content is sourced live from a Google Sheet
 
-## TEST #3 - Encoding HTML Entities
+
+## DEMO - Encoding HTML Entities
 
 Retrieve data that contains HTML markup characters, to test encoding.
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
 
 <div class="demo yellow large">
     <div id="table3"></div>
 </div>
 
-## TEST #4 - Using Webflow Table Helper
+
+## DEMO - LOCODE Approach
 
 Performs both the data retrieval and binding in a single call using a helper method.
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
 
 <div class="demo yellow large">
     <div id="table4"></div>
