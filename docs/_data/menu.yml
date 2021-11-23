@@ -46,3 +46,13 @@
   items:
     - name: Lorem-Ipsum Generator
       link: /webflow-content/lipsum/
+
+- label: Webflow-Html
+  items:
+    - name: JSON Formatter
+      link: /webflow-html/formatjson/
+
+- label: Webflow-Demo
+  items:
+    - name: Webflow Preview Link
+      link: /webflow-demo/preview-link/
