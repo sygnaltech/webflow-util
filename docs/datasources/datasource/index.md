@@ -1,21 +1,21 @@
 ---
 layout: page
-title: Data Sources
+title: Collection List Data Sources
 #subtitle: Make your webflow site awesome
 menubar: menu
 hero_height: is-small
 toc: true
 ---
 
-<a class="button is-danger" href="/webflow-util/datasources/datasource/demo.html" target="_blank">View Webflow Demonstration</a>
+<a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/collection-item-count" target="_blank">View Demonstration in Webflow</a>
 
-# Collection List Data Sources
 
-WFU makes your data more programmatically accessible by creating **data sources** and a **database** for your scripts to use.
+WFU allows you to create a Data Source from any Webflow Collection List. You can then use that source in several ways;
 
-This feature enables WFU's [data-binding](databinding) capabilities, but you can access this database for other purposes, such as diplaying a CMS collection item count.
-
-*See an example of how to do that below.*
+- Data-bind to a form SELECT or INPUT control.
+- Display an HTML table
+- Display a list
+- Display the count of items
 
 ## How to Create a Collection List Data Source
 
@@ -62,7 +62,7 @@ You can create as many collection data-sources as you need, but make certain the
 
 
 
-# Advanced Notes
+## Advanced Notes
 
 You can create as many collection data-sources as you want, but make certain they are each named differently. Webflow does have a limit on the number of Collection Lists per page, and these will count towards that.
 

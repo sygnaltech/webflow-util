@@ -9,9 +9,9 @@ toc: false
 
 # What is WFU?
 
-This library is a collection of utilities that add capability to 
+Sygnal Webflow Utils (WFU) is a collection of javascript libraries that add functionality to 
 [Webflow](https://webflow.com/)
-sites. It focuses on overcoming certain limitations of Webflow, and adding certain functionality.
+sites. It focuses on overcoming certain limitations of Webflow, and adding certain capabilities.
 
 Some of the most popular features include;
 
@@ -20,7 +20,7 @@ Some of the most popular features include;
 - Adding tables support, with data sourced from Google Sheets
 - Multilingual support through language-detection and a dynamic content-switcher
 
-All of these features are focused on creating as much capability within Webflow as possible, without relying on 3rd party plug-ins and monthly service fees.
+All of these features work with Webflow's native hosting, and are focused on creating as much capability within Webflow as possible - with no 3rd party plug-ins or monthly service fees.
 
 This project is also a practical exploration into the use of Javascript ES6 modules, NPM, and other state-of-the art web dev technologies, and how they can be used to enhance Webflow sites.
 

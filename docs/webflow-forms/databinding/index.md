@@ -7,12 +7,13 @@ hero_height: is-small
 toc: true
 ---
 
-<a class="button is-danger" href="demo.html" target="_blank">View Webflow Demonstration</a>
-
 
 Data-binding is the original feature that WFU was built around. It developed out of a need to populate Form SELECTs with dynamic data from Webflow Collection Lists.
 
 In this latest version, support for form INPUTs ( textboxes ) has been added, using HTML5's autocomplete features.
+
+<a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/data-binding" target="_blank">View Demonstration in Webflow</a>
+
 
 ## How it Works
 

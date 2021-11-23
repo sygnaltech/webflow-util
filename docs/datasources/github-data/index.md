@@ -4,9 +4,11 @@ title: Github Repo Info
 # subtitle: DEMO
 menubar: menu
 hero_height: is-small
-# toc: true
+toc: true
 # tabs: webflow-table
 ---
+
+## What it Does
 
 This module wraps the Github API to extract basic tag information about the specified repository.
 

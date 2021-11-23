@@ -40,8 +40,9 @@ WFU **data sources** are simple JSON arrays built from Collection Lists that you
 
 ## Data Shapes
 
-WFU utilizes 3 types of JSON structural patterns which I refer to as **data shapes**;
+WFU utilizes 3 types of JSON simple structural patterns which I refer to as **data shapes**;
 
-1. **Table.** A JSON array in which each element contains the same set of keys. Typically constructed from a tabular source such as a Webflow Collection List, or a CSV file.
-2. **List.** A Table with only two fields per element. Used for data-binding to FORM controls.
-3. **Dictionary.** A Javascript `map` structure containing key-value pairs.
+1. **Table.** A JSON array in which each element contains the same set of keys. Typically this is constructed from a tabular source such as a Webflow Collection List, or a CSV file. 
+2. **List.** A Table with only one or two fields per element. Lists are primarily used for data-binding to FORM controls.
+3. **Dictionary.** A List, which has a `key` field and a `value` field. The key field content is expected to be unique. Dictionaries are used for lookups in template processing. 
+

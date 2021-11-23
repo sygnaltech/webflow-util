@@ -7,11 +7,15 @@
       link: /whats-new
     - name: Library Modules
       link: /modules
+    - name: Design Philosophy
+      link: /design
     - name: Technical Notes
       link: /tech
 
 - label: DataSources
   items:
+    - name: Overview
+      link: /datasources/
     - name: Webflow Collection List
       link: /datasources/datasource/
     - name: Google Sheet Data
@@ -23,7 +27,7 @@
   items:
     - name: Overview
       link: /webflow-data/
-    - name: Dictionary
+    - name: Macro Expansion
       link: /webflow-data/dictionary/
     - name: Count Items
       link: /webflow-data/count-collection-items/

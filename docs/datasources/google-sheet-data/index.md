@@ -4,11 +4,12 @@ title: Google Sheet Data
 # subtitle: DEMO
 menubar: menu
 hero_height: is-small
-# toc: true
+toc: true
 # tabs: webflow-table
 ---
 
-# Google Sheet Data
+
+WFU can use public Google Sheets as a data source.
 
 ## DEMO - Google Sheet to JSON
 
@@ -21,6 +22,8 @@ Retrieve data from a Google sheet, and convert it to JSON.
 <div class="demo area grey large">
     <pre id="json1">Loading...</pre>
 </div>
+
+<a class="button is-primary" href="https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/edit#gid=0" target="_blank">Open Google Sheet</a>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>

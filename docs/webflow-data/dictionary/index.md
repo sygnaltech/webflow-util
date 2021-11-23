@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Dictionary
+title: Macro Expansion
 subtitle: webflow-data
 menubar: menu
 hero_height: is-small
@@ -8,14 +8,11 @@ toc: true
 # tabs: webflow-table
 ---
 
+WFU macro expansion allows you to populate specific values in your Webflow pages, from a remote data source.
 
-This feature enables you to populate specific values on a page, 
-from a remote data source.
+Insert text strings, numeric values, or calculated spreadsheet results anywhere you like.
 
-Insert text strings, numeric values, or calculated spreadsheet results
-anywhere you like in your Webflow site.
-
-Values are stored in a JSON array.
+Values are stored in a dictionary-style JSON array.
 
 
 

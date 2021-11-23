@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Count Items
+title: Count Datasource Items
 subtitle: webflow-data
 menubar: menu
 hero_height: is-small
@@ -8,7 +8,7 @@ toc: true
 # tabs: webflow-table
 ---
 
-<a class="button is-danger" href="demo.html" target="_blank">View Webflow Demonstration</a>
+<a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/collection-item-count" target="_blank">View Demonstration in Webflow</a>
 
 **Display the count of the items in your data set.**
 
