@@ -73,7 +73,7 @@ Each of the bolded values in this list are loaded dynamically from the Google Sh
 ### Option 2: Macro Expansion
 
 WFU also provides for macro expansion.
-In your text, use the construction <code>{{ Key Name }}</code>
+In your text, use the construction <code>{% raw %}{{ Key Name }}{% endraw %}</code>
 to identify where you want values inserted.
 This is particularly of use in Rich Text Elements.
 
@@ -97,19 +97,21 @@ with {{ SizeBillion }} over 1 billion.
 Here's an example of tag-expanded content.
 
 
-<div class="container" style="width: 50%; justify-content: left;" wfu-data-macros="datasourceName">
+<div class="container" style="width: 100%; justify-content: left;" wfu-data-macros="datasourceName">
 <div class="notification is-primary">
 {% raw %}
-
+<p>
 Global population is growing!
-
+</p>
+<p>
 Currently, there are {{Countries}} countries in the world,
 of which {{Europe}} are in Europe.
-
+</p>
+<p>
 Of a total global population of {{Population}},
 {{Size100Million}} of our contries are over 100 million population,
 with {{SizeBillion}} over 1 billion.
-
+</p>
 {% endraw %}
 </div>
 </div>
