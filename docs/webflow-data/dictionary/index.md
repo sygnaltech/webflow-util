@@ -146,25 +146,11 @@ with {{SizeBillion}} over 1 billion.
             json
         );
 
+        var db = new Database();
+        db.data.set ("Countries", JSON.parse(json));
+
         // Create Dictionary
-        var dict = new Map();
-
-        var ds = JSON.parse(json);
-
-        console.log(`length: ${ds.length}`); // # rows
-
-        var keyField = "Name";
-        var valueField = "Value";
-
-        for (var i = 0; i < ds.length; i++) {
-
-            console.log(`key ${ds[i][keyField]} = ${ds[i][valueField]}`);
-
-            dict.set(
-                ds[i][keyField],
-                ds[i][valueField]
-            );
-        }
+        var dict = db.getDictionary ("Countries", "Name", "Value");
 
         // Apply data to all elements
         $("*[wfu-map-dict]").each(function (i, obj) {
