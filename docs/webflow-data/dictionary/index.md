@@ -40,8 +40,8 @@ This is a javascript `Map` element.
 This is the Google Sheet content, after it has been converted to JSON.
 Note the `Key` and `Value` column names become field keys in the JSON.
 
-<div class="demo area grey large">
-    <pre id="json1">Loading...</pre>
+<div class="demo area grey large" id="json1">
+    <pre>Loading...</pre>
 </div>
 
 Once the dictionary is created, you can use it.
@@ -122,10 +122,11 @@ with {{SizeBillion}} over 1 billion.
 
 <script type="module">
 
-    import { Database, getCsvAsJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
+    import { Database, getCsvAsData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
     import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
     import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { expandMacrosInElement } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { expandMacrosInElement, displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
 
     $(function () {
 
@@ -135,15 +136,13 @@ with {{SizeBillion}} over 1 billion.
 
         // Get JSON data
         // retrieve from Google Sheet
-        json = getCsvAsJson(
+        json = getCsvAsData(
             'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv&gid=118669749',
             true // pretty print
         )
 
         // Display JSON data
-        $("#json1").text(
-            json
-        );
+        displayDataAsHtml($("#json1"), json);
 
         // Load Database
         var db = new Database();

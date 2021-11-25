@@ -4,7 +4,7 @@
  * http://sygnal.com
  */
 
-import { getCsv, csvToJson } from './webflow-data.js';
+import { getCsv, csvToData } from './webflow-data.js';
 import { encodeHtml } from './webflow-html.js';
 
 var tableRenderOptions = {
@@ -44,21 +44,21 @@ export var renderTableFromCsv = function (elem, csv, options = {}) {
     //    logging: true, // enable logging to console
     //});
 
-    var json = csvToJson(csv);
+    var data = csvToData(csv);
 
-    renderTableFromJson(
+    renderTableFromData(
         elem,
-        json,
+        data,
         options
     );
 
 }
 
-export var renderTableFromJson = function (elem, json, options = {}) {
+export var renderTableFromData = function (elem, data, options = {}) {
 
     renderTableFromArray(
         elem,
-        JSON.parse(json),
+        data,
         options
     );
 }
@@ -77,7 +77,7 @@ export var renderTableFromArray = function (elem, arr, options = {}) {
         var stylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
-            href: `https://localhost/dist/theme/${settings.theme}/table.css`
+            href: `https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/dist/theme/${settings.theme}/table.css`
         });
     stylesheet.appendTo("head");
     }

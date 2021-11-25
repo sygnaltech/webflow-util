@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Webflow Util | Tables
+title: HTML Tables
 # subtitle: DEMO
 menubar: menu
 hero_height: is-small
@@ -73,55 +73,50 @@ Performs both the data retrieval and binding in a single call using a helper met
 
 <script type="module">
 
-    import { getCsvAsJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
+    import { getCsvAsData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
+    import { renderTableFromData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
     import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-
     import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
+    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
 
     $(function () {
 
-        //// Display version
-        //$("*[data-value='ver']").text(
-        //    webflowTableUtil.getVersion()
-        //);
+        var data;
 
-        var json;
+        // TEST #1 - retrieve CSV as data
 
-        // TEST #1 - retrieve CSV as JSON
-
-        // Get JSON data
-        json = getCsvAsJson(
-            'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
-            true // pretty print
+        // Get data
+        data = getCsvAsData(
+            'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
         )
 
         // Display JSON data
-        $("#json1").text(
-            json
+        displayDataAsHtml(
+            $("#json1"),
+            data
         );
 
-        // TEST #2 - Create an HTML table from the JSON
+        // TEST #2 - Create an HTML table from the data
 
         // Create HTML table
-        renderTableFromJson(
+        renderTableFromData(
             $("#table1"),
-            json
+            data
         );
 
         // TEST #3 - ENCODING HTML ENTITIES
 
         // Get JSON data to Google Sheet
         // This version uses the google-sheet-data module to construct the CSV url
-        json = getCsvAsJson(
-            getGoogleSheetCsvUrl("1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI"),
-            true // pretty print
+        data = getCsvAsData(
+            getGoogleSheetCsvUrl("1tU7X22tLHfDiGfTHIahH2XGAKYfv2A3kq7fs80qQRaI")
         );
 
         // Create HTML table
-        renderTableFromJson(
+        renderTableFromData(
             $("#table3"),
-            json
+            data
         );
 
         // TEST #4 - USING HELPER METHODS

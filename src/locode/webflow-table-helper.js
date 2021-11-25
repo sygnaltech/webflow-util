@@ -8,8 +8,8 @@
  * LO-CODE Helper class to simplify table functions.
  */
 
-import { getCsvAsJson } from '../modules/webflow-data.js';
-import { renderTableFromJson } from '../modules/webflow-table.js';
+import { getCsvAsData } from '../modules/webflow-data.js';
+import { renderTableFromData } from '../modules/webflow-table.js';
 import { getGoogleSheetCsvUrl } from '../datasources/google-sheet-data.js';
 
 export var renderTableFromGoogleSheet = function (elem, googleSheetId) {
@@ -24,14 +24,14 @@ export var renderTableFromGoogleSheet = function (elem, googleSheetId) {
 //    });
 
     // Retrieve CSV and convert to JSON
-    var json = getCsvAsJson(
+    var data = getCsvAsData(
         url
     );
 
     // Create HTML table
-    renderTableFromJson(
+    renderTableFromData(
         elem,
-        json
+        data
     );
 
 }

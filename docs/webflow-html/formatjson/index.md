@@ -60,7 +60,7 @@ Format JSON, with syntax highlighting.
     "Rank": 1,
     "Country": "China",
     "Region": "Asia",
-    "Population": 1,411,778,724,
+    "Population": "1,411,778,724",
     "Percent": false
   },
   {
@@ -77,19 +77,22 @@ Format JSON, with syntax highlighting.
 
 <script type="module">
         
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
     import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { Database } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/webflow-collectionlist-data.js';
-    import { displayJsonAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { Database, loadAllData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
+    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
 
     $(function () {
 
         var json;
         json = $('#data2').text();
+        
+        var data;
+        data = JSON.parse(json);
 
-        displayJsonAsHtml(
+        displayDataAsHtml(
             $("#json1"), 
-            json 
+            data
         );
 
     });

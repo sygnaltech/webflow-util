@@ -61,7 +61,8 @@ export var dataBindAllForms = function (db) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach
     db.data.forEach((data, dataSourceName) => {
 
-        // Create datalists of all data sources
+        // Create HTML datalists of all data sources
+        // for data binding
         createHtmlDataList(
             createDsnMoniker(dataSourceName), // creates a more unique name to avoid element ID conflicts
             data

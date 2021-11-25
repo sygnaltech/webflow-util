@@ -33,11 +33,10 @@ This example uses Google Sheet content, after it has been converted to JSON.
 
 <script type="module">
         
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
     import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-        
-    import { Database } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-
-    import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/webflow-collectionlist-data.js';
+    import { Database, loadAllData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
+    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
 
     $(function () {
 
@@ -47,17 +46,17 @@ This example uses Google Sheet content, after it has been converted to JSON.
 
         // Get JSON data
         getGoogleSheetData(
-            '16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0',
-            true // pretty print
+            '16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0'
         ).then((res) => {
 
-            $("#json1").text(
+            displayDataAsHtml (
+                $("#json1"),
                 res
             );
 
             db.data.set(
                 "test",
-                JSON.parse(res) // data
+                res // data
             );
 
             // Count items

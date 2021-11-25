@@ -6,44 +6,10 @@
  * Creates a data source from a Webflow Collection list.
  */
 
-import { Database } from '../modules/webflow-data.js';
+// import { Database } from '../modules/webflow-data.js';
 
-export var loadAllDataSources = function () {
 
-    // Find all elements which specify a data-source
-    // for data binding
-    var dataSources = $('div[wfu-data]');
-
-    console.log(`sources found = ${dataSources.length}`);
-
-    var db = new Database();
-
-    // Iterate and bind each individually
-    $.each(dataSources, function (i, elem) {
-
-        console.log(`processing source ${elem.getAttribute("wfu-data")}`);
-
-        var data = prepareDataSource(elem.getAttribute("wfu-data"));
-
-        // add to database
-        db.data.set(
-            elem.getAttribute("wfu-data"),
-            data
-        );
-    })
-
-    return db;
-}
-
-export var prepareDataSource = function (name) {
-
-    // Find all elements which specify a data-source
-    // for data binding
-    var dataSource = $(`div[wfu-data='${name}']`);
-    if (!dataSource) {
-        console.warn(`Datasource: '${name}' does not exist`);
-        return;
-    }
+export var prepareCollectionListDataSource = function (dataSource) {
 
     // Aggregate JSON Data
     // var data = $('script');

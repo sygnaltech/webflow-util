@@ -19,31 +19,30 @@ Retrieve data from a Google sheet, and convert it to JSON.
 
 <span class="tag is-danger is-medium is-light">Demonstration</span>
 
-<div class="demo area grey large">
-    <pre id="json1">Loading...</pre>
+<div class="demo area grey large" id="json1">
+    <pre>Loading...</pre>
 </div>
 
 <a class="button is-primary" href="https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/edit#gid=0" target="_blank">Open Google Sheet</a>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
 <script type="module">
+
         
     import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
+    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+//    import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
 
     $(function () {
 
-        var json;
-
-        // Get JSON data
-//            json = await
+        // Get data
         getGoogleSheetData(
-            '16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0',
-            true // pretty print
+            '16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0'
         ).then((res) => {
 
-            $("#json1").text(
+            displayDataAsHtml(
+                $("#json1"),
                 res
             );
 

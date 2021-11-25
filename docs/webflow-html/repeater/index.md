@@ -39,13 +39,13 @@ Resulting data;
 <div class="demo yellow large" id="demo1">
 </div>
 
-<template id="template1" wfu-template-type="macros">
 {% raw %}
+<template id="template1" wfu-template-type="macros">
 <div>
     <p><b>#{{Rank}} - {{Country}} ({{Region}})</b> - {{Population}}</p>
 </div>
-{% endraw %}
 </template>
+{% endraw %}
 
 
 - Retrieved from a Google Sheet source as CSV.
@@ -55,33 +55,63 @@ Resulting data;
 
 
 
+## DEMO - Google Sheet to HTML Template Repeater ( NoCode )
+
+**NoCode** version using `wfu-` attributes.
+
+Retrieve data from a Google sheet, and convert it to JSON.
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
+
+{% raw %}
+<script type="text/json" wfu-data="links" wfu-data-type="google-sheet">
+{
+    "version": "1",
+    "url": "https://docs.google.com/spreadsheets/d/16C5Lpzi69LgJb14YyF8eGRiVljUt8-sGGm5L6wfcpr0/export?format=csv"
+}
+</script>
+{% endraw %}
+
+<div class="demo yellow large" id="demo2">
+</div>
+
+{% raw %}
+<template id="links" wfu-template-type="macros">
+    <li><a href="{{Link}}" target="_blank">{{Title}}</a></li>
+</template>
+{% endraw %}
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
 <script type="module">
 
-    import { Database, getCsvAsJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
+    import { Database, loadAllData, getCsvAsData, getDictionaryFromDataRow } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
     import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
     import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
     import { expandMacrosInElement } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { HtmlBuilder } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html-builder.js';
 
     $(function () {
 
         var json;
 
+        // Load Database
+        var db = loadAllData();
+
         // TEST #1 - retrieve CSV as JSON
 
         // Get JSON data
-        json = getCsvAsJson(
-            'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv',
-            true // pretty print
+        json = getCsvAsData(
+            'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv'
         );
 
-        // Load Database
-        var db = new Database();
         db.add ("Countries", json);
 
-        var arr = db.getDataSource("Countries");
+        var arr = db.getData("countries");
 
         for (var row = 0; row < arr.length; row++) {
 
@@ -99,6 +129,19 @@ Resulting data;
 
         }
 
+        // TEST #2 - retrieve CSV as JSON
+
+        var hb = new HtmlBuilder();
+        hb.add("<ul>");
+        hb.addTemplate(
+            $("#links"),
+            db.getData("links")
+            );
+        hb.add("</ul>");
+
+        $("#demo2").html(hb.render());
+
     });
 
 </script>
+

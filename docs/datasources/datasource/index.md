@@ -38,23 +38,24 @@ In the Webflow designer;
 </script>
 ```
 
-+ Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
-+ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
-+ The name is whatever field you want visible to the user.
-+ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
-+ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
+    + Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
+    + Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
+    + The name is whatever field you want visible to the user.
+    + In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
+    + Make certain there are no spaces between your inserted tag, and the double quotes `"`.
 
 
 
 5. Name your data source. We do this with a custom attribute on the Collection List itself;
 
-+ Select your outermost Collection List element.
-+ Add a custom attribute named `wfu-data`.
-+ In the value, give it a unique name. I recommend all lowercase letters, no spaces or special characters. For example `blogposts` and `products` are good names.
-+ *Remember this name*, you'll need it later.
+    + Select your outermost Collection List element.
+    + Add a custom attribute named `wfu-data`.
+    + In the value, give it a unique name. I recommend all lowercase letters, no spaces or special characters. For example `blogposts` and `products` are good names.
+    + *Remember this name*, you'll need it later.
 
+6. Identify your data source as a collection list type, by adding another custom attribute directly on the Collection List, of `wfu-data-type="collection-list"`
 
-6. Once you're all setup, you can make the Collection List invisible. Simply select the outermost Collection List element and mark it as invisible on all devices. If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
+7. Once you're all setup, you can make the Collection List invisible. Simply select the outermost Collection List element and mark it as invisible on all devices. If you do this, you won't see it anymore in the Webflow designer, but you can select it in the left-side Navigator.
 
 *You have a data source!*
 

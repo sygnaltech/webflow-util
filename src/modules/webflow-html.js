@@ -97,20 +97,22 @@ export var applyDynamicAttributes = function () {
 
 }
 
-export var formatJson = function (json) {
+export var formatJson = function (data) {
+
+    var json;
 
     // Convert JSON to string
-    if (typeof json != 'string') {
-        json = JSON.stringify(json, undefined, 2);
+    if (typeof data != 'string') {
+        json = JSON.stringify(data, undefined, 2);
     }
 
     return json;
 }
 
-export var formatJsonAsHtml = function (json) {
+export var formatJsonAsHtml = function (data) {
 
     // Convert JSON to string
-    json = formatJson(json);
+    var json = formatJson(data);
 
     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -135,11 +137,16 @@ export var formatJsonAsHtml = function (json) {
 
 }
 
-export var displayJsonAsHtml = function (el, json) {
+export var displayDataAsHtml = function (el, data) {
 
+//    var json = formatJson(data);
+
+    // Create <pre> element
     $(el).html("<pre class='wfu-code'></pre>");
+
+    // Populate <pre> element with formatted JSON data
     $(el).children("pre").html(
-        formatJsonAsHtml(json)
+        formatJsonAsHtml(data)
     );
 
 }

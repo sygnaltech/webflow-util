@@ -56,6 +56,7 @@ The main purpose is to simply;
 
 <script type="module">
 
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
     import {
         getGithubRepoTagsUrl,
         getGithubRepoTags, getGithubRepoTagLatest
