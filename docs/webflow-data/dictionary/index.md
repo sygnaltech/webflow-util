@@ -125,7 +125,7 @@ with {{SizeBillion}} over 1 billion.
     import { Database, getCsvAsJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
     import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
     import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-
+    import { expandMacrosInElement } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
     import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
 
     $(function () {
@@ -146,8 +146,9 @@ with {{SizeBillion}} over 1 billion.
             json
         );
 
+        // Load Database
         var db = new Database();
-        db.data.set ("Countries", JSON.parse(json));
+        db.add ("Countries", json);
 
         // Create Dictionary
         var dict = db.getDictionary ("Countries", "Name", "Value");
@@ -164,31 +165,9 @@ with {{SizeBillion}} over 1 billion.
         // Expand macros
         $("*[wfu-data-macros]").each(function (i, obj) {
 
-            var html = $(obj).html();
-//                    dict.get(obj.getAttribute("wfu-map-dict"))
-
-            html = html.replace(
-                /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
-                replacer
-                );
-
-                // \{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}
-
-//                var newString = 'abc12345#$*%'.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
-
-            // [$<params>]
-
-            $(obj).html(
-                html
-            );
+            expandMacrosInElement(obj, dict);
 
         });
-
-        // https://regexr.com/
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
-        function replacer(match, p1, p2, p3, offset, string) {
-            return dict.get(p2);
-        }
 
     });
 
