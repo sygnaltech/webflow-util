@@ -20,7 +20,6 @@ export var encodeHtml = function (text) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 }
-
 export var autosizeIFrames = function () {
 
     // Identify all IFRAMES with autosize tag
@@ -144,3 +143,41 @@ export var displayJsonAsHtml = function (el, json) {
     );
 
 }
+
+/* expandMacrosInElement
+ * Expands {{ var }} constructs in an elements innerHtml
+ * using dictionary lookup, and replaces the element content.
+ */
+export var expandMacrosInElement = function (el, dict) {
+
+    var html = $(el).html();
+
+    html = expandMacrosInText(html, dict);
+
+    $(el).html(
+        html
+    );
+
+//    return html;
+}
+
+/* expandMacrosInText
+ * Expands {{ var }} constructs in text
+ */
+export var expandMacrosInText = function (text, dict) {
+
+    text = text.replace(
+        /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+        replacer
+    );
+
+    // https://regexr.com/
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+    var replacer = function (match, p1, p2, p3, offset, string) {
+
+        return dict.get(p2);
+    }
+
+    return text;
+}
+
