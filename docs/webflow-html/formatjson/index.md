@@ -78,12 +78,9 @@ Format JSON, with syntax highlighting.
 <script type="module">
         
     import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-        
     import { Database } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-
     import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/webflow-collectionlist-data.js';
-
-    import { displayJsonAsHtml } from 'http://localhost/src/modules/webflow-html.js';
+    import { displayJsonAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
 
     $(function () {
 
