@@ -126,7 +126,6 @@ with {{SizeBillion}} over 1 billion.
     import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
     import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
     import { expandMacrosInElement } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
-    import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
 
     $(function () {
 
@@ -148,10 +147,14 @@ with {{SizeBillion}} over 1 billion.
 
         // Load Database
         var db = new Database();
-        db.add ("Countries", json);
+        db.add ("CountryStats", json);
+
+// console.log(db.getDataSource("CountryStats"));
 
         // Create Dictionary
-        var dict = db.getDictionary ("Countries", "Name", "Value");
+        var dict = db.getDictionary ("CountryStats", "Name", "Value");
+
+// console.log(dict);
 
         // Apply data to all elements
         $("*[wfu-map-dict]").each(function (i, obj) {

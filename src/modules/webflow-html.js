@@ -158,7 +158,6 @@ export var expandMacrosInElement = function (el, dict) {
         html
     );
 
-//    return html;
 }
 
 /* expandMacrosInText
@@ -166,17 +165,18 @@ export var expandMacrosInElement = function (el, dict) {
  */
 export var expandMacrosInText = function (text, dict) {
 
-    text = text.replace(
-        /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
-        replacer
-    );
-
     // https://regexr.com/
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+    // Must be positioned before regex replace call
     var replacer = function (match, p1, p2, p3, offset, string) {
 
         return dict.get(p2);
     }
+
+    text = text.replace(
+        /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+        replacer
+    );
 
     return text;
 }

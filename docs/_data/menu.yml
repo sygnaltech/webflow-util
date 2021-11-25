@@ -51,6 +51,8 @@
   items:
     - name: JSON Formatter
       link: /webflow-html/formatjson/
+    - name: Repeater
+      link: /webflow-html/repeater/
 
 - label: Webflow-Demo
   items:

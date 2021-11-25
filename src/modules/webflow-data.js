@@ -36,11 +36,31 @@ export class Database {
 
         var ds = this.getDataSource(dataSourceName);
 
+//        console.log(ds);
+
         for (var i = 0; i < ds.length; i++)
         {
+//            console.log(`${0}: ${ds.length} ${ds[i].keyField} / ${ds[i].valueField}`);
             dict.set(
-                ds[i].keyField,
-                ds[i].valueField
+                ds[i][keyField],
+                ds[i][valueField]
+            );
+        }
+
+        console.log(dict);
+        return dict;
+    }
+
+    // TEST:
+    getDictionaryFromRow = function (dataSourceName, row) {
+        var dict = new Map();
+
+        var ds = this.getDataSource(dataSourceName);
+
+        for (const v in ds[row]) {
+            dict.set(
+                v,
+                ds[row][v]
             );
         }
 
