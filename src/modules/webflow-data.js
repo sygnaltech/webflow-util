@@ -11,6 +11,17 @@ import { csvToObjects } from './webflow-data-csv.js';
 export class Database {
     data = new Map();
 
+    // Add specified JSON document under key.
+    add = function (key, json) {
+
+        // Convert string to JSON
+        if (typeof json == 'string') {
+            json = JSON.parse(json);
+        }
+
+        this.data.set(key, json);
+    }
+
     getDataSource = function (dataSourceName) {
         return this.data.get(dataSourceName);
     }
