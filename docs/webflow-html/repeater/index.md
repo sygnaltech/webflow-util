@@ -55,9 +55,9 @@ Resulting data;
 
 
 
-## DEMO - Google Sheet to HTML Template Repeater ( NoCode )
+## DEMO - Google Sheet to HTML Template Repeater ( LoCode )
 
-**NoCode** version using `wfu-` attributes.
+**LoCode** version using minimal javascript configuration code.
 
 Retrieve data from a Google sheet, and convert it to JSON.
 
@@ -72,14 +72,30 @@ Retrieve data from a Google sheet, and convert it to JSON.
 </script>
 {% endraw %}
 
-<div class="demo yellow large" id="demo2">
-</div>
-
 {% raw %}
 <template id="links" wfu-template-type="macros">
     <li><a href="{{Link}}" target="_blank">{{Title}}</a></li>
 </template>
 {% endraw %}
+
+<div class="demo yellow large" id="demo2">
+</div>
+
+
+
+
+
+
+## DEMO - Google Sheet to HTML Template Repeater ( NoCode )
+
+**NoCode** version using `wfu-` attributes.
+
+Retrieve data from a Google sheet, and convert it to JSON.
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
+
+<ul wfu-bind="links" wfu-bind-template="links">
+</ul>
 
 
 
@@ -89,7 +105,7 @@ Retrieve data from a Google sheet, and convert it to JSON.
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { Database, loadAllData, getCsvAsData, getDictionaryFromDataRow } from '{{site.liburl}}/src/modules/webflow-data.js';
+    import { Database, loadAllData, getCsvAsData, getDictionaryFromDataRow, bindAllData } from '{{site.liburl}}/src/modules/webflow-data.js';
     import { getGoogleSheetCsvUrl } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
     import { renderTableFromGoogleSheet } from '{{site.liburl}}/src/locode/webflow-table-helper.js';
     import { expandMacrosInElement } from '{{site.liburl}}/src/modules/webflow-html.js';
@@ -140,6 +156,10 @@ Retrieve data from a Google sheet, and convert it to JSON.
         hb.add("</ul>");
 
         $("#demo2").html(hb.render());
+
+        // TEST #3 - bind all 
+
+        bindAllData(db);
 
     });
 
