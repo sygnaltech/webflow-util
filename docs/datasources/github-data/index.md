@@ -51,7 +51,6 @@ The main purpose is to simply;
     <pre id="json1">Loading...</pre>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
 <script type="module">
@@ -60,7 +59,7 @@ The main purpose is to simply;
     import {
         getGithubRepoTagsUrl,
         getGithubRepoTags, getGithubRepoTagLatest
-    } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/github-data.js';
+    } from '{{site.liburl}}/src/datasources/github-data.js';
 
 
     $(function () {

@@ -8,6 +8,11 @@ toc: true
 # tabs: webflow-table
 ---
 
+{% if site.url == "http://localhost:4000" %}
+{% assign lib_url = "https://localhost" %}
+{% else %}
+{% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
+{% endif %}
 
 WFU can use public Google Sheets as a data source.
 
@@ -29,10 +34,8 @@ Retrieve data from a Google sheet, and convert it to JSON.
 
 <script type="module">
 
-        
-    import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
-//    import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
+    import { getGoogleSheetData } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
+    import { displayDataAsHtml } from '{{site.liburl}}/src/modules/webflow-html.js';
 
     $(function () {
 

@@ -9,7 +9,6 @@ toc: true
 
 <a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/collection-item-count" target="_blank">View Demonstration in Webflow</a>
 
-
 WFU allows you to create a Data Source from any Webflow Collection List. You can then use that source in several ways;
 
 - Data-bind to a form SELECT or INPUT control.

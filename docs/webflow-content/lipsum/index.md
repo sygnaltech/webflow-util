@@ -7,7 +7,6 @@ hero_height: is-small
 toc: true
 ---
 
-
 **Lipsum** is a popular abbreviaton of the term <i>Lorem Ipsum</i>, which refers to
 Latin-looking text that approximates English in text layouts.
 
@@ -57,7 +56,7 @@ Generates a random number of lipsum paragraphs.
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { genLipsumWords, genLipsumSentences, genLipsumParagraphs, genLipsumText } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-content-lipsum.js';
+    import { genLipsumWords, genLipsumSentences, genLipsumParagraphs, genLipsumText } from '{{site.liburl}}/src/modules/webflow-content-lipsum.js';
 
     function genWords() {
         $("#words").text(

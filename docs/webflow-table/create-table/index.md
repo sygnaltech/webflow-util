@@ -11,7 +11,6 @@ output:
     css: ../../demo.css
 ---
 
-
 While DIVs are superior for layout, HTML Tables can offer a simplicity of data-presentation that is tough to beat.
 
 Webflow does not have a Table element, so we've added the ability to generate an HTML table anywhere you like, from tabular JSON data.
@@ -74,11 +73,11 @@ Performs both the data retrieval and binding in a single call using a helper met
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { getCsvAsData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { renderTableFromData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
-    import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
-    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { getCsvAsData } from '{{site.liburl}}/src/modules/webflow-data.js';
+    import { renderTableFromData } from '{{site.liburl}}/src/modules/webflow-table.js';
+    import { getGoogleSheetCsvUrl } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
+    import { renderTableFromGoogleSheet } from '{{site.liburl}}/src/locode/webflow-table-helper.js';
+    import { displayDataAsHtml } from '{{site.liburl}}/src/modules/webflow-html.js';
 
     $(function () {
 

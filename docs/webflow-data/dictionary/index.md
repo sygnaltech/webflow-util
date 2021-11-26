@@ -123,10 +123,9 @@ with {{SizeBillion}} over 1 billion.
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { Database, getCsvAsData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { renderTableFromJson } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-table.js';
-    import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { expandMacrosInElement, displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { Database, getCsvAsData } from '{{site.liburl}}/src/modules/webflow-data.js';
+    import { getGoogleSheetCsvUrl } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
+    import { expandMacrosInElement, displayDataAsHtml } from '{{site.liburl}}/src/modules/webflow-html.js';
 
     $(function () {
 

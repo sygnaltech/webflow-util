@@ -89,11 +89,11 @@ Retrieve data from a Google sheet, and convert it to JSON.
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { Database, loadAllData, getCsvAsData, getDictionaryFromDataRow } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-data.js';
-    import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/datasources/google-sheet-data.js';
-    import { renderTableFromGoogleSheet } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/locode/webflow-table-helper.js';
-    import { expandMacrosInElement } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
-    import { HtmlBuilder } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html-builder.js';
+    import { Database, loadAllData, getCsvAsData, getDictionaryFromDataRow } from '{{site.liburl}}/src/modules/webflow-data.js';
+    import { getGoogleSheetCsvUrl } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
+    import { renderTableFromGoogleSheet } from '{{site.liburl}}/src/locode/webflow-table-helper.js';
+    import { expandMacrosInElement } from '{{site.liburl}}/src/modules/webflow-html.js';
+    import { HtmlBuilder } from '{{site.liburl}}/src/modules/webflow-html-builder.js';
 
     $(function () {
 
