@@ -26,3 +26,6 @@ This project is also a practical exploration into the use of Javascript ES6 modu
 
 *This library will be expanded as needed, and broken into modules for convenient selection of the parts you need.*
 
+## Getting Started
+
+- The Github Repo is [sygnal/webflow-util](https://github.com/sygnaltech/webflow-util)

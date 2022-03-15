@@ -53,6 +53,10 @@
       link: /webflow-html/formatjson/
     - name: Repeater
       link: /webflow-html/repeater/
+    - name: Auto-Size IFRAMEs
+      link: /webflow-html/autosizeiframes/
+    - name: Dynamic Attributes
+      link: /webflow-html/dynamicattributes/
 
 - label: Webflow-Demo
   items:
