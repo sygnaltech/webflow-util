@@ -20,6 +20,8 @@ $(function () {
         var ratingValue = rating.attr("wfu-rating");
         var exclusionMaskPercent = (100.0 * (5.0 - ratingValue)) / 5.0;
 
+        // Portions copyright (c) 2022 by Chris Coyier  (https://codepen.io/chriscoyier/pen/poWvyXQ)
+
         rating.html(`
           <div class="wfu-rating-stars">
             <svg viewBox="0 0 576 512" width="100" title="star">
