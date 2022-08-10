@@ -58,6 +58,11 @@
     - name: Dynamic Attributes
       link: /webflow-html/dynamicattributes/
 
+- label: Webflow-UI
+  items:
+    - name: Ratings Component
+      link: /webflow-ui/ratings/
+
 - label: Webflow-Demo
   items:
     - name: Webflow Preview Link

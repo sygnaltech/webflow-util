@@ -35,3 +35,4 @@ WFU's capabilities are separated into functional modules;
 
 - `webflow-svg` - Experimental support for SVG manipulations.
 
+- `webflow-ui` - UI Components, such as 5-star ratings.
