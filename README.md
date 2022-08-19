@@ -1,4 +1,4 @@
-# Webflow Utils [WFU] v3.0
+# Webflow Utils [WFU] v3
 
 The **WFU** library is a collection of utilities that add capability to 
 [Webflow](https://webflow.com/)
@@ -10,6 +10,8 @@ Some of the most popular features include;
 - Adding custom attributes dynamically to elements within a collection list.
 - Adding tables support, with data sourced from Google Sheets
 - Multilingual support through language-detection and a dynamic content-switcher
+- 5-star Ratings widget (SVG, with fractional support)
+- URL querystring param extraction and passthrough
 
 All of these features are focused on creating as much capability within Webflow as possible, without relying on 3rd party plug-ins and monthly service fees.
 
