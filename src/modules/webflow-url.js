@@ -34,7 +34,7 @@ export var processTaggedElements = function () {
 
                 console.log(`set VALUE to ${urlParams.get($(this).attr("wfu-query-param"))}`);
 
-            } else {
+            } else if (!$(this).is('a')) {
 
                 // For anything else, set the inner text
                 $(this).text(
@@ -65,17 +65,20 @@ export var processLinks = function () {
         // Loop through all links
         $("a").each(function () {
 
-            //get href
-            var hrefParts = $(this).attr("href").split("?");
-            var hrefBase = hrefParts[0];
-            var hrefQuery = hrefParts[1]; // currently discarded
+            if ($(this).attr("wfu-query-param") != '-') {
 
-            // Crude - replaces whole querystring, preserving nothing
-            // should merge
-            var newHref = hrefBase + document.location.search;
+                //get href
+                var hrefParts = $(this).attr("href").split("?");
+                var hrefBase = hrefParts[0];
+                var hrefQuery = hrefParts[1]; // currently discarded
 
-            // Update link href
-            $(this).attr("href", newHref);
+                // Crude - replaces whole querystring, preserving nothing
+                // should merge
+                var newHref = hrefBase + document.location.search;
+
+                // Update link href
+                $(this).attr("href", newHref);
+            }
         });
 
     }

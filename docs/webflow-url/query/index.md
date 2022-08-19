@@ -14,7 +14,6 @@ toc: true
 {% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
 {% endif %}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/dist/css/webflow-ui.css">
 
 ## DEMO - URL Query Params Passthrough
 
@@ -70,6 +69,8 @@ Applied to any other elements, the inner text of the element will be replaced wi
 
 All `<a>` links on the page will automatically be affected. You do not need the custom attribute on them.
 WFU will replace the entire querystring of those `href`'s with the querystring of the current page's URL.
+
+The processing of a specific link can be suppressed by applying the `wfu-query-param` custom attribute with a hyphen (`-`) as the value.
 
 *Note that this will be expanded on eventually with configuration options, and the ability to merge querystrings.*
 
