@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Webflow Utils 3.0
+title: Webflow Utils v3
 subtitle: Make your webflow site awesome
 menubar: menu
 hero_height: is-small
