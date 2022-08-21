@@ -9,14 +9,13 @@
  */
 
 
-import { processTaggedElements, processLinks } from '../modules/webflow-url.js';
+import { processElements } from '../modules/webflow-url.js';
 
 $(function () {
 
     console.log("running WFU-URL");
 
-    processTaggedElements();
-    processLinks();
+    processElements();
 
 });
 

@@ -29,9 +29,13 @@ WFU will replace the `value` attribute with the value of the querystring param `
 - On any other elements with a custom attribute of `wfu-query-param=X`, 
 WFU will replace the inner text of the element with the value of the querystring param `X`. 
 
-- Any links will have the `href` modified so that its querystring is completely **replaced** with the full querystring of the current page. 
+- Any links will have the `href` modified, depending on what you request.
 
+	- `wfu-query-param=*`, or an absence of the `wfu-query-param` attribute, will merge all params from the page's current URL into the link href.
 
+	- `wfu-query-param=foo,bar,bat`, will only merge the querystring params named `foo`, `bar`, and `bat` from the page's current URL into the link href.
+
+	- `wfu-query-param=-` (a hypen) will suppress processing of this link, and no changes will be made. 
 
 
 ## Getting Started ( NOCODE )
@@ -67,8 +71,8 @@ containing the HTML `<input>` element code, e.g.;
 
 Applied to any other elements, the inner text of the element will be replaced with the value of the param.
 
-All `<a>` links on the page will automatically be affected. You do not need the custom attribute on them.
-WFU will replace the entire querystring of those `href`'s with the querystring of the current page's URL.
+All `<a>` links on the page will automatically be affected. 
+You do not need the custom attribute on them, unless you're wanting to specify which params are merged in.
 
 The processing of a specific link can be suppressed by applying the `wfu-query-param` custom attribute with a hyphen (`-`) as the value.
 

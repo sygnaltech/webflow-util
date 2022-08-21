@@ -9,78 +9,110 @@
  */
 
 // Process elements with the custom attr wfu-query-param
-export var processTaggedElements = function () {
+export var processElements = function () {
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    console.log("ready!");
-    console.log(`${document.location.search.length} params found.`);
-    console.log(`${document.location.search} = query.`);
+    // Skip if there is no querystring
+    if (Array.from(urlParams).length == 0)
+        return;
 
-    if (document.location.search.length) {
+    // Loop all processable elements
+    // - All <a> elements
+    // - Any element tagged with [wfu-query-param]=?
+    // TODO: ignore elems tagged [wfu-query-param]=- or eleme within a DIV tagged as such? 
+    $("*[wfu-query-param], a").each(function () {
 
-        // loop all wfu-query-param="editors" elems 
-        $("*[wfu-query-param]").each(function () {
+        if ($(this).is('input')) {
 
-            console.log(`found wfu-query-param element ${this}, ${$(this).attr("wfu-query-param")}`);
+            // For INPUT elements, set the value param
+            $(this).attr(
+                'value',
+                urlParams.get($(this).attr("wfu-query-param"))
+            );
 
-            if ($(this).is('input')) {
+        } else if ($(this).is('a')) {
 
-                // For INPUT parts, set the value param
-                $(this).attr(
-                    'value',
-                    urlParams.get($(this).attr("wfu-query-param"))
-                );
+            // FORMS
+            // IFRAMES 
 
-                console.log(`set VALUE to ${urlParams.get($(this).attr("wfu-query-param"))}`);
+            processLink($(this));
 
-            } else if (!$(this).is('a')) {
+        } else {
 
-                // For anything else, set the inner text
-                $(this).text(
-                    urlParams.get($(this).attr("wfu-query-param"))
-                );
+            // For anything else, set the inner text
+            $(this).text(
+                urlParams.get($(this).attr("wfu-query-param"))
+            );
 
-                console.log(`set INNER TEXT to ${urlParams.get($(this).attr("wfu-query-param"))}`);
+        }
 
-            }
-
-        });
-
-    }
+    });
 
 }
 
-// Process elements with the custom attr wfu-query-param
-export var processLinks = function () {
+var processLink = function (linkElem) {
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    console.log("ready!");
-    console.log(`${document.location.search.length} params found.`);
-    console.log(`${document.location.search} = query.`);
+    // Skip if no href
+    if (linkElem.attr("href") == null)
+        return;
 
-    if (document.location.search.length) {
+    // Disassemble url 
+    var hrefParts = linkElem.attr("href").split("?");
+    var hrefBase = hrefParts[0];
+    var hrefQuery = hrefParts[1];
 
-        // Loop through all links
-        $("a").each(function () {
+    const newParams = new URLSearchParams(hrefQuery);
 
-            if ($(this).attr("wfu-query-param") != '-') {
+    // Handle suppressed elements
+    if (linkElem.attr("wfu-query-param") == '-') {
 
-                //get href
-                var hrefParts = $(this).attr("href").split("?");
-                var hrefBase = hrefParts[0];
-                var hrefQuery = hrefParts[1]; // currently discarded
+        // Skip, do nothing
+//        console.log(`Processing - / ${linkElem.attr("href")}`);
 
-                // Crude - replaces whole querystring, preserving nothing
-                // should merge
-                var newHref = hrefBase + document.location.search;
+        // Handle all-params elements 
+        // https://stackoverflow.com/questions/1318076/jquery-hasattr-checking-to-see-if-there-is-an-attribute-on-an-element
+    } else if (linkElem.attr("wfu-query-param") == '*' || linkElem.attr("wfu-query-param") == undefined || linkElem.attr("wfu-query-param") == false) {
 
-                // Update link href
-                $(this).attr("href", newHref);
-            }
-        });
+//        console.log(`Processing * / ${linkElem.attr("href")} / ${hrefBase} / ${hrefQuery}`);
 
+//        linkElem.text(`${linkElem.text()} - WILDCARD`);
+
+        // Merge querystrings
+        // overrwrites any conflicting params with new ones
+        for (let p of urlParams) {
+            newParams.set(p[0], urlParams.get(p[0]));
+        };
+
+        // Replaces whole querystring, preserving nothing
+        var newHref = hrefBase + '?' + newParams.toString();
+
+        // Update link href
+        linkElem.attr("href", newHref);
+
+        // Handle specific-params 
+    } else {
+
+//        console.log(`Process MULTI / ${linkElem.attr("href")} / ${hrefBase} / ${hrefQuery}`);
+
+        // Duplicate params risk 
+        // https://stackoverflow.com/a/60828146 
+
+        // Iterate through params and append
+        // e.g. [wfu-query-param]="foo,bar,bat"
+        var overrideParams = linkElem.attr("wfu-query-param").split(",");
+
+        for (let p of overrideParams) {
+            if (urlParams.get(p) != null)
+                newParams.set(p, urlParams.get(p));
+        };
+
+        var newHref = hrefBase + '?' + newParams.toString();
+
+        // Update link href
+        linkElem.attr("href", newHref);
     }
 
 }
