@@ -9,7 +9,7 @@ toc: false
 
 # What is WFU?
 
-Sygnal Webflow Utils (WFU) is a collection of javascript libraries that add functionality to 
+**Sygnal Webflow Utils (WFU)** is a collection of javascript libraries that add functionality to 
 [Webflow](https://webflow.com/)
 sites. It focuses on overcoming certain limitations of Webflow, and adding certain capabilities.
 
