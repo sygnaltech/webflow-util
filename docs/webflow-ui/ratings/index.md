@@ -15,16 +15,24 @@ toc: true
 {% endif %}
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/dist/css/webflow-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/css/input-range-slider.css">
 
-WFU can use public Google Sheets as a data source.
+WFU is exploring the addition of simple components to the Webflow interface,
+starting with a simple 5-star ratings component that is commonly needed for customer reviews. 
+
+This component-
+
+- Is fully SVG, and can be sized as large or small as you want.
+- Can be colored, via CSS. 
+- Supports fractional stars, e.g. 2.5 stars. 
 
 ## DEMO - Ratings Component
 
-Displays a fractional-star rating, as specified.
-
-
 <span class="tag is-danger is-medium is-light">Demonstration</span>
 
+View source to see the specifics on how these demos work.
+
+
 ```
 <div wfu="rating" wfu-rating="5.0"></div>
 ```
@@ -49,6 +57,49 @@ Displays a fractional-star rating, as specified.
 ```
 
 <div wfu="rating" wfu-rating="3.5" style="width: 200px;"></div>
+
+## Coloring
+
+Since the art is SVG-based, it can affected by the CSS `fill` attribute.
+
+However, Webflow does not directly provide access to the fill attribute, or SVG's.
+Best practice is to put a `<style>` element or CSS in the `<head>` 
+however most browsers will accept an in-body `<style>` element.
+
+```
+<style>
+#stars2 svg {
+    fill: red; 
+}
+</style>
+```
+
+<style>
+#stars2 svg {
+    fill: red; 
+}
+</style>
+
+<div id="stars2" wfu="rating" wfu-rating="3.5" style="width: 200px;"></div>
+
+Note: Due to the way the shaded area works, the color and darkness is not easily specified. 
+
+## Dynamic Example
+
+What's your rating, **1 to 5 stars**?
+
+<style>
+#stars svg {
+    fill: darkblue; 
+}
+</style>
+
+<form style="width: 300px; margin: 0 0 1rem 0">
+<div class="slidecontainer">
+<input type="range" min="1" max="5" step="0.5" value="3.5" class="slider" id="myRange">
+</div>
+</form>
+<div id="stars" wfu="rating" wfu-rating="3.5" style="width: 200pxred;"></div>
 
 ## Usage Notes
 
@@ -99,23 +150,24 @@ Paste this code into the EMBED;
 </div>
 ```
 
-Note that you can put anything into the DIV and it will be deleted when the Rating Component is created.
+Alternatively, you can put anything into the DIV and it will be deleted when the Rating Component is created.
 In this way, you can have a visible placeholder while you're in the designer, where scripts cannot run.
 
-We recommend placing stars there for convenience;
+We recommend placing stars there for convenience.
+If you are using this with Webflow, you can place an **HTML Embed** element inside of your div, with the following contents, to create visible stars.
 
 ```
 <div wfu="rating" wfu-rating="3.5">
     <svg viewBox="0 0 576 512" width="20%" title="star">
-      <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+        <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
     </svg><svg viewBox="0 0 576 512" width="20%" title="star">
-      <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+        <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
     </svg><svg viewBox="0 0 576 512" width="20%" title="star">
-      <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+        <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
     </svg><svg viewBox="0 0 576 512" width="20%" title="star">
-      <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+        <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
     </svg><svg viewBox="0 0 576 512" width="20%" title="star">
-      <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
+        <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
     </svg>
 </div>
 ```
@@ -157,25 +209,18 @@ leave it as not required, and configure the Embed element so that it is conditio
 
 <script type="module">
 
-    import { getGoogleSheetData } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
-    import { displayDataAsHtml } from '{{site.liburl}}/src/modules/webflow-html.js';
+    import { setRating } from '{{site.liburl}}/src/modules/webflow-ui.js';
 
     $(function () {
+    
+        $("#myRange").on('input', function() {
+    
+            console.log('changed to.' + $("#myRange").val());
 
-        // Get data
-        getGoogleSheetData(
-            '16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0'
-        ).then((res) => {
-
-            displayDataAsHtml(
-                $("#json1"),
-                res
-            );
-
-        }, (err) => {
-            console.log(err);
+            setRating($("#stars"), $("#myRange").val())
+    
         });
-
+  
     });
 
 </script>
