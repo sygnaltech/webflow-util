@@ -1,6 +1,6 @@
 
 /*
- * webflow-info
+ * webflow-demo
  *
  * Sygnal Technology Group
  * http://sygnal.com
@@ -21,10 +21,28 @@ export class WebflowInfo {
 
 // Returns a Webflow preview link 
 // to the current page
-export var createWebflowPreviewLink = function (previewId) {
+export var getWebflowPreviewLink = function (url) {
 
     var webflowInfo = new WebflowInfo();
 
-    return `https://preview.webflow.com/preview/sygnal-webflow-utils?utm_medium=preview_link&utm_source=designer&utm_content=sygnal-webflow-utils&preview=${previewId}&pageId=${webflowInfo.pageId}&workflow=preview`;
+    const parsedUrl = new URL(url);
+
+    // Add/replace pageId in Url 
+    parsedUrl.searchParams.set("pageId", webflowInfo.pageId);
+
+    return parsedUrl.href;
+
+}
+
+export var updateHrefToWebflowPreviewLink = function (elemA) {
+
+    var parsedUrl = $(elemA).attr("href");
+
+    // Modify href to include pageId
+    var modifiedUrl = getWebflowPreviewLink(parsedUrl);
+
+    // Set updated href
+    $(elemA).attr("href", modifiedUrl);
+
 }
 
