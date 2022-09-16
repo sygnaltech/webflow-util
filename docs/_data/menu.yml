@@ -62,6 +62,8 @@
       link: /webflow-html/autosizeiframes/
     - name: Dynamic Attributes
       link: /webflow-html/dynamicattributes/
+    - name: Nested Lists
+      link: /webflow-html/nestedlists/
 
 - label: Webflow-UI
   items:

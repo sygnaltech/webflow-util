@@ -1,0 +1,74 @@
+
+/*
+ * CSS for Sygnal Webflow Util HTL library
+ */
+
+// Apply skeleton loader effect to elements targeted for parsing by WFU.
+
+@import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
+
+.w-richtext[wfu-lists] li {
+    font-family: 'Redacted', cursive;
+    color: black;
+    em {
+        font-style: normal;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    display: inline-block; // contents;
+
+    animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        color: hsl(200, 20%, 80%);
+    }
+
+    100% {
+        color: hsl(200, 20%, 95%);
+    }
+}
+
+// Nested list styling
+
+.w-richtext ul ul, .w-richtext ol ol {
+    margin-top: 0.5rem;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+
+ol .wfu-list-level-2 {
+    list-style-type: decimal-leading-zero;
+}
+
+ol .wfu-list-level-3 {
+    list-style-type: lower-roman;
+}
+
+.wfu-pro {
+    list-style-type: none;
+    color: green;
+}
+
+// https://www.toptal.com/designers/htmlarrows/symbols/
+// https://caniuse.com/css-marker-pseudo
+.wfu-pro::marker { // ::before
+    content: "\2611   ";
+}
+
+.wfu-con {
+    list-style-type: none;
+    color: red;
+}
+
+// https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+// https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+.wfu-con::marker {
+    content: "\2612   ";
+}
+

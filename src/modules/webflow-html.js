@@ -188,3 +188,105 @@ export var expandMacrosInText = function (text, dict) {
     return text;
 }
 
+/* processList
+ * Parses markup in LI's to create nested lists
+ * https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
+ */
+export var processList = function (list) {
+    //        console.log(`LIST -------------------------`);
+
+    var content = $(list).html();
+    console.log(content);
+
+    var data = $.parseHTML(content);
+    var items = [];
+
+    $.each(data, function (i, el) {
+
+        var item = {
+            indent: 1,
+            mode: '',
+            text: $(el).html().trim()
+        };
+
+        items.push(item);
+        //        console.log(`${i} ${item.text} ${items.length}`);
+
+        var limit = 10;
+        for (var j = 1; j < limit; j += 1) {
+
+            if (item.text.startsWith("&gt;")) {
+                item.text = item.text.substring(4).trim(); // remove directive 
+                item.indent++;
+            } else if (item.text.startsWith("+")) {
+                item.text = item.text.substring(1).trim(); // remove directive 
+                item.mode = "pro";
+            } else if (item.text.startsWith("-")) {
+                item.text = item.text.substring(1).trim(); // remove directive 
+                item.mode = "con";
+            } else {
+                break; // done
+            }
+
+        }
+
+    });
+
+    // Render HTML
+    // Creates structured embedded list from the 
+    // array data set. 
+
+    var outHtml = '';
+    var level = 1;
+    var tag = list.tagName.toLowerCase();
+    var prevLevel = 1;
+
+    $.each(items, function (i, item) {
+
+        //        console.log(`#${i} / ${item.text} / c${level} n${item.indent} / ${item.mode} - current level `); 
+
+        // Add optional PRO/CON class 
+        var attr = '';
+        if (item.mode == 'pro')
+            attr = " class='wfu-pro'";
+        if (item.mode == 'con')
+            attr = " class='wfu-con'";
+
+        prevLevel = level;
+
+        if (item.indent > level) {
+            //          console.log (`LEVEL ${prevLevel} -> ${level} / opening`);
+            for (var l = level + 1; l <= item.indent; l += 1)
+                outHtml += `<${tag} class="wfu-list-level-${l}">`;
+            outHtml += `<li${attr}>${item.text}`;
+
+            level = item.indent;
+
+            //          console.log(outHtml);
+
+        } else if (item.indent < level) {
+            //          console.log (`LEVEL ${prevLevel} ->  ${level} / closing`);
+            outHtml += `</li></${tag}>`.repeat(level - item.indent);
+            outHtml += `</li>`;
+            outHtml += `<li${attr}>${item.text}`;
+            level = item.indent;
+            //          console.log(outHtml);
+        } else {
+            //          console.log (`LEVEL ${prevLevel} ->  ${level} / same`);
+            if (i > 0)
+                outHtml += `</li>`;
+            outHtml += `<li${attr}>${item.text}`;
+            //          console.log(outHtml);
+        }
+
+    });
+
+    if (level > 1)
+        outHtml += `</li></${tag}>`.repeat(level - 1);
+    outHtml += `</li>`;
+    level = 1;
+
+    //      console.log(outHtml);  
+    $(list).html(outHtml);
+
+}
