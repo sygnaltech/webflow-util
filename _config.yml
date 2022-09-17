@@ -18,9 +18,15 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-url: "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" # the base hostname & protocol for your site, e.g. http://example.com
-baseurl: "/webflow-util" # the subpath of your site, e.g. /blog
+# source: ..
+#source: d:\projects\webflow-util
+
+# url: "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" # the base hostname & protocol for your site, e.g. http://example.com
+
+# baseurl: /
+# baseurl: "/webflow-util" # the subpath of your site, e.g. /blog
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
+# url: /
 
 #liburl: https://localhost # the base hostname & protocol for your site, e.g. http://example.com
 liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest # the base hostname & protocol for your site, e.g. http://example.com

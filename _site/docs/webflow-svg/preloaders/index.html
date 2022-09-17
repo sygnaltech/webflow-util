@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sygnal Webflow Animation | Preloaders</title>
+    <link rel="icon" href="data:;base64,=">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../demo.css" rel="stylesheet" type="text/css" />
+    <style>
+        #preloader2 svg {
+            width: 1000px;
+            height: 1000px;
+            margin: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Sygnal Webflow Animation | Preloaders <span data-value="ver"></span>
+            </h1>
+            <p class="subtitle">
+                by Sygnal Technology Group
+            </p>
+
+            <div class="block">
+                <span class="tag is-danger is-medium">Demonstration</span>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+
+                <h2>Default theme</h2>
+
+                <div style="height: 200px; overflow: auto;">
+                    <!--<div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">-->
+
+                    <div id="preloader1">
+                        <img src="../three-dots/preloader.svg" style="width: 100px; height: 100px;" />
+                    </div>
+
+                </div>
+
+                <h2>Default theme, striped</h2>
+
+                <div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">
+
+                    <div id="preloader2">
+                        <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                          viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                            <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                              <animateTransform 
+                                 attributeName="transform" 
+                                 attributeType="XML" 
+                                 type="rotate"
+                                 dur="1s" 
+                                 from="0 50 50"
+                                 to="360 50 50" 
+                                 repeatCount="indefinite" />
+                          </path>
+                        </svg>
+                    </div>
+
+                </div>
+
+                <h2>Default theme, striped and background-color</h2>
+
+                <div style="height: 200px; overflow: auto;">
+                    <!--<div style="background-color: lightyellow; padding: 40px; height: 400px; overflow: auto;">-->
+
+                    <div id="table3"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+    <script type="module">
+
+        $(function () {
+
+        });
+
+    </script>
+
+</body>
+</html>
+

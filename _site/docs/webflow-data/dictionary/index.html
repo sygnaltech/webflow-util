@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+
+
+
+<html
+ lang="en"
+ >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content=#ffffff>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png"
+           href="/favicon.png" 
+    />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
+    
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Macro Expansion | Sygnal Webflow Utils</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Macro Expansion" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<meta property="og:description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<link rel="canonical" href="http://localhost:4000/docs/webflow-data/dictionary/" />
+<meta property="og:url" content="http://localhost:4000/docs/webflow-data/dictionary/" />
+<meta property="og:site_name" content="Sygnal Webflow Utils" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Macro Expansion" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/webflow-data/dictionary/","headline":"Macro Expansion","@type":"WebPage","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- head scripts --></head>
+
+  <body>
+    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item">
+                Sygnal Webflow Utils
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu" :class="{ 'is-active': openNav }">
+            <div class="navbar-start">
+                <a href="/" class="navbar-item ">Home</a>
+                
+            </div>
+
+            <div class="navbar-end">
+                
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+    
+        <section class="hero  is-small  is-bold is-primary" >
+    <div class="hero-body ">
+        <div class="container">
+            <h1 class="title is-2">Macro Expansion</h1>
+            <p class="subtitle is-3">webflow-data</p>
+            
+        </div>
+    </div>
+</section>
+    
+    
+
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+            
+    </ul>
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="" class=""><a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo</b></a></a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Main Menu</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/" class="">Home</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/whats-new" class="">What's New</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/modules" class="">Library Modules</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/design" class="">Design Philosophy</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/tech" class="">Technical Notes</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">DataSources</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/datasources/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/datasource/" class="">Webflow Collection List</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/google-sheet-data/" class="">Google Sheet Data</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/github-data/" class="">Github Data</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Data</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-data/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/dictionary/" class="is-active">Macro Expansion</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/count-collection-items/" class="">Count Items</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Forms</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-forms/databinding/" class="">Data-binding Form INPUTs & SELECTs</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Table</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-table/create-table/" class="">HTML Tables</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Content</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-content/lipsum/" class="">Lorem-Ipsum Generator</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Html</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-html/formatjson/" class="">JSON Formatter</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/repeater/" class="">Repeater</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/autosizeiframes/" class="">Auto-Size IFRAMEs</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/dynamicattributes/" class="">Dynamic Attributes</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/nestedlists/" class="">Nested Lists</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-UI</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-ui/ratings/" class="">Ratings Component</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Demo</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-demo/preview-link/" class="">Webflow Preview Link</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Url</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-url/query/" class="">Query Param Passthrough</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+                </div>
+                
+                <div class="column is-8">
+                    
+                    
+                    
+                    
+                    
+    
+    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#example-json-content">Example JSON content</a>
+    <ul>
+      <li><a href="#option-1-tagged-elements">Option 1: Tagged Elements</a></li>
+      <li><a href="#option-2-macro-expansion">Option 2: Macro Expansion</a></li>
+    </ul>
+  </li>
+</ul>
+    </div>
+</div>
+
+
+
+
+<div class="content">
+    <p>WFU macro expansion allows you to populate specific values in your Webflow pages, from a remote data source.</p>
+
+<p>Insert text strings, numeric values, or calculated spreadsheet results anywhere you like.</p>
+
+<p>Values are stored in a dictionary-style JSON array.</p>
+
+<h1 id="preparing-the-dictionary">Preparing the Dictionary</h1>
+
+<ol>
+  <li>
+    <p>Load data from an external data source.
+Here we’re using a 
+<a href="https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/edit#gid=118669749" target="_blank">Google Sheet</a> 
+with calculated fields.</p>
+  </li>
+  <li>
+    <p>The data source must have 2 identified columns - a unique Key column, and Value column.
+In a Google Sheet source, those are unique column header names.
+In this demo we are using <code class="language-plaintext highlighter-rouge">Name</code> and <code class="language-plaintext highlighter-rouge">Value</code>.</p>
+  </li>
+  <li>
+    <p>Construct a dictionary structure with those key-value pairs.
+This is a javascript <code class="language-plaintext highlighter-rouge">Map</code> element.</p>
+  </li>
+  <li>
+    <p>Find all HTML elements tagged to a specific Key, and load that Value.</p>
+  </li>
+</ol>
+
+<h2 id="example-json-content">Example JSON content</h2>
+
+<p>This is the Google Sheet content, after it has been converted to JSON.
+Note the <code class="language-plaintext highlighter-rouge">Key</code> and <code class="language-plaintext highlighter-rouge">Value</code> column names become field keys in the JSON.</p>
+
+<div class="demo area grey large" id="json1">
+    <pre>Loading...</pre>
+</div>
+
+<p>Once the dictionary is created, you can use it.</p>
+
+<h1 id="applying-the-dictionary">Applying the Dictionary</h1>
+
+<h3 id="option-1-tagged-elements">Option 1: Tagged Elements</h3>
+
+<p>Identify elements in which you want data loaded where, using the <code>wfu-map-dict</code> custom attribute.</p>
+
+<p>e.g. <code>&lt;span wfu-map-dict="Countries"&gt;&lt;/span&gt;</code></p>
+
+<p>Each of the bolded values in this list are loaded dynamically from the Google Sheet.</p>
+
+<ul>
+  <li>Countries: <b><span wfu-map-dict="Countries"></span></b></li>
+  <li>Europe: <b><span wfu-map-dict="Europe"></span></b></li>
+  <li>Population: <b><span wfu-map-dict="Population"></span></b></li>
+  <li>Size &gt; 1 Billion: <b><span wfu-map-dict="SizeBillion"></span></b></li>
+  <li>Size &gt; 100 Million: <b><span wfu-map-dict="Size100Million"></span></b></li>
+</ul>
+
+<h3 id="option-2-macro-expansion">Option 2: Macro Expansion</h3>
+
+<p>WFU also provides for macro expansion.
+In your text, use the construction <code>{{ Key Name }}</code>
+to identify where you want values inserted.
+This is particularly of use in Rich Text Elements.</p>
+
+<p>Text or Rich Text element itself must be tagged with the custom attribute
+    <code> wfu-data-macros="datasourceName"</code>.</p>
+
+<pre>
+Global population is growing!
+                    
+Currently, there are {{ Countries }} countries in the world,
+of which {{ Europe }} are in Europe.
+                    
+Of a total global population of {{ Population }},
+{{ Size100Million }} of our contries are over 100 million population,
+with {{ SizeBillion }} over 1 billion.
+</pre>
+
+<p>Here’s an example of tag-expanded content.</p>
+
+<div class="container" style="width: 100%; justify-content: left;" wfu-data-macros="datasourceName">
+<div class="notification is-primary">
+
+<p>
+Global population is growing!
+</p>
+<p>
+Currently, there are {{Countries}} countries in the world,
+of which {{Europe}} are in Europe.
+</p>
+<p>
+Of a total global population of {{Population}},
+{{Size100Million}} of our contries are over 100 million population,
+with {{SizeBillion}} over 1 billion.
+</p>
+
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+<script type="module">
+
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
+    import { Database, getCsvAsData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/modules/webflow-data.js';
+    import { getGoogleSheetCsvUrl } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/datasources/google-sheet-data.js';
+    import { expandMacrosInElement, displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/modules/webflow-html.js';
+
+    $(function () {
+
+        var json;
+
+        // TEST #1 - retrieve CSV as JSON
+
+        // Get JSON data
+        // retrieve from Google Sheet
+        json = getCsvAsData(
+            'https://docs.google.com/spreadsheets/d/16lPOiFz5Ow-FTro5SWS-m00fNhRjgsiyeSBdme3gKX0/export?format=csv&gid=118669749',
+            true // pretty print
+        )
+
+        // Display JSON data
+        displayDataAsHtml($("#json1"), json);
+
+        // Load Database
+        var db = new Database();
+        db.add ("CountryStats", json);
+
+// console.log(db.getDataSource("CountryStats"));
+
+        // Create Dictionary
+        var dict = db.getDictionary ("CountryStats", "Name", "Value");
+
+// console.log(dict);
+
+        // Apply data to all elements
+        $("*[wfu-map-dict]").each(function (i, obj) {
+
+            $(obj).text(
+                dict.get(obj.getAttribute("wfu-map-dict"))
+            );
+
+        });
+
+        // Expand macros
+        $("*[wfu-data-macros]").each(function (i, obj) {
+
+            expandMacrosInElement(obj, dict);
+
+        });
+
+    });
+
+</script>
+
+
+</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+        <footer class="footer">
+    <div class="container">
+        
+        
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</footer>
+
+    
+    <script src="/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+</html>
