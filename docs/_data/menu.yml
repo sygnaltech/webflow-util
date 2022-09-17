@@ -9,73 +9,73 @@
     - name: Home
       link: /
     - name: What's New
-      link: /docs/whats-new
+      link: /whats-new
     - name: Library Modules
-      link: /docs/modules
+      link: /modules
     - name: Design Philosophy
-      link: /docs/design
+      link: /design
     - name: Technical Notes
-      link: /docs/tech
+      link: /tech
 
 - label: DataSources
   items:
     - name: Overview
-      link: /docs/datasources/
+      link: /datasources/
     - name: Webflow Collection List
-      link: /docs/datasources/datasource/
+      link: /datasources/datasource/
     - name: Google Sheet Data
-      link: /docs/datasources/google-sheet-data/
+      link: /datasources/google-sheet-data/
     - name: Github Data
-      link: /docs/datasources/github-data/
+      link: /datasources/github-data/
 
 - label: Webflow-Data
   items:
     - name: Overview
-      link: /docs/webflow-data/
+      link: /webflow-data/
     - name: Macro Expansion
-      link: /docs/webflow-data/dictionary/
+      link: /webflow-data/dictionary/
     - name: Count Items
-      link: /docs/webflow-data/count-collection-items/
+      link: /webflow-data/count-collection-items/
 
 - label: Webflow-Forms
   items:
     - name: Data-binding Form INPUTs & SELECTs
-      link: /docs/webflow-forms/databinding/
+      link: /webflow-forms/databinding/
 
 - label: Webflow-Table
   items:
     - name: HTML Tables
-      link: /docs/webflow-table/create-table/
+      link: /webflow-table/create-table/
 
 - label: Webflow-Content
   items:
     - name: Lorem-Ipsum Generator
-      link: /docs/webflow-content/lipsum/
+      link: /webflow-content/lipsum/
 
 - label: Webflow-Html
   items:
     - name: JSON Formatter
-      link: /docs/webflow-html/formatjson/
+      link: /webflow-html/formatjson/
     - name: Repeater
-      link: /docs/webflow-html/repeater/
+      link: /webflow-html/repeater/
     - name: Auto-Size IFRAMEs
-      link: /docs/webflow-html/autosizeiframes/
+      link: /webflow-html/autosizeiframes/
     - name: Dynamic Attributes
-      link: /docs/webflow-html/dynamicattributes/
+      link: /webflow-html/dynamicattributes/
     - name: Nested Lists
-      link: /docs/webflow-html/nestedlists/
+      link: /webflow-html/nestedlists/
 
 - label: Webflow-UI
   items:
     - name: Ratings Component
-      link: /docs/webflow-ui/ratings/
+      link: /webflow-ui/ratings/
 
 - label: Webflow-Demo
   items:
     - name: Webflow Preview Link
-      link: /docs/webflow-demo/preview-link/
+      link: /webflow-demo/preview-link/
 
 - label: Webflow-Url
   items:
     - name: Query Param Passthrough
-      link: /docs/webflow-url/query/
+      link: /webflow-url/query/
