@@ -196,12 +196,21 @@ export var processList = function (list) {
     //        console.log(`LIST -------------------------`);
 
     var content = $(list).html();
-    console.log(content);
+//    console.log(content);
 
     var data = $.parseHTML(content);
     var items = [];
 
     $.each(data, function (i, el) {
+
+//        console.log(el);
+        
+//        console.log(JSON.stringify(el));
+//        console.log(el.nodeName);
+//        console.log(el.nodeType);
+
+        if (el.nodeName != "LI")
+            return; // skip
 
         var item = {
             indent: 1,
