@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+
+
+
+<html
+ lang="en"
+ >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content=#ffffff>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png"
+           href="/favicon.png" 
+    />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
+    
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Collection List Data Sources | Sygnal Webflow Utils</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Collection List Data Sources" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<meta property="og:description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<link rel="canonical" href="http://localhost:4000/docs/datasources/datasource/" />
+<meta property="og:url" content="http://localhost:4000/docs/datasources/datasource/" />
+<meta property="og:site_name" content="Sygnal Webflow Utils" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Collection List Data Sources" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/datasources/datasource/","headline":"Collection List Data Sources","@type":"WebPage","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- head scripts --></head>
+
+  <body>
+    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item">
+                Sygnal Webflow Utils
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu" :class="{ 'is-active': openNav }">
+            <div class="navbar-start">
+                <a href="/" class="navbar-item ">Home</a>
+                
+            </div>
+
+            <div class="navbar-end">
+                
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+    
+        <section class="hero  is-small  is-bold is-primary" >
+    <div class="hero-body ">
+        <div class="container">
+            <h1 class="title is-2">Collection List Data Sources</h1>
+            <p class="subtitle is-3"></p>
+            
+        </div>
+    </div>
+</section>
+    
+    
+
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+            
+    </ul>
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="" class=""><a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo</b></a></a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Main Menu</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/" class="">Home</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/whats-new" class="">What's New</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/modules" class="">Library Modules</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/design" class="">Design Philosophy</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/tech" class="">Technical Notes</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">DataSources</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/datasources/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/datasource/" class="is-active">Webflow Collection List</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/google-sheet-data/" class="">Google Sheet Data</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/github-data/" class="">Github Data</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Data</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-data/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/dictionary/" class="">Macro Expansion</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/count-collection-items/" class="">Count Items</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Forms</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-forms/databinding/" class="">Data-binding Form INPUTs & SELECTs</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Table</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-table/create-table/" class="">HTML Tables</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Content</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-content/lipsum/" class="">Lorem-Ipsum Generator</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Html</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-html/formatjson/" class="">JSON Formatter</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/repeater/" class="">Repeater</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/autosizeiframes/" class="">Auto-Size IFRAMEs</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/dynamicattributes/" class="">Dynamic Attributes</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/nestedlists/" class="">Nested Lists</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-UI</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-ui/ratings/" class="">Ratings Component</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Demo</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-demo/preview-link/" class="">Webflow Preview Link</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Url</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-url/query/" class="">Query Param Passthrough</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+                </div>
+                
+                <div class="column is-8">
+                    
+                    
+                    
+                    
+                    
+    
+    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#how-to-create-a-collection-list-data-source">How to Create a Collection List Data Source</a></li>
+  <li><a href="#advanced-notes">Advanced Notes</a></li>
+  <li><a href="#ways-to-use-your-data">Ways to Use your Data</a>
+    <ul>
+      <li><a href="#collection-list-item-count">Collection List Item Count</a></li>
+    </ul>
+  </li>
+  <li><a href="#how-it-works">How it Works</a></li>
+</ul>
+    </div>
+</div>
+
+
+
+
+<div class="content">
+    <p><a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/collection-item-count" target="_blank">View Demonstration in Webflow</a></p>
+
+<p>WFU allows you to create a Data Source from any Webflow Collection List. You can then use that source in several ways;</p>
+
+<ul>
+  <li>Data-bind to a form SELECT or INPUT control.</li>
+  <li>Display an HTML table</li>
+  <li>Display a list</li>
+  <li>Display the count of items</li>
+</ul>
+
+<h2 id="how-to-create-a-collection-list-data-source">How to Create a Collection List Data Source</h2>
+
+<p>In the Webflow designer;</p>
+
+<ol>
+  <li>
+    <p>Create a Webflow <code class="language-plaintext highlighter-rouge">Collection List</code>. Put it somewhere you can find easily, I recommend you make it the very last element in your page.</p>
+  </li>
+  <li>
+    <p>Bind it to the <code class="language-plaintext highlighter-rouge">Collection</code> you want to access data from.</p>
+  </li>
+  <li>
+    <p>In the Collection List Item, add an <code class="language-plaintext highlighter-rouge">HTML Embed</code> element.</p>
+  </li>
+  <li>
+    <p>Paste the following code into the <code class="language-plaintext highlighter-rouge">HTML Embed</code>.</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="application/json"&gt;
+{
+  "id": " (your item goes here) ",
+  "text": " ( text item goes here) "
+}
+&lt;/script&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
++ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
++ The name is whatever field you want visible to the user.
++ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
++ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>Name your data source. We do this with a custom attribute on the Collection List itself;</p>
+
+    <ul>
+      <li>Select your outermost Collection List element.</li>
+      <li>Add a custom attribute named <code class="language-plaintext highlighter-rouge">wfu-data</code>.</li>
+      <li>In the value, give it a unique name. I recommend all lowercase letters, no spaces or special characters. For example <code class="language-plaintext highlighter-rouge">blogposts</code> and <code class="language-plaintext highlighter-rouge">products</code> are good names.</li>
+      <li><em>Remember this name</em>, you’ll need it later.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Identify your data source as a collection list type, by adding another custom attribute directly on the Collection List, of <code class="language-plaintext highlighter-rouge">wfu-data-type="collection-list"</code></p>
+  </li>
+  <li>
+    <p>Once you’re all setup, you can make the Collection List invisible. Simply select the outermost Collection List element and mark it as invisible on all devices. If you do this, you won’t see it anymore in the Webflow designer, but you can select it in the left-side Navigator.</p>
+  </li>
+</ol>
+
+<p><em>You have a data source!</em></p>
+
+<p>You can create as many collection data-sources as you need, but make certain they are each named differently.</p>
+
+<h2 id="advanced-notes">Advanced Notes</h2>
+
+<p>You can create as many collection data-sources as you want, but make certain they are each named differently. Webflow does have a limit on the number of Collection Lists per page, and these will count towards that.</p>
+
+<p>If you happen to already have a collection list on the page that displays exactly the data you want, you can use that Collection List as your datasource. Simply put your Embed block there, and apply the <code class="language-plaintext highlighter-rouge">wfu-data</code> attribute to the Collection List. Don’t mark the Collection List as invisible, however you can mark the Embed element as invisible to avoid a messy look in your Designer.</p>
+
+<p>If you’ve hidden your Collection List, or your Embed, remember they’re always available in your left-side navigation.</p>
+
+<p>If you use your data-source on multiple pages, you can build your Collection List into a Symbol. Wrap your Collection list in a DIV, and turn the DIV into a Symbol. This will allow you to more easily access that outmost Collection List element if you need to.</p>
+
+<h2 id="ways-to-use-your-data">Ways to Use your Data</h2>
+
+<p>Besides <a href="databinding">data-binding</a>, you can use this data in other ways.</p>
+
+<h3 id="collection-list-item-count">Collection List Item Count</h3>
+
+<p>Want to display the number of items in a collection?</p>
+
+<ol>
+  <li>Setup that colection as a data source using the instructions above. In this example, we’ll give the data source a <code class="language-plaintext highlighter-rouge">wfu-data</code> id of <code class="language-plaintext highlighter-rouge">blogposts</code>. Any unique datasource name will work (see above).</li>
+  <li>Create an element on your page where you want to display the count. In this example, we’ll give it an ID of <code class="language-plaintext highlighter-rouge">myCounter</code></li>
+  <li>Paste the following code into your page’s <strong>Before <code class="language-plaintext highlighter-rouge">&lt;/body&gt;</code> tag</strong> section.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="module"&gt;
+import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/datasources/webflow-collectionlist-data.js';
+$(function () {
+
+    // Create database
+    var db = loadAllDataSources();
+
+    // Count items
+    $("#myCounter").text(db.data.get("blogposts").length);
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h2 id="how-it-works">How it Works</h2>
+
+<p>WFU <strong>data sources</strong> are simple JSON arrays built from Collection Lists that you prepare. These are stored in a Map collection that I refer database, which enables you to retrieve multiple data sources</p>
+
+
+</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+        <footer class="footer">
+    <div class="container">
+        
+        
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</footer>
+
+    
+    <script src="/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+</html>

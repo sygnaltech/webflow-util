@@ -1,0 +1,33 @@
+
+/*
+ * General CSS for Sygnal Webflow Util library
+ */
+
+/* Initially hide images that are tagged for SVG-inlining.
+   This prevents them from appearing (blck) before the CSS color-rules can be applied. */
+.wfu-svg {
+    visibility: hidden;
+}
+
+pre.wfu-code {
+}
+
+.wfu-json-string {
+    color: #008000;
+}
+
+.wfu-json-number {
+    color: #FF0000;
+}
+
+.wfu-json-boolean {
+    color: #FF8C00;
+}
+
+.wfu-json-null {
+    color: #908080;
+}
+
+.wfu-json-key {
+    color: #1A1A1A;
+}

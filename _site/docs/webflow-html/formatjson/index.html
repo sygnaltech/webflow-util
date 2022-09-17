@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+
+
+
+<html
+ lang="en"
+ >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content=#ffffff>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png"
+           href="/favicon.png" 
+    />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
+    
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Format JSON | Sygnal Webflow Utils</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Format JSON" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<meta property="og:description" content="Make your Webflow site awesome. Tools to add dynamic capabilities." />
+<link rel="canonical" href="http://localhost:4000/docs/webflow-html/formatjson/" />
+<meta property="og:url" content="http://localhost:4000/docs/webflow-html/formatjson/" />
+<meta property="og:site_name" content="Sygnal Webflow Utils" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Format JSON" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/webflow-html/formatjson/","headline":"Format JSON","@type":"WebPage","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- head scripts --></head>
+
+  <body>
+    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item">
+                Sygnal Webflow Utils
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu" :class="{ 'is-active': openNav }">
+            <div class="navbar-start">
+                <a href="/" class="navbar-item ">Home</a>
+                
+            </div>
+
+            <div class="navbar-end">
+                
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+    
+        <section class="hero  is-small  is-bold is-primary" >
+    <div class="hero-body ">
+        <div class="container">
+            <h1 class="title is-2">Format JSON</h1>
+            <p class="subtitle is-3">webflow-data</p>
+            
+        </div>
+    </div>
+</section>
+    
+    
+
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+            
+    </ul>
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="" class=""><a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo</b></a></a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Main Menu</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/" class="">Home</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/whats-new" class="">What's New</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/modules" class="">Library Modules</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/design" class="">Design Philosophy</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/tech" class="">Technical Notes</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">DataSources</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/datasources/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/datasource/" class="">Webflow Collection List</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/google-sheet-data/" class="">Google Sheet Data</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/datasources/github-data/" class="">Github Data</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Data</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-data/" class="">Overview</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/dictionary/" class="">Macro Expansion</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-data/count-collection-items/" class="">Count Items</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Forms</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-forms/databinding/" class="">Data-binding Form INPUTs & SELECTs</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Table</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-table/create-table/" class="">HTML Tables</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Content</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-content/lipsum/" class="">Lorem-Ipsum Generator</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Html</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-html/formatjson/" class="is-active">JSON Formatter</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/repeater/" class="">Repeater</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/autosizeiframes/" class="">Auto-Size IFRAMEs</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/dynamicattributes/" class="">Dynamic Attributes</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/webflow-html/nestedlists/" class="">Nested Lists</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-UI</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-ui/ratings/" class="">Ratings Component</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Demo</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-demo/preview-link/" class="">Webflow Preview Link</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Webflow-Url</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/webflow-url/query/" class="">Query Param Passthrough</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+                </div>
+                
+                <div class="column is-8">
+                    
+                    
+                    
+                    
+                    
+    
+    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#demo---format-json">DEMO - Format JSON</a></li>
+</ul>
+    </div>
+</div>
+
+
+
+
+<div class="content">
+    <style>
+.wfu-svg {
+    visibility: hidden;
+}
+pre.wfu-code {
+}
+.wfu-json-string {
+    color: #008000;
+}
+.wfu-json-number {
+    color: #FF0000;
+}
+.wfu-json-boolean {
+    color: #FF8C00;
+}
+.wfu-json-null {
+    color: #908080;
+}
+.wfu-json-key {
+    color: #1A1A1A;
+}
+</style>
+
+<!--
+<a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/demo/collection-item-count" target="_blank">View Demonstration in Webflow</a>
+-->
+
+<p><strong>Display the count of the items in your data set.</strong></p>
+
+<p>This can be used with Webflow Collection Lists as well-
+however it will be limited to the maximum Collection List size
+( 100 items ).</p>
+
+<h2 id="demo---format-json">DEMO - Format JSON</h2>
+
+<p>Format JSON, with syntax highlighting.</p>
+
+<p><span class="tag is-danger is-medium is-light">Demonstration</span></p>
+
+<div id="json1" class="demo area grey large">
+    <pre>Loading...</pre>
+</div>
+
+<script type="text/json" id="data2">
+[
+  {
+    "Rank": 1,
+    "Country": "China",
+    "Region": "Asia",
+    "Population": "1,411,778,724",
+    "Percent": false
+  },
+  {
+    "Rank": "2",
+    "Country": "India",
+    "Region": "Asia",
+    "Population": "1,381,914,537",
+    "Percent": "17.50%"
+  }
+]
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
+
+<script type="module">
+        
+    // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
+    import { getGoogleSheetData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/datasources/google-sheet-data.js';
+    import { Database, loadAllData } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/modules/webflow-data.js';
+    import { displayDataAsHtml } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/modules/webflow-html.js';
+
+    $(function () {
+
+        var json;
+        json = $('#data2').text();
+        
+        var data;
+        data = JSON.parse(json);
+
+        displayDataAsHtml(
+            $("#json1"), 
+            data
+        );
+
+    });
+
+</script>
+
+
+</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+        <footer class="footer">
+    <div class="container">
+        
+        
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</footer>
+
+    
+    <script src="/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+</html>
