@@ -79,3 +79,8 @@
   items:
     - name: Query Param Passthrough
       link: /docs/webflow-url/query/
+
+- label: Webflow-Video
+  items:
+    - name: Background Video Poster
+      link: /docs/webflow-video/background-video-poster/
