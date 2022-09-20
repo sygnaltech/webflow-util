@@ -41,6 +41,8 @@
   items:
     - name: Data-binding Form INPUTs & SELECTs
       link: /docs/webflow-forms/databinding/
+    - name: Zapier Webhook
+      link: /docs/webflow-forms/zapier-webhook/
 
 - label: Webflow-Table
   items:
