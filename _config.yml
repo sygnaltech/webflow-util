@@ -41,6 +41,9 @@ plugins:
   - jekyll-feed
   - github-pages
 
+image:
+  path: docs/og_image.jpg
+
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

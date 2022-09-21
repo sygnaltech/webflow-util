@@ -28,7 +28,7 @@ This works fine, but
 (2) I will trigger Webflow's form data storage, and form notification email. In some cases these are simply not desired,
 and they cannot be selectively turned off for a specific form. 
 
-- Setup your Zzp to trigger off of a Webhook, and then give that Webhook URL to your Webflow form as the `Action` URL.
+- Setup your Zap to trigger off of a Webhook, and then give that Webhook URL to your Webflow form as the `Action` URL. Set your form method to POST.
 
 That second option works great however Webflows forms handler then does not run at all, 
 which means that the user sees the webhook's JSON response. 
