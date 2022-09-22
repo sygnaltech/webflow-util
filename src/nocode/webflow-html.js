@@ -14,6 +14,43 @@ import { processList } from '../modules/webflow-html.js';
 
 $(function () {
 
+    // Process filtered items
+    $("*[wfu-filter]").each(function (index) {
+
+        console.log($(this).attr("wfu-filter"));
+
+        var visible = eval($(this).attr("wfu-filter"));
+
+        if (visible)
+            $(this).css("display", "block");
+    });
+
+    // Process filtered items
+    $("*[wfu-filter-func]").each(function (index) {
+
+        var funcName = $(this).attr("wfu-filter-func");
+        var fqFuncName = `window.${funcName}`;  // ()`;
+//        var func = eval(`window["top"]["${funcName}"]`);
+
+        console.debug(fqFuncName);
+
+        var f = new Function(fqFuncName);
+
+//        console.log(f($(this)));
+//        alert(window);
+
+        // Test for function
+        // jquery isFunction deprecated
+        // https://stackoverflow.com/a/66824642
+//        console.log(typeof window[`"${funcName}"`] === "function");
+
+        var visible = eval(`${fqFuncName}($(this))`);
+//        console.log(visible);
+
+        if (visible)
+            $(this).css("display", "block");
+    });
+
     // Process standalone lists
     var listElems = $("ul[wfu-lists], ol[wfu-lists]");
     $.each(listElems, function (id, listElem) {

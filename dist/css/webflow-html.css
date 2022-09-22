@@ -2,6 +2,17 @@
 /*
  * CSS for Sygnal Webflow Util HTL library
  */
+
+
+*[wfu-filter] {
+    display: none;
+}
+
+*[wfu-filter-func] {
+    display: none;
+}
+
+
 @import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 .w-richtext[wfu-lists] li {
   font-family: "Redacted", cursive;
