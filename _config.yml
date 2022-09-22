@@ -41,8 +41,14 @@ plugins:
   - jekyll-feed
   - github-pages
 
-image:
-  path: docs/og_image.jpg
+# image: /docs/og_image.jpg
+
+# https://jekyllrb.com/docs/configuration/front-matter-defaults/
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /docs/og_image_anim_800.gif
 
 # Exclude from processing.
 # The following items will not be processed, by default.
