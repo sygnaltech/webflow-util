@@ -3,6 +3,20 @@
  * CSS for Sygnal Webflow Util HTL library
  */
 
+
+
+// Hide filtered elements, by default
+
+*[wfu-filter] {
+    display: none;
+}
+
+*[wfu-filter-func] {
+    display: none;
+}
+
+
+
 // Apply skeleton loader effect to elements targeted for parsing by WFU.
 
 @import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
