@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Element Filtering
-# subtitle: DEMO
+subtitle: webflow-html
 menubar: menu
 hero_height: is-small
 toc: true
