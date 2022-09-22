@@ -66,6 +66,8 @@
       link: /docs/webflow-html/dynamicattributes/
     - name: Nested Lists
       link: /docs/webflow-html/nestedlists/
+    - name: Element Filtering
+      link: /docs/webflow-html/filter/
 
 - label: Webflow-UI
   items:
