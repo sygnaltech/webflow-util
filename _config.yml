@@ -48,7 +48,7 @@ defaults:
   - scope:
       path: ""
     values:
-      image: /docs/og_image_anim_800.gif
+      image: /docs/og_image_anim.gif
 
 # Exclude from processing.
 # The following items will not be processed, by default.
