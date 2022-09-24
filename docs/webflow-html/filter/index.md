@@ -87,7 +87,13 @@ as it will be passed the element you are evaluating in the filter.
 
 There are currently no configuration options for this library, so we'll use a *no-code* integration approach.
 
-Install this JS in BODY, site-wide or on the specific pages you want the script to affect.
+Add this CSS script to the HEAD of your site or page.
+
+```
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/css/webflow-html.css">
+```
+
+Add this JS reference to the BODY of your site or page.
 
 ```
 <script type="module" src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/nocode/webflow-html.js"></script>
