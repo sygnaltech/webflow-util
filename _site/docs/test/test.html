@@ -29,12 +29,12 @@
 <link rel="canonical" href="http://localhost:4000/docs/test/test.html" />
 <meta property="og:url" content="http://localhost:4000/docs/test/test.html" />
 <meta property="og:site_name" content="Sygnal Webflow Utils" />
-<meta property="og:image" content="http://localhost:4000/docs/og_image_anim_800.gif" />
+<meta property="og:image" content="http://localhost:4000/docs/og_image_anim.gif" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4000/docs/og_image_anim_800.gif" />
+<meta property="twitter:image" content="http://localhost:4000/docs/og_image_anim.gif" />
 <meta property="twitter:title" content="Jekyll Liquid TESTS" />
 <script type="application/ld+json">
-{"url":"http://localhost:4000/docs/test/test.html","headline":"Jekyll Liquid TESTS","@type":"WebPage","image":"http://localhost:4000/docs/og_image_anim_800.gif","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
+{"url":"http://localhost:4000/docs/test/test.html","headline":"Jekyll Liquid TESTS","@type":"WebPage","image":"http://localhost:4000/docs/og_image_anim.gif","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <!-- head scripts --></head>
 
@@ -321,7 +321,7 @@
 <p>https://jekyllrb.com/docs/liquid/filters/</p>
 
 <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"module"</span><span class="nt">&gt;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">createWebflowPreviewLink</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-demo.js</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createWebflowPreviewLink</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.11/src/modules/webflow-demo.js</span><span class="dl">'</span><span class="p">;</span>
 <span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">#previewLink</span><span class="dl">"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="dl">"</span><span class="s2">href</span><span class="dl">"</span><span class="p">,</span> 
   		<span class="nx">createWebflowPreviewLink</span><span class="p">(</span><span class="dl">'</span><span class="s1">4d388483d99c6cc36c58ae966e92c615</span><span class="dl">'</span><span class="p">)</span>
@@ -330,7 +330,7 @@
 <span class="nt">&lt;/script&gt;</span></code></pre></figure>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="module"&gt;
-import { createWebflowPreviewLink } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-demo.js';
+import { createWebflowPreviewLink } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.11/src/modules/webflow-demo.js';
 $(function () {
     $("#previewLink").attr("href", 
   		createWebflowPreviewLink('4d388483d99c6cc36c58ae966e92c615')

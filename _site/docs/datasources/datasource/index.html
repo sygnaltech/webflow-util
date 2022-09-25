@@ -29,12 +29,12 @@
 <link rel="canonical" href="http://localhost:4000/docs/datasources/datasource/" />
 <meta property="og:url" content="http://localhost:4000/docs/datasources/datasource/" />
 <meta property="og:site_name" content="Sygnal Webflow Utils" />
-<meta property="og:image" content="http://localhost:4000/docs/og_image_anim_800.gif" />
+<meta property="og:image" content="http://localhost:4000/docs/og_image_anim.gif" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4000/docs/og_image_anim_800.gif" />
+<meta property="twitter:image" content="http://localhost:4000/docs/og_image_anim.gif" />
 <meta property="twitter:title" content="Collection List Data Sources" />
 <script type="application/ld+json">
-{"url":"http://localhost:4000/docs/datasources/datasource/","headline":"Collection List Data Sources","@type":"WebPage","image":"http://localhost:4000/docs/og_image_anim_800.gif","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
+{"url":"http://localhost:4000/docs/datasources/datasource/","headline":"Collection List Data Sources","@type":"WebPage","image":"http://localhost:4000/docs/og_image_anim.gif","description":"Make your Webflow site awesome. Tools to add dynamic capabilities.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <!-- head scripts --></head>
 
@@ -352,18 +352,19 @@
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="application/json"&gt;
 {
-  "id": " (your item goes here) ",
-  "text": " ( text item goes here) "
+  "id": "*** your item goes here ***",
+  "text": "*** text item goes here ***"
 }
 &lt;/script&gt;
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
-+ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
-+ The name is whatever field you want visible to the user.
-+ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
-+ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
-</code></pre></div></div>
+<ul>
+  <li>Where I have indicated with <em>** notes **</em>, you’ll need to insert the field you want for the item ID, and the text you want to display.</li>
+  <li>Typically the ID would be unique, and the <code class="language-plaintext highlighter-rouge">slug</code> works great for that. You may have another field such as a product SKU that would be more appropriate.</li>
+  <li>The name is whatever field you want visible to the user.</li>
+  <li>In Webflow’s Designer, use the <strong>Add Field</strong> widget at the top right of the Embed element to insert these</li>
+  <li>Make certain there are no spaces between your inserted tag, and the double quotes <code class="language-plaintext highlighter-rouge">"</code>.</li>
+</ul>
 
 <ol>
   <li>
@@ -413,7 +414,7 @@
 </ol>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="module"&gt;
-import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/datasources/webflow-collectionlist-data.js';
+import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.11/src/datasources/webflow-collectionlist-data.js';
 $(function () {
 
     // Create database
