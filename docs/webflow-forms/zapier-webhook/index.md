@@ -63,8 +63,6 @@ Install this JS in BODY, site-wide or on the specific pages you want the script 
 <script type="module" src="{{ site.liburl }}/src/nocode/webflow-form.js"></script>
 ```
 
-*In place of `@latest` use the current version number in your URLs.*
-
 
 
 ### STEP 2 - Setup your Zap, and link your Webflow form 
