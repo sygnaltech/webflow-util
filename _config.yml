@@ -23,7 +23,8 @@
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 #liburl: https://localhost # the base hostname & protocol for your site, e.g. http://example.com
-liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest # the base hostname & protocol for your site, e.g. http://example.com
+liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.11 # the base hostname & protocol for your site, e.g. http://example.com
+libver: 3.11
 
 title: Sygnal Webflow Utils
 email: web@sygnal.com
@@ -49,6 +50,7 @@ defaults:
       path: ""
     values:
       image: /docs/og_image_anim.gif
+      stylesheet: /docs/docs.css
 
 # Exclude from processing.
 # The following items will not be processed, by default.

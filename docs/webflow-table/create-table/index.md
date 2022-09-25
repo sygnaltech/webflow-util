@@ -73,11 +73,11 @@ Performs both the data retrieval and binding in a single call using a helper met
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { getCsvAsData } from '{{site.liburl}}/src/modules/webflow-data.js';
-    import { renderTableFromData } from '{{site.liburl}}/src/modules/webflow-table.js';
-    import { getGoogleSheetCsvUrl } from '{{site.liburl}}/src/datasources/google-sheet-data.js';
-    import { renderTableFromGoogleSheet } from '{{site.liburl}}/src/locode/webflow-table-helper.js';
-    import { displayDataAsHtml } from '{{site.liburl}}/src/modules/webflow-html.js';
+    import { getCsvAsData } from '{{ site.liburl }}/src/modules/webflow-data.js';
+    import { renderTableFromData } from '{{ site.liburl }}/src/modules/webflow-table.js';
+    import { getGoogleSheetCsvUrl } from '{{ site.liburl }}/src/datasources/google-sheet-data.js';
+    import { renderTableFromGoogleSheet } from '{{ site.liburl }}/src/locode/webflow-table-helper.js';
+    import { displayDataAsHtml } from '{{ site.liburl }}/src/modules/webflow-html.js';
 
     $(function () {
 

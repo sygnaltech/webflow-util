@@ -31,18 +31,17 @@ In the Webflow designer;
 ```
 <script type="application/json">
 {
-  "id": " (your item goes here) ",
-  "text": " ( text item goes here) "
+  "id": "*** your item goes here ***",
+  "text": "*** text item goes here ***"
 }
 </script>
 ```
 
-    + Where I have indicated with (notes), you'll need to insert the field you want for the item ID, and the text you want to display. 
-    + Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
-    + The name is whatever field you want visible to the user.
-    + In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
-    + Make certain there are no spaces between your inserted tag, and the double quotes `"`.
-
++ Where I have indicated with *** notes ***, you'll need to insert the field you want for the item ID, and the text you want to display. 
++ Typically the ID would be unique, and the `slug` works great for that. You may have another field such as a product SKU that would be more appropriate.
++ The name is whatever field you want visible to the user.
++ In Webflow's Designer, use the **Add Field** widget at the top right of the Embed element to insert these
++ Make certain there are no spaces between your inserted tag, and the double quotes `"`.
 
 
 5. Name your data source. We do this with a custom attribute on the Collection List itself;
@@ -90,7 +89,7 @@ Want to display the number of items in a collection?
     
 ```
 <script type="module">
-import { loadAllDataSources } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/datasources/webflow-collectionlist-data.js';
+import { loadAllDataSources } from '{{ site.liburl }}/src/datasources/webflow-collectionlist-data.js';
 $(function () {
 
     // Create database

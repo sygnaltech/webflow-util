@@ -14,8 +14,8 @@ toc: true
 {% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
 {% endif %}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/dist/css/webflow-ui.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/css/input-range-slider.css">
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/webflow-ui.css">
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/input-range-slider.css">
 
 WFU is exploring the addition of simple components to the Webflow interface,
 starting with a simple 5-star ratings component that is commonly needed for customer reviews. 
@@ -127,13 +127,13 @@ There are currently no configuration options for the data-binding feature, so we
 Install CSS in HEAD, generally site-wide.
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/dist/css/webflow-ui.css">
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/webflow-ui.css">
 ```
 
 Install JS in BODY, generally site-wide.
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/src/nocode/webflow-ui.js"></script>
+<script src="{{ site.liburl }}/src/nocode/webflow-ui.js"></script>
 ```
 
 *Update the version numbers as needed.
@@ -205,11 +205,11 @@ leave it as not required, and configure the Embed element so that it is conditio
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
-<script src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.3/src/nocode/webflow-ui.js" type="text/javascript" crossorigin="anonymous"></script>
+<script src="{{ site.liburl }}/src/nocode/webflow-ui.js" type="text/javascript" crossorigin="anonymous"></script>
 
 <script type="module">
 
-    import { setRating } from '{{site.liburl}}/src/modules/webflow-ui.js';
+    import { setRating } from '{{ site.liburl }}/src/modules/webflow-ui.js';
 
     $(function () {
     

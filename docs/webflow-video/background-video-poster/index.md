@@ -69,7 +69,7 @@ There are currently no configuration options for this library, so we'll use a *n
 Install this JS in BODY, site-wide or on the specific pages you want the script to affect.
 
 ```
-<script type="module" src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/nocode/webflow-video.js"></script>
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-video.js"></script>
 ```
 
 *In place of `@latest` use the current version number in your URLs.*

@@ -50,7 +50,7 @@ Automatically sizes the IFRAME to fit its content.
 
 <script type="module">
 
-    import { autosizeIFrames } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { autosizeIFrames } from '{{ site.liburl }}/src/modules/webflow-html.js';
 
     $(function () {
 

@@ -90,16 +90,14 @@ There are currently no configuration options for this library, so we'll use a *n
 Add this CSS script to the HEAD of your site or page.
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/dist/css/webflow-html.css">
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/webflow-html.css">
 ```
 
 Add this JS reference to the BODY of your site or page.
 
 ```
-<script type="module" src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/nocode/webflow-html.js"></script>
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-html.js"></script>
 ```
-
-*In place of `@latest` use the current version number in your URLs.*
 
 
 

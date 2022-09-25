@@ -40,7 +40,7 @@ Paste this code, exactly, into the **Before `</body>` tag** script area of your 
 
 ```
 <script type="module">
-    import { dataBindAll } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.0/src/locode/webflow-forms-helper.js';
+    import { dataBindAll } from '{{ site.liburl }}/src/locode/webflow-forms-helper.js';
     $(function () {
         dataBindAll();
     });

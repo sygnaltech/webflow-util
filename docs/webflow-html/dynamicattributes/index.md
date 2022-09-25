@@ -212,7 +212,7 @@ On the outermost `<data>` element, specify the element that you want the attribu
 
 <script type="module">
 
-    import { applyDynamicAttributes } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+    import { applyDynamicAttributes } from '{{ site.liburl }}/src/modules/webflow-html.js';
 
     $(function () {
 

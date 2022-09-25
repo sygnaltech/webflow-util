@@ -35,7 +35,7 @@ Limitations;
 - Add this script
 
 ```
-<script type="module" src="https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@latest/src/nocode/webflow-demo.js"></script>
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-demo.js"></script>
 ```
 
 Important: change the `@latest` in the URL to the current version number, e.g. `@3.7`.

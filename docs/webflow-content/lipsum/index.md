@@ -56,7 +56,7 @@ Generates a random number of lipsum paragraphs.
 <script type="module">
 
     // cdn.jsdelivr.net/gh/sygnaltech/webflow-util
-    import { genLipsumWords, genLipsumSentences, genLipsumParagraphs, genLipsumText } from '{{site.liburl}}/src/modules/webflow-content-lipsum.js';
+    import { genLipsumWords, genLipsumSentences, genLipsumParagraphs, genLipsumText } from '{{ site.liburl }}/src/modules/webflow-content-lipsum.js';
 
     function genWords() {
         $("#words").text(

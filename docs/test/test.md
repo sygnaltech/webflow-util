@@ -22,7 +22,7 @@ https://jekyllrb.com/docs/liquid/filters/
 
 {% highlight html %}
 <script type="module">
-import { createWebflowPreviewLink } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-demo.js';
+import { createWebflowPreviewLink } from '{{ site.liburl }}/src/modules/webflow-demo.js';
 $(function () {
     $("#previewLink").attr("href", 
   		createWebflowPreviewLink('4d388483d99c6cc36c58ae966e92c615')
@@ -33,7 +33,7 @@ $(function () {
 
 ```
 <script type="module">
-import { createWebflowPreviewLink } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-demo.js';
+import { createWebflowPreviewLink } from '{{ site.liburl }}/src/modules/webflow-demo.js';
 $(function () {
     $("#previewLink").attr("href", 
   		createWebflowPreviewLink('4d388483d99c6cc36c58ae966e92c615')
