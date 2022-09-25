@@ -14,11 +14,13 @@ toc: true
 {% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
 {% endif %}
 
-
-## DEMO - Element Filtering
+## Advanced Element Filtering
 
 <a class="button is-danger" href="https://webflow-collections.webflow.io/advanced-filter" target="_blank">View Demonstration in Webflow</a>
 
+Webflow has a powerful conditional visibility feature, however sometimes it falls short when you have complex rules.
+
+WFU's advanced filtering feature allows you to expand on this.
 Choose which elements you want to be visible depending on simple javascript expression or a javascript function.
 
 - Display certain elements only between certain hours of the day, certain days of the week, seasonally, etc.
