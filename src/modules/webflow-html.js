@@ -8,6 +8,7 @@
  * HTML Utilities
  */
 
+
 // Simplest-case encoding for HTML5
 export var encodeHtml = function (text) {
 
@@ -20,6 +21,7 @@ export var encodeHtml = function (text) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 }
+
 export var autosizeIFrames = function () {
 
     // Identify all IFRAMES with autosize tag
@@ -46,7 +48,7 @@ export var applyDynamicAttributes = function () {
 
     // Find all <data> elements which specify a data-source
     // for data binding
-    var dynamicAttributeDatas = $('data[type="apply-attr"]');
+    var dynamicAttributeDatas = $('data[type="wfu-apply-attr"]');
 
     // Iterate and bind each individually
     $.each(dynamicAttributeDatas, function (i, elem) {

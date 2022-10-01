@@ -27,3 +27,41 @@ Nested Lists in Webflow, with prefix markup.
 
 
 
+## Getting Started ( NOCODE )
+
+
+### STEP 1 - Add the Library
+
+
+There are currently no configuration options for this library, so we'll use a *no-code* integration approach.
+
+Add this CSS script to the HEAD of your site or page.
+
+```
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/webflow-html.css">
+```
+
+Add this JS reference to the BODY of your site or page.
+
+```
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-html.js"></script>
+```
+
+
+
+### STEP 2 - Apply `wfu-lists=nested` to Desired Elements
+
+Positioning is important, make sure you're placing this custom attribute on the correct element.
+
+- To nest a standalone list element, place it directly on the top level element in the list structure.
+
+- To nest lists within a Rich Text element, place it directly on the Rich Text element itself.
+
+
+Can be placed on Rich Text elements (directly on the main element), or on 
+
+`wfu-lists=nested`
+
+
+
+

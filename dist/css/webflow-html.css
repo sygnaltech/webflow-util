@@ -38,18 +38,18 @@
 
 
 @import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
-.w-richtext[wfu-lists] li {
+.w-richtext[wfu-lists-loading] li {
   font-family: "Redacted", cursive;
   color: black;
   display: inline-block;
   animation: skeleton-loading 1s linear infinite alternate;
 }
-.w-richtext[wfu-lists] li em {
-  font-style: normal;
-}
-.w-richtext[wfu-lists] li a {
-  color: inherit;
-}
+    .w-richtext[wfu-lists-loading] li em {
+        font-style: normal;
+    }
+    .w-richtext[wfu-lists-loading] li a {
+        color: inherit;
+    }
 
 @keyframes skeleton-loading {
   0% {
@@ -64,7 +64,7 @@
 }
 
 ol .wfu-list-level-2 {
-  list-style-type: decimal-leading-zero;
+  list-style-type: lower-latin;
 }
 
 ol .wfu-list-level-3 {
