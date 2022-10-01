@@ -3,6 +3,30 @@
  * CSS for Sygnal Webflow Util HTL library
  */
 
+[wfu-truncate] {
+    position: relative;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+[wfu-truncate="2"] {
+    -webkit-line-clamp: 2;
+}
+
+[wfu-truncate="3"] {
+    -webkit-line-clamp: 3;
+}
+
+[wfu-truncate="4"] {
+    -webkit-line-clamp: 4;
+}
+
+[wfu-truncate="5"] {
+    -webkit-line-clamp: 5;
+}
+
 
 *[wfu-filter] {
     display: none;

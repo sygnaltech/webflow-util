@@ -4,9 +4,50 @@
  */
 
 
+// Add text trucation w/ ellipsis support
+
+// Applies to all, defaults to 1 line
+[wfu-truncate] {
+    position: relative;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+[wfu-truncate="2"] {
+    -webkit-line-clamp: 2;
+}
+
+[wfu-truncate="3"] {
+    -webkit-line-clamp: 3;
+}
+
+[wfu-truncate="4"] {
+    -webkit-line-clamp: 4;
+}
+
+[wfu-truncate="5"] {
+    -webkit-line-clamp: 5;
+}
+
+
+/*
+[wfu-truncate]::after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70%;
+  height: 1.2em;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+}
+*/
+
+
 
 // Hide filtered elements, by default
-
 *[wfu-filter] {
     display: none;
 }

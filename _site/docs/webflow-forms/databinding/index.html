@@ -130,6 +130,11 @@
             <a href="/docs/tech" class="">Technical Notes</a>
             
         </li>
+        
+        <li>
+            <a href="/docs/breaking" class="">Breaking Changes</a>
+            
+        </li>
             
     </ul>
 
@@ -245,6 +250,11 @@
             <a href="/docs/webflow-html/filter/" class="">Element Filtering</a>
             
         </li>
+        
+        <li>
+            <a href="/docs/webflow-html/truncate/" class="">Truncate Text w/ Ellipsis</a>
+            
+        </li>
             
     </ul>
 
@@ -352,7 +362,7 @@
 <p>Paste this code, exactly, into the <strong>Before <code class="language-plaintext highlighter-rouge">&lt;/body&gt;</code> tag</strong> script area of your Page settings. If you are using data-binding on multiple pages, you might choose to do this in your site-wide settings.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="module"&gt;
-    import { dataBindAll } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.11/src/locode/webflow-forms-helper.js';
+    import { dataBindAll } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.12/src/locode/webflow-forms-helper.js';
     $(function () {
         dataBindAll();
     });
