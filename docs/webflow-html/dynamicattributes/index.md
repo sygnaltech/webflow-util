@@ -37,7 +37,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/ecommerce-product-photography-tips-a-beginners-guide" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd6890c56eac6ff1_Photo-1.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/ecommerce-product-photography-tips-a-beginners-guide" class="blog-post-title-link archive-title">Ecommerce &lt;product&gt; &quot;photography&quot; tips: a beginner's guide</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="prev">
+                        <data type="wfu-apply-attr" apply="prev">
                             <data attr="style" value="background-color: yellow;"></data>
                         </data>
                     </div>
@@ -55,7 +55,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/why-your-design-process-should-start-with-content" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd68901d70ac6fee_Photo-6.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/why-your-design-process-should-start-with-content" class="blog-post-title-link archive-title">Why your design process should start with content</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="prev">
+                        <data type="wfu-apply-attr" apply="prev">
                             <data attr="style" value="background-color: yellow;"></data>
                         </data>
                     </div>
@@ -73,7 +73,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/how-to-show-and-hide-content-with-webflow-click-interactions-copy" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd6890d83aac6fef_Photo-5.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/how-to-show-and-hide-content-with-webflow-click-interactions-copy" class="blog-post-title-link archive-title">How to show and hide content with Webflow click interactions</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="next">
+                        <data type="wfu-apply-attr" apply="next">
                             <data attr="style" value="background-color: yellow;"></data>
                         </data>
                     </div>
@@ -91,7 +91,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/writing-funny-how-to-improve-your-website-ux-with-humor" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd68904692ac6ff3_Photo-3.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/writing-funny-how-to-improve-your-website-ux-with-humor" class="blog-post-title-link archive-title">Writing funny: how to improve your website UX with humor</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="prev">
+                        <data type="wfu-apply-attr" apply="prev">
                             <data attr="style" value="background-color: lightblue;"></data>
                         </data>
                     </div>
@@ -109,7 +109,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/9-landing-page-design-tips-that-improve-ux-and-conversions" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd6890a59bac6ff2_Photo-2.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/9-landing-page-design-tips-that-improve-ux-and-conversions" class="blog-post-title-link archive-title">9 landing page design tips that improve UX and conversions</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="parent">
+                        <data type="wfu-apply-attr" apply="parent">
                             <data attr="style" value="background-color: yellow;"></data>
                         </data>
                     </div>
@@ -127,7 +127,7 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
                     <a href="/blog/10-ecommerce-design-tips-to-turn-one-time-buyers-into-loyal-customers" style="background-image:url(&quot;https://assets.website-files.com/61287c86fd689080a7ac6fe4/61287c86fd6890c56eac6ff1_Photo-1.jpg&quot;)" class="simple-blog-image-block small w-inline-block"><div class="blog-post-overlay light"></div></a>
                     <a href="/blog/10-ecommerce-design-tips-to-turn-one-time-buyers-into-loyal-customers" class="blog-post-title-link archive-title">10 ecommerce design tips to turn one-time buyers into loyal customers</a>
                     <div class="w-embed w-script">
-                        <data type="apply-attr" apply="prev">
+                        <data type="wfu-apply-attr" apply="prev">
                             <data attr="style" value="background-color: lightgreen;"></data>
                         </data>
                     </div>
@@ -188,7 +188,7 @@ Paste in the following code.
 
 
 ```
-<data type="apply-attr" apply="prev">
+<data type="wfu-apply-attr" apply="prev">
     <data attr="style" value="background-color: yellow;></data>
 </data>
 ```
