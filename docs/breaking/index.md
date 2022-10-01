@@ -26,3 +26,7 @@ Attribute name changed from `apply-attr` to `wfu-apply-attr`, e.g.
 #### Nested Lists
 
 Skeleton loader temporarily disabled, as we work through some issues with Webflow's editor. 
+
+Custom attribute tag is now recommended as `wfu-lists=nested` rather than `wfu-lists=all`.
+
+Both are currently identical, but we will expand on this in the future.
