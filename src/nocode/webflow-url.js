@@ -9,13 +9,25 @@
  */
 
 
-import { processElements } from '../modules/webflow-url.js';
+import { WfuQuery, WfuRelativeLinkFixup, WfuTargetLinks } from '../modules/webflow-url.js';
 
 $(function () {
 
-    console.log("running WFU-URL");
+    console.debug("running WFU-URL");
 
-    processElements();
+    // Apply query key/values in-page
+    // To tagged elements
+    const wfuQuery = new WfuQuery();
+    wfuQuery.processAll();
+
+    // Fixup relative links from the CMS
+    // HACK: 
+    const wfuRelativeLinkFixup = new WfuRelativeLinkFixup();
+    wfuRelativeLinkFixup.processAll();
+
+    // Target external links to _blank
+    const wfuTargetLinks = new WfuTargetLinks();
+    wfuTargetLinks.processAll();
 
 });
 
