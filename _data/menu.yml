@@ -2,7 +2,7 @@
 - 
 - label: 
   items:
-    - name: <a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo</b></a>
+    - name: <a href="https://github.com/sygnaltech/webflow-util" target="_blank"><b>Github Repo {{ site.libver }}</b></a>
 
 - label: Main Menu
   items:
@@ -85,6 +85,10 @@
 
 - label: Webflow-Url
   items:
+    - name: CMS Relative Link Fixups
+      link: /docs/webflow-url/cms-fixups/
+    - name: External Link Targeting
+      link: /docs/webflow-url/link-targeting/
     - name: Query Param Passthrough
       link: /docs/webflow-url/query/
 
