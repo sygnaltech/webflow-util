@@ -16,8 +16,6 @@
       link: /docs/design
     - name: Technical Notes
       link: /docs/tech
-    - name: Breaking Changes
-      link: /docs/breaking
 
 - label: DataSources
   items:
