@@ -9,13 +9,21 @@ toc: true
 
 # What's New?
 
-## v3.15
+## v3.16
 
 Under development. 
 
+## v3.15
+
+#### Lib: `webflow-forms`
+
+- Redesigned to a webhook-handler approach, which is specified by a `wfu-form-handler` attribute.
+- The zapier handler is named `zapier`
+- A new `success` handler is added for webhooks that have other JSON response formats. 
+
 ## v3.14
 
-#### `webflow-url`
+#### Lib: `webflow-url`
 
 - [Automatic targeting of external links](/docs/webflow-url/link-targeting/)
 - [CMS relative link fixups](https://wfu.sygnal.com/docs/webflow-url/cms-fixups/)
