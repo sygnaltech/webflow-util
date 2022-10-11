@@ -177,54 +177,6 @@ export var dataBindFormSelect = function (elem, db) {
 
 }
 
-export var setFormHandlerZapier = function (elem) {
-
-    // Catch any submits on forms
-    // Which post to Zapier-webhooks 
-    $(elem).submit(function () {
-
-        var form = $(this);
-
-        console.debug("WFU Handle Form submit to Zapier webhook.")
-
-        // Get the Zapier webhook Url
-        var hook = $(form).attr("action");
-        console.debug(`webhook: ${hook}`);
-
-        // Get the Webflow wait message
-        var waitMessage = $(form).children("input[type=submit]").attr("data-wait");
-        console.debug(`waitMessage: ${waitMessage}`);
-
-        // Get form post data 
-        //    var data = $(form).serialize();
-
-        // Post to hook,
-        // Capture & handle result
-        $.post(
-            hook,
-            $(form).serialize(),
-            function (data) {
-
-                console.debug(`Webhook result: ${data.status}`);
-
-                if (data.status == "success") {
-                    setWebflowFormMode($(form), WebflowFormMode.Success);
-                } else {
-                    setWebflowFormMode($(form), WebflowFormMode.Error);
-                }
-
-            })
-            .done(function () {
-            })
-            .fail(function () {
-            })
-            .always(function () {
-            });
-
-        return false;
-    });
-
-}
 
 export const WebflowFormMode = {
     Active: 0,
@@ -232,30 +184,169 @@ export const WebflowFormMode = {
     Error: 2
 }
 
-export var setWebflowFormMode = function (form, mode) {
+export class WfuFormHandler {
 
-    var success = $(form).siblings("div.w-form-done");
-    var error = $(form).siblings("div.w-form-fail");
+    formBlock;
+    config; // Optional config
+    form;
+    action;
+    waitMessage;
+    handler;
 
-    switch (mode) {
-        case WebflowFormMode.Active:
-            console.debug("Change Webflow form mode to active.");
-            $(form).css("display", "block");
-            $(success).css("display", "none");
-            $(error).css("display", "none");
-            break;
-        case WebflowFormMode.Success:
-            console.debug("Change Webflow form mode to success (done).");
-            $(form).css("display", "none");
-            $(success).css("display", "block");
-            $(error).css("display", "none");
-            break;
-        case WebflowFormMode.Error:
-            console.debug("Change Webflow form mode to error.");
-            $(form).css("display", "none");
-            $(success).css("display", "none");
-            $(error).css("display", "block");
-            break;
+    static get WebflowFormMode() {
+        return WebflowFormMode;
+    }
+
+    constructor(elem, config) {
+
+        this.handler = this;
+
+        this.config = config;
+
+        // Resolve Form Block pointer
+        if ($(elem).is("form"))
+            this.formBlock = $(elem).parent();
+        else
+            this.formBlock = $(elem);
+        console.log(this.formBlock);
+
+        // Resolve ancillary pointers
+        this.form = this.formBlock.children("form");
+        console.log(this.form);
+
+        this.action = this.form.attr("action");
+        console.log(this.action);
+
+        // Get the Webflow wait message
+        this.waitMessage = $(this.form).children("input[type=submit]").attr("data-wait");
+        console.debug(`waitMessage: ${this.waitMessage}`);
+
+    }
+
+
+
+    // es6 call class methods from within same class
+    // https://stackoverflow.com/a/36248405
+
+    setWebflowFormMode (mode) {
+
+        console.log("setting form mode.");
+
+        var success = $(this.form).siblings("div.w-form-done");
+        var error = $(this.form).siblings("div.w-form-fail");
+
+        switch (mode) {
+            case WebflowFormMode.Active:
+                console.debug("Change Webflow form mode to active.");
+                $(this.form).css("display", "block");
+                $(success).css("display", "none");
+                $(error).css("display", "none");
+                break;
+            case WebflowFormMode.Success:
+                console.debug("Change Webflow form mode to success (done).");
+                $(this.form).css("display", "none");
+                $(success).css("display", "block");
+                $(error).css("display", "none");
+                break;
+            case WebflowFormMode.Error:
+                console.debug("Change Webflow form mode to error.");
+                $(this.form).css("display", "none");
+                $(success).css("display", "none");
+                $(error).css("display", "block");
+                break;
+        }
+
+    }
+
+
+    setFormHandlerZapier() {
+
+        const handler = this;
+
+        console.debug("WFU Handle Form submit to Zapier webhook.");
+
+        // Catch any submits on forms
+        // Which post to Zapier-webhooks 
+        $(this.form).submit(function () {
+
+            // Get form post data 
+            //    var data = $(form).serialize();
+
+            // Post to hook,
+            // Capture & handle result
+            $.post(
+                this.action,
+                $(this.form).serialize(),
+                function (data) {
+
+                    // How to access the correct `this` inside a callback 
+                    // https://stackoverflow.com/a/20279485
+                    console.debug(`Webhook result: ${data.status}`);
+
+                    if (data.status == "success") {
+                        this.setWebflowFormMode(WebflowFormMode.Success);
+                    } else {
+                        this.setWebflowFormMode(WebflowFormMode.Error);
+                    }
+
+                }.bind(handler))
+                .done(function () {
+                })
+                .fail(function () {
+                })
+                .always(function () {
+                });
+
+            return false;
+        });
+
+    }
+
+    setFormHandlerSuccess () {
+
+        const handler = this;
+
+        console.debug("WFU Handle Form submit to webhook (success response).");
+
+        // Catch any submits on forms
+        // Which post to Zapier-webhooks 
+        $(this.form).submit(function () {
+
+            // Get form post data 
+            //    var data = $(form).serialize();
+
+            // Post to hook,
+            // Capture & handle result
+            $.post(
+                this.action,
+                $(this.form).serialize(),
+                function (data) {
+
+                    // How to access the correct `this` inside a callback 
+                    // https://stackoverflow.com/a/20279485
+
+                    // Assume success
+                    this.setWebflowFormMode(WebflowFormMode.Success);
+
+                }.bind(handler))
+                .done(function () {
+                })
+                .fail(function () {
+                })
+                .always(function () {
+                });
+
+            return false;
+        });
+
+    }
+
+}
+
+export class WfuFormHandlerMake extends WfuFormHandler {
+
+    constructor(elem, config) {
+        super(elem, config); // call the super class constructor and pass in the name parameter
     }
 
 }

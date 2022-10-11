@@ -8,15 +8,38 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
-import { setFormHandlerZapier } from '../modules/webflow-form.js';
+import { WfuFormHandler } from '../modules/webflow-form.js';
 
 $(function () {
 
     // Catch any submits on forms
     // Which post to Zapier-webhooks 
-    $("form[action^='https://hooks.zapier.com/hooks/catch/']").each(function () {
-        
-        setFormHandlerZapier($(this));
+    $("*[wfu-form-handler]").each(function () {
+
+        const handlerName = $(this).attr("wfu-form-handler");
+        var handler;
+
+        switch (handlerName) {
+            case "zapier":
+
+                handler = new WfuFormHandler($(this));
+                handler.setFormHandlerZapier();
+
+                break;
+            case "success":
+
+                console.log("apply success handler.");
+
+                handler = new WfuFormHandler($(this));
+                handler.setFormHandlerSuccess();
+
+                break;
+            default:
+
+                console.error(`Unknown wfu-form-handler ${handlerName}`);
+
+                break;
+        }
 
     });
 
