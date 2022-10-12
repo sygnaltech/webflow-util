@@ -22,16 +22,20 @@ $(function () {
         switch (handlerName) {
             case "zapier":
 
+                console.debug("applying WFU form handler - zapier.");
+
                 handler = new WfuFormHandler($(this));
                 handler.setFormHandlerZapier();
 
-                break;
-            case "success":
+                console.debug(`Data - ${$(this).serialize()}`);
 
-                console.log("apply success handler.");
+                break;
+            case "other":
+
+                console.debug("applying WFU form handler - other.");
 
                 handler = new WfuFormHandler($(this));
-                handler.setFormHandlerSuccess();
+                handler.setFormHandlerOther();
 
                 break;
             default:

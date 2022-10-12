@@ -36,14 +36,14 @@ The WFU forms handler bridges that gap;
 
 Because each webhook provider responds differently, we have several "handlers" for each situation;
 
-- The Zapier handler looks for "success" in the response, and displays the success message if it is present. However it's important to note that Zapier's success response
+- The **Zapier** handler looks for "success" in the response, and displays the success message if it is present. However it's important to note that Zapier's success response
 only indicates that the data was received successfully. It does not indicate that the Zap ran successfully. 
 
-- The Success handler always displays the success message. It's most useful for unknown webhookd providers, 
+- The **Other** handler always displays the success message. It's most useful for unknown webhookd providers, 
 and in situations where success/failure aren't that important, you just need to indicate to the user that their work is done. 
 Use it for simple and less essential form submissions, like newsletter enrollments. 
 
-- The Make/Integromat handler can handle specific responses and display error messages. 
+- The **Make** (Integromat) handler can handle specific responses and display error messages. 
 It is currently under development, and will be available here soon.  
 
 
@@ -99,7 +99,7 @@ On the `Form Block` element, add a custom attribute of `wfu-form-handler`, and s
 
 - Use `zapier` for Zapier webhooks.
 
-- Use `success` for all other webhooks.
+- Use `other` for all other webhooks.
 
 Each will behave slightly differently in how it processes the response, since each webhook service does responses differently.
 See notes above.

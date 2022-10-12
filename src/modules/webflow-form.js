@@ -267,21 +267,34 @@ export class WfuFormHandler {
 
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
-        $(this.form).submit(function () {
+        $(this.form).submit(function (e) {
+
+            e.preventDefault();
 
             // Get form post data 
             //    var data = $(form).serialize();
+
+            console.debug("Posting data.");
+            console.debug(`Webhook - ${this.action}`);
+            console.debug(`Data - ${$(this).serialize()}`);
+
+//             console.debug(`Form - ${$(JSON.stringify(this.form))}`);
 
             // Post to hook,
             // Capture & handle result
             $.post(
                 this.action,
-                $(this.form).serialize(),
-                function (data) {
+                $(this).serialize(),
+                function (data, status, xhr) {
 
                     // How to access the correct `this` inside a callback 
                     // https://stackoverflow.com/a/20279485
-                    console.debug(`Webhook result: ${data.status}`);
+
+                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+                    console.debug(`Webhook response status: ${status}`);
+                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+
+                    console.debug(`Zapier result: ${data.status}`);
 
                     if (data.status == "success") {
                         this.setWebflowFormMode(WebflowFormMode.Success);
@@ -292,7 +305,12 @@ export class WfuFormHandler {
                 }.bind(handler))
                 .done(function () {
                 })
-                .fail(function () {
+                .fail(function (jqxhr, settings, ex) {
+
+                    console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+                    console.debug(`Webhook response FAILED settings: ${settings}`);
+                    console.debug(`Webhook response FAILED ex: ${ex}`);
+
                 })
                 .always(function () {
                 });
@@ -302,7 +320,7 @@ export class WfuFormHandler {
 
     }
 
-    setFormHandlerSuccess () {
+    setFormHandlerOther () {
 
         const handler = this;
 
@@ -310,20 +328,30 @@ export class WfuFormHandler {
 
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
-        $(this.form).submit(function () {
+        $(this.form).submit(function (e) {
 
-            // Get form post data 
+            e.preventDefault();
+
+            // Get form post data
             //    var data = $(form).serialize();
+
+            console.debug("Posting data.");
+            console.debug(`Webhook - ${this.action}`);
+            console.debug(`Data - ${$(this).serialize()}`);
 
             // Post to hook,
             // Capture & handle result
             $.post(
                 this.action,
-                $(this.form).serialize(),
-                function (data) {
+                $(this).serialize(),
+                function (data, status, xhr) {
 
                     // How to access the correct `this` inside a callback 
                     // https://stackoverflow.com/a/20279485
+
+                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+                    console.debug(`Webhook response status: ${status}`);
+                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
 
                     // Assume success
                     this.setWebflowFormMode(WebflowFormMode.Success);
@@ -331,7 +359,12 @@ export class WfuFormHandler {
                 }.bind(handler))
                 .done(function () {
                 })
-                .fail(function () {
+                .fail(function (jqxhr, settings, ex) {
+
+                    console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+                    console.debug(`Webhook response FAILED settings: ${settings}`);
+                    console.debug(`Webhook response FAILED ex: ${ex}`);
+
                 })
                 .always(function () {
                 });

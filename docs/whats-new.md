@@ -9,9 +9,16 @@ toc: true
 
 # What's New?
 
-## v3.16
+## v3.17
 
 Under development. 
+
+## v3.16
+
+#### Lib: `webflow-forms`
+
+- Changed `success` handler to `other`. 
+- Bugfix on form data serilaization. 
 
 ## v3.15
 
