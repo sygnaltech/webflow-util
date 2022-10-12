@@ -27,8 +27,6 @@ $(function () {
                 handler = new WfuFormHandler($(this));
                 handler.setFormHandlerZapier();
 
-                console.debug(`Data - ${$(this).serialize()}`);
-
                 break;
             case "other":
 

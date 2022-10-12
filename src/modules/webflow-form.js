@@ -261,13 +261,14 @@ export class WfuFormHandler {
 
     setFormHandlerZapier() {
 
-        const handler = this;
+        const handler = this.handler;
+        const form = this.form;
 
         console.debug("WFU Handle Form submit to Zapier webhook.");
 
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
-        $(this.form).submit(function (e) {
+        $(form).submit(function (e) {
 
             e.preventDefault();
 
@@ -275,31 +276,31 @@ export class WfuFormHandler {
             //    var data = $(form).serialize();
 
             console.debug("Posting data.");
-            console.debug(`Webhook - ${this.action}`);
-            console.debug(`Data - ${$(this).serialize()}`);
+            console.debug(`Webhook - ${handler.action}`);
+            console.debug(`Data - ${form.serialize()}`);
 
 //             console.debug(`Form - ${$(JSON.stringify(this.form))}`);
 
             // Post to hook,
             // Capture & handle result
             $.post(
-                this.action,
-                $(this).serialize(),
+                handler.action,
+                form.serialize(),
                 function (data, status, xhr) {
 
                     // How to access the correct `this` inside a callback 
                     // https://stackoverflow.com/a/20279485
 
-                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+//                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
                     console.debug(`Webhook response status: ${status}`);
-                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+//                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
 
                     console.debug(`Zapier result: ${data.status}`);
 
                     if (data.status == "success") {
-                        this.setWebflowFormMode(WebflowFormMode.Success);
+                        handler.setWebflowFormMode(WebflowFormMode.Success);
                     } else {
-                        this.setWebflowFormMode(WebflowFormMode.Error);
+                        handler.setWebflowFormMode(WebflowFormMode.Error);
                     }
 
                 }.bind(handler))
@@ -322,7 +323,8 @@ export class WfuFormHandler {
 
     setFormHandlerOther () {
 
-        const handler = this;
+        const handler = this.handler;
+        const form = this.form;
 
         console.debug("WFU Handle Form submit to webhook (success response).");
 
@@ -336,22 +338,22 @@ export class WfuFormHandler {
             //    var data = $(form).serialize();
 
             console.debug("Posting data.");
-            console.debug(`Webhook - ${this.action}`);
-            console.debug(`Data - ${$(this).serialize()}`);
+            console.debug(`Webhook - ${handler.action}`);
+            console.debug(`Data - ${form.serialize()}`);
 
             // Post to hook,
             // Capture & handle result
             $.post(
-                this.action,
-                $(this).serialize(),
+                handler.action,
+                form.serialize(),
                 function (data, status, xhr) {
 
                     // How to access the correct `this` inside a callback 
                     // https://stackoverflow.com/a/20279485
 
-                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+//                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
                     console.debug(`Webhook response status: ${status}`);
-                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+//                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
 
                     // Assume success
                     this.setWebflowFormMode(WebflowFormMode.Success);
