@@ -9,9 +9,17 @@ toc: true
 
 # What's New?
 
-## v3.17
+## v3.18
 
 Under development. 
+
+## v3.17
+
+#### Lib: `webflow-forms`
+
+- Added 'n8n' handler.
+- Change handlers so that the form action is retrieve at the point of submit.
+This way it can be changed live (e.g. for debugging purposes).
 
 ## v3.16
 
