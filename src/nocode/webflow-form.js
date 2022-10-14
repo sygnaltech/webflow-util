@@ -28,6 +28,22 @@ $(function () {
                 handler.setFormHandlerZapier();
 
                 break;
+            case "n8n":
+
+                console.debug("applying WFU form handler - n8n.");
+
+                handler = new WfuFormHandler($(this));
+                handler.setFormHandlerN8N();
+
+                break;
+            case "make":
+
+                console.debug("applying WFU form handler - make.");
+
+                handler = new WfuFormHandler($(this));
+                handler.setFormHandlerMake();
+
+                break;
             case "other":
 
                 console.debug("applying WFU form handler - other.");
