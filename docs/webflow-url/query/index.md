@@ -17,19 +17,30 @@ toc: true
 
 ## DEMO - URL Query Params Passthrough
 
-<a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/url/test-all-params/test?u=1&v=12&test1=ziggy&test2=marlow" target="_blank">View Demonstration in Webflow</a>
+<!-- a class="button is-danger" href="https://sygnal-webflow-utils.webflow.io/url/test-all-params/test?u=1&v=12&test1=ziggy&test2=marlow" target="_blank">View Demonstration in Webflow</a-->
+
+**NO-CODE. Designed for Webflow.**
+
+Extract querystring parameters from your URL, and apply the contents to tagged elements on your page.
+
+- Use querystring data in your FORM data, to collect it for submissions ( e.g. `utm_` params )
+- Pass querystring data through to other links on the page, so it will get carried through
+- Use querystring data in visible fields, e.g. to personalize a page from an Email newsletter link click ( "Hey Mary!" )
 
 ## Usage Notes
+
+Configure everything using simple custom attributes. 
 
 This tool will carry any URL querystring params into your webpage, and apply them as follows;
 
 - On any INPUT elements with a custom attribute of `wfu-query-param=X`, 
 WFU will replace the `value` attribute with the value of the querystring param `X`.
+This works with `type=hidden` INPUT elements as well, so the data can be passed through invisibly. 
 
 - On any other elements with a custom attribute of `wfu-query-param=X`, 
 WFU will replace the inner text of the element with the value of the querystring param `X`. 
 
-- Any links will have the `href` modified, depending on what you request.
+- For **all** links on your page, WFU will modify the link's `href`, depending on what you request.
 
 	- `wfu-query-param=*`, or an absence of the `wfu-query-param` attribute, will merge all params from the page's current URL into the link href.
 
