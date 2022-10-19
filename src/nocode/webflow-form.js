@@ -9,8 +9,17 @@
  */
 
 import { WfuFormHandler } from '../modules/webflow-form.js';
+import { WfuFormIPInfo } from '../modules/webflow-form-ipinfo.js';
 
 $(function () {
+
+    // Prepare any tagged forms by appending IP Info
+    $("*[wfu-form-ipinfo]").each(function () {
+
+        const ipInfoHandler = new WfuFormIPInfo($(this));
+        ipInfoHandler.appendIPInfo();
+
+    });
 
     // Catch any submits on forms
     // Which post to Zapier-webhooks 

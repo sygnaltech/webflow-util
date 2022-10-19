@@ -43,6 +43,8 @@
       link: /docs/webflow-forms/databinding/
     - name: Form Webhook Handler
       link: /docs/webflow-forms/webhook/
+    - name: Form IP Info
+      link: /docs/webflow-forms/ip-info/
 
 - label: Webflow-Table
   items:
