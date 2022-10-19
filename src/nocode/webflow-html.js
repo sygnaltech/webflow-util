@@ -17,7 +17,7 @@ $(function () {
     // Process filtered items
     $("*[wfu-filter]").each(function (index) {
 
-        console.log($(this).attr("wfu-filter"));
+//        console.log($(this).attr("wfu-filter"));
 
         var visible = eval($(this).attr("wfu-filter"));
 
