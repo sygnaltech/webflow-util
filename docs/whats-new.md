@@ -9,9 +9,15 @@ toc: true
 
 # What's New?
 
-## v3.18
+## v3.19
 
 Under development. 
+
+## v3.18
+
+#### Lib: `webflow-forms`
+
+- Added IP Info capture-and-append.
 
 ## v3.17
 
