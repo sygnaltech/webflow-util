@@ -39,26 +39,29 @@ Because each webhook provider responds differently, we have several "handlers" f
 - The **Zapier** handler looks for "success" in the response, and displays the success message if it is present. However it's important to note that Zapier's success response
 only indicates that the data was received successfully. It does not indicate that the Zap ran successfully. 
 
+- The **Make** (Integromat) handler can handle specific responses and display error messages. 
+
+- The **n8n** handler can handle specific responses and display error messages. 
+
 - The **Other** handler always displays the success message. It's most useful for unknown webhookd providers, 
 and in situations where success/failure aren't that important, you just need to indicate to the user that their work is done. 
 Use it for simple and less essential form submissions, like newsletter enrollments. 
 
-- The **Make** (Integromat) handler can handle specific responses and display error messages. 
-It is currently under development, and will be available here soon.  
 
 
 ### Key advantages
 
-- Immediate form processing, with no delays. If you've used e.g. Zapier's polling trigger, it can take 10 minutes for a form submission to be detected.
+- Immediate form processing, with no delays. 
+If you've used e.g. Zapier's Webflow trigger, it polls for new forms and can take 10 minutes for a form submission to be detected.
 
-- No need to use Webflow's built-in forms notification system. 
+- No need to use Webflow's built-in forms email notification system. 
 You can go direct to a Sales Force Automation (SFA) system, or to your own email notification with no unsubscribe link problems. 
 
 - No form submission limits. 
 
 - Make the form behave like a normal webflow form post, where it stays on the same page, and displays the form's success message.
 
-- Handle error scenarios better, including unique server side logic and error messages ( with Make ).
+- Handle error scenarios better, including unique server side logic and error messages ( with Make & n8n ).
 
 
 ## Getting Started ( NOCODE )
@@ -98,6 +101,10 @@ Open the left-side Navigator panel in Webflow's and select the `Form Block` elem
 On the `Form Block` element, add a custom attribute of `wfu-form-handler`, and specify the handler you want;
 
 - Use `zapier` for Zapier webhooks.
+
+- Use `make` for Make ( Integromat ) webhooks.
+
+- Use `n8n` for n8n webhooks.
 
 - Use `other` for all other webhooks.
 
