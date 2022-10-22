@@ -43,7 +43,7 @@ e.g.;
 ```
 <script type="module">
 
-using { WindcavePayment, PaypalPayment } from "{{ site.liburl }}/src/modules/webflow-commerce.min.js";
+import { WindcavePayment, PaypalPayment } from "{{ site.liburl }}/src/modules/webflow-commerce.min.js";
 
 $(function() {
   
