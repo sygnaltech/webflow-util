@@ -96,3 +96,8 @@
   items:
     - name: Background Video Poster
       link: /docs/webflow-video/background-video-poster/
+
+- label: Webflow-Commerce
+  items:
+    - name: Payment Provider
+      link: /docs/webflow-commerce/payment-provider/
