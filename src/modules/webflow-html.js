@@ -301,3 +301,53 @@ export var processList = function (list) {
     $(list).html(outHtml);
 
 }
+
+/* sortCollectionList
+ * Sorts a Collection List
+ * https://codepen.io/memetican/pen/oNygGLj/259b05cd6be71a16d2f4787e0714278f
+ */
+export var sortCollectionList = function (l) {
+
+    const $list = $(l);
+    const $dir = $list.attr("wfu-sort-dir") || "asc";
+    const $sortType = $list.attr("wfu-sort-type") || "string";
+
+    $list.attr("wfu-sort-type");
+
+    var $items = $list.children();
+
+    console.debug(`WFU sorting ${$sortType} ${$dir} (${$items.length} children)`);
+
+    $items.sort(function (a, b) {
+
+        const key1 = $(a).find("[wfu-sort-key]").attr("wfu-sort-key");
+        const key2 = $(b).find("[wfu-sort-key]").attr("wfu-sort-key");
+
+        // Determine asc sort result
+        var sortResult = 1;
+        switch ($sortType) {
+            case "date":
+
+                sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
+                console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
+                break;
+            case "string":
+            default:
+                sortResult = key1.localeCompare(key2);
+                console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
+                break;
+        }
+
+        // Invert for desc
+        if ($dir != "asc") {
+            sortResult = sortResult * -1;
+        }
+
+        return sortResult;
+    });
+
+    //    $items.detach().appendTo($list);
+    console.log('writing.');
+    $list.html($items);
+
+}

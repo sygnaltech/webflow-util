@@ -8,11 +8,22 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
-import { processList } from '../modules/webflow-html.js';
+import { processList, sortCollectionList } from '../modules/webflow-html.js';
 
 // https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
 
 $(function () {
+
+    // Unwrap tagged items
+//    $("*[wfu-unwrap]").each(function (index) {
+
+        //        console.log($(this).attr("wfu-filter"));
+
+//        var visible = eval($(this).attr("wfu-filter"));
+
+  //      if (visible)
+  //          $(this).css("display", "block");
+//    });
 
     // Process filtered items
     $("*[wfu-filter]").each(function (index) {
@@ -23,6 +34,19 @@ $(function () {
 
         if (visible)
             $(this).css("display", "block");
+    });
+
+    // Process sorted items
+    $("[wfu-sort]").each(function () {
+
+
+        sortCollectionList($(this));
+        //        console.log($(this).attr("wfu-filter"));
+
+//        var visible = eval($(this).attr("wfu-filter"));
+
+ //       if (visible)
+ //           $(this).css("display", "block");
     });
 
     // Process filtered items

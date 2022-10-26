@@ -70,6 +70,8 @@
       link: /docs/webflow-html/nestedlists/
     - name: Element Filtering
       link: /docs/webflow-html/filter/
+    - name: Element Sorting
+      link: /docs/webflow-html/sort/
     - name: Truncate Text w/ Ellipsis
       link: /docs/webflow-html/truncate/
 
