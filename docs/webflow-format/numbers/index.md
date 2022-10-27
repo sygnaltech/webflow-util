@@ -14,19 +14,22 @@ toc: true
 {% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
 {% endif %}
 
-## Advanced Element Filtering
+## Format Numbers & Currencies
 
 <a class="button is-danger" href="https://webflow-collections.webflow.io/formatting-numbers" target="_blank">View Demonstration in Webflow</a>
 
-Webflow supports the storage of numbers and decimals in the CMS, 
-but has virtually no formatting options besides the number of decimal places you want to see. 
+Webflow supports the storage of numbers, including integers and decimals, in the CMS, 
+but has virtually no formatting options.
+
+For decimal values, Webflow allows you to specify the number of decimal places you want to see in the CMS-bound field,
+however there are no options for commas, units, or currency formats. 
 
 This library allows you to format those numbers in commonly recognized formats, including
 
-- USD
-- GBP
-- EUR
-- JPY
+- USD currency ( also useful for AUD, NZD, and others )
+- GBP currency
+- EUR currency
+- JPY currency
 - %
 
 And more will come as [users request](mailto:wfu@sygnal.com). 
