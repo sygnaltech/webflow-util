@@ -103,3 +103,8 @@
   items:
     - name: Payment Provider
       link: /docs/webflow-commerce/payment-provider/
+
+- label: Webflow-Format
+  items:
+    - name: Format Numbers
+      link: /docs/webflow-format/numbers/
