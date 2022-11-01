@@ -330,11 +330,20 @@ export var sortCollectionList = function (l) {
 
                 sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
                 console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
+
+                break;
+            case "number":
+
+                sortResult = new Number(key1) < new Number(key2) ? -1 : 1;
+                console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
+
                 break;
             case "string":
             default:
+
                 sortResult = key1.localeCompare(key2);
                 console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
+
                 break;
         }
 

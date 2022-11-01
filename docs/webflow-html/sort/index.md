@@ -49,9 +49,10 @@ Defaults to ascending when unspecified or unrecognized.
 If you want to specify the data type of the field being sorted, add this attribute with a value of;
 
 - `string` for values that should be sorted as strings
+- `number` for values that should be sorted as numbers
 - `date` for values that should be sorted as dates
 
-Defaults to string when unspecified or unrecognized.
+Defaults to `string` when unspecified or unrecognized.
 
 
 ### Creating your Sort Key
@@ -63,8 +64,8 @@ with this code;
 <data wfu-sort-key=""></data>
 ```
 
-As the value, insert field that you want to sort by, using **+ Add Field** 
-at the top-right of the HTML Embed Code Editor window.
+As the attribute value for `wfu-sort-key`, insert the field that you want to sort by, 
+using Webflow's '**+ Add Field** at the top-right of the HTML Embed Code Editor window.
 
 Remember to specify `date` in the above configuration if you're wanting to sort by dates.
 
