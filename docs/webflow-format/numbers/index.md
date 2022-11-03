@@ -26,11 +26,11 @@ however there are no options for commas, units, or currency formats.
 
 This library allows you to format those numbers in commonly recognized formats, including
 
-- USD currency ( also useful for AUD, NZD, and others )
-- GBP currency
-- EUR currency
-- JPY currency
-- %
+- `usd` - US currency ( also useful for AUD, NZD, and others )
+- `gbp` - British pound sterling
+- `eur` - European currency
+- `jpy` - Japanese currency
+- `%` - percentages
 
 And more will come as [users request](mailto:wfu@sygnal.com). 
 
