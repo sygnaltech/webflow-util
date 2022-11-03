@@ -1,0 +1,18 @@
+
+/*
+ * Formatting CSS for Sygnal Webflow Util library
+ */
+
+/* Formatting CSVs
+   Apply the wfu-csv attr to a collection list for format its contents as CSV
+ */
+[wfu-csv] .w-dyn-item {
+    display: inline;
+}
+[wfu-csv] .w-dyn-item p {
+    display: inline;
+}
+[wfu-csv] .w-dyn-item:not(:last-child) p::after {
+    content: ", ";
+}
+
