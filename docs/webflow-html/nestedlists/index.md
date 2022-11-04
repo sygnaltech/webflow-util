@@ -26,6 +26,8 @@ Nested Lists in Webflow, with prefix markup.
 <a class="button is-danger" href="https://preview.webflow.com/preview/nested-lists-richtext?utm_medium=preview_link&utm_source=designer&utm_content=nested-lists-richtext&preview=229cc8bfcbde11d0f0160c2394d802dd&workflow=preview&pageId=631bd2167b03fde593551fab" target="_blank">View Demonstration in Webflow Designer</a>
 
 
+NOTE: There is currently a limitation in editing nested list elements [in Webflow Editor mode](https://www.loom.com/share/d0e5a05463b44754b480e4d7075cc914).
+
 
 ## Getting Started ( NOCODE )
 
