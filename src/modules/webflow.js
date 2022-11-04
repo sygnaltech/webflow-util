@@ -8,6 +8,12 @@
  * Core Utilities
  */
 
+
+
+
+
+
+
 // https://university.webflow.com/lesson/intro-to-breakpoints
 export const WebflowBreakpoint = {
     Large1920: 1920, // >=
@@ -140,3 +146,82 @@ export var getVars = function (elem) {
     return dict;
 }
 
+
+
+/*
+ * WfuEditor
+ *
+ * Sygnal Technology Group
+ * http://sygnal.com
+ *
+ * Detects the current editor mode.
+ */
+
+export class WfuEditor {
+
+    config; // Optional config
+
+    get isEditorMode() {
+
+        return $("html").attr("data-wf-mode") == "editor";
+
+    }
+
+    detectEditorMode() {
+
+        // HACK: Use the <title> to detect Editor mode status
+        if ($("title").text().startsWith("Editor:")) {
+            console.debug("Editor mode");
+            $("html").attr("data-wf-mode", "editor");
+        } else {
+            console.debug("NOT Editor mode");
+            $("html").removeAttr("data-wf-mode");
+        }
+
+    }
+
+    constructor(elem, config) {
+        config = config || {};
+
+        this.config = config;
+
+        this.init();
+
+        console.debug(`WFU Edit mode monitor installed`);
+
+    }
+
+    // Install Editor mode detector
+    init() {
+        var _this = this;
+        this.observeDOM($("title")[0], function (m) {
+
+            _this.detectEditorMode();
+        });
+    }
+
+    // Installs a mutation observer
+    observeDOM = (function () {
+    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+    return function (obj, callback) {
+        if (!obj || obj.nodeType !== 1) return;
+
+        if (MutationObserver) {
+            // define a new observer
+            var mutationObserver = new MutationObserver(callback)
+
+            // have the observer observe foo for changes in children
+            mutationObserver.observe(obj, { childList: true, subtree: true })
+            return mutationObserver
+        }
+
+        // browser support fallback
+        else if (window.addEventListener) {
+            obj.addEventListener('DOMNodeInserted', callback, false)
+            obj.addEventListener('DOMNodeRemoved', callback, false)
+        }
+    }
+    })();
+
+}
