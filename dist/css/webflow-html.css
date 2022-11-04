@@ -38,16 +38,17 @@
 
 
 @import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
-.w-richtext[wfu-lists-loading] li {
-  font-family: "Redacted", cursive;
-  color: black;
-  display: inline-block;
-  animation: skeleton-loading 1s linear infinite alternate;
+html:not([data-wf-mode="editor"]) .w-richtext[wfu-lists-loading] li {
+    font-family: "Redacted", cursive;
+    color: black;
+    display: inline-block;
+    animation: skeleton-loading 1s linear infinite alternate;
 }
-    .w-richtext[wfu-lists-loading] li em {
+
+    html:not([data-wf-mode="editor"]) .w-richtext[wfu-lists-loading] li em {
         font-style: normal;
     }
-    .w-richtext[wfu-lists-loading] li a {
+    html:not([data-wf-mode="editor"]) .w-richtext[wfu-lists-loading] li a {
         color: inherit;
     }
 
@@ -59,32 +60,33 @@
     color: #f0f3f5;
   }
 }
-.w-richtext ul ul, .w-richtext ol ol {
-  margin-top: 0.5rem;
+
+html:not([data-wf-mode="editor"]) .w-richtext ul ul, .w-richtext ol ol {
+    margin-top: 0.5rem;
 }
 
-ol .wfu-list-level-2 {
-  list-style-type: lower-latin;
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-2 {
+    list-style-type: lower-latin;
 }
 
-ol .wfu-list-level-3 {
-  list-style-type: lower-roman;
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-3 {
+    list-style-type: lower-roman;
 }
 
-.wfu-pro {
-  list-style-type: none;
-  color: green;
+html:not([data-wf-mode="editor"]) .wfu-pro {
+    list-style-type: none;
+    color: green;
 }
 
-.wfu-pro::marker {
-  content: "☑  ";
+    html:not([data-wf-mode="editor"]) .wfu-pro::marker {
+        content: "☑  ";
+    }
+
+html:not([data-wf-mode="editor"]) .wfu-con {
+    list-style-type: none;
+    color: red;
 }
 
-.wfu-con {
-  list-style-type: none;
-  color: red;
-}
-
-.wfu-con::marker {
-  content: "☒  ";
-}
+    html:not([data-wf-mode="editor"]) .wfu-con::marker {
+        content: "☒  ";
+    }
