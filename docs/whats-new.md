@@ -9,9 +9,44 @@ toc: true
 
 # What's New?
 
-## v3.19
+
+## v3.24
 
 Under development. 
+
+## v3.23
+
+#### Lib: `webflow`
+
+- Added Editor-mode detector.
+
+#### Lib: `webflow-html`
+
+- Added Webflow Editor-mode behavior for nested lists.
+
+## v3.22
+
+#### Lib: `webflow-html`
+
+- Sorting expanded to include numeric keys
+
+## v3.21
+
+#### Lib: `webflow-format`
+
+- Number formatting for numbers and currency
+
+## v3.20
+
+#### Lib: `webflow-html`
+
+- List sorting
+
+## v3.19
+
+#### Lib: `webflow-commerce`
+
+- Simple commerce
 
 ## v3.18
 
