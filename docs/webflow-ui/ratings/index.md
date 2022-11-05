@@ -133,7 +133,7 @@ Install CSS in HEAD, generally site-wide.
 Install JS in BODY, generally site-wide.
 
 ```
-<script src="{{ site.liburl }}/src/nocode/webflow-ui.js"></script>
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-ui.js"></script>
 ```
 
 *Update the version numbers as needed.
@@ -205,7 +205,7 @@ leave it as not required, and configure the Embed element so that it is conditio
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript" crossorigin="anonymous"></script>
 
-<script src="{{ site.liburl }}/src/nocode/webflow-ui.js" type="text/javascript" crossorigin="anonymous"></script>
+<script src="{{ site.liburl }}/src/nocode/webflow-ui.js" type="module" crossorigin="anonymous"></script>
 
 <script type="module">
 
