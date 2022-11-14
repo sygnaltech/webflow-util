@@ -11,19 +11,27 @@ output:
     css: ../../demo.css
 ---
 
-<span class="tag is-danger is-medium is-light">Demonstration</span>
 
-**This tool allows you to dynamically apply custom attributes to HTML elements.**
+**This library allows you to dynamically apply custom attributes to HTML elements.**
 
-- This is most valuable within a Webflow Collection List, where the attributes are changing an unknown in advance.
+- This is most valuable within a Webflow Collection List, where the attributes are changing and unknown in advance.
 
 - Attributes are applied in WFU's post-processing script, executed immediately after the page loads.
 
 - WFU has no restrictions on what custom attributes you can add, or which elements you can add them to.
+This means that Webflow's reserved fields are not a barrier here. 
 
 ## DEMO - Dynamic Attributes
 
-Note you must *view source* in order to see the dynamic attributes in the HTML.
+<a class="button is-danger" href="https://wfu-dynamic-attributes.webflow.io/" target="_blank">View Demonstration</a>
+
+<a class="button is-danger" href="https://preview.webflow.com/preview/wfu-dynamic-attributes?utm_medium=preview_link&utm_source=designer&utm_content=wfu-dynamic-attributes&preview=dba3779908e5421fa00dfabe0a8fca46&workflow=preview" target="_blank">View Project</a>
+
+
+
+<span class="tag is-danger is-medium is-light">Demonstration</span>
+
+Dynamic attributes are not natively visible. *View source* in order to see the dynamic attributes in the HTML of this demo page.
 
 For demonstration purposes, I've applied the attributes as `style` attributes, which apply a visible background color.
 
@@ -154,33 +162,33 @@ For demonstration purposes, I've applied the attributes as `style` attributes, w
 </ul>
 
 
-## How to Use
 
-### Setup
 
-Include JQuery.
 
-Just prior to the `</body>` tag, embed this source in your page (or side-wide).
 
-Update the library URL to reference the current version of WFU, to avoid breaking changes.
+## Getting Started ( NOCODE )
+
+
+### STEP 1 - Add the Library
+
+
+There are currently no configuration options for this library, so we'll use a *no-code* integration approach.
+
+Add this CSS script to the HEAD of your site or page.
 
 ```
-<script type="module">
+<link rel="stylesheet" href="{{ site.liburl }}/dist/css/webflow-html.css">
+```
 
-    import { applyDynamicAttributes } from 'https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util/src/modules/webflow-html.js';
+Add this JS reference to the BODY of your site or page.
 
-    $(function () {
-
-        // Apply dynamic attributes
-        applyDynamicAttributes();
-
-    });
-
-</script>
+```
+<script type="module" src="{{ site.liburl }}/src/nocode/webflow-html.js"></script>
 ```
 
 
-### Add an HTML Embed
+
+### STEP 2 -Add an HTML Embed with your custom Attributes
 
 Put an HTML Embed right after, or right inside of the element you wish to affect.
 
@@ -188,40 +196,35 @@ Paste in the following code.
 
 
 ```
-<data type="wfu-apply-attr" apply="prev">
-    <data attr="style" value="background-color: yellow;></data>
-</data>
+<data 
+  wfu-attr="style" 
+  wfu-attr-target="prev" 
+  wfu-attr-val="background-color: yellow;"
+  ></data>
 ```
 
-In the innermost `<data>` item, set the `attr` to the name of the attriute you want added, and the `value` to whatever value you like. Either can be dynamically defined in your Collection data, if the HTML Embed is inside of a Collection List.
+- `wfu-attr` indicates the name of the attribute you want to add
+- `wfu-attr-target` identifies the element you want to apply it to, one of;
+  - `prev` indicates the prior sibling.
+  - `next` indicates the following sibling.
+  - `parent` indicates the containing element.
+- `wfu-attr-val` is the value you want applied. Use Webflow's CMS field embed for this, for dynamic values.
 
-On the outermost `<data>` element, specify the element that you want the attribute applied to.
+NOTE: Any existing attribute will be overwritten.
 
-- `prev` indicates the prior sibling.
-- `next` indicates the following sibling.
-- `parent` indicates the containing element.
+- Yes you can put multiple attributes in the same embed, and even target them differently
 
+## Future
 
-## Technical Notes
+May allow value modification;
 
-- HTML5's `<data>` element displays any content between the tags. Since this is intended to be invisible, we use attributes only.
+- Prepend, append 
+- Regex transforms 
 
+May allow advanced targeting;
 
+- jQuery or CSS selectors 
 
-<script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=61287c86fd6890b8d2ac6fdc" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-
-<script type="module">
-
-    import { applyDynamicAttributes } from '{{ site.liburl }}/src/modules/webflow-html.js';
-
-    $(function () {
-
-        // Apply dynamic attributes
-        applyDynamicAttributes();
-
-    });
-
-</script>
 
 
 

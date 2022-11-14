@@ -10,9 +10,13 @@ toc: true
 # What's New?
 
 
-## v3.24
+## v3.25
 
 Under development. 
+
+## v3.24
+
+- Upgraded Dynamic attributes.
 
 ## v3.23
 
