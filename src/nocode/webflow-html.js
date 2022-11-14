@@ -9,11 +9,14 @@
  */
 
 import { WfuEditor } from '../modules/webflow.js';
-import { processList, sortCollectionList } from '../modules/webflow-html.js';
+import { applyDynamicAttributes, processList, sortCollectionList } from '../modules/webflow-html.js';
 
 // https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
 
 $(function () {
+
+    // Dynamic Attributes
+    applyDynamicAttributes();
 
     // Init Editor mode detection
     const wfuEditor = new WfuEditor();

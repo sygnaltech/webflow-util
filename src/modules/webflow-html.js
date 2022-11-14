@@ -48,27 +48,23 @@ export var applyDynamicAttributes = function () {
 
     // Find all <data> elements which specify a data-source
     // for data binding
-    var dynamicAttributeDatas = $('data[type="wfu-apply-attr"]');
+    var dynamicAttributeDatas = $('data[wfu-attr]');
 
     // Iterate and bind each individually
     $.each(dynamicAttributeDatas, function (i, elem) {
 
         var data = this;
 
-        // Webflow wraps EMBEDS in a DIV, so we work from that parent as a reference
+        // Webflow wraps EMBEDS in a DIV, so we work from that parent as a positional reference
         var dataContainer = $(data).parent();
 
         // hide this node
         $(dataContainer).attr("style", "display: none;");
 
-        //        console.log("Found Data " + $(data).html());
-
-        // if "prior"
-
         var target = null;
 
-        // Webflow wraps EMBEDS in a DIV, so we work from that parent as a reference
-        switch ($(data).attr("apply")) {
+        // Webflow wraps EMBEDS in a DIV[wf-embed], so we work from that parent as a reference
+        switch ($(data).attr("wfu-attr-target")) {
             case "prev":
                 target = $(dataContainer).prev();
                 break;
@@ -84,16 +80,12 @@ export var applyDynamicAttributes = function () {
                     console.warn("Unknown apply setting for param.");
         }
 
-//        var target = $(dataContainer).prev();
-
-        // Iterate through attributes, and apply them
-        $(this).children().each(function (cindex) {
-            var dataItem = this;
-
-//            console.log("Adding attr: " + $(dataItem).attr("attr") + " = " + $(dataItem).attr("value"));
-
-            $(target).attr($(dataItem).attr("attr"), $(dataItem).attr("value"));
-        });
+        // Apply attribute
+        var dataItem = this;
+        $(target).attr(
+            $(dataItem).attr("wfu-attr"),
+            $(dataItem).attr("wfu-attr-val")
+        );
 
     });
 
