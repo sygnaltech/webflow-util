@@ -51,8 +51,12 @@ If you want to specify the data type of the field being sorted, add this attribu
 - `string` for values that should be sorted as strings
 - `number` for values that should be sorted as numbers
 - `date` for values that should be sorted as dates
+- `semver` for values that should be sorted as [semantic versions](https://semver.org/) **
 
 Defaults to `string` when unspecified or unrecognized.
+
+** Note that semver sorting is a numeric-only implementation
+of the sort rules. It is not designed to handle alphanumerics in pre-release identifiers.
 
 
 ### Creating your Sort Key

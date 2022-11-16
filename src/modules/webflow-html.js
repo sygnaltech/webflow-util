@@ -330,6 +330,35 @@ export var sortCollectionList = function (l) {
                 console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
 
                 break;
+            case "semver":
+
+                const semver1 = `${key1}.0.0.0`.split('.');
+                const semver2 = `${key2}.0.0.0`.split('.');
+
+                // https://semver.org/#spec-item-11
+
+                // Precedence is determined by the first difference when comparing each 
+                // of these identifiers from left to right as follows: 
+                // Major, minor, and patch versions are always compared numerically.
+                for (var p = 0; p < 4; p++) 
+                    if (semver1[p] != semver2[p])
+                        break;
+
+                // Numeric identifiers always have lower precedence than non-numeric identifiers.
+
+                // Identifiers with letters or hyphens are compared lexically in ASCII sort order.
+
+                    // https://semver.org/#:~:text=Precedence%20for%20two%20pre%2Drelease%20versions%20with%20the%20same%20major%2C%20minor%2C%20and%20patch
+
+//                console.log(`semver difference at part ${p}`);
+
+                // Identifiers consisting of only digits are compared numerically.
+
+                // Compare; if same, doesn't matter
+                sortResult = new Number(semver1[p]) < new Number(semver2[p]) ? -1 : 1;
+                console.debug(`comparing semvers ${key1} ${key2} = ${sortResult}`);
+
+                break;
             case "string":
             default:
 
