@@ -10,9 +10,13 @@ toc: true
 # What's New?
 
 
-## v3.25
+## v3.26
 
 Under development. 
+
+## v3.25
+
+- Added semver sorting.
 
 ## v3.24
 
