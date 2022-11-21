@@ -1,48 +1,58 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /*
  * CSS for Sygnal Webflow Util HTL library
  */
-
+@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 [wfu-truncate] {
-    position: relative;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 [wfu-truncate="2"] {
-    -webkit-line-clamp: 2;
+  -webkit-line-clamp: 2;
 }
 
 [wfu-truncate="3"] {
-    -webkit-line-clamp: 3;
+  -webkit-line-clamp: 3;
 }
 
 [wfu-truncate="4"] {
-    -webkit-line-clamp: 4;
+  -webkit-line-clamp: 4;
 }
 
 [wfu-truncate="5"] {
-    -webkit-line-clamp: 5;
+  -webkit-line-clamp: 5;
 }
 
-
+/*
+[wfu-truncate]::after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70%;
+  height: 1.2em;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+}
+*/
 *[wfu-filter] {
-    display: none;
+  display: none;
 }
 
 *[wfu-filter-func] {
-    display: none;
+  display: none;
 }
 
-
-@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 .w-richtext[wfu-lists] li {
   font-family: "Redacted", cursive;
   color: black;
   display: inline-block;
-  animation: skeleton-loading 1s linear infinite alternate;
+  -webkit-animation: skeleton-loading 1s linear infinite alternate;
+          animation: skeleton-loading 1s linear infinite alternate;
 }
 .w-richtext[wfu-lists] li em {
   font-style: normal;
@@ -51,12 +61,21 @@
   color: inherit;
 }
 
-@keyframes skeleton-loading {
+@-webkit-keyframes skeleton-loading {
   0% {
-    color: #c2cfd6;
+    color: hsl(200deg, 20%, 80%);
   }
   100% {
-    color: #f0f3f5;
+    color: hsl(200deg, 20%, 95%);
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    color: hsl(200deg, 20%, 80%);
+  }
+  100% {
+    color: hsl(200deg, 20%, 95%);
   }
 }
 .w-richtext ul ul, .w-richtext ol ol {
@@ -87,4 +106,4 @@ ol .wfu-list-level-3 {
 
 .wfu-con::marker {
   content: "☒  ";
-}
+}/*# sourceMappingURL=webflow-html.css.map */

@@ -1,10 +1,12 @@
 
 /*
- * CSS for Sygnal Webflow Util HTL library
+ * CSS for Sygnal Webflow Util HTML library
  */
 
 
-// Add text trucation w/ ellipsis support
+/*
+ * Text trucation w/ ellipsis support
+ */
 
 // Applies to all, defaults to 1 line
 [wfu-truncate] {
@@ -46,8 +48,11 @@
 */
 
 
+/*
+ * Filtered elements
+ * hide by default, until filter statis is determined
+ */
 
-// Hide filtered elements, by default
 *[wfu-filter] {
     display: none;
 }
@@ -57,8 +62,10 @@
 }
 
 
-
-// Apply skeleton loader effect to elements targeted for parsing by WFU.
+/*
+ * Skeleton loader
+ * apply skeleton loader effect to elements targeted for parsing by WFU.
+ */
 
 @import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
 
@@ -88,7 +95,12 @@
     }
 }
 
-// Nested list styling
+
+
+
+/*
+ * Nested lists
+ */
 
 .w-richtext ul ul, .w-richtext ol ol {
     margin-top: 0.5rem;
@@ -125,5 +137,52 @@ ol .wfu-list-level-3 {
 // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
 .wfu-con::marker {
     content: "\2612   ";
+}
+
+
+
+/*
+ * Editor mode detection 
+ */
+
+html:not([data-wf-mode="editor"]) .w-richtext ul ul, .w-richtext ol ol {
+    margin-top: 0.5rem;
+}
+
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-2 {
+    list-style-type: lower-latin;
+}
+
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-3 {
+    list-style-type: lower-roman;
+}
+
+html:not([data-wf-mode="editor"]) .wfu-pro {
+    list-style-type: none;
+    color: green;
+}
+
+    html:not([data-wf-mode="editor"]) .wfu-pro::marker {
+        content: "☑  ";
+    }
+
+html:not([data-wf-mode="editor"]) .wfu-con {
+    list-style-type: none;
+    color: red;
+}
+
+    html:not([data-wf-mode="editor"]) .wfu-con::marker {
+        content: "☒  ";
+    }
+
+
+
+/*
+ * Hide elements on spec 
+ */
+
+// Hide elements which contain no collection list items
+[wfu-hide="empty-collection-list"]:not(:has(.w-dyn-item)) {  
+    display: none; 
 }
 
