@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Hide Section
+title: Hide Section w/ Empty Collection Lists
 subtitle: webflow-html
 menubar: menu
 hero_height: is-small
