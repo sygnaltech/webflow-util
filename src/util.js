@@ -9,7 +9,20 @@
  */
 
 
+// HTML Decode JSON for Select Option element
+// https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+function decodeHTML(text) {
+    return $("<textarea/>")
+      .html(text)
+      .text();
+}
 
+// https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+function encodeHTML(text) {
+    return $("<textarea/>")
+      .text(text)
+      .html();
+}
 
 // How to check if a number is between two values?
 // https://stackoverflow.com/a/18881828
