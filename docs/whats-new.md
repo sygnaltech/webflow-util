@@ -10,9 +10,17 @@ toc: true
 # What's New?
 
 
-## v3.26
+## v3.28
 
 Under development. 
+
+## v3.27
+
+- Added Decode HTML
+
+## v3.26
+
+- Added Hide Section w/ Empty Collection Lists
 
 ## v3.25
 
