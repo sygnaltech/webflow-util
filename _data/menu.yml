@@ -76,6 +76,8 @@
       link: /docs/webflow-html/truncate/
     - name: Hide Section w/ Empty Collection Lists 
       link: /docs/webflow-html/hide/
+    - name: Decode HTML 
+      link: /docs/webflow-html/decode-html/
 
 - label: Webflow-UI
   items:

@@ -9,7 +9,7 @@
  */
 
 import { WfuEditor } from '../modules/webflow.js';
-import { applyDynamicAttributes, processList, sortCollectionList } from '../modules/webflow-html.js';
+import { decodeHtml, applyDynamicAttributes, processList, sortCollectionList } from '../modules/webflow-html.js';
 
 // https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
 
@@ -31,6 +31,17 @@ $(function () {
   //      if (visible)
   //          $(this).css("display", "block");
 //    });
+
+    // HTML decode anything 
+    $("[wfu-decode]").each(function (index) {
+
+        $(this).html(
+            decodeHtml($(this).html())
+            );
+//            console.log("removing attr.");
+        $(this).removeAttr("wfu-decode");
+//console.log("attr removed.");
+    });
 
     // Process filtered items
     $("*[wfu-filter]").each(function (index) {

@@ -2,10 +2,14 @@
 /*
  * CSS for Sygnal Webflow Util HTML library
  */
+@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
+[wfu-decode] {
+  display: none;
+}
+
 /*
  * Text trucation w/ ellipsis support
  */
-@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 [wfu-truncate] {
   position: relative;
   display: -webkit-box;

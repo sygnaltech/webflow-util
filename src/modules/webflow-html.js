@@ -8,8 +8,32 @@
  * HTML Utilities
  */
 
+// HTML Decode
+// https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+export var decodeHtml = function (text) {
+    
+    console.log(text);
+
+    var decoded = $("<textarea/>")
+      .html(text)
+      .text();
+
+console.log(decoded);
+
+      return decoded;
+}
+
+// HTML Encode
+// https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+//export var encodeHTML = function (text) {
+//    return $("<textarea/>")
+//      .text(text)
+//      .html();
+//}
+
 
 // Simplest-case encoding for HTML5
+// TODO: move to util lib 
 export var encodeHtml = function (text) {
 
     // Important- this approach handles common scenarios,
