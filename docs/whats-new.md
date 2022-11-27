@@ -10,9 +10,13 @@ toc: true
 # What's New?
 
 
-## v3.28
+## v3.29
 
 Under development. 
+
+## v3.28
+
+- Added user tracking
 
 ## v3.27
 
