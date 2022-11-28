@@ -10,17 +10,24 @@ toc: true
 # What's New?
 
 
-## v3.29
+## v3.30
 
 Under development. 
 
+## v3.29
+
+- Additional numeric formats
+added to `webflow-format`.
+
 ## v3.28
 
-- Added user tracking
+- Added user tracking w/ cookies & web storage 
+as `webflow-track`.
 
 ## v3.27
 
 - Added Decode HTML
+to `webflow-html`.
 
 ## v3.26
 
