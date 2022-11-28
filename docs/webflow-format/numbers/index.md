@@ -30,7 +30,8 @@ This library allows you to format those numbers in commonly recognized formats, 
 - `gbp` - British pound sterling
 - `eur` - European currency
 - `jpy` - Japanese currency
-- `%` - percentages
+- `%` or `percent` - percentages
+- `,` or `comma` - thousands formatting with commas
 
 And more will come as [users request](mailto:wfu@sygnal.com). 
 

@@ -35,9 +35,21 @@ export var formatField = function (elem) {
             "style": 'currency',
             "currency": 'JPY'
         }],
+        ["percent", {
+            "locale": 'en-US',
+            "style": 'percent',
+        }],
         ["%", {
             "locale": 'en-US',
             "style": 'percent',
+        }],
+        ["comma", {
+            "locale": 'en-US',
+//            "style": 'percent',
+        }],
+        [",", {
+            "locale": 'en-US',
+//            "style": 'percent',
         }],
     ]);
     // Important- this approach handles common scenarios,
