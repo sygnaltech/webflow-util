@@ -10,9 +10,13 @@ toc: true
 # What's New?
 
 
-## v3.30
+## v3.31
 
 Under development. 
+
+## v3.30
+
+- Tracking, added cookies and localStorage options.
 
 ## v3.29
 
@@ -21,7 +25,7 @@ added to `webflow-format`.
 
 ## v3.28
 
-- Added user tracking w/ cookies & web storage 
+- Added user tracking w/ localStorage 
 as `webflow-track`.
 
 ## v3.27
