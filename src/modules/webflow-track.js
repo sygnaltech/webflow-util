@@ -14,8 +14,12 @@
  */
 
 var defaultConfig = {
-    method: 'webStorage', // cookie ( not yet implemented )
+
+    // sessionStorage | localStorage | cookies
+    method: 'sessionStorage',
+    
     prefix: 'track' 
+
 }
 
 export class WfuTracker {
@@ -33,42 +37,98 @@ export class WfuTracker {
     }
 
     track = function(key, val) {
-        if (this.config.method == "webStorage")
-            sessionStorage.setItem(`${this.trackKey(key)}`, 
-                val || "true");
-        else
-            document.cookie = `${this.config.prefix}_${key}=${val || "true"}`; 
+        switch (this.config.method) {
+            case "sessionStorage":
+                sessionStorage.setItem(`${this.trackKey(key)}`, 
+                    val || "true");
+                break;
+            case "localStorage":
+                localStorage.setItem(`${this.trackKey(key)}`, 
+                    val || "true");
+                break;
+            case "cookies":
+                document.cookie = `${this.config.prefix}_${key}=${val || "true"}`; 
+                break;
+        }        
 
     }
 
     untrack = function(key) {
-        if (this.config.method == "webStorage")
-            sessionStorage.removeItem(`${this.trackKey(key)}`); 
-        else
-            document.cookie =  
-                `${this.trackKey(key)}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+        switch (this.config.method) {
+            case "sessionStorage":
+                sessionStorage.removeItem(`${this.trackKey(key)}`); 
+                break;
+            case "localStorage":
+                localStorage.removeItem(`${this.trackKey(key)}`); 
+                break;
+            case "cookies":
+                document.cookie =  
+                    `${this.trackKey(key)}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+                break;
+        }        
     } 
 
     isTracked = function(key) {
-        if (this.config.method == "webStorage")
-          return sessionStorage.getItem(`${this.trackKey(key)}`); 
-        else {
-            return document.cookie
-                .split('; ')
-                .find((row) => row.startsWith(`${this.trackKey(key)}`))
-                ?.split('=')[1];
+        switch (this.config.method) {
+            case "sessionStorage":
+                return sessionStorage.getItem(`${this.trackKey(key)}`); 
+                break;
+            case "localStorage":
+                return localStorage.getItem(`${this.trackKey(key)}`); 
+                break;
+            case "cookies":
+                return document.cookie
+                    .split('; ')
+                    .find((row) => row.startsWith(`${this.trackKey(key)}`))
+                    ?.split('=')[1];
+                break;
+        }
+    }
+
+    getItem = function(key) {
+        switch (this.config.method) {
+            case "sessionStorage":
+                return sessionStorage.getItem(`${this.trackKey(key)}`); 
+                break;
+            case "localStorage":
+                return localStorage.getItem(`${this.trackKey(key)}`); 
+                break;
+            case "cookies":
+                return document.cookie
+                    .split('; ')
+                    .find((row) => row.startsWith(`${this.trackKey(key)}`))
+                    ?.split('=')[1];
+                break;
         }
     }
 
     reset = function() {
-        if (this.config.method == "webStorage") 
-            // Should clear only track_ items 
-            sessionStorage.clear();  
-        else {
-            untrack("page-visited");
-            untrack("button-clicked");
-            untrack("referrer");
-        } 
+        switch (this.config.method) {
+            case "sessionStorage":
+                sessionStorage.clear();  
+                break;
+            case "localStorage":
+                localStorage.clear();  
+                break;
+            case "cookies":
+
+                var arrSplit = document.cookie.split(";");
+
+                for(var i = 0; i < arrSplit.length; i++)
+                {
+                    var cookie = arrSplit[i].trim();
+                    var cookieName = cookie.split("=")[0];
+                
+                    // If the prefix of the cookie's name matches the one specified, remove it
+                    if(cookieName.indexOf(`${this.config.prefix}_`) === 0) {
+                
+                        // Remove the cookie
+                        document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                    }
+                }
+
+                break;
+        }
     }
 
 }
