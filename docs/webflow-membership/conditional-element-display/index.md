@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Membership
-subtitle: webflow-format
+title: Webflow Membership + Conditional Elements
+subtitle: webflow-membership
 menubar: menu
 hero_height: is-small
 toc: true
