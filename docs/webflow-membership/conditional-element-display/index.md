@@ -22,13 +22,10 @@ toc: true
 
 
 <div class="notification is-danger">
-THIS IS LIKELY A TEMPORARY SOLUTION, AS WEBFLOW IS BUILDING THIS FEATURE NATIVELY.
+This is likely a <b>temporary</b> solution, as Webflow is building
+this feature into Memberships natively.
 </div>
 
-
-<!--
-**THIS IS LIKELY A TEMPORARY SOLUTION, AS WEBFLOW IS BUILDING THIS FEATURE NATIVELY.**
--->
 
 This feature allows you to hide/show elements based on the logged-in / logged-out state of the current user. 
 

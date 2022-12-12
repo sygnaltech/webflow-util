@@ -10,9 +10,13 @@ toc: true
 # What's New?
 
 
-## v3.31
+## v3.32
 
 Under development. 
+
+## v3.31
+
+- Added Webflow Membership module, with conditional element display. 
 
 ## v3.30
 
