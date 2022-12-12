@@ -108,6 +108,11 @@
     - name: Payment Provider
       link: /docs/webflow-commerce/payment-provider/
 
+- label: Webflow-Membership
+  items:
+    - name: Conditional Element Display
+      link: /docs/webflow-membership/conditional-element-display/
+
 - label: Webflow-Format
   items:
     - name: Format Numbers
