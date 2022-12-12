@@ -16,9 +16,19 @@ toc: true
 
 ## Webflow Membership + Conditional Element Display
 
+<!--
 <a class="button is-danger" href="https://webflow-collections.webflow.io/formatting-numbers" target="_blank">View Demonstration in Webflow</a>
+--> 
 
+
+<div class="notification is-danger">
+THIS IS LIKELY A TEMPORARY SOLUTION, AS WEBFLOW IS BUILDING THIS FEATURE NATIVELY.
+</div>
+
+
+<!--
 **THIS IS LIKELY A TEMPORARY SOLUTION, AS WEBFLOW IS BUILDING THIS FEATURE NATIVELY.**
+-->
 
 This feature allows you to hide/show elements based on the logged-in / logged-out state of the current user. 
 
