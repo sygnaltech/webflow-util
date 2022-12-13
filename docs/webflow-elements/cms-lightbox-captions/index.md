@@ -23,11 +23,13 @@ toc: true
 <a class="button is-danger" href="https://webflow-collections.webflow.io/formatting-numbers" target="_blank">View Demonstration in Webflow</a>
 --> 
 
-<div class="notification is-danger">
-Tested with CMS-stored images, thumbnails, and captions. Not tested with video.
+<div class="notification is-warning">
+Works with CMS-stored images, thumbnails, and captions. 
+Does not support captioning video, due some complexities matching captions to
+the currently displayed video.
 </div>
 
-<div class="notification is-danger">
+<div class="notification is-warning">
 This is likely a <b>temporary</b> solution, as Webflow intends to building
 captioning support into Memberships natively.
 </div>

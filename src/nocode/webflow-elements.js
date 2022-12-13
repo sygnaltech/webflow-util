@@ -12,7 +12,7 @@
 import { WfuLightbox } from '../modules/webflow-element-lightbox.js';
 
 $(function () {
-
+ 
     const wfuLightbox = new WfuLightbox();
 
     // Show all elements tagged for logged-in users only
@@ -61,9 +61,10 @@ function setupCaption() {
     
     figure.children("figcaption").remove();
     
-    figure.append(
-        $(`<figcaption class="w-lightbox-caption">${caption}</figcaption>`)
-        );
+    if (caption)
+        figure.append(
+            $(`<figcaption class="w-lightbox-caption">${caption}</figcaption>`)
+            );
   
 }
   
