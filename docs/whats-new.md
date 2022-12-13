@@ -10,9 +10,14 @@ toc: true
 # What's New?
 
 
-## v3.32
+## v3.33
 
 Under development. 
+
+## v3.32
+
+- Added Webflow Elements
+  - Added CMS Lightbox + Captions 
 
 ## v3.31
 
