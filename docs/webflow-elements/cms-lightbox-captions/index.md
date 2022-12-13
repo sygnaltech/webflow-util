@@ -16,6 +16,9 @@ toc: true
 
 ## Display Captions in Webflow's Lightboxes
 
+<a class="button is-danger" href="https://webflow.com/made-in-webflow/website/cms-lightbox-captions" target="_blank">View the Cloneable Site in Webflow</a>
+
+
 <!--
 <a class="button is-danger" href="https://webflow-collections.webflow.io/formatting-numbers" target="_blank">View Demonstration in Webflow</a>
 --> 
