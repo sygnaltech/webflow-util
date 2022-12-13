@@ -117,3 +117,9 @@
   items:
     - name: Format Numbers
       link: /docs/webflow-format/numbers/
+
+
+- label: Webflow-Elements
+  items:
+    - name: Webflow CMS Lightbox + Captions
+      link: /docs/webflow-elements/cms-lightbox-captions/
