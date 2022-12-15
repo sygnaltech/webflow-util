@@ -7,4 +7,8 @@
 
 [wfu-hide-logged-in] {
   display: none;
+}
+
+[wfu-login-button] {
+  cursor: pointer;
 }/*# sourceMappingURL=webflow-membership.css.map */

@@ -31,5 +31,18 @@ $(function () {
         $(this).removeAttr("wfu-hide-logged-in"); 
     });
 
+
+    // Expanded login button
+    // Used on a containing DIV to expand the trigger area of 
+    // Webflow's Log-In / Log-Out button  
+    $("[wfu-login-button]").click(function() {
+        $(this).find("[data-wf-user-logout]").trigger('click');
+    })
+    $("[wfu-login-button] [data-wf-user-logout]").click(function(e) {
+        e.stopPropagation();
+    });
+
+
+
 });
 
