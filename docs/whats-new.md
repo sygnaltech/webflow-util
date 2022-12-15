@@ -10,10 +10,14 @@ toc: true
 # What's New?
 
 
+## v3.34
+
+Under development.
+
 ## v3.33
 
-Under development. 
-
+- Membership
+  - Added expand login button
 ## v3.32
 
 - Added Webflow Elements

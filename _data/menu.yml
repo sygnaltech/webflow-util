@@ -112,6 +112,8 @@
   items:
     - name: Conditional Element Display
       link: /docs/webflow-membership/conditional-element-display/
+    - name: Expanded Login Button 
+      link: /docs/webflow-membership/expand-login-button/
 
 - label: Webflow-Format
   items:
