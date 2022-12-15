@@ -10,14 +10,20 @@ toc: true
 # What's New?
 
 
-## v3.34
+## v3.35
 
 Under development.
 
-## v3.33
+## v3.34
 
 - Membership
   - Added expand login button
+
+## v3.33
+
+- Updates for lightbox captions
+  - Suppressed captions on video elements, since they're 'Undefined' 
+  
 ## v3.32
 
 - Added Webflow Elements
