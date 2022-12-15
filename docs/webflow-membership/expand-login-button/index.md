@@ -36,20 +36,17 @@ See https://sygnal.com for an example ( top right ).
 
 ## Usage Notes
 
-### Create a DIV
+### Create a DIV, with the `wfu-login-button` attribute
 
-### Place the Webflow Log-In / Log-Out Button inside of it
-
+- Add the `wfu-login-button` custom attribute (no value needed) to identify the clickable "expanded login button" element.
 - Include whatever else you want in that button DIV
 - Style it however you like
 
 
+### Place the Webflow Log-In / Log-Out Button inside of it
 
-### `wfu-login-button` attribute
-
-Add the `wfu-login-button` custom attribute (no value needed) when you want an element to only appear to logged-in users.
-
-
+This is important, it's the inner element that the expanded button will perform 
+the log-in / log-out action through. 
 
 
 
