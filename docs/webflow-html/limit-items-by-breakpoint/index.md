@@ -18,6 +18,9 @@ toc: true
 
 <a class="button is-danger" href="https://display-random-list-items.webflow.io/" target="_blank">View Demonstration in Webflow</a>
 
+<a class="button is-danger" href="https://webflow.com/made-in-webflow/website/display-random-list-items" target="_blank">Cloneable</a>
+
+
 Webflow has a built-in Limit Items feature on Collection Lists,
 however it is not breakpoint-sensitive.
 
@@ -52,6 +55,11 @@ Place on any Collection List directly ( not the Collection List Wrapper ).
 
 Specify the number of items you want to show from 1 to 12. 
 
+### Advanced note 
+
+If you want to have the item limits also shown in the Designer,
+you can add a special chunk of CSS code into an HTML Embed.
+See the Cloneable, above. You'll find this CSS in the HTML Embed at the very bottom of the homepage.
 
 ## Getting Started ( NOCODE )
 
