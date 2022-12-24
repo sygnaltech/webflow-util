@@ -10,9 +10,15 @@ toc: true
 # What's New?
 
 
-## v3.35
+## v3.36
 
 Under development.
+
+## v3.35
+
+- HTML
+  - Added dynamic limit items by breakpoint
+  - Added dynamic random sort, on refresh
 
 ## v3.34
 
@@ -23,7 +29,7 @@ Under development.
 
 - Updates for lightbox captions
   - Suppressed captions on video elements, since they're 'Undefined' 
-  
+
 ## v3.32
 
 - Added Webflow Elements
