@@ -8,6 +8,33 @@
  * HTML Utilities
  */
 
+// Credit James Padolsey 
+// https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
+(function($){
+ 
+    $.fn.shuffle = function() {
+ 
+        var allElems = this.get(),
+            getRandom = function(max) {
+                return Math.floor(Math.random() * max);
+            },
+            shuffled = $.map(allElems, function(){
+                var random = getRandom(allElems.length),
+                    randEl = $(allElems[random]).clone(true)[0];
+                allElems.splice(random, 1);
+                return randEl;
+           });
+ 
+        this.each(function(i){
+            $(this).replaceWith($(shuffled[i]));
+        });
+ 
+        return $(shuffled);
+ 
+    };
+ 
+})(jQuery);
+
 // HTML Decode
 // https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
 export var decodeHtml = function (text) {
@@ -325,14 +352,30 @@ export var processList = function (list) {
 export var sortCollectionList = function (l) {
 
     const $list = $(l);
-    const $dir = $list.attr("wfu-sort-dir") || "asc";
-    const $sortType = $list.attr("wfu-sort-type") || "string";
+    const mode = $list.attr("wfu-sort") || "default";
+    const dir = $list.attr("wfu-sort-dir") || "asc";
+    const sortType = $list.attr("wfu-sort-type") || "string";
 
     $list.attr("wfu-sort-type");
 
     var $items = $list.children();
 
-    console.debug(`WFU sorting ${$sortType} ${$dir} (${$items.length} children)`);
+    console.debug(`WFU sorting ${mode} ${sortType} ${dir} (${$items.length} children)`);
+
+    console.debug({
+        name: "WFU sorting", 
+        mode: mode, 
+        sortType: sortType, 
+        dir: dir, 
+        children: `${$items.length} children`
+    });
+
+    // If Random sort, do it now 
+    // uses jQuery extension, defined above
+    if(dir == "random") {
+        $list.children().shuffle();
+        return;
+    }
 
     $items.sort(function (a, b) {
 
@@ -341,7 +384,7 @@ export var sortCollectionList = function (l) {
 
         // Determine asc sort result
         var sortResult = 1;
-        switch ($sortType) {
+        switch (sortType) {
             case "date":
 
                 sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
@@ -393,7 +436,7 @@ export var sortCollectionList = function (l) {
         }
 
         // Invert for desc
-        if ($dir != "asc") {
+        if (dir != "asc") {
             sortResult = sortResult * -1;
         }
 

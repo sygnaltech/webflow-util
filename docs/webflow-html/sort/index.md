@@ -14,7 +14,7 @@ toc: true
 {% assign lib_url = "https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util" %}
 {% endif %}
 
-## Advanced Element Filtering
+## Advanced Element Sorting
 
 <a class="button is-danger" href="https://webflow-collections.webflow.io/advanced-filter" target="_blank">View Demonstration in Webflow</a>
 
@@ -26,7 +26,7 @@ Supports;
 
 - Sorting by string or date values ( defaults to string )
 - Sorting ascending / descending ( defaults to ascending )
-
+- Sorting randomly ( on every page refresh )
 
 ## Usage Notes
 
@@ -41,6 +41,7 @@ If you want to change the direction, add this attribute with a value of;
 
 - `asc` for ascending
 - `desc` for descending
+- `random` for random ( on every page refresh )
 
 Defaults to ascending when unspecified or unrecognized.
 
