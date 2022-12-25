@@ -10,13 +10,20 @@ toc: true
 # What's New?
 
 
-## v3.36
+## v3.37
 
 Under development.
 
+## v3.36
+
+- webflow-membership-routing
+  - Added advanced log-in & sign-up routing
+- webflow-membership
+  - Refactored expanded login button area feature
+
 ## v3.35
 
-- HTML
+- webflow-html
   - Added dynamic limit items by breakpoint
   - Added dynamic random sort, on refresh
 

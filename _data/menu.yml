@@ -116,6 +116,8 @@
       link: /docs/webflow-membership/conditional-element-display/
     - name: Expanded Login Button 
       link: /docs/webflow-membership/expand-login-button/
+    - name: Advanced Login Flow 
+      link: /docs/webflow-membership/advanced-login-flow/
 
 - label: Webflow-Format
   items:
