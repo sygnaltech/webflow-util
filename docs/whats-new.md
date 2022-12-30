@@ -14,6 +14,12 @@ toc: true
 
 Under development.
 
+## v3.371
+
+- webflow-membership-routing
+  - Added internal tracing 
+  - Revisions to . path handling 
+
 ## v3.37
 
 - webflow-membership-routing
