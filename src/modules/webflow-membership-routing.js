@@ -16,10 +16,16 @@
  */
 
 
-var defaultConfig = {
+var defaultRoutingConfig = {
     
     routeAfterFirstLogin: false, // false | URL
     routeAfterLogin: false, // false | "." | URL 
+
+}
+
+var defaultAccessGroupConfig = {
+    
+    accessGroupAllowed: "", // all allowed 
 
 }
 
@@ -29,7 +35,7 @@ export class WfuMembershipRouting {
 
     constructor(config = {}) {
 
-        this.config = $.extend({}, defaultConfig, config);
+        this.config = $.extend({}, defaultRoutingConfig, config);
 
         // Install if needed 
         window.getCookie = window.getCookie || function(name) {
@@ -45,66 +51,64 @@ export class WfuMembershipRouting {
 
     isLoggedIn = function() {
 
-//        const loggedIn = window.getCookie("wf_loggedin") || false;
-//        console.log (`logged in = ${loggedIn}`);
-
         return window.getCookie("wf_loggedin") || false;
     }
 
-    // Handle user routing
+    // Handle user routing, starting point
     // based on page, referrer situation
     // and config. 
     routeUser = function() {
 
-        // Handle recognized paths 
-        switch(window.location.pathname) {
-            case "/":
-                this.routeUserFromHome();
-                break;
-            case "/log-in":
-                this.routeUserFromLogin();
-                break;
-        }
+        if (this.routeAfterFirstLogin())
+            return;
+
+        this.routeAfterLogin();
 
     }
 
-    // Use on homepage only
-    // because this is where a new self-sign-up is directed 
-    // immediately after confirming sign-up, via the email link 
-    routeUserFromHome = function() {
+    // Determines if the immediate scenario is a first-login
+    // scenario. 
+    // TEST: Routed logins with this 
+    // Returns TRUE if routing applied. 
+    routeAfterFirstLogin = function() {
+
+        // If not /, exit
+        if (window.location.pathname != "/"
+            && window.location.pathname != "/log-in")
+            return false;
 
         // If no routing rule, exit
         if (!this.config.routeAfterFirstLogin)
-            return;
-        
+            return false;
+
         // If no referrer, exit
         // because we have no information to route with  
         if (!document.referrer)
-            return;
+            return false;
         var urlReferrer = new URL(document.referrer);
 
         // Determine if this is a new registrant
         // TODO: add additional ?verifyToken= verification 
-        var newRegistrant = false;
-        if (urlReferrer.pathname == '/sign-up')
-            newRegistrant = true;
-      
-        if (newRegistrant) {
-        
-            // This is a new registrant on a first-time login
-            // So redirect them to our desired first-time page 
-            window.location.replace(this.config.routeAfterFirstLogin); 
-            
+        if (urlReferrer.pathname != '/sign-up')
+            return false; 
+
+        // This is a new registrant on a first-time login
+        // So redirect them to our desired first-time page 
+        switch (window.location.pathname) {
+            case "/":
+
+                // A redirect is needed
+                window.location.replace(this.config.routeAfterFirstLogin); 
+
+                break;
+            case "/log-in":
+
+                // Form config is ok 
+                this.setLoginPageRedirect(this.config.routeAfterFirstLogin); 
+                break;
         }
-        
-      }
-      
-      setLoginPageRedirect = function(url) {
 
-        window.location.replace(
-            `/log-in?usredir=${encodeURIComponent(url)}`
-            ); 
-
+        return true; 
       }
 
       /*
@@ -114,16 +118,15 @@ export class WfuMembershipRouting {
        * - Indirect access, via redir string -> do nothing
        * - Accepted member invitation, via /sign-up -> first time login page
        */
-      routeUserFromLogin = function() {
-
-console.debug("routeUserFromLogin"); 
+      routeAfterLogin = function() {
 
         // If no routing rule, exit
-        if (!this.config.routeAfterLogin 
-            && !this.config.routeAfterFirstLogin
-            ) return;
+        if (!this.config.routeAfterLogin) 
+            return false;
 
-            console.debug("routeUserFromLogin 1"); 
+        // If no login forms, exit
+        if (!$("form[data-wf-user-form-type='login']").length)
+            return false;
 
         // Setup context
         var url = new URL(window.location.href);
@@ -136,62 +139,113 @@ console.debug("routeUserFromLogin");
           
         // If redir, exit
         if (url.searchParams.has('usredir'))
-            return; 
-
-
-            console.debug("routeUserFromLogin ALL GO"); 
-
+            return false; 
 
         // Get context 
         // - First time login, coming from /sign-up 
         // - Member 
         // - (FUTURE) access-groups 
-      
-        // Check for new registrant
-        var isFirstLogin = false;
-        
-        if (urlReferrer) {
-      
-            if (urlReferrer.pathname == '/sign-up')
-                isFirstLogin = true;
-          
-            // Safety
-            // to prevent recurring redirects 
-            if (urlReferrer.pathname == "/log-in")
-                urlReferrer = undefined;
-        }
-        
-        if (isFirstLogin) {
 
-            // This is a new registrant on a first-time login
-            // So redirect them to our desired first-time page 
-//            window.location.replace(this.config.routeAfterSignUp); 
-                // "/u/new");
-            this.setLoginPageRedirect(this.config.routeAfterFirstLogin);
+        // Rewrite querystring
+        // to redirect to a specific target after login.
+        // ONLY if no redirect is already specified. 
+        // TEST: Back button 
 
-        } else {
+        var routePath = this.config.routeAfterLogin;
 
-            // Rewrite querystring
-            // to redirect to a specific target after login.
-            // ONLY if no redirect is already specified. 
-            // TEST: Back button 
-            switch(this.config.routeAfterLogin) {
-
-                case ".": // Return to the page log-in was clicked 
-                    this.setLoginPageRedirect(urlReferrer.pathname);
-                    break;
-
+        if (routePath == ".") {
+            switch(urlReferrer.pathname) {
+                case "/log-in":
+                case "/sign-up":
+                    routePath = "/";
                 default:
-                    this.setLoginPageRedirect(this.config.routeAfterLogin); 
-                    break;
-
+                    routePath = urlReferrer.pathname;
             }
+        } 
 
-        }
+        this.setLoginPageRedirect(routePath);
+
+        return true; 
+      }
       
+      // Apply redirect path to login
+      setLoginPageRedirect = function(url) {
+
+        // Directly apply to each form as a config attr
+        $("form[data-wf-user-form-type='login']").each(function() {
+            $(this).attr("data-wf-user-form-redirect", url);
+        });
+
+        // Original approach
+        // window.location.replace(
+        //     `/log-in?usredir=${encodeURIComponent(url)}`
+        //     ); 
+
       }
 
 }
 
+export class WfuMembershipAccessGroupRouting {
+
+    config; // Optional config
+
+    constructor(config = {}) {
+
+        this.config = $.extend({}, defaultAccessGroupConfig, config);
+
+        // Install if needed 
+        window.getCookie = window.getCookie || function(name) {
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) return match[2];
+            }
+    
+        // Get current user's access groups 
+    
+    }
+
+    isLoggedIn = function() {
+
+        return window.getCookie("wf_loggedin") || false;
+    }
+
+    // Verify and handle access appropriately
+    verifyAccess = function() {
+        if (hasAccess) {
+            // Show page
+            // Remove [wfu-user-access]
+            // [wfu-user-no-access] 
+
+        } else {
+            // Hide page
+            location.replace("/");
+        }
+    }
+
+    // Determine if the current user has access
+    hasAccess = function() {
+
+        // If all allowed, return true
+        // Make content visible
+        if (!this.config.accessGroupAllowed)
+            return true;
+
+        // Handle "anyone logged in" rule (*)
+        if (this.config.accessGroupAllowed == "*") {
+            // logged in
+            return isLoggedIn();
+        }
+
+        // Get current user's access groups
+        const accessGroups = [ "webflow" ];
+
+        // If user has the allowed access group, return true
+        if (accessGroups.includes(this.config.accessGroupAllowed))
+            return true;
+
+        // Block access
+        return false;
+    }
+
+}
 
 

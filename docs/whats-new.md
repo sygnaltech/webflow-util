@@ -10,9 +10,15 @@ toc: true
 # What's New?
 
 
-## v3.37
+## v3.38
 
 Under development.
+
+## v3.37
+
+- webflow-membership-routing
+  - Refactored to utilize the login form's internal redirect
+  - Expanded to support log-in forms on other pages 
 
 ## v3.36
 
