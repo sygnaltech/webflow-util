@@ -10,9 +10,14 @@ toc: true
 # What's New?
 
 
-## v3.38
+## v3.39
 
 Under development.
+
+## v3.38
+
+- webflow-url
+  - Bugfix on url morphing in certain page constructions
 
 ## v3.371
 

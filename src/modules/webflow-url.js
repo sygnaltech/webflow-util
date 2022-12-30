@@ -28,49 +28,6 @@ export class WfuQuery {
 
     }
 
-    // Process elements with the custom attr wfu-query-param
-    processAll = function () {
-
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Skip if there is no querystring
-        if (Array.from(urlParams).length == 0)
-            return;
-
-        // Loop all processable elements
-        // - All <a> elements
-        // - Any element tagged with [wfu-query-param]=?
-        // TODO: ignore elems tagged [wfu-query-param]=- or eleme within a DIV tagged as such? 
-        $("*[wfu-query-param], a").each(function () {
-
-            if ($(this).is('input')) {
-
-                // For INPUT elements, set the value param
-                $(this).attr(
-                    'value',
-                    urlParams.get($(this).attr("wfu-query-param"))
-                );
-
-            } else if ($(this).is('a')) {
-
-                // FORMS
-                // IFRAMES 
-
-                processLink($(this));
-
-            } else {
-
-                // For anything else, set the inner text
-                $(this).text(
-                    urlParams.get($(this).attr("wfu-query-param"))
-                );
-
-            }
-
-        });
-
-    }
-
     processLink = function (linkElem) {
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -134,6 +91,51 @@ export class WfuQuery {
             // Update link href
             linkElem.attr("href", newHref);
         }
+
+    }
+
+    // Process elements with the custom attr wfu-query-param
+    processAll = function () {
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Skip if there is no querystring
+        if (Array.from(urlParams).length == 0)
+            return;
+
+        const that = this;
+
+        // Loop all processable elements
+        // - All <a> elements
+        // - Any element tagged with [wfu-query-param]=?
+        // TODO: ignore elems tagged [wfu-query-param]=- or eleme within a DIV tagged as such? 
+        $("*[wfu-query-param], a").each(function () {
+
+            if ($(this).is('input')) {
+
+                // For INPUT elements, set the value param
+                $(this).attr(
+                    'value',
+                    urlParams.get($(this).attr("wfu-query-param"))
+                );
+
+            } else if ($(this).is('a')) {
+
+                // FORMS
+                // IFRAMES 
+
+                that.processLink($(this));
+
+            } else {
+
+                // For anything else, set the inner text
+                $(this).text(
+                    urlParams.get($(this).attr("wfu-query-param"))
+                );
+
+            }
+
+        });
 
     }
 
