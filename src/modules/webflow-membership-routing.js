@@ -120,50 +120,83 @@ export class WfuMembershipRouting {
        */
       routeAfterLogin = function() {
 
+        console.group(`wfu routeAfterLogin`)
+
         // If no routing rule, exit
-        if (!this.config.routeAfterLogin) 
+        if (!this.config.routeAfterLogin) {
+            console.debug("no routeafterlogin config set.");
+            console.groupEnd();
+
             return false;
+        }
 
         // If no login forms, exit
-        if (!$("form[data-wf-user-form-type='login']").length)
+        if (!$("form[data-wf-user-form-type='login']").length) {
+            console.debug("no login forms found.");
+            console.groupEnd();
+
             return false;
+        }
 
         // Setup context
         var url = new URL(window.location.href);
-        console.log(url.href);
-      
-        console.log(document.referrer); 
-        var urlReferrer = undefined;
-        if (document.referrer) 
-            urlReferrer = new URL(document.referrer);
+        console.debug(`url: ${url.href}`); 
+
+        console.debug(`referrer: ${document.referrer}`); 
+        var urlReferrer = undefined; 
+        var urlReferrerPath = "";
+        if (document.referrer) {
+            urlReferrer = new URL(document.referrer); 
+            urlReferrerPath = urlReferrer.pathname; 
+        }
           
         // If redir, exit
-        if (url.searchParams.has('usredir'))
+        if (url.searchParams.has('usredir')) {
+            console.debug("specific redirection specified.");
+            console.groupEnd();
+
             return false; 
+        }
 
         // Get context 
         // - First time login, coming from /sign-up 
         // - Member 
         // - (FUTURE) access-groups 
 
-        // Rewrite querystring
+        // Rewrite sign-up form redirect 
         // to redirect to a specific target after login.
-        // ONLY if no redirect is already specified. 
         // TEST: Back button 
 
-        var routePath = this.config.routeAfterLogin;
+        var routePath = this.config.routeAfterLogin; 
+        console.debug(`default routePath: ${routePath}`); 
 
         if (routePath == ".") {
-            switch(urlReferrer.pathname) {
-                case "/log-in":
-                case "/sign-up":
-                    routePath = "/";
-                default:
-                    routePath = urlReferrer.pathname;
+            if (url.pathname == "/log-in") { 
+
+                // Use referrer as redirect location
+                switch(urlReferrerPath) {
+                    case "": // no referrer 
+                    case "/log-in":
+                    case "/sign-up":
+                        routePath = "/";
+                    default:
+                        routePath = urlReferrerPath;
+                }
+
+            } else {
+
+                // Use current path as redirect location 
+                var routePath = url.pathname; 
+
             }
+
         } 
 
+        console.debug(`routePath: ${routePath}`); 
+
         this.setLoginPageRedirect(routePath);
+
+        console.groupEnd(); 
 
         return true; 
       }
