@@ -10,9 +10,15 @@ toc: true
 # What's New?
 
 
-## v3.39
+## v3.40
 
 Under development.
+
+## v3.39
+
+- webflow-html
+  - Enhanced sorting so that nested lists can be sorted as well 
+  - Added sequence numbering
 
 ## v3.38
 

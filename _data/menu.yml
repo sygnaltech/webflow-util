@@ -74,6 +74,8 @@
       link: /docs/webflow-html/limit-items-by-breakpoint/
     - name: Element Sorting
       link: /docs/webflow-html/sort/
+    - name: Sequence Numbers
+      link: /docs/webflow-html/seq/
     - name: Truncate Text w/ Ellipsis
       link: /docs/webflow-html/truncate/
     - name: Hide Section w/ Empty Collection Lists 
