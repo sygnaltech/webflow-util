@@ -9,7 +9,7 @@
  */
 
 import { WfuEditor } from '../modules/webflow.js';
-import { decodeHtml, applyDynamicAttributes, processList, sortCollectionList } from '../modules/webflow-html.js';
+import { decodeHtml, applyDynamicAttributes, processList, sortCollectionList, sequence } from '../modules/webflow-html.js';
 
 // https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
 
@@ -20,6 +20,13 @@ $(function () {
 
     // Init Editor mode detection
     const wfuEditor = new WfuEditor();
+
+    // Sequence items 
+    $("[wfu-seq-group").each(function () {
+
+        sequence($(this));
+
+    });
 
     // Unwrap tagged items
 //    $("*[wfu-unwrap]").each(function (index) {
@@ -54,17 +61,17 @@ $(function () {
             $(this).css("display", "block");
     });
 
-    // Process sorted items
-    $("[wfu-sort]").each(function () {
-
-
+    // Process sorted items 
+    // Innermost first, to make sure the sorting does not
+    // break jQuery references 
+    $("[wfu-sort] [wfu-sort] [wfu-sort]").each(function () {
         sortCollectionList($(this));
-        //        console.log($(this).attr("wfu-filter"));
-
-//        var visible = eval($(this).attr("wfu-filter"));
-
- //       if (visible)
- //           $(this).css("display", "block");
+    });
+    $("[wfu-sort] [wfu-sort]").each(function () {
+        sortCollectionList($(this));
+    });
+    $("[wfu-sort]").each(function () {
+        sortCollectionList($(this));
     });
 
     // Process filtered items

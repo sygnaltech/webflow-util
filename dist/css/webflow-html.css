@@ -58,6 +58,10 @@
   display: none;
 }
 
+[wfu-sort] {
+  display: none;
+}
+
 /*
  * Skeleton loader
  * apply skeleton loader effect to elements targeted for parsing by WFU.

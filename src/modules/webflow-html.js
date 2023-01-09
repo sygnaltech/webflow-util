@@ -297,8 +297,6 @@ export var processList = function (list) {
 
     $.each(items, function (i, item) {
 
-        //        console.log(`#${i} / ${item.text} / c${level} n${item.indent} / ${item.mode} - current level `); 
-
         // Add optional PRO/CON class 
         var attr = '';
         if (item.mode == 'pro')
@@ -309,28 +307,26 @@ export var processList = function (list) {
         prevLevel = level;
 
         if (item.indent > level) {
-            //          console.log (`LEVEL ${prevLevel} -> ${level} / opening`);
+
             for (var l = level + 1; l <= item.indent; l += 1)
                 outHtml += `<${tag} class="wfu-list-level-${l}">`;
             outHtml += `<li${attr}>${item.text}`;
 
             level = item.indent;
 
-            //          console.log(outHtml);
-
         } else if (item.indent < level) {
-            //          console.log (`LEVEL ${prevLevel} ->  ${level} / closing`);
+
             outHtml += `</li></${tag}>`.repeat(level - item.indent);
             outHtml += `</li>`;
             outHtml += `<li${attr}>${item.text}`;
             level = item.indent;
-            //          console.log(outHtml);
+
         } else {
-            //          console.log (`LEVEL ${prevLevel} ->  ${level} / same`);
+
             if (i > 0)
                 outHtml += `</li>`;
             outHtml += `<li${attr}>${item.text}`;
-            //          console.log(outHtml);
+
         }
 
     });
@@ -340,8 +336,22 @@ export var processList = function (list) {
     outHtml += `</li>`;
     level = 1;
 
-    //      console.log(outHtml);  
     $(list).html(outHtml);
+
+}
+
+export var sequence = function (l) {
+
+    const $group = $(l);
+    
+    // Get the group name
+    const groupName = $group.attr("wfu-seq-group");
+
+    // Find matching items 
+    var i = 0;
+    $group.find(`[wfu-seq="${groupName}"]`).each(function() {
+        $(this).html(++i);
+    }); 
 
 }
 
@@ -351,12 +361,12 @@ export var processList = function (list) {
  */
 export var sortCollectionList = function (l) {
 
+    console.group("SORT");
+
     const $list = $(l);
     const mode = $list.attr("wfu-sort") || "default";
     const dir = $list.attr("wfu-sort-dir") || "asc";
     const sortType = $list.attr("wfu-sort-type") || "string";
-
-    $list.attr("wfu-sort-type");
 
     var $items = $list.children();
 
@@ -370,81 +380,94 @@ export var sortCollectionList = function (l) {
         children: `${$items.length} children`
     });
 
+    console.debug('before.');
+
+    console.debug($list.children()); 
+
     // If Random sort, do it now 
     // uses jQuery extension, defined above
     if(dir == "random") {
+
+        // Randomize
+        // updates element order directly, immediately
         $list.children().shuffle();
-        return;
+
+    } else {
+
+        $items.sort(function (a, b) {
+
+            const key1 = $(a).find("[wfu-sort-key]").attr("wfu-sort-key");
+            const key2 = $(b).find("[wfu-sort-key]").attr("wfu-sort-key");
+
+            // Determine asc sort result
+            var sortResult = 1;
+            switch (sortType) {
+                case "date":
+
+                    sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
+                    console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
+
+                    break;
+                case "number":
+
+                    sortResult = new Number(key1) < new Number(key2) ? -1 : 1;
+                    console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
+
+                    break;
+                case "semver":
+
+                    const semver1 = `${key1}.0.0.0`.split('.');
+                    const semver2 = `${key2}.0.0.0`.split('.');
+
+                    // https://semver.org/#spec-item-11
+
+                    // Precedence is determined by the first difference when comparing each 
+                    // of these identifiers from left to right as follows: 
+                    // Major, minor, and patch versions are always compared numerically.
+                    for (var p = 0; p < 4; p++) 
+                        if (semver1[p] != semver2[p])
+                            break;
+
+                    // Numeric identifiers always have lower precedence than non-numeric identifiers.
+
+                    // Identifiers with letters or hyphens are compared lexically in ASCII sort order.
+
+                        // https://semver.org/#:~:text=Precedence%20for%20two%20pre%2Drelease%20versions%20with%20the%20same%20major%2C%20minor%2C%20and%20patch
+
+    //                console.log(`semver difference at part ${p}`);
+
+                    // Identifiers consisting of only digits are compared numerically.
+
+                    // Compare; if same, doesn't matter
+                    sortResult = new Number(semver1[p]) < new Number(semver2[p]) ? -1 : 1;
+                    console.debug(`comparing semvers ${key1} ${key2} = ${sortResult}`);
+
+                    break;
+                case "string":
+                default:
+
+                    sortResult = key1.localeCompare(key2);
+                    console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
+
+                    break;
+            }
+
+            // Invert for desc
+            if (dir != "asc") {
+                sortResult = sortResult * -1;
+            }
+
+            return sortResult;
+        });
+
+        console.debug('writing.');
+        $list.html($items);
+
     }
 
-    $items.sort(function (a, b) {
+    // Remove attribute to display 
+    $list.removeAttr("wfu-sort");
 
-        const key1 = $(a).find("[wfu-sort-key]").attr("wfu-sort-key");
-        const key2 = $(b).find("[wfu-sort-key]").attr("wfu-sort-key");
-
-        // Determine asc sort result
-        var sortResult = 1;
-        switch (sortType) {
-            case "date":
-
-                sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
-                console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
-
-                break;
-            case "number":
-
-                sortResult = new Number(key1) < new Number(key2) ? -1 : 1;
-                console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
-
-                break;
-            case "semver":
-
-                const semver1 = `${key1}.0.0.0`.split('.');
-                const semver2 = `${key2}.0.0.0`.split('.');
-
-                // https://semver.org/#spec-item-11
-
-                // Precedence is determined by the first difference when comparing each 
-                // of these identifiers from left to right as follows: 
-                // Major, minor, and patch versions are always compared numerically.
-                for (var p = 0; p < 4; p++) 
-                    if (semver1[p] != semver2[p])
-                        break;
-
-                // Numeric identifiers always have lower precedence than non-numeric identifiers.
-
-                // Identifiers with letters or hyphens are compared lexically in ASCII sort order.
-
-                    // https://semver.org/#:~:text=Precedence%20for%20two%20pre%2Drelease%20versions%20with%20the%20same%20major%2C%20minor%2C%20and%20patch
-
-//                console.log(`semver difference at part ${p}`);
-
-                // Identifiers consisting of only digits are compared numerically.
-
-                // Compare; if same, doesn't matter
-                sortResult = new Number(semver1[p]) < new Number(semver2[p]) ? -1 : 1;
-                console.debug(`comparing semvers ${key1} ${key2} = ${sortResult}`);
-
-                break;
-            case "string":
-            default:
-
-                sortResult = key1.localeCompare(key2);
-                console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
-
-                break;
-        }
-
-        // Invert for desc
-        if (dir != "asc") {
-            sortResult = sortResult * -1;
-        }
-
-        return sortResult;
-    });
-
-    //    $items.detach().appendTo($list);
-    console.log('writing.');
-    $list.html($items);
+    console.groupEnd();
 
 }
