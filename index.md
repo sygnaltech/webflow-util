@@ -1,15 +1,15 @@
 ---
 layout: page
-title: Webflow Utils v3
+title: Sygnal Attributes v4
 subtitle: Make your webflow site awesome
 menubar: menu
 hero_height: is-small
 toc: false
 ---
 
-# What is WFU?
+# What is Sygnal Attributes?
 
-**Sygnal Webflow Utils v{{ site.libver }} (WFU)** is a collection of javascript libraries that add functionality to 
+**Sygnal Attributes v{{ site.libver }} (WFU)** is a collection of javascript libraries that add functionality to 
 [Webflow](https://webflow.com/)
 sites. It focuses on overcoming certain limitations of Webflow, and adding certain capabilities.
 

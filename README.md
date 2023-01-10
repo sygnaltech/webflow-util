@@ -1,4 +1,4 @@
-# Webflow Utils [WFU] v3
+# Sygnal Attributes [WFU] v4
 
 The **WFU** library is a collection of utilities that add capability to 
 [Webflow](https://webflow.com/)
@@ -21,12 +21,11 @@ This project is also a practical exploration into the use of Javascript ES6 modu
 
 ## Documentation
 
-All documentation is on Github Pages-
-https://sygnaltech.github.io/webflow-util/
+Master documentation is here-
+https://attr.sygnal.com
 
-- [Home](https://sygnaltech.github.io/webflow-util/)
-- [What's New](https://sygnaltech.github.io/webflow-util/whats-new)
-- [Technical Notes](https://sygnaltech.github.io/webflow-util/tech)
-- [Databinding](https://sygnaltech.github.io/webflow-util/databinding)
+Legacy documentation and demos are here-
+https://wfu.sygnal.com
+
 
 

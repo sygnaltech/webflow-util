@@ -23,10 +23,10 @@
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 #liburl: https://localhost # the base hostname & protocol for your site, e.g. http://example.com
-liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@3.39 # the base hostname & protocol for your site, e.g. http://example.com
-libver: 3.39
+liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@4.0 # the base hostname & protocol for your site, e.g. http://example.com
+libver: 4.0
 
-title: Sygnal Webflow Utils
+title: Sygnal Attributes
 email: web@sygnal.com
 description: >- # this means to ignore newlines until "baseurl:"
   Make your Webflow site awesome.

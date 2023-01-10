@@ -10,9 +10,17 @@ toc: true
 # What's New?
 
 
-## v3.40
+## v4.1
 
 Under development.
+
+## v4.0
+
+Project renamed to Sygnal Attributes, for 2023
+
+License changed to GNU GPLv3.
+
+Primary documentation moved to https://attr.sygnal.com.
 
 ## v3.39
 
