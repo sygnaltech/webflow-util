@@ -5,20 +5,17 @@
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Tracking Utilities
+ * Member Information Utilities
  */
 
+import { XXH64 } from './webflow-crypto.js';
+import { toTitleCase } from './webflow-utils.js';
 
 // Install utility function if needed 
 window.getCookie = window.getCookie || function(name) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     if (match) return match[2];
 }
-
-const StorageKeys = Object.freeze({
-    user: 'wfuUser',
-    userKey: 'wfuUserKey',
-});
 
 // How to add days to Date?
 // https://stackoverflow.com/a/563442
@@ -28,19 +25,59 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
+const StorageKeys = Object.freeze({
+    user: 'wfuUser',
+    userKey: 'wfuUserKey',
+});
+
 
 /*
  * User class.
  */
 
+//import Md5 from "crypto-api/src/hasher/md5";
 export class WfuUser {
 
     // Webflow data
     user_id; // Webflow user_id
-    name;
-    email;
+
+    get user_id_alt() {
+        if (!this.email)
+            return undefined;
+
+        return XXH64.hash(this.email);
+//        return xxHash32(this.email); // UTF-8 xxHash32 
+    }
+
     accept_communications;
 
+    // https://stackoverflow.com/questions/22156326/private-properties-in-javascript-es6-classes
+    email;
+
+    name;
+
+    get name_short_clean() {
+
+        if (!this.email)
+            return undefined;
+
+        return this.email.split("@")[0];
+    }
+    get name_short() { // @ segment of email
+
+        if (!this.email)
+            return undefined;
+
+        return this.name_short_clean + '@';
+    }
+    get name_short_tcase() {
+
+        if (!this.email)
+            return undefined;
+
+        return toTitleCase(this.name_short_clean);
+    }
+   
     // access-groups
     access_groups = [];
 
@@ -51,6 +88,7 @@ export class WfuUser {
     meta = new Map();
 
     constructor() {
+
     }
 
     isLoggedIn = function() {
@@ -66,6 +104,7 @@ export class WfuUser {
         this.user_id = json.user_id;
         this.name = json.name;
         this.email = json.email;
+
         this.accept_communications = json.accept_communications; 
         this.access_groups = json.access_groups;
     }
