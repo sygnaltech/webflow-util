@@ -51,7 +51,7 @@ $(function () {
     });
 
     // Process filtered items
-    $("*[wfu-filter]").each(function (index) {
+    $("[wfu-filter]").each(function (index) {
 
 //        console.log($(this).attr("wfu-filter"));
 
@@ -75,7 +75,7 @@ $(function () {
     });
 
     // Process filtered items
-    $("*[wfu-filter-func]").each(function (index) {
+    $("[wfu-filter-func]").each(function (index) {
 
         var funcName = $(this).attr("wfu-filter-func");
         var fqFuncName = `window.${funcName}`;  // ()`;
@@ -122,6 +122,24 @@ $(function () {
         // So that the skeleton CSS will reveal the underlying
         // processed content.
         $(rtf).removeAttr("wfu-lists");
+
+    });
+
+    // Process limit multiple items
+    // e.g. limit a list to a multiple of N items
+    $("[wfu-limit-multiple]").each(function (index) {
+
+        // Determine multiple limit
+        const items = $(this).children().length;
+        const multiple = $(this).attr("wfu-limit-multiple");
+        const min = $(this).attr("wfu-limit-multiple-min"); // Minimum
+        var lastItem = Math.floor(items / multiple) * multiple;
+        if (lastItem < min) lastItem = min; // Apply minimum
+
+        // Hide extra items over multiple limit
+        for (var hideItem = 1; hideItem < multiple; hideItem++) {
+            $(this).children(`*:nth-child(${lastItem + hideItem})`).hide();
+        } 
 
     });
 
