@@ -135,6 +135,9 @@ export class WfuDataBinder {
 
     bindData_user(el, user) {
         
+        if (!user || !user.email)
+            return; 
+
         // Get data source name 
         var dsn = $(el).attr("wfu-bind");
         const elemType = el.tagName.toLowerCase(); 

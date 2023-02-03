@@ -30,6 +30,34 @@ const StorageKeys = Object.freeze({
     userKey: 'wfuUserKey',
 });
 
+/*
+ * Debugging class.
+ */
+
+export class WfuDebug {
+    
+    enabled = false; 
+
+    group(name) {
+        if (this.enabled)
+            console.group(name);
+    }
+
+    groupEnd() {
+        if (this.enabled)
+            console.groupEnd();
+    }
+
+    // Unlimited arguments in a JavaScript function
+// https://stackoverflow.com/a/6396066
+    debug() {
+        if (this.enabled)
+            console.debug(...arguments); 
+    }
+
+}
+    
+
 
 /*
  * User class.
@@ -37,6 +65,14 @@ const StorageKeys = Object.freeze({
 
 //import Md5 from "crypto-api/src/hasher/md5";
 export class WfuUser {
+
+//    user_data_layer; // 1 = shallow | 2 = deep | 3 = external
+    user_data_loaded = {
+        email: false,
+        account_info: false,
+        custom_fields: false,
+        access_groups: false
+    };
 
     // Webflow data
     user_id; // Webflow user_id
@@ -46,7 +82,6 @@ export class WfuUser {
             return undefined;
 
         return XXH64.hash(this.email);
-//        return xxHash32(this.email); // UTF-8 xxHash32 
     }
 
     accept_communications;
@@ -59,6 +94,9 @@ export class WfuUser {
     get name_short_clean() {
 
         if (!this.email)
+            return undefined;
+
+        if (this.email == {}) 
             return undefined;
 
         return this.email.split("@")[0];
@@ -132,17 +170,28 @@ var defaultUserInfoConfig = {
 
     userLogoutPurge: undefined, // Used for external data cleanup such as OAuth cookies 
 
+    debug: false, // Debugging mode
+
+    // Advanced settings
+    advanced: {
+
+        accountInfoLoadDelay: 300, // ms 
+
+    },
+
 }
 
 export class WfuUserInfo {
+
+    console = new WfuDebug();
 
     config; // Optional config
 
     constructor(config = {}) {
 
-        console.group("WfuUserInfo init.");
-
         this.config = $.extend({}, defaultUserInfoConfig, config);
+
+        this.console.enabled = this.config.debug; 
 
         // // Install utility function if needed 
         // window.getCookie = window.getCookie || function(name) {
@@ -153,6 +202,14 @@ export class WfuUserInfo {
     }
 
     init = function() {
+
+        // Suppress IFRAME loads & user-account page loads 
+        if (window.self != window.top)
+            return;
+        if (window.location.pathname == `/user-account`) 
+            return;
+
+        this.console.group(`WfuUserInfo init - ${Date.now()}.`);
 
         // Install jQuery-based listeners 
         // to listen for login events 
@@ -174,7 +231,7 @@ export class WfuUserInfo {
         // Call on every page on load.
         this.readyUserInfo();
 
-        console.groupEnd();
+        this.console.groupEnd();
     
     }
 
@@ -185,9 +242,9 @@ export class WfuUserInfo {
 
     clearUserInfo = function() {
 
-        console.group("clearUserInfo");
+        this.console.group("clearUserInfo");
 
-        console.debug ("logged out, cleaning info."); 
+        this.console.debug ("logged out, cleaning info."); 
         
         sessionStorage.removeItem(StorageKeys.user); 
         localStorage.removeItem(StorageKeys.userKey); 
@@ -196,7 +253,7 @@ export class WfuUserInfo {
         if (this.config.userLogoutPurge)
             this.config.userLogoutPurge(); // async 
 
-        console.groupEnd();
+            this.console.groupEnd();
 
     }
 
@@ -211,108 +268,347 @@ export class WfuUserInfo {
     // Should be called on every page at the start. 
     readyUserInfo = async function() {
 
-        console.group("readyUserInfo");
+        this.console.group("readyUserInfo");
         
         // If not logged in
         // clear user tracking 
         if(!this.isLoggedIn()) { 
             this.clearUserInfo(); 
 
-            console.groupEnd();
+            this.console.groupEnd();
             return;
         }
     
         // Load or create blank
         var user = this.loadUserInfoCache();
+
+        // If no cached user, load it 
         if (!user)
-            user = this.loadUserInfo();
+            user = await this.loadUserInfoAsync();
+
+        // If still cannot create user info object
+        // typically first load
+        if (!user) {
+            this.console.groupEnd();
+            return;
+        }
 
         // Notify listeners 
         if (this.config.userInfoUpdatedCallback)
             this.config.userInfoUpdatedCallback(user); // async 
 
-        console.groupEnd();
+        this.console.groupEnd();
+
+    }
+
+    getUserKey = async function() {
+
+        var userKey;
+        
+        // Get cached version if possible
+        const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
+        if (userKeyEncoded) {
+            return atob(userKeyEncoded);
+        }
 
     }
 
     // Loads user info, from local and server data.
     // readying it for use. 
     // Should be called on every page at the start. 
-    loadUserInfo = async function() {
+    loadUserInfoAsync = async function() {
+        this.console.group("loadUserInfoAsync");
 
-        console.group("loadUserInfo");
-
-        console.debug(`isLoggedIn = ${this.isLoggedIn()}`); 
+        this.console.debug(`isLoggedIn = ${this.isLoggedIn()}`); 
         
         // If not logged in
         // clear user tracking 
         if(!this.isLoggedIn()) { 
             this.clearUserInfo(); 
 
-            console.groupEnd();
+            this.console.groupEnd();
             return;
         }
+
+        // Remove user
+        sessionStorage.removeItem(StorageKeys.user);
+
+        // Load layers asynchronously
+        // for maximum performance
+        // merge dynamically as results are gathered
+        this.loadUserInfoAsync_loginInfo(); // async
+        this.loadUserInfoAsync_accountInfo(); // async
+        this.loadUserInfoAsync_accessGroups(); // async
+
+        this.console.groupEnd();
+    }
+
+    loadUserInfoAsync_loginInfo = async function() { 
+
+        this.console.group("loadUserInfoAsync_loginInfo");
     
         // Create blank
         var user = new WfuUser();
+        user.user_data_loaded.email = true;
+//        user.user_data_layer = 1; // email-only 
 
-        sessionStorage.removeItem(StorageKeys.user);
+        const userKey = await this.getUserKey();
+        if (!userKey) {
+            // Logged in but no userKey
+            // Typically happens on first login from sign-up auth 
+            this.console.debug("No user key for loading."); 
 
-        const userKey = localStorage.getItem(StorageKeys.userKey);
-        user.email = atob(userKey);
+//            this.loadUserInfoAlt();
+
+            this.console.groupEnd();
+            return;
+        }
+
+        // Loaded successfully
+
+        user.email = userKey;
 
         // Cache locally (email only)
+        this.console.debug("Caching user object [login].");
         this.saveUserInfoCache(user); 
 
-        // Hydrate user object with other data 
-        if (this.config.loadUserInfoCallback) {
-            await this.config.loadUserInfoCallback(user);
+        // // Hydrate user object with other data 
+        // if (this.config.loadUserInfoCallback) {
+        //     await this.config.loadUserInfoCallback(user);
 
-            // Cache locally ( updated )
-            this.saveUserInfoCache(user); 
-        }
+        //     // Cache locally ( updated )
+        //     this.saveUserInfoCache(user); 
+        // }
 
         // Notify listeners
         if (this.config.userInfoUpdatedCallback)
             this.config.userInfoUpdatedCallback(user); // async
 
-        console.groupEnd();
+        this.console.groupEnd();
     }
-    
-    saveUserInfoCache = function (user) {
 
-        console.group("saveUserInfoCache");
+    loadUserInfoAsync_accountInfo = async function() {
+
+        this.console.group("loadUserInfoAsync_accountInfo");
+
+        // console.debug(`isLoggedIn = ${this.isLoggedIn()}`); 
+        
+        // // If not logged in
+        // // clear user tracking 
+        // if(!this.isLoggedIn()) { 
+        //     this.clearUserInfo(); 
+
+        //     console.groupEnd();
+        //     return;
+        // }
+
+//        sessionStorage.removeItem(StorageKeys.user);
+
+        const that = this; 
+
+        // Attempt alt capture
+        $("body").append(`<iframe src="/user-account" id="userInfoPixel" style="display: none;"></iframe>`); 
+        var $userInfoPixel = $('#userInfoPixel'); 
+
+        $userInfoPixel.on("load", async function() {
+
+            that.console.debug("Loading user account info."); 
+            that.console.debug(`%c here`, "color: #ff0000; background-color: yellow;"); 
+
+
+
+            // Create blank
+            var user = new WfuUser();
+//            user.user_data_layer = 2; // email-only 
+            user.user_data_loaded.email = true; 
+            user.user_data_loaded.account_info = true; 
+//            user.user_data_loaded.access_groups = true;
+
+            var $userAccountEmail = await $userInfoPixel.contents().find("input#wf-user-account-email");
+
+            // Detect programmatic changes on input type text [duplicate]
+            // https://stackoverflow.com/a/72223895
+            const input = $userAccountEmail[0];
+            const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+            Object.defineProperty(input, "value", {
+                get: desc.get,
+                set: function(v) {
+                    that.console.debug("setting programmatically", v);
+                    desc.set.call(this, v);
+
+                    // How can I trigger an onchange event manually? [duplicate]
+                    // https://stackoverflow.com/a/2856602
+                    if ("createEvent" in document) {
+                        var evt = document.createEvent("HTMLEvents");
+                        evt.initEvent("change", false, true);
+                        input.dispatchEvent(evt);
+                    }
+                    else
+                    input.fireEvent("onchange");
+
+                }
+            });
+
+            // setting up input change event 
+            $userAccountEmail.on("change", async function() {
+
+                that.console.debug("email field load detected.");
+
+                that.console.debug(`waiting ${that.config.advanced.accountInfoLoadDelay}ms`);
+
+                setTimeout(async function() {
+
+
+    //                console.debug(`%c email - ${$(this).val()}`, "color: #ff0000; background-color: yellow;"); 
+                    that.console.debug(`%c USER-ACCOUNT LOADED`, "color: #ff0000; background-color: yellow;"); 
+
+        // console.debug($userAccountEmail[0]);
+
+                    const userKey = $userAccountEmail.val();
+
+//                    that.console.debug(`Alt userKey found - ${userKey}`);
+
+                    user.email = userKey;
+
+                    // Name, if defined
+                    user.name = await $userInfoPixel.contents().find("[data-wf-user-field='wf-user-field-name']").val();
+                    // [data-wf-user-field='wf-user-field-name'] 
+//                    that.console.debug(user.name);
+//                    that.console.debug(user); 
+
+                    // Accept_communications, if defined 
+                    const $accept_communications = await $userInfoPixel.contents().find("#wf-user-account-accept-communications");
+                    if ($accept_communications)
+                        user.accept_communications = $accept_communications[0].checked;
+
+                    that.console.debug(user); 
+
+                    // User data fields, if defined 
+        //            await userInfoPixel.contents().find("[data-wf-user-field]").each(function() {
+        //                 user.data[$(this).attr("id")] = $(this).val();
+        //             });
+
+                    // Cache locally (email only)
+                    that.console.debug("Caching user object [account_info].");
+                    that.saveUserInfoCache(user); 
+            
+                    // // Hydrate user object with other data 
+                    // if (this.config.loadUserInfoCallback) {
+                    //     await this.config.loadUserInfoCallback(user);
+            
+                    //     // Cache locally ( updated )
+                    //     this.saveUserInfoCache(user); 
+                    // }
+            
+                    // Notify listeners
+                    if (that.config.userInfoUpdatedCallback)
+                        that.config.userInfoUpdatedCallback(user); // async
+
+                }, that.config.advanced.accountInfoLoadDelay
+                );
+
+            });
+/* 
+*/ 
+
+            that.console.groupEnd();
+        });
+
+    }
+
+    loadUserInfoAsync_accessGroups = async function() {
+
+        this.console.group("loadUserInfoAsync_accessGroups");
+        this.console.debug("Not yet implemented.");
+        this.console.groupEnd();
+
+    }
+
+    saveUserInfoCache = function (newUserData) {
+        
+        this.console.group("saveUserInfoCache");
 
         if(!this.isLoggedIn) {
-            console.debug("no user logged in."); 
-            console.groupEnd();
+            this.console.debug("no user logged in."); 
+            this.console.groupEnd();
             return null; 
         }
 
+        // if(!user.email) {
+        //     console.debug("invalid user object, save exited."); 
+        //     console.groupEnd();
+        //     return null; 
+        // } 
+
+        // Smart merge 
+        // https://www.javascripttutorial.net/object/javascript-merge-objects/ 
+        // https://masteringjs.io/tutorials/fundamentals/merge-two-objects 
+        var userData = this.loadUserInfoCache();
+        if (!userData)
+            userData = new WfuUser();
+
+        if (newUserData.user_data_loaded.email) {
+            this.console.debug("Merging user email.");
+            userData.email = newUserData.email;
+        }
+        if (newUserData.user_data_loaded.account_info) {
+            this.console.debug("Merging user account_info.");
+            userData.email = newUserData.email;
+            userData.name = newUserData.name;
+            userData.accept_communications = newUserData.accept_communications;
+        }
+        if (newUserData.user_data_loaded.custom_fields) {
+            this.console.debug("Merging user custom_fields.");
+            // Not yet implemented.
+        }
+        if (newUserData.user_data_loaded.access_groups) {
+            this.console.debug("Merging user access_groups.");
+            // Not yet implemented.
+        }
+
+            // if (existingUser.user_data_layer < user.user_data_layer) {
+            //     user = {
+            //         ...existingUser, ...user
+            //     }
+            // } else {
+            //     user = {
+            //         ...user, ...existingUser
+            //     }
+            // }
+
+        this.console.debug(newUserData); // pre  
+
+        this.console.debug("merged.");
+
+        this.console.debug(userData); // Merged 
+
         sessionStorage.setItem(StorageKeys.user,
-            btoa(JSON.stringify(user))
+            btoa(JSON.stringify(userData))
             ); 
 
-        console.groupEnd();
+        this.console.groupEnd();
     }
 
     loadUserInfoCache = function () { 
 
-        console.group("loadUserInfoCache");
+        this.console.group("loadUserInfoCache");
 
         if(!this.isLoggedIn) {
-            console.log("No user logged in.");
-            console.groupEnd();
+            this.console.debug("No user logged in.");
+            this.console.groupEnd();
             return null; 
         }
 
         const userInfo = sessionStorage.getItem(StorageKeys.user); 
 
         if(!userInfo) {
-            console.log("No user info to load.");
-            console.groupEnd();
+            this.console.debug("No user info to load.");
+            this.console.groupEnd();
             return null;
         } 
+
+        this.console.debug(userInfo);
+        this.console.debug("getting user."); 
 
         // De-serialize User 
         const user = new WfuUser();
@@ -320,7 +616,7 @@ export class WfuUserInfo {
             JSON.parse(atob(userInfo))
         );
 
-        console.groupEnd();
+        this.console.groupEnd();
 
         return user;
     } 
