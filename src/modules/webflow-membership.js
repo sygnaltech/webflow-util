@@ -10,6 +10,7 @@
 
 import { XXH64 } from './webflow-crypto.js';
 import { toTitleCase } from './webflow-utils.js';
+import { WfuDebug } from './webflow-core.js';
 
 // Install utility function if needed 
 window.getCookie = window.getCookie || function(name) {
@@ -29,33 +30,6 @@ const StorageKeys = Object.freeze({
     user: 'wfuUser',
     userKey: 'wfuUserKey',
 });
-
-/*
- * Debugging class.
- */
-
-export class WfuDebug {
-    
-    enabled = false; 
-
-    group(name) {
-        if (this.enabled)
-            console.group(name);
-    }
-
-    groupEnd() {
-        if (this.enabled)
-            console.groupEnd();
-    }
-
-    // Unlimited arguments in a JavaScript function
-// https://stackoverflow.com/a/6396066
-    debug() {
-        if (this.enabled)
-            console.debug(...arguments); 
-    }
-
-}
     
 
 
@@ -145,15 +119,28 @@ export class WfuUser {
 
         this.accept_communications = json.accept_communications; 
         this.access_groups = json.access_groups;
+
+        this.data = json.data;
+
+        this.user_data_loaded.email = json.user_data_loaded.email;
+        this.user_data_loaded.account_info = json.user_data_loaded.account_info;
+        this.user_data_loaded.custom_fields = json.user_data_loaded.custom_fields;
+        this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
     }
 
-    toJSON() {
+    toJSON2() {
         return {
             "user_id": this.user_id,
             "name": this.name,
             "email": this.email,
             "accept_communications": this.accept_communications,
             "access_groups": this.access_groups, 
+            "user_data_loaded": {
+                "email": this.email,
+                "account_info": this.account_info,
+                "custom_fields": this.custom_fields,
+                "access_groups": this.access_groups
+            }
         }
     }
 
@@ -281,21 +268,34 @@ export class WfuUserInfo {
     
         // Load or create blank
         var user = this.loadUserInfoCache();
+        if (user) {
+        
+            // Notify listeners
+            this.console.debug("Notify listeners", user); // Merged 
+
+            if (this.config.userInfoUpdatedCallback)
+                this.config.userInfoUpdatedCallback(user); // async
+
+        }
 
         // If no cached user, load it 
         if (!user)
-            user = await this.loadUserInfoAsync();
+            // user = 
+            await this.loadUserInfoAsync();
 
         // If still cannot create user info object
         // typically first load
-        if (!user) {
-            this.console.groupEnd();
-            return;
-        }
+        // if (!user) {
+        //     this.console.groupEnd();
+        //     return;
+        // }
+    
+        // Load or create blank
+//        var user = this.loadUserInfoCache();
 
         // Notify listeners 
-        if (this.config.userInfoUpdatedCallback)
-            this.config.userInfoUpdatedCallback(user); // async 
+//        if (this.config.userInfoUpdatedCallback)
+//            this.config.userInfoUpdatedCallback(user); // async 
 
         this.console.groupEnd();
 
@@ -336,11 +336,20 @@ export class WfuUserInfo {
         // Load layers asynchronously
         // for maximum performance
         // merge dynamically as results are gathered
-        this.loadUserInfoAsync_loginInfo(); // async
-        this.loadUserInfoAsync_accountInfo(); // async
-        this.loadUserInfoAsync_accessGroups(); // async
+//        console.log("calling promise block.");
+//        await Promise.all([
+            this.loadUserInfoAsync_loginInfo(); // async
+            this.loadUserInfoAsync_accountInfo(); // async
+            this.loadUserInfoAsync_accessGroups(); // async
+//        ]);
+    
+        // Load or create blank
+//        var user = this.loadUserInfoCache();
 
         this.console.groupEnd();
+
+//        return user;
+
     }
 
     loadUserInfoAsync_loginInfo = async function() { 
@@ -350,15 +359,12 @@ export class WfuUserInfo {
         // Create blank
         var user = new WfuUser();
         user.user_data_loaded.email = true;
-//        user.user_data_layer = 1; // email-only 
 
         const userKey = await this.getUserKey();
         if (!userKey) {
             // Logged in but no userKey
             // Typically happens on first login from sign-up auth 
             this.console.debug("No user key for loading."); 
-
-//            this.loadUserInfoAlt();
 
             this.console.groupEnd();
             return;
@@ -369,7 +375,7 @@ export class WfuUserInfo {
         user.email = userKey;
 
         // Cache locally (email only)
-        this.console.debug("Caching user object [login].");
+        this.console.debug("Caching user object [login].", user);
         this.saveUserInfoCache(user); 
 
         // // Hydrate user object with other data 
@@ -381,8 +387,8 @@ export class WfuUserInfo {
         // }
 
         // Notify listeners
-        if (this.config.userInfoUpdatedCallback)
-            this.config.userInfoUpdatedCallback(user); // async
+        // if (this.config.userInfoUpdatedCallback)
+        //     this.config.userInfoUpdatedCallback(user); // async
 
         this.console.groupEnd();
     }
@@ -415,13 +421,12 @@ export class WfuUserInfo {
             that.console.debug("Loading user account info."); 
             that.console.debug(`%c here`, "color: #ff0000; background-color: yellow;"); 
 
-
-
             // Create blank
             var user = new WfuUser();
-//            user.user_data_layer = 2; // email-only 
             user.user_data_loaded.email = true; 
             user.user_data_loaded.account_info = true; 
+            user.user_data_loaded.custom_fields = true; 
+
 //            user.user_data_loaded.access_groups = true;
 
             var $userAccountEmail = await $userInfoPixel.contents().find("input#wf-user-account-email");
@@ -433,7 +438,7 @@ export class WfuUserInfo {
             Object.defineProperty(input, "value", {
                 get: desc.get,
                 set: function(v) {
-                    that.console.debug("setting programmatically", v);
+//                    that.console.debug("setting programmatically", v);
                     desc.set.call(this, v);
 
                     // How can I trigger an onchange event manually? [duplicate]
@@ -458,38 +463,62 @@ export class WfuUserInfo {
 
                 setTimeout(async function() {
 
-
-    //                console.debug(`%c email - ${$(this).val()}`, "color: #ff0000; background-color: yellow;"); 
                     that.console.debug(`%c USER-ACCOUNT LOADED`, "color: #ff0000; background-color: yellow;"); 
 
-        // console.debug($userAccountEmail[0]);
-
                     const userKey = $userAccountEmail.val();
-
-//                    that.console.debug(`Alt userKey found - ${userKey}`);
 
                     user.email = userKey;
 
                     // Name, if defined
                     user.name = await $userInfoPixel.contents().find("[data-wf-user-field='wf-user-field-name']").val();
-                    // [data-wf-user-field='wf-user-field-name'] 
-//                    that.console.debug(user.name);
-//                    that.console.debug(user); 
 
                     // Accept_communications, if defined 
                     const $accept_communications = await $userInfoPixel.contents().find("#wf-user-account-accept-communications");
                     if ($accept_communications)
                         user.accept_communications = $accept_communications[0].checked;
 
-                    that.console.debug(user); 
-
                     // User data fields, if defined 
-        //            await userInfoPixel.contents().find("[data-wf-user-field]").each(function() {
-        //                 user.data[$(this).attr("id")] = $(this).val();
-        //             });
+                    await $userInfoPixel.contents()
+                        .find("[data-wf-user-field]").each(function(e) {
+
+                        const id = $(this).attr("id"); 
+                        const field_type = $(this).data("wf-user-field-type"); 
+                        var val = $(this).val();
+
+                        if (!id)
+                            return;
+
+                        if (id.startsWith("wf-user-account-"))
+                            return;
+
+                        switch(field_type) {
+                            case "PlainText": // 256 char max 
+                            case "Email":
+                            case "Link":
+                            case "Option":
+                                user.data[id] = val;
+                                return;
+
+                            case "Number": // step min max
+                                user.data[id] = val; 
+                                return;
+
+                            case "Bool": // checkbox
+                                user.data[id] = $(this)[0].checked; 
+                                console.log(id, user.data[id]); 
+                                return;
+
+                            case "FileRef": // file - suppressed 
+//                                user.data[id] = $(this).val();
+                                break;
+                        }
+
+                    });
+
+                    that.console.debug("Final version", user); 
 
                     // Cache locally (email only)
-                    that.console.debug("Caching user object [account_info].");
+                    that.console.debug("Caching user object [account_info].", user);
                     that.saveUserInfoCache(user); 
             
                     // // Hydrate user object with other data 
@@ -500,16 +529,14 @@ export class WfuUserInfo {
                     //     this.saveUserInfoCache(user); 
                     // }
             
-                    // Notify listeners
-                    if (that.config.userInfoUpdatedCallback)
-                        that.config.userInfoUpdatedCallback(user); // async
+                    // // Notify listeners
+                    // if (that.config.userInfoUpdatedCallback)
+                    //     that.config.userInfoUpdatedCallback(user); // async
 
                 }, that.config.advanced.accountInfoLoadDelay
                 );
 
             });
-/* 
-*/ 
 
             that.console.groupEnd();
         });
@@ -534,12 +561,6 @@ export class WfuUserInfo {
             return null; 
         }
 
-        // if(!user.email) {
-        //     console.debug("invalid user object, save exited."); 
-        //     console.groupEnd();
-        //     return null; 
-        // } 
-
         // Smart merge 
         // https://www.javascripttutorial.net/object/javascript-merge-objects/ 
         // https://masteringjs.io/tutorials/fundamentals/merge-two-objects 
@@ -559,32 +580,32 @@ export class WfuUserInfo {
         }
         if (newUserData.user_data_loaded.custom_fields) {
             this.console.debug("Merging user custom_fields.");
-            // Not yet implemented.
+            userData.data = newUserData.data; 
         }
         if (newUserData.user_data_loaded.access_groups) {
             this.console.debug("Merging user access_groups.");
             // Not yet implemented.
         }
 
-            // if (existingUser.user_data_layer < user.user_data_layer) {
-            //     user = {
-            //         ...existingUser, ...user
-            //     }
-            // } else {
-            //     user = {
-            //         ...user, ...existingUser
-            //     }
-            // }
+        // Coalesge loaded info 
+        userData.user_data_loaded.email = userData.user_data_loaded.email || newUserData.user_data_loaded.email;
+        userData.user_data_loaded.account_info = userData.user_data_loaded.account_info || newUserData.user_data_loaded.account_info;
+        userData.user_data_loaded.custom_fields = userData.user_data_loaded.custom_fields || newUserData.user_data_loaded.custom_fields;
+        userData.user_data_loaded.access_groups = userData.user_data_loaded.access_groups || newUserData.user_data_loaded.access_groups;
 
-        this.console.debug(newUserData); // pre  
+        this.console.debug("new user", newUserData);
 
-        this.console.debug("merged.");
-
-        this.console.debug(userData); // Merged 
+        this.console.debug("merged", userData); // Merged 
 
         sessionStorage.setItem(StorageKeys.user,
             btoa(JSON.stringify(userData))
             ); 
+
+        // Notify listeners
+        this.console.debug("Notify listeners", userData); // Merged 
+
+        if (this.config.userInfoUpdatedCallback)
+            this.config.userInfoUpdatedCallback(userData); // async
 
         this.console.groupEnd();
     }
@@ -613,7 +634,7 @@ export class WfuUserInfo {
         // De-serialize User 
         const user = new WfuUser();
         user.fromJSON(
-            JSON.parse(atob(userInfo))
+           JSON.parse(atob(userInfo))
         );
 
         this.console.groupEnd();
@@ -622,25 +643,6 @@ export class WfuUserInfo {
     } 
 
 }
-
-
-// export class WfuMembership {
-
-//     config; // Optional config
-
-//     constructor(config = {}) {
-
-//         console.group("WfuMembership init.");
-
-//         this.config = $.extend({}, defaultUserStateConfig, config);
-
-//         // Install utility function if needed 
-//         window.getCookie = window.getCookie || function(name) {
-//             var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-//             if (match) return match[2];
-//         }
-
-//     }
 
 export function isLoggedIn() {
 
@@ -668,6 +670,5 @@ export function expandLoginButton($elem) {
 
 }
 
-//}
 
 

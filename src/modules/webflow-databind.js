@@ -31,6 +31,7 @@ const DataSourceType = Object.freeze({
 
 var dataBinderConfig = {
     db: undefined,
+    user: undefined,
     handlers: [
     ]
 }
@@ -83,7 +84,8 @@ export class WfuDataBinder {
         if ("!@#%^&*-+=?".includes(dsn[0])) { 
             dsnName = dsn.substring(1); 
         } else if (dsn[0] == "$") {
-            dsnName = dsn.split(".")[1]; 
+            const dsnZone = dsn.split(".")[0]; 
+            dsnName = dsn.substring(dsnZone.length + 1); 
         } else {
             dsnName = dsn; 
         }
@@ -100,8 +102,9 @@ export class WfuDataBinder {
         // for data binding
         var dataBind = $('[wfu-bind]');
 
-        //    console.log(`bind targets found = ${dataBind.length}`);
-        const user = new WfuUserInfo().loadUserInfoCache();
+        // Prepare sources
+        if (!this.config.user)
+            this.config.user = new WfuUserInfo().loadUserInfoCache(); 
 
     //    var db = new Database();
         const that = this;
@@ -117,7 +120,7 @@ export class WfuDataBinder {
                 case DataSourceType.user:
                     that.bindData_user(
                         elem,
-                        user
+                        that.config.user
                     )
                     break;
                 case DataSourceType.db:
@@ -134,7 +137,7 @@ export class WfuDataBinder {
     }
 
     bindData_user(el, user) {
-        
+
         if (!user || !user.email)
             return; 
 
@@ -142,7 +145,17 @@ export class WfuDataBinder {
         var dsn = $(el).attr("wfu-bind");
         const elemType = el.tagName.toLowerCase(); 
         const dsnName = this.getDataSourceName(dsn); 
-        const val = user[dsnName];
+        const dsnNameParts = dsnName.split(".");
+        var val;
+
+        switch (dsnNameParts[0]) {
+            case "data":
+                val = user.data[dsnNameParts[1]];
+                break;
+            default:
+                val = user[dsnName]; 
+                break;
+        }
 
         // console.log(user);
         // console.log(dsnName);
