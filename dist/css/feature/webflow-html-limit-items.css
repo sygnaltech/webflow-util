@@ -1,59 +1,44 @@
-@charset "UTF-8";
-/*
- * CSS for Sygnal Webflow Util HTML library
- */
-@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 /*
  * Limit collection list items, at breakpoint levels
  */
-[wfu-limit-items="1"] > div:nth-child(n+2):nth-child(-n+1000) {
-  display: none;
+@media screen {
+  [wfu-limit-items="1"] > div:nth-child(n+2):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="2"] > div:nth-child(n+3):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="3"] > div:nth-child(n+4):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="4"] > div:nth-child(n+5):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="5"] > div:nth-child(n+6):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="6"] > div:nth-child(n+7):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="7"] > div:nth-child(n+8):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="8"] > div:nth-child(n+9):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="9"] > div:nth-child(n+10):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="10"] > div:nth-child(n+11):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="11"] > div:nth-child(n+12):nth-child(-n+1000) {
+    display: none;
+  }
+  [wfu-limit-items="12"] > div:nth-child(n+13):nth-child(-n+1000) {
+    display: none;
+  }
 }
-
-[wfu-limit-items="2"] > div:nth-child(n+3):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="3"] > div:nth-child(n+4):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="4"] > div:nth-child(n+5):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="5"] > div:nth-child(n+6):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="6"] > div:nth-child(n+7):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="7"] > div:nth-child(n+8):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="8"] > div:nth-child(n+9):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="9"] > div:nth-child(n+10):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="10"] > div:nth-child(n+11):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="11"] > div:nth-child(n+12):nth-child(-n+1000) {
-  display: none;
-}
-
-[wfu-limit-items="12"] > div:nth-child(n+13):nth-child(-n+1000) {
-  display: none;
-}
-
 @media screen and (min-width: 1920px) {
   [wfu-limit-items-1920="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
@@ -92,7 +77,7 @@
     display: none;
   }
 }
-@media screen and (min-width: 1440px) {
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
   [wfu-limit-items-1440="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -130,7 +115,7 @@
     display: none;
   }
 }
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1280px) and (max-width: 1439px) {
   [wfu-limit-items-1280="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -168,7 +153,7 @@
     display: none;
   }
 }
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 992px) and (max-width: 1279px) {
   [wfu-limit-items-d="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -319,172 +304,4 @@
   [wfu-limit-items-p="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-}
-[wfu-decode] {
-  display: none;
-}
-
-/*
- * Text trucation w/ ellipsis support
- */
-[wfu-truncate] {
-  position: relative;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-[wfu-truncate="2"] {
-  -webkit-line-clamp: 2;
-}
-
-[wfu-truncate="3"] {
-  -webkit-line-clamp: 3;
-}
-
-[wfu-truncate="4"] {
-  -webkit-line-clamp: 4;
-}
-
-[wfu-truncate="5"] {
-  -webkit-line-clamp: 5;
-}
-
-/*
-[wfu-truncate]::after {
-  content: "";
-  text-align: right;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 70%;
-  height: 1.2em;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
-}
-*/
-/*
- * Filtered elements
- * hide by default, until filter statis is determined
- */
-*[wfu-filter] {
-  display: none;
-}
-
-*[wfu-filter-func] {
-  display: none;
-}
-
-[wfu-sort] {
-  display: none;
-}
-
-/*
- * Skeleton loader
- * apply skeleton loader effect to elements targeted for parsing by WFU.
- */
-.w-richtext[wfu-lists-loading] li {
-  font-family: "Redacted", cursive;
-  color: black;
-  display: inline-block;
-  -webkit-animation: skeleton-loading 1s linear infinite alternate;
-          animation: skeleton-loading 1s linear infinite alternate;
-}
-.w-richtext[wfu-lists-loading] li em {
-  font-style: normal;
-}
-.w-richtext[wfu-lists-loading] li a {
-  color: inherit;
-}
-
-@-webkit-keyframes skeleton-loading {
-  0% {
-    color: hsl(200deg, 20%, 80%);
-  }
-  100% {
-    color: hsl(200deg, 20%, 95%);
-  }
-}
-
-@keyframes skeleton-loading {
-  0% {
-    color: hsl(200deg, 20%, 80%);
-  }
-  100% {
-    color: hsl(200deg, 20%, 95%);
-  }
-}
-/*
- * Nested lists
- */
-.w-richtext ul ul, .w-richtext ol ol {
-  margin-top: 0.5rem;
-}
-
-ol .wfu-list-level-2 {
-  list-style-type: decimal-leading-zero;
-}
-
-ol .wfu-list-level-3 {
-  list-style-type: lower-roman;
-}
-
-.wfu-pro {
-  list-style-type: none;
-  color: green;
-}
-
-.wfu-pro::marker {
-  content: "☑  ";
-}
-
-.wfu-con {
-  list-style-type: none;
-  color: red;
-}
-
-.wfu-con::marker {
-  content: "☒  ";
-}
-
-/*
- * Editor mode detection 
- */
-html:not([data-wf-mode=editor]) .w-richtext ul ul, .w-richtext ol ol {
-  margin-top: 0.5rem;
-}
-
-html:not([data-wf-mode=editor]) ol .wfu-list-level-2 {
-  list-style-type: lower-latin;
-}
-
-html:not([data-wf-mode=editor]) ol .wfu-list-level-3 {
-  list-style-type: lower-roman;
-}
-
-html:not([data-wf-mode=editor]) .wfu-pro {
-  list-style-type: none;
-  color: green;
-}
-
-html:not([data-wf-mode=editor]) .wfu-pro::marker {
-  content: "☑  ";
-}
-
-html:not([data-wf-mode=editor]) .wfu-con {
-  list-style-type: none;
-  color: red;
-}
-
-html:not([data-wf-mode=editor]) .wfu-con::marker {
-  content: "☒  ";
-}
-
-/*
- * Hide elements on spec 
- */
-[wfu-hide=empty-collection-list]:not(:has(.w-dyn-item)) {
-  display: none;
-}
-
-/* test *//*# sourceMappingURL=webflow-html.css.map */
+}/*# sourceMappingURL=webflow-html-limit-items.css.map */
