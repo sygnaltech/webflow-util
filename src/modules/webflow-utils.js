@@ -17,3 +17,29 @@ export function toTitleCase(str) {
     }).join(' ');
 }
 
+// How do you JSON.stringify an ES6 Map?
+// https://stackoverflow.com/a/56150320
+export function jsonMapReplacer(key, value) {
+
+    if(value instanceof Map) {
+        return {
+            dataType: 'Map',
+            value: Array.from(value.entries()), // or with spread: value: [...value]
+        };
+    } else {
+        return value;
+    }
+}
+
+// How do you JSON.stringify an ES6 Map?
+// https://stackoverflow.com/a/56150320
+export function jsonMapReviver(key, value) {
+console.log ("reviving", key, typeof value, value); 
+    if(typeof value === 'object' && value !== null) {
+        if (value.dataType === 'Map') {
+            return new Map(value.value);
+        }
+      }
+      return value;    
+}
+

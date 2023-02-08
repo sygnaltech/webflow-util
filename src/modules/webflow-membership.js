@@ -9,7 +9,7 @@
  */
 
 import { XXH64 } from './webflow-crypto.js';
-import { toTitleCase } from './webflow-utils.js';
+import { toTitleCase, jsonMapReplacer, jsonMapReviver } from './webflow-utils.js';
 import { WfuDebug } from './webflow-core.js';
 
 // Install utility function if needed 
@@ -94,10 +94,10 @@ export class WfuUser {
     access_groups = [];
 
     // User data
-    data = new Map();
+    data = {}; // = new Map();
 
     // Meta data
-    meta = new Map();
+    meta = {}; //  = new Map();
 
     constructor() {
 
@@ -128,6 +128,7 @@ export class WfuUser {
         this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
     }
 
+    /** 
     toJSON2() {
         return {
             "user_id": this.user_id,
@@ -143,6 +144,7 @@ export class WfuUser {
             }
         }
     }
+    */
 
 }
 
@@ -496,14 +498,17 @@ export class WfuUserInfo {
                             case "Email":
                             case "Link":
                             case "Option":
+//                                user.data.set(id, val);
                                 user.data[id] = val;
                                 return;
 
                             case "Number": // step min max
+//                                user.data.set(id, val);
                                 user.data[id] = val; 
                                 return;
 
                             case "Bool": // checkbox
+//                                user.data.set(id, $(this)[0].checked); 
                                 user.data[id] = $(this)[0].checked; 
                                 console.log(id, user.data[id]); 
                                 return;
@@ -598,7 +603,7 @@ export class WfuUserInfo {
         this.console.debug("merged", userData); // Merged 
 
         sessionStorage.setItem(StorageKeys.user,
-            btoa(JSON.stringify(userData))
+            btoa(JSON.stringify(userData)) // , jsonMapReplacer))
             ); 
 
         // Notify listeners
@@ -634,7 +639,7 @@ export class WfuUserInfo {
         // De-serialize User 
         const user = new WfuUser();
         user.fromJSON(
-           JSON.parse(atob(userInfo))
+           JSON.parse(atob(userInfo)) //, jsonMapReviver)
         );
 
         this.console.groupEnd();
