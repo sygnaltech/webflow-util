@@ -23,8 +23,8 @@
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 #liburl: https://localhost # the base hostname & protocol for your site, e.g. http://example.com
-liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@4.8 # the base hostname & protocol for your site, e.g. http://example.com
-libver: 4.8
+liburl: https://cdn.jsdelivr.net/gh/sygnaltech/webflow-util@4.9 # the base hostname & protocol for your site, e.g. http://example.com
+libver: 4.9
 
 title: Sygnal Attributes
 email: web@sygnal.com
