@@ -9,6 +9,7 @@
  */
 
 import { getDataSource } from './webflow-data-collectionlist.js';
+import { WfuDebug } from './webflow-core.js';
 
 // Creates an HTML <DATALIST> for binding.
 // Data source assumes array of objects, with a per-item value of 'name'
@@ -178,6 +179,17 @@ export var dataBindFormSelect = function (elem, db) {
 }
 
 
+
+/*
+ * WfuFormHandler class.
+ */
+
+var defaultFormHandlerConfig = {
+
+    debug: false, // Debugging mode
+
+}
+
 export const WebflowFormMode = {
     Active: 0,
     Success: 1,
@@ -185,6 +197,8 @@ export const WebflowFormMode = {
 }
 
 export class WfuFormHandler {
+
+    console = new WfuDebug();
 
     formBlock;
     config; // Optional config
@@ -200,58 +214,57 @@ export class WfuFormHandler {
     constructor(elem, config) {
 
         this.handler = this;
-        this.form = 
 
-        this.config = config;
+        this.config = $.extend({}, defaultFormHandlerConfig, config);
+
+        this.console.enabled = this.config.debug; 
 
         // Resolve Form Block pointer
         if ($(elem).is("form"))
             this.formBlock = $(elem).parent();
         else
             this.formBlock = $(elem);
-        console.log(this.formBlock);
+        this.console.debug(this.formBlock);
 
         // Resolve ancillary pointers
         this.form = this.formBlock.children("form");
-        console.log(this.form);
+        this.console.debug(this.form);
 
         this.action = this.form.attr("action");
-        console.log(this.action);
+        this.console.debug(this.action);
 
         // Get the Webflow wait message
         this.waitMessage = $(this.form).children("input[type=submit]").attr("data-wait");
-        console.debug(`waitMessage: ${this.waitMessage}`);
+        this.console.debug(`waitMessage: ${this.waitMessage}`);
 
     }
-
-
 
     // es6 call class methods from within same class
     // https://stackoverflow.com/a/36248405
 
     setWebflowFormMode (mode, message) {
 
-        console.log("setting form mode.");
+        this.console.debug("setting form mode.");
 
         var success = $(this.form).siblings("div.w-form-done");
         var error = $(this.form).siblings("div.w-form-fail");
 
         switch (mode) {
             case WebflowFormMode.Active:
-                console.debug("Change Webflow form mode to active.");
+                this.console.debug("Change Webflow form mode to active.");
                 $(this.form).css("display", "block");
                 $(success).css("display", "none");
                 $(error).css("display", "none");
                 break;
             case WebflowFormMode.Success:
-                console.debug("Change Webflow form mode to success (done).");
+                this.console.debug("Change Webflow form mode to success (done).");
                 $(success).children("*[wfu-form-message]").html(message);
                 $(this.form).css("display", "none");
                 $(success).css("display", "block");
                 $(error).css("display", "none");
                 break;
             case WebflowFormMode.Error:
-                console.debug("Change Webflow form mode to error.");
+                this.console.debug("Change Webflow form mode to error.");
                 $(error).children("*[wfu-form-message]").html(message);
                 $(this.form).css("display", "none");
                 $(success).css("display", "none");
@@ -261,208 +274,34 @@ export class WfuFormHandler {
 
     }
 
-    setFormHandlerZapier() {
+    handleResponse(data, status, xhr) {
 
-        const handler = this.handler;
-        const form = this.form;
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
 
-        console.debug("WFU Handle Form submit to Zapier webhook.");
+        this.console.debug(`Webhook response status: ${status}`);
 
-        // Catch any submits on forms
-        // Which post to Zapier-webhooks 
-        $(form).submit(function (e) {
-
-            e.preventDefault();
-
-            // Get form post data 
-            //    var data = $(form).serialize();
-
-            console.debug("Posting data.");
-            console.debug(`Webhook - ${form.attr("action")}`);
-            console.debug(`Data - ${form.serialize()}`);
-
-//             console.debug(`Form - ${$(JSON.stringify(this.form))}`);
-
-            // Post to hook,
-            // Capture & handle result
-            $.post(
-                form.attr("action"),
-                form.serialize(),
-                function (data, status, xhr) {
-
-                    // How to access the correct `this` inside a callback 
-                    // https://stackoverflow.com/a/20279485
-
-//                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
-                    console.debug(`Webhook response status: ${status}`);
-//                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-
-                    console.debug(`Zapier result: ${data.status}`);
-
-                    if (data.status == "success") {
-                        handler.setWebflowFormMode(WebflowFormMode.Success);
-                    } else {
-                        handler.setWebflowFormMode(WebflowFormMode.Error);
-                    }
-
-                }.bind(handler))
-                .done(function () {
-                })
-                .fail(function (jqxhr, settings, ex) {
-
-                    console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
-                    console.debug(`Webhook response FAILED settings: ${settings}`);
-                    console.debug(`Webhook response FAILED ex: ${ex}`);
-
-                })
-                .always(function () {
-                });
-
-            return false;
-        });
+        // Assume success
+        this.setWebflowFormMode(WebflowFormMode.Success);
 
     }
 
-    setFormHandlerMake() {
+    handleFailResponse(jqxhr, settings, ex) {
 
-        const handler = this.handler;
-        const form = this.form;
-
-        console.debug("WFU Handle Form submit to Make webhook.");
-
-        // Catch any submits on forms
-        // Which post to Zapier-webhooks 
-        $(form).submit(function (e) {
-
-            e.preventDefault();
-
-            console.debug("Posting data.");
-            console.debug(`Webhook - ${form.attr("action")}`);
-            console.debug(`Data - ${form.serialize()}`);
-
-            // Post to hook,
-            // Capture & handle result
-            $.post(
-                form.attr("action"),
-                form.serialize(),
-                function (data, status, xhr) {
-
-                    // How to access the correct `this` inside a callback 
-                    // https://stackoverflow.com/a/20279485
-
-                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
-                    console.debug(`Webhook response status: ${status}`);
-                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-
-//                    console.debug(`Zapier result: ${data.status}`);
-
-                    if (xhr.status >= 200 && xhr.status < 300) { // (status == "success") {
-                        handler.setWebflowFormMode(WebflowFormMode.Success, xhr.responseJSON?.message);
-                    } else {
-                        handler.setWebflowFormMode(WebflowFormMode.Error, xhr.responseJSON?.message);
-                    }
-
-                }.bind(handler))
-                .done(function () {
-                })
-                .fail(function (jqxhr, settings, ex) {
-
-                    console.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
-                    console.debug(`Webhook response FAILED settings: ${settings}`);
-                    console.debug(`Webhook response FAILED ex: ${ex}`);
-
-                    // Webhook is off - Webhook is temporarily disabled.
-                    // ? Scenario is off
-                    if (jqxhr.status == 400) {
-                        console.error(jqxhr.responseText);
-                        // use default error message, or maybe "Service unavailable." 
-                        handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
-                    } else {
-                        handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
-                    }
-
-                })
-                .always(function () {
-                });
-
-            return false;
-        });
+        this.console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+        this.console.debug(`Webhook response FAILED settings: ${settings}`);
+        this.console.debug(`Webhook response FAILED ex: ${ex}`);
 
     }
 
-    setFormHandlerN8N() {
+    init() {
 
         const handler = this.handler;
         const form = this.form;
 
-        console.debug("WFU Handle Form submit to n8n webhook.");
+        this.console.debug("WFU Handle Form submit to webhook (success response).");
 
-        // Catch any submits on forms
-        // Which post to Zapier-webhooks 
-        $(form).submit(function (e) {
-
-            e.preventDefault();
-
-            console.debug("Posting data.");
-            console.debug(`Webhook - ${form.attr("action")}`);
-            console.debug(`Data - ${form.serialize()}`);
-
-            // Post to hook,
-            // Capture & handle result
-            $.post(
-                form.attr("action"),
-                form.serialize(),
-                function (data, status, xhr) {
-
-                    // How to access the correct `this` inside a callback 
-                    // https://stackoverflow.com/a/20279485
-
-                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
-                    console.debug(`Webhook response status: ${status}`);
-                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-
-                    //                    console.debug(`Zapier result: ${data.status}`);
-
-                    if (xhr.status >= 200 && xhr.status < 300) { // (status == "success") {
-                        handler.setWebflowFormMode(WebflowFormMode.Success, xhr.responseJSON?.message);
-                    } else {
-                        handler.setWebflowFormMode(WebflowFormMode.Error, xhr.responseJSON?.message);
-                    }
-
-                }.bind(handler))
-                .done(function () {
-                })
-                .fail(function (jqxhr, settings, ex) {
-
-                    console.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
-                    console.debug(`Webhook response FAILED settings: ${settings}`);
-                    console.debug(`Webhook response FAILED ex: ${ex}`);
-
-                    // Webhook is off - Webhook is temporarily disabled.
-                    // ? Scenario is off
-                    if (jqxhr.status == 400) {
-                        console.error(jqxhr.responseText);
-                        // use default error message, or maybe "Service unavailable." 
-                        handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
-                    } else {
-                        handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
-                    }
-
-                })
-                .always(function () {
-                });
-
-            return false;
-        });
-
-    }
-
-    setFormHandlerOther () {
-
-        const handler = this.handler;
-        const form = this.form;
-
-        console.debug("WFU Handle Form submit to webhook (success response).");
+        const that = this;
 
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
@@ -473,9 +312,9 @@ export class WfuFormHandler {
             // Get form post data
             //    var data = $(form).serialize();
 
-            console.debug("Posting data.");
-            console.debug(`Webhook - ${form.attr("action")}`);
-            console.debug(`Data - ${form.serialize()}`);
+            that.console.debug("Posting data.");
+            that.console.debug(`Webhook - ${form.attr("action")}`);
+            that.console.debug(`Data - ${form.serialize()}`);
 
             // Post to hook,
             // Capture & handle result
@@ -483,26 +322,13 @@ export class WfuFormHandler {
                 form.attr("action"),
                 form.serialize(),
                 function (data, status, xhr) {
-
-                    // How to access the correct `this` inside a callback 
-                    // https://stackoverflow.com/a/20279485
-
-//                    console.debug(`Webhook response data: ${JSON.stringify(data)}`);
-                    console.debug(`Webhook response status: ${status}`);
-//                    console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-
-                    // Assume success
-                    this.setWebflowFormMode(WebflowFormMode.Success);
-
-                }.bind(handler))
+                    that.handleResponse(data, status, xhr); 
+                }.bind(handler)
+                )
                 .done(function () {
                 })
                 .fail(function (jqxhr, settings, ex) {
-
-                    console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
-                    console.debug(`Webhook response FAILED settings: ${settings}`);
-                    console.debug(`Webhook response FAILED ex: ${ex}`);
-
+                    that.handleFailResponse(jqxhr, settings, ex); 
                 })
                 .always(function () {
                 });
@@ -514,10 +340,182 @@ export class WfuFormHandler {
 
 }
 
+
+
+
+
+
+export class WfuFormHandlerN8N extends WfuFormHandler {
+
+    constructor(elem, config) {
+        super(elem, config); // call the super class constructor and pass in the name parameter
+    }
+
+    handleResponse(data, status, xhr) {
+
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
+
+        this.console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+        this.console.debug(`Webhook response status: ${status}`);
+        this.console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+
+        if (xhr.status >= 200 && xhr.status < 300) { 
+            handler.setWebflowFormMode(WebflowFormMode.Success, xhr.responseJSON?.message);
+        } else {
+            handler.setWebflowFormMode(WebflowFormMode.Error, xhr.responseJSON?.message);
+        }
+
+    }
+
+    handleFailResponse(jqxhr, settings, ex) {
+
+        this.console.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
+        this.console.debug(`Webhook response FAILED settings: ${settings}`);
+        this.console.debug(`Webhook response FAILED ex: ${ex}`);
+
+        // Webhook is off - Webhook is temporarily disabled.
+        // ? Scenario is off
+        if (jqxhr.status == 400) {
+            console.error(jqxhr.responseText);
+            // use default error message, or maybe "Service unavailable." 
+            handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
+        } else {
+            handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
+        }
+
+    } 
+    
+}
+
+export class WfuFormHandlerZapier extends WfuFormHandler {
+
+    constructor(elem, config) {
+        super(elem, config); // call the super class constructor and pass in the name parameter
+    }
+
+    handleResponse(data, status, xhr) {
+
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
+
+        this.console.debug(`Webhook response status: ${status}`);
+
+        this.console.debug(`Zapier result: ${data.status}`);
+
+        if (data.status == "success") {
+            handler.setWebflowFormMode(WebflowFormMode.Success);
+        } else {
+            handler.setWebflowFormMode(WebflowFormMode.Error);
+        }
+
+    }
+
+    handleFailResponse(jqxhr, settings, ex) { 
+
+        this.console.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+        this.console.debug(`Webhook response FAILED settings: ${settings}`);
+        this.console.debug(`Webhook response FAILED ex: ${ex}`);
+
+    }
+
+}
+
 export class WfuFormHandlerMake extends WfuFormHandler {
 
     constructor(elem, config) {
         super(elem, config); // call the super class constructor and pass in the name parameter
     }
 
+    handleResponse(data, status, xhr) {
+
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
+
+        this.console.debug(`Webhook response data: ${JSON.stringify(data)}`);
+        this.console.debug(`Webhook response status: ${status}`);
+        this.console.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+
+        if (xhr.status >= 200 && xhr.status < 300) { 
+            handler.setWebflowFormMode(WebflowFormMode.Success, xhr.responseJSON?.message);
+        } else {
+            handler.setWebflowFormMode(WebflowFormMode.Error, xhr.responseJSON?.message);
+        }
+
+    }
+
+    handleFailResponse(jqxhr, settings, ex) { 
+
+        this.console.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
+        this.console.debug(`Webhook response FAILED settings: ${settings}`);
+        this.console.debug(`Webhook response FAILED ex: ${ex}`);
+
+        // Webhook is off - Webhook is temporarily disabled.
+        // ? Scenario is off
+        if (jqxhr.status == 400) {
+            console.error(jqxhr.responseText);
+            // use default error message, or maybe "Service unavailable." 
+            handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
+        } else {
+            handler.setWebflowFormMode(WebflowFormMode.Error, jqxhr.responseJSON?.message);
+        }
+
+    }
+
+}
+
+export class WfuFormHandlerBasin extends WfuFormHandler {
+
+    constructor(elem, config) {
+        super(elem, config); // call the super class constructor and pass in the name parameter
+    }
+
+}
+
+// https://dev.to/sanderdebr/js-es6-design-patterns-factory-3a3g 
+export const WfuFormHandlerFactory = {
+    create: function (type, elem, config) {
+        var handler;
+
+        switch (type) {
+            case "zapier":
+
+                handler = new WfuFormHandlerZapier($(this));
+                handler.init();
+
+                break;
+            case "n8n":
+
+                handler = new WfuFormHandlerN8N($(this));
+                handler.init();
+
+                break;
+            case "make":
+
+                handler = new WfuFormHandlerMake($(this));
+                handler.init();
+
+                break;
+            case "basin":
+
+                handler = new WfuFormHandlerBasin(elem);
+                handler.init();
+
+                break;
+            case "other":
+            case "": // unspecified 
+
+                handler = new WfuFormHandler($(this));
+                handler.init();
+
+                break;
+            default:
+
+                console.error(`Unknown wfu-form-handler ${handlerName}`);
+
+                break;
+        }
+
+        return handler;
+    }
 }
