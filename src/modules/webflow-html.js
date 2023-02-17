@@ -8,6 +8,8 @@
  * HTML Utilities
  */
 
+//#region Utility functions
+
 // Credit James Padolsey 
 // https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
 (function($){
@@ -73,6 +75,10 @@ export var encodeHtml = function (text) {
         .replace(/>/g, "&gt;");
 }
 
+//#endregion
+
+//#region IFRAMES
+
 export var autosizeIFrames = function () {
 
     // Identify all IFRAMES with autosize tag
@@ -92,6 +98,10 @@ export var autosizeIFrames = function () {
     });
 
 }
+
+//#endregion
+
+//#region Dynamic Attributes
 
 // Applies custom attributes to HTML elements throughout the page
 // from relatively-positioned <data> elements.
@@ -141,6 +151,10 @@ export var applyDynamicAttributes = function () {
     });
 
 }
+
+//#endregion
+
+//#region Data Formatting
 
 export var formatJson = function (data) {
 
@@ -196,6 +210,10 @@ export var displayDataAsHtml = function (el, data) {
 
 }
 
+//#endregion
+
+//#region Macros
+
 /* expandMacrosInElement
  * Expands {{ var }} constructs in an elements innerHtml
  * using dictionary lookup, and replaces the element content.
@@ -232,6 +250,10 @@ export var expandMacrosInText = function (text, dict) {
 
     return text;
 }
+
+//#endregion
+
+//#region Nested Lists
 
 /* processList
  * Parses markup in LI's to create nested lists
@@ -340,6 +362,8 @@ export var processList = function (list) {
 
 }
 
+//#endregion
+
 export var sequence = function (l) {
 
     const $group = $(l);
@@ -354,6 +378,8 @@ export var sequence = function (l) {
     }); 
 
 }
+
+//#region Sorting
 
 /* sortCollectionList
  * Sorts a Collection List
@@ -471,3 +497,5 @@ export var sortCollectionList = function (l) {
     console.groupEnd();
 
 }
+
+//#endregion

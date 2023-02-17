@@ -23,9 +23,7 @@ $(function () {
 
     // Sequence items 
     $("[wfu-seq-group").each(function () {
-
         sequence($(this));
-
     });
 
     // Unwrap tagged items
@@ -39,24 +37,17 @@ $(function () {
   //          $(this).css("display", "block");
 //    });
 
-    // HTML decode anything 
+    // HTML decode items 
     $("[wfu-decode]").each(function (index) {
-
         $(this).html(
             decodeHtml($(this).html())
             );
-//            console.log("removing attr.");
         $(this).removeAttr("wfu-decode");
-//console.log("attr removed.");
     });
 
     // Process filtered items
     $("[wfu-filter]").each(function (index) {
-
-//        console.log($(this).attr("wfu-filter"));
-
         var visible = eval($(this).attr("wfu-filter"));
-
         if (visible)
             $(this).css("display", "block");
     });
@@ -142,6 +133,23 @@ $(function () {
         } 
 
     });
+
+    // Layout 
+    /* 
+    $("data[layout-target-id]").each(function() {
+        
+        const containerId = $(this).attr("layout-target-id");
+    //    console.debug(`item: ${containerId}`);
+        
+        var $target = $(`data[layout-container-id='${containerId}']`)
+    //    console.debug($target);
+        $target=$target.closest("[layout-container]");
+    //    console.debug($target);
+    
+        const $item = $(this).closest("[layout-item]"); 
+        $item.appendTo($target);
+    }); 
+    */
 
 });
 
