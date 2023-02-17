@@ -9,9 +9,11 @@
  * An advanced utility for retriving and caching values online, for maximum performance.
  */
 
-// import { CountUp } from 'https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.7/countUp.js';
+
 import { WfuDebug } from './webflow-core.js';
 
+
+//#region WfuCacheItem
 
 var defaultWfuCacheItemConfig = {
 
@@ -33,7 +35,16 @@ export class WfuCacheItem {
 
 }
 
+//#endregion
+
+//#region WfuCache
+
 var defaultWfuCacheConfig = {
+
+    // sessionStorage | localStorage | cookies
+    method: 'sessionStorage', // ONLY supported 
+    
+    prefix: 'cache', 
 
     debug: false, // Debugging mode
 
@@ -55,6 +66,10 @@ export class WfuCache {
 
     }
 
+    cacheKey = function(key) {
+        return `${this.config.prefix}_${key}`;
+    }
+
     async getAsync(valueName) {
 
         this.console.group(`getAsync - "${valueName}"`);
@@ -62,7 +77,8 @@ export class WfuCache {
         var valueHandler = this.config.val[valueName];
         this.console.debug("valueHandler", valueHandler);
         
-        var returnValue = sessionStorage.getItem(valueName);
+        var returnValue = sessionStorage.getItem(
+            this.cacheKey(valueName));
         this.console.debug("cached? sessionStorage.getItem", returnValue); 
       
         const that = this;
@@ -73,7 +89,8 @@ export class WfuCache {
             
             // Call valueHandler function to calculate 
             returnValue = await valueHandler.config.updateFnAsync().then(r => {
-                sessionStorage.setItem(valueName, r);
+                sessionStorage.setItem(
+                    this.cacheKey(valueName), r);
                 that.console.debug("sessionStorage.setItem", valueName, r); 
                 that.console.debug("calculated", r); 
                 return r;
@@ -88,6 +105,9 @@ export class WfuCache {
     }
 
 }
+
+//#endregion
+
 
 
 
