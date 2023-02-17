@@ -16,7 +16,14 @@
 
 export class WfuDebug {
     
-    enabled = false; 
+    #_enabled = false;
+
+    get enabled() {
+        return localStorage.getItem('wfuDebug') || this.#_enabled;
+    }
+    set enabled(active) {
+        this.#_enabled = active;
+    }
 
     group(name) {
         if (this.enabled)
