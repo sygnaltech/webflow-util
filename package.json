@@ -2,7 +2,7 @@
   "name": "webflow-util",
   "version": "3.0.0",
   "description": "A utility library for websites designed & hosted on Webflow",
-  "homepage": "https://sygnal-webflow-utils.webflow.io/",
+  "homepage": "https://attr.sygnal.com",
   "license": "MIT",
   "repository": "http://github.com/sygnaltech/webflow-util",
   "keywords": [
@@ -11,6 +11,19 @@
   "author": {
     "name": "Michael Wells",
     "email": "mike@sygnal.com",
-    "url": "https://sygnal.com"
+    "url": "https://www.sygnal.com"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "serve",
+    "build": "esbuild ./src/**/*.ts --bundle --minify --sourcemap --outdir=dist --watch",
+    "format": "prettier src/*.ts -w"
+  },
+
+  "devDependencies": {
+    "esbuild": "^0.15.14",
+    "prettier": "^2.7.1",
+    "serve": "^14.1.1",
+    "typescript": "^4.9.3"
   }
 }
