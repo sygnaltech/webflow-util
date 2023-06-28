@@ -9,9 +9,14 @@
  */
 
 import { WfuHtml } from '../webflow-html'
+import { WfuDebug } from '../webflow-core';
 
 
 const init = () => { 
+
+    // Initialize debugging
+    let debug = new WfuDebug("wfu-html");
+    debug.debug ("Initializing");
 
     let obj = new WfuHtml({
         dynamicAttributes: true

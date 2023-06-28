@@ -13,6 +13,9 @@
  */
 
 
+import { WfuDebug } from '../webflow-core';
+
+
 
 interface Config {
 }
@@ -27,7 +30,9 @@ export class WfuHtmlDynamicAttributes {
 
     Process() {
 
-        console.debug("Dynamic attributes processed.", this.config)
+        // Initialize debugging
+        let debug = new WfuDebug("wfu-html");
+        debug.debug ("Dynamic attributes processed.", this.config);
     
         // Select all elements in the document
         var allElements = document.querySelectorAll('*');

@@ -9,7 +9,6 @@
 
 import { WfuHtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 
-
 interface Config {
     dynamicAttributes: boolean;
 }
