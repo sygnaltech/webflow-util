@@ -1,6 +1,7 @@
 
 /*
  * webflow-demo
+ * DEPRECATED and replaced with TypeScript verion 
  * 
  * Sygnal Technology Group
  * http://sygnal.com
