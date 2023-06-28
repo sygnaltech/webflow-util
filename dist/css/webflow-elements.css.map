@@ -1,1 +1,1 @@
-{"version":3,"sources":["webflow-elements.scss","webflow-elements.css"],"names":[],"mappings":"AAEA;EACI,oBAAA;ACDJ","file":"webflow-elements.css"}
+{"version":3,"sourceRoot":"","sources":["../../src/css/webflow-elements.scss"],"names":[],"mappings":"AAEA;EACI","file":"webflow-elements.css"}

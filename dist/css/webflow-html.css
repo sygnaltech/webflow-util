@@ -415,8 +415,7 @@
   font-family: "Redacted", cursive;
   color: black;
   display: inline-block;
-  -webkit-animation: skeleton-loading 1s linear infinite alternate;
-          animation: skeleton-loading 1s linear infinite alternate;
+  animation: skeleton-loading 1s linear infinite alternate;
 }
 .w-richtext[wfu-lists-loading] li em {
   font-style: normal;
@@ -425,21 +424,12 @@
   color: inherit;
 }
 
-@-webkit-keyframes skeleton-loading {
-  0% {
-    color: hsl(200deg, 20%, 80%);
-  }
-  100% {
-    color: hsl(200deg, 20%, 95%);
-  }
-}
-
 @keyframes skeleton-loading {
   0% {
-    color: hsl(200deg, 20%, 80%);
+    color: hsl(200, 20%, 80%);
   }
   100% {
-    color: hsl(200deg, 20%, 95%);
+    color: hsl(200, 20%, 95%);
   }
 }
 /*
