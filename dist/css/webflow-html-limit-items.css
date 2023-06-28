@@ -1,11 +1,7 @@
-
-
 /*
  * SCSS Limit collection list items, at breakpoint levels
  */
-
 @media screen {
-
   [wfu-limit-items="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -42,12 +38,8 @@
   [wfu-limit-items="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-
-// 1920px
 @media screen and (min-width: 1920px) {
-  
   [wfu-limit-items-1920="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -84,12 +76,8 @@
   [wfu-limit-items-1920="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-
-// 1440px
 @media screen and (min-width: 1440px) and (max-width: 1919px) {
-  
   [wfu-limit-items-1440="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -126,12 +114,8 @@
   [wfu-limit-items-1440="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-
-// 1280px
 @media screen and (min-width: 1280px) and (max-width: 1439px) {
-  
   [wfu-limit-items-1280="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -168,12 +152,8 @@
   [wfu-limit-items-1280="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-
-// Desktop PLUS
 @media screen and (min-width: 992px) {
-
   [wfu-limit-items-d-max="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -210,12 +190,8 @@
   [wfu-limit-items-d-max="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-
-// Desktop
 @media screen and (min-width: 992px) and (max-width: 1279px) {
-
   [wfu-limit-items-d="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -252,12 +228,8 @@
   [wfu-limit-items-d="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
 }
-  
-// Tablet
 @media screen and (min-width: 768px) and (max-width: 991px) {
-  
   [wfu-limit-items-t="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -294,12 +266,8 @@
   [wfu-limit-items-t="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-  
 }
-
-// Mobile-Landscape 
 @media screen and (min-width: 480px) and (max-width: 767px) {
-  
   [wfu-limit-items-l="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -336,12 +304,8 @@
   [wfu-limit-items-l="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-  
 }
-  
-// Mobile-Portrait
 @media screen and (max-width: 479px) {
-  
   [wfu-limit-items-p="1"] > div:nth-child(n+2):nth-child(-n+1000) {
     display: none;
   }
@@ -378,6 +342,4 @@
   [wfu-limit-items-p="12"] > div:nth-child(n+13):nth-child(-n+1000) {
     display: none;
   }
-
-}
-
+}/*# sourceMappingURL=webflow-html-limit-items.css.map */
