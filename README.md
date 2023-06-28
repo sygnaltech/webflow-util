@@ -1,4 +1,7 @@
-# Sygnal Attributes [WFU] v4
+# Sygnal Attributes [WFU] v5
+
+> NOTE: in v5, the library is undergoing significant migration 
+from JS/CSS to TS/SCSS, which means significant code restructuring. Basic library functionality and APIs should remain unchanged. 
 
 The **WFU** library is a collection of utilities that add capability to 
 [Webflow](https://webflow.com/)
