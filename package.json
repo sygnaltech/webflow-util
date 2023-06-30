@@ -1,6 +1,6 @@
 {
   "name": "webflow-util",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "A utility library for websites designed & hosted on Webflow",
   "homepage": "https://attr.sygnal.com",
   "license": "MIT",
@@ -19,11 +19,13 @@
     "build": "esbuild ./src/**/*.ts ./src/*.ts --bundle --minify --sourcemap --outdir=dist --watch",
     "format": "prettier src/*.ts -w"
   },
-
   "devDependencies": {
     "esbuild": "^0.15.14",
     "prettier": "^2.7.1",
     "serve": "^14.1.1",
     "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "countup.js": "github:inorganik/countUp.js"
   }
 }
