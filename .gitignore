@@ -6,12 +6,7 @@
 _site/
 /_site/
 
-dist/**/*.js
-dist/**/*.map
-dist/**/*.js.map
 
-*.map
-*.js.map
 
 ## Ignore node
 node_modules

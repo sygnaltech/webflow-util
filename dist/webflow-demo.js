@@ -1,0 +1,2 @@
+(()=>{var r=class{constructor(){this.siteId=document.documentElement.getAttribute("data-wf-site"),this.pageId=document.documentElement.getAttribute("data-wf-page")}getWebflowPreviewLink(e){let t=new URL(e);return t.searchParams.set("pageId",this.pageId??""),t.href}updateHrefToWebflowPreviewLink(e){var t=e.href,i=this.getWebflowPreviewLink(t??"");e.href=i}};})();
+//# sourceMappingURL=webflow-demo.js.map
