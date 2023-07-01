@@ -17,7 +17,8 @@ import { CountUp, CountUpOptions } from 'countup.js';
 // Added by .d.ts types wrapper, custom built 
 // BUG: import { Waypoint } from 'waypoints'; // 'waypoint'; 
 
-import { WfuDebug } from '../webflow-core';
+
+import { WfuCore, WfuDebug } from '../webflow-core';
 
 
 
@@ -78,6 +79,10 @@ export class WfuCountUp {
 
 
     init(): void {
+
+//        console.log("init countup");
+
+        new WfuCore().init();
 
         this.debug.debug("countup init");
 
