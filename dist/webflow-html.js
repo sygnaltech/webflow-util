@@ -2,11 +2,24 @@
   // src/webflow-core.ts
   var WfuDebug = class {
     constructor(label) {
+      this.localStorageDebugFlag = "wfuDebug";
       this._enabled = false;
       this._label = label;
     }
+    get persistentDebug() {
+      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+    }
+    set persistentDebug(active) {
+      if (active) {
+        localStorage.setItem(this.localStorageDebugFlag, "true");
+        console.debug("WFU persistent debug enabled.");
+      } else {
+        localStorage.removeItem(this.localStorageDebugFlag);
+        console.debug("WFU persistent debug disabled.");
+      }
+    }
     get enabled() {
-      var wfuDebugValue = Boolean(localStorage.getItem("wfuDebug"));
+      var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
       wfuDebugValue = wfuDebugValue || this._enabled;
       return wfuDebugValue;
     }
