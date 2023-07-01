@@ -9,10 +9,12 @@
  */
 
 import { WfuHtml } from '../webflow-html'
-import { WfuDebug } from '../webflow-core';
+import { WfuCore, WfuDebug } from '../webflow-core';
 
 
 const init = () => { 
+
+    new WfuCore().init();
 
     // Initialize debugging
     let debug = new WfuDebug("wfu-html");
