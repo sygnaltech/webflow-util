@@ -1,12 +1,18 @@
+
+// npm install --save @types/waypoints
+
+/*
 declare module 'waypoint' {
     export class Waypoint {
       // Define the class properties and methods
     }
 }
-  
-/* 
-declare global {
-  class Waypoint {
+*/  
+
+/*
+//declare global {
+  declare module 'waypoint' {
+  export class Waypoint {
     constructor(options: object);
     context: Element;
     element: Element;
@@ -34,7 +40,8 @@ declare global {
     static viewportHeight(): number;
     static viewportWidth(): number;
   }
-}
+ }
 
-*/
 
+
+*/ 
