@@ -1,6 +1,16 @@
 {
-    "compilerOptions": {
-      "typeRoots": ["node_modules/@types", "custom-typings"]
-    }
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"], // , "custom-typings"],
+    "allowJs": true, 
+    "outDir": "./dist",
+    "sourceMap": true,
+    "rootDir": "./src",
+    "module": "commonjs", // "es6", // "commonjs"
+    "target": "es6",
+
+    // Cannot find module 'ts-transformer-keys'. Did you mean to set the 'moduleResolution' option to 'node', or to add aliases to the 'paths' option?
+// https://stackoverflow.com/a/71191552
+    "moduleResolution":"node", // https://www.typescriptlang.org/docs/handbook/module-resolution.html
   }
+}
   

@@ -16,7 +16,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "serve",
-    "build": "esbuild ./src/**/*.ts ./src/*.ts --bundle --minify --sourcemap --outdir=dist --watch",
+    "tsbuild": "tsc --watch",
+    "build": "esbuild ./src/**/*.ts ./src/*.ts --bundle --sourcemap --outdir=dist --watch --external:custom-typings/*",
     "format": "prettier src/*.ts -w"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@types/waypoints": "^4.0.4",
     "countup.js": "github:inorganik/countUp.js"
   }
 }
