@@ -10,9 +10,16 @@
  * Utilizes Waypoints for individual and group triggering.
  */
 
+// Library added by npm package install 
+// https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.7/countUp.js';
+import { CountUp, CountUpOptions } from 'countup.js'; 
 
-import { CountUp } from 'countup.js'; // https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.7/countUp.js';
+// Added by .d.ts types wrapper, custom built 
+// BUG: import { Waypoint } from 'waypoints'; // 'waypoint'; 
+
 import { WfuDebug } from '../webflow-core';
+
+
 
 // Waypoints 
 // http://imakewebthings.com/waypoints/guides/getting-started/
@@ -20,13 +27,26 @@ import { WfuDebug } from '../webflow-core';
 // import { Waypoint } from 'waypoint';
 // https://attr.sygnal.com/webflow-countup/countup 
 
-var defaultConfig = {
 
+interface WfuCountUpConfig {
     waypointSelfTrigger: {
-        offset: '90%',
+      offset: number; // string;
     },
     waypointGroupTrigger: {
-        offset: '70%',
+      offset: number; //string;
+    },
+    countupSettings: CountUpOptions;
+    debug: boolean;
+}
+
+
+var defaultConfig: WfuCountUpConfig = {
+
+    waypointSelfTrigger: {
+        offset: 90, //'90%',
+    },
+    waypointGroupTrigger: {
+        offset: 70, //'70%',
     },
     countupSettings: {}, 
 
@@ -37,7 +57,7 @@ var defaultConfig = {
 
 export class WfuCountUp {
 
-    config; // Optional config
+    config: WfuCountUpConfig; // Optional config
     debug: WfuDebug; 
  
     // Initialize
@@ -124,19 +144,22 @@ export class WfuCountUp {
 
                 // Configuration settings
                 // https://github.com/inorganik/CountUp.js 
-                const counter = new CountUp(
+                const counter: CountUp = new CountUp(
                     element as HTMLElement, 
                     n,
                     this.config.countupSettings
-                    ).start();
+                    );
         
                 if(counter != null)
                     countups.push(counter);
-                
+
+                counter.start();
+                    
+
             });  
         
             // const wp = new Waypoint({
-            //     element: trigger,
+            //     element: trigger as HTMLElement,
             //     handler: function() { 
         
             //         for (var i = 0; i < countups.length; i++) {
@@ -145,7 +168,7 @@ export class WfuCountUp {
                         
             //         this.destroy(); // to trigger once
             //     }, 
-            //     offset: that.config.waypointGroupTrigger // '70%'
+            //     offset: that.config.waypointGroupTrigger.offset // '70%'
             // });      
             
         });
@@ -170,12 +193,12 @@ export class WfuCountUp {
             );
         
             // const wp = new Waypoint({
-            //     element: $(this)[0],
+            //     element: c as HTMLElement,
             //     handler: function() {
             //         counter.start(); 
             //         this.destroy(); // to trigger once
             //     }, 
-            //     offset: that.config.waypointSelfTrigger // '90%'
+            //     offset: that.config.waypointSelfTrigger.offset // '90%'
             // });
             
         });
@@ -184,4 +207,5 @@ export class WfuCountUp {
 
 }
 
+window["WfuCountUp"] = WfuCountUp;
 
