@@ -57,12 +57,12 @@ export class WfuCache {
  
     constructor(customConfig = {}) {
 
+        //        this.config = $.extend({}, defaultWfuCacheConfig, config);
+        this.config = { ...defaultConfig, ...customConfig };
+
         // Enable debugging, if specified
         this.debug = new WfuDebug("wfu-cache");
         this.debug.enabled = this.config.debug; 
-
-        //        this.config = $.extend({}, defaultWfuCacheConfig, config);
-        this.config = { ...defaultConfig, ...customConfig };
 
     }
 
@@ -111,7 +111,7 @@ export class WfuCache {
 //#region WfuCache
 
 
-
+window["WfuCache"] = WfuCache;
 
 
 

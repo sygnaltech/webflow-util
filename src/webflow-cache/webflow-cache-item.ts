@@ -45,6 +45,8 @@ export class WfuCacheItem {
  
     constructor(customConfig = {}) {
 
+        this.debug = new WfuDebug("wfu-cache-item");
+
         // Merge configs
 //        this.config = Object.assign({}, defaultConfig, customConfig);
         this.config = { ...defaultConfig, ...customConfig };
@@ -58,7 +60,7 @@ export class WfuCacheItem {
 
 
 
-
+window["WfuCacheItem"] = WfuCacheItem;
 
 
 
