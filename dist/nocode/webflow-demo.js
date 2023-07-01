@@ -1,2 +1,61 @@
-(()=>{var n=class{constructor(){this.siteId=document.documentElement.getAttribute("data-wf-site"),this.pageId=document.documentElement.getAttribute("data-wf-page")}getWebflowPreviewLink(e){let t=new URL(e);return t.searchParams.set("pageId",this.pageId??""),t.href}updateHrefToWebflowPreviewLink(e){var t=e.href,r=this.getWebflowPreviewLink(t??"");e.href=r}};var o=class{constructor(e){this._enabled=!1;this._label=e}get enabled(){var e=Boolean(localStorage.getItem("wfuDebug"));return e=e||this._enabled,e}set enabled(e){this._enabled=e}group(e){this.enabled&&console.group(e)}groupEnd(){this.enabled&&console.groupEnd()}debug(...e){this.enabled&&console.debug(this._label,...e)}};var a=()=>{new o("wfu-demo").debug("Initializing");let e=new n;document.querySelectorAll("a[wfu-demo-link]").forEach(r=>{e.updateHrefToWebflowPreviewLink(r)})};document.addEventListener("DOMContentLoaded",a);})();
+(() => {
+  // src/webflow-demo.ts
+  var WebflowInfo = class {
+    constructor() {
+      this.siteId = document.documentElement.getAttribute("data-wf-site");
+      this.pageId = document.documentElement.getAttribute("data-wf-page");
+    }
+    getWebflowPreviewLink(url) {
+      var _a;
+      const parsedUrl = new URL(url);
+      parsedUrl.searchParams.set("pageId", (_a = this.pageId) != null ? _a : "");
+      return parsedUrl.href;
+    }
+    updateHrefToWebflowPreviewLink(linkElem) {
+      var parsedUrl = linkElem.href;
+      var modifiedUrl = this.getWebflowPreviewLink(parsedUrl != null ? parsedUrl : "");
+      linkElem.href = modifiedUrl;
+    }
+  };
+
+  // src/webflow-core.ts
+  var WfuDebug = class {
+    constructor(label) {
+      this._enabled = false;
+      this._label = label;
+    }
+    get enabled() {
+      var wfuDebugValue = Boolean(localStorage.getItem("wfuDebug"));
+      wfuDebugValue = wfuDebugValue || this._enabled;
+      return wfuDebugValue;
+    }
+    set enabled(active) {
+      this._enabled = active;
+    }
+    group(name) {
+      if (this.enabled)
+        console.group(name);
+    }
+    groupEnd() {
+      if (this.enabled)
+        console.groupEnd();
+    }
+    debug(...args) {
+      if (this.enabled)
+        console.debug(this._label, ...args);
+    }
+  };
+
+  // src/nocode/webflow-demo.ts
+  var init = () => {
+    let debug = new WfuDebug("wfu-demo");
+    debug.debug("Initializing");
+    const webflowInfo = new WebflowInfo();
+    const elements = document.querySelectorAll("a[wfu-demo-link]");
+    elements.forEach((element) => {
+      webflowInfo.updateHrefToWebflowPreviewLink(element);
+    });
+  };
+  document.addEventListener("DOMContentLoaded", init);
+})();
 //# sourceMappingURL=webflow-demo.js.map

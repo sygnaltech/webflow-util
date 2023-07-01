@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../src/webflow-video.ts"],
   "sourcesContent": ["\n/*\n * webflow-video\n * \n * Sygnal Technology Group\n * http://sygnal.com\n * \n * Webflow Video\n */\n\n\n\nexport class WebflowVideo {\n\n    // Initialize\n    constructor() {\n    }\n\n    // Fix all data poster urls\n    processAllDataPosterUrls (): void {\n\n        // Find poster video overrides and apply them\n        const elements = document.querySelectorAll(`div[wfu-data-poster-url]`);\n        elements.forEach((element) => {\n\n            element.setAttribute(\n                \"data-poster-url\",\n                element.getAttribute(\"wfu-data-poster-url\")\n            );\n\n        });\n\n    }\n\n}\n\n\n\n"],
-  "mappings": "MAYO,IAAMA,EAAN,KAAmB,CAGtB,aAAc,CACd,CAGA,0BAAkC,CAGb,SAAS,iBAAiB,0BAA0B,EAC5D,QAASC,GAAY,CAE1BA,EAAQ,aACJ,kBACAA,EAAQ,aAAa,qBAAqB,CAC9C,CAEJ,CAAC,CAEL,CAEJ",
-  "names": ["WebflowVideo", "element"]
+  "mappings": ";;AAYO,MAAM,eAAN,MAAmB;AAAA,IAGtB,cAAc;AAAA,IACd;AAAA,IAGA,2BAAkC;AAG9B,YAAM,WAAW,SAAS,iBAAiB,0BAA0B;AACrE,eAAS,QAAQ,CAAC,YAAY;AAE1B,gBAAQ;AAAA,UACJ;AAAA,UACA,QAAQ,aAAa,qBAAqB;AAAA,QAC9C;AAAA,MAEJ,CAAC;AAAA,IAEL;AAAA,EAEJ;",
+  "names": []
 }

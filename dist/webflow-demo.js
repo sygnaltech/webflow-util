@@ -1,2 +1,21 @@
-(()=>{var r=class{constructor(){this.siteId=document.documentElement.getAttribute("data-wf-site"),this.pageId=document.documentElement.getAttribute("data-wf-page")}getWebflowPreviewLink(e){let t=new URL(e);return t.searchParams.set("pageId",this.pageId??""),t.href}updateHrefToWebflowPreviewLink(e){var t=e.href,i=this.getWebflowPreviewLink(t??"");e.href=i}};})();
+(() => {
+  // src/webflow-demo.ts
+  var WebflowInfo = class {
+    constructor() {
+      this.siteId = document.documentElement.getAttribute("data-wf-site");
+      this.pageId = document.documentElement.getAttribute("data-wf-page");
+    }
+    getWebflowPreviewLink(url) {
+      var _a;
+      const parsedUrl = new URL(url);
+      parsedUrl.searchParams.set("pageId", (_a = this.pageId) != null ? _a : "");
+      return parsedUrl.href;
+    }
+    updateHrefToWebflowPreviewLink(linkElem) {
+      var parsedUrl = linkElem.href;
+      var modifiedUrl = this.getWebflowPreviewLink(parsedUrl != null ? parsedUrl : "");
+      linkElem.href = modifiedUrl;
+    }
+  };
+})();
 //# sourceMappingURL=webflow-demo.js.map
