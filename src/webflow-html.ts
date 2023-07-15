@@ -8,10 +8,14 @@
  */
 
 import { WfuHtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
+import { WfuBreakpoints } from './webflow-html/breakpoints'
 
 interface Config {
-    dynamicAttributes: boolean;
+    dynamicAttributes?: boolean | true;
+    handleBreakpointChange?: ((e: MediaQueryListEvent) => void) | null;
 }
+
+
 
 
 export class WfuHtml {
@@ -21,11 +25,20 @@ export class WfuHtml {
         this.config = config;
     }
 
-    Process() {
+    init() {
 
+        // Init breakpoints
+        let breakpoints = new WfuBreakpoints({
+            handleBreakpointChange: (e: MediaQueryListEvent) => {
+                // handle the breakpoint change here
+            }
+        });
+        breakpoints.init();
+
+        // Init dynamic attributes
         if(this.config.dynamicAttributes) {
             let obj = new WfuHtmlDynamicAttributes({});
-            obj.Process();
+            obj.init();
         }
 
     }

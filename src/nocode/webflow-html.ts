@@ -24,7 +24,7 @@ const init = () => {
         dynamicAttributes: true
     });
 
-    obj.Process();
+    obj.init();
 
 }
   

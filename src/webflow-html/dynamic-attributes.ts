@@ -28,11 +28,11 @@ export class WfuHtmlDynamicAttributes {
         this.config = config;
     }
 
-    Process() {
+    init() {
 
         // Initialize debugging
         let debug = new WfuDebug("wfu-html");
-        debug.debug ("Dynamic attributes processed.", this.config);
+        debug.debug ("Dynamic attributes initialized.", this.config);
     
         // Select all elements in the document
         var allElements = document.querySelectorAll('*');
