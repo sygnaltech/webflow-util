@@ -125,7 +125,7 @@
         handleBreakpointChange: (breakpointName, e) => {
           window["sa5"] = window["sa5"] || {};
           const sa5 = window["sa5"];
-          const breakpointChangeHandler = sa5["breakpointChangeHandler"];
+          const breakpointChangeHandler = sa5["breakpointChanged"];
           if (breakpointChangeHandler)
             breakpointChangeHandler(breakpointName, e);
         }

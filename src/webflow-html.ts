@@ -15,6 +15,7 @@ interface Sa5HtmlConfig {
 
     dynamicAttributes?: boolean | true;
     handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
+//    handleOrientationChange?: ((orientationName: string, e: MediaQueryListEvent) => void) | null;
 
     debug?: boolean | true;
 
@@ -48,7 +49,7 @@ export class Sa5Html {
                 const sa5: any = window['sa5'];
 
                 // Get any global handler
-                const breakpointChangeHandler = sa5['breakpointChangeHandler'];
+                const breakpointChangeHandler = sa5['breakpointChanged'];
                 if(breakpointChangeHandler) 
                     breakpointChangeHandler(breakpointName, e);
 
