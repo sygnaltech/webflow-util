@@ -108,8 +108,6 @@ export class Sa5Cache {
 
 //#endregion
 
-//#region WfuCache
-
 
 // Register
 window["sa5"] = window["sa5"] || {};

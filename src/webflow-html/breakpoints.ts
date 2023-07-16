@@ -57,24 +57,6 @@ export class Sa5Breakpoints {
                 } as MediaQueryListEvent); 
             }
 
-/*
-            // If a handler is defined, we install it
-            if(this.config.handleBreakpointChange) {
-
-                // Install change listener
-                mediaQueryList.addEventListener('change', this.config.handleBreakpointChange);
-
-
-                if (device)
-                // Call the callback now to initialize current breakpoint
-                this.config.handleBreakpointChange({ 
-                    media: mediaQueryList.media, 
-                    matches: mediaQueryList.matches 
-                } as MediaQueryListEvent); 
-
-            }
-*/
-
         }
 
     }
@@ -90,7 +72,7 @@ export class Sa5Breakpoints {
         var device = null;
         for (let d in sa5Breakpoints) {
             if (e.media == sa5Breakpoints[d]) {
-                console.log(`Current device: ${d}`);
+//                console.log(`Current device: ${d}`);
                 device = d; 
             }
           }
@@ -100,20 +82,7 @@ export class Sa5Breakpoints {
             this.config.handleBreakpointChange(
                 device as string, 
                 e
-/*                { 
-                media: e.media, 
-                matches: e.matches 
-            } as MediaQueryListEvent
-            */
             ); 
-/*
-        // Notify any globally registered handlers 
-        if(this.config.handleBreakpointChange) 
-            this.config.handleBreakpointChange({ 
-                media: e.media, 
-                matches: e.matches 
-            } as MediaQueryListEvent); 
-  */
 
     });
 

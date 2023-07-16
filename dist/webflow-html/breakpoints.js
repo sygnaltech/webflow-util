@@ -58,7 +58,6 @@
         var device = null;
         for (let d in sa5Breakpoints) {
           if (e.media == sa5Breakpoints[d]) {
-            console.log(`Current device: ${d}`);
             device = d;
           }
         }

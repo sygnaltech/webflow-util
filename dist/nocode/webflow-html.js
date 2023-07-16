@@ -104,7 +104,6 @@
         var device = null;
         for (let d in sa5Breakpoints) {
           if (e.media == sa5Breakpoints[d]) {
-            console.log(`Current device: ${d}`);
             device = d;
           }
         }
@@ -140,15 +139,16 @@
   var Sa5Html = class {
     constructor(config) {
       this.config = config;
+      this.debug = new Sa5Debug("sa5-html");
+      this.debug.enabled = this.config.debug;
     }
     init() {
-      console.log("sa5-html init.");
+      this.debug.debug("sa5-html init.");
       let breakpoints = new Sa5Breakpoints({
         handleBreakpointChange: (breakpointName, e) => {
           window["sa5"] = window["sa5"] || {};
           const sa5 = window["sa5"];
           const breakpointChangeHandler = sa5["breakpointChangeHandler"];
-          console.log("x breakpointChangeHandler", breakpointChangeHandler);
           if (breakpointChangeHandler)
             breakpointChangeHandler(breakpointName, e);
         }
