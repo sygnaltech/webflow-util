@@ -17,9 +17,9 @@
   };
 
   // src/webflow-core.ts
-  var WfuDebug = class {
+  var Sa5Debug = class {
     constructor(label) {
-      this.localStorageDebugFlag = "wfuDebug";
+      this.localStorageDebugFlag = "sa5-debug";
       this._enabled = false;
       this._label = label;
     }
@@ -29,10 +29,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("WFU persistent debug enabled.");
+        console.debug("sa5-core debug enabled (persistent).");
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("WFU persistent debug disabled.");
+        console.debug("sa5-core debug disabled (persistent).");
       }
     }
     get enabled() {
@@ -64,13 +64,12 @@
     updateFnAsync: void 0,
     debug: false
   };
-  var WfuCacheItem = class {
+  var Sa5CacheItem = class {
     constructor(customConfig = {}) {
-      this.debug = new WfuDebug("wfu-cache-item");
+      this.debug = new Sa5Debug("sa5-cache-item");
       this.config = __spreadValues(__spreadValues({}, defaultConfig), customConfig);
       this.debug.enabled = this.config.debug;
     }
   };
-  window["WfuCacheItem"] = WfuCacheItem;
 })();
 //# sourceMappingURL=webflow-cache-item.js.map

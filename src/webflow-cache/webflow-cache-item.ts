@@ -11,12 +11,12 @@
  */
 
 
-import { WfuDebug } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core';
 
 
 
 
-interface WfuCacheItemConfig {
+interface Sa5CacheItemConfig {
 
     store: string;
     name: string;
@@ -27,7 +27,7 @@ interface WfuCacheItemConfig {
 }
 
 
-var defaultConfig: WfuCacheItemConfig = {
+var defaultConfig: Sa5CacheItemConfig = {
 
     store: "sessionStorage", // | localStorage 
     name: undefined, 
@@ -38,14 +38,14 @@ var defaultConfig: WfuCacheItemConfig = {
 }
 
 
-export class WfuCacheItem {
+export class Sa5CacheItem {
 
-    config: WfuCacheItemConfig; // Optional config
-    debug: WfuDebug; 
+    config: Sa5CacheItemConfig; // Optional config
+    debug: Sa5Debug; 
  
     constructor(customConfig = {}) {
 
-        this.debug = new WfuDebug("wfu-cache-item");
+        this.debug = new Sa5Debug("sa5-cache-item");
 
         // Merge configs
 //        this.config = Object.assign({}, defaultConfig, customConfig);
@@ -60,7 +60,7 @@ export class WfuCacheItem {
 
 
 
-window["WfuCacheItem"] = WfuCacheItem;
+// window["WfuCacheItem"] = WfuCacheItem;
 
 
 

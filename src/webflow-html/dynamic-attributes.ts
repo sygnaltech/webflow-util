@@ -13,7 +13,7 @@
  */
 
 
-import { WfuDebug } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core';
 
 
 
@@ -21,7 +21,7 @@ interface Config {
 }
 
 
-export class WfuHtmlDynamicAttributes {
+export class Sa5HtmlDynamicAttributes {
     config: Config;
 
     constructor(config: Config) {
@@ -31,7 +31,7 @@ export class WfuHtmlDynamicAttributes {
     init() {
 
         // Initialize debugging
-        let debug = new WfuDebug("wfu-html");
+        let debug = new Sa5Debug("sa5-html");
         debug.debug ("Dynamic attributes initialized.", this.config);
     
         // Select all elements in the document
@@ -62,4 +62,8 @@ export class WfuHtmlDynamicAttributes {
 
 }
   
-  
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
+
+

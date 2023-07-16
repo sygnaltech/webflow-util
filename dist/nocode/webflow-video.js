@@ -15,7 +15,7 @@
   };
 
   // src/webflow-core.ts
-  var WfuCore = class {
+  var Sa5Core = class {
     init() {
       this.initDebugMode();
     }
@@ -24,7 +24,7 @@
       let params = new URLSearchParams(window.location.search);
       let hasDebug = params.has(debugParamKey);
       if (hasDebug) {
-        let wfuDebug = new WfuDebug(`wfu init`);
+        let wfuDebug = new Sa5Debug(`sa5 init`);
         wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
       }
     }
@@ -38,9 +38,9 @@
       }
     }
   };
-  var WfuDebug = class {
+  var Sa5Debug = class {
     constructor(label) {
-      this.localStorageDebugFlag = "wfuDebug";
+      this.localStorageDebugFlag = "sa5-debug";
       this._enabled = false;
       this._label = label;
     }
@@ -50,10 +50,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("WFU persistent debug enabled.");
+        console.debug("sa5-core debug enabled (persistent).");
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("WFU persistent debug disabled.");
+        console.debug("sa5-core debug disabled (persistent).");
       }
     }
     get enabled() {
@@ -80,8 +80,8 @@
 
   // src/nocode/webflow-video.ts
   var init = () => {
-    new WfuCore().init();
-    let debug = new WfuDebug("wfu-video");
+    new Sa5Core().init();
+    let debug = new Sa5Debug("sa5-video");
     debug.debug("Initializing");
     const webflowVideo = new WebflowVideo();
     webflowVideo.processAllDataPosterUrls();

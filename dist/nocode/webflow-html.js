@@ -1,6 +1,6 @@
 (() => {
   // src/webflow-core.ts
-  var WfuCore = class {
+  var Sa5Core = class {
     init() {
       this.initDebugMode();
     }
@@ -9,7 +9,7 @@
       let params = new URLSearchParams(window.location.search);
       let hasDebug = params.has(debugParamKey);
       if (hasDebug) {
-        let wfuDebug = new WfuDebug(`wfu init`);
+        let wfuDebug = new Sa5Debug(`sa5 init`);
         wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
       }
     }
@@ -23,9 +23,9 @@
       }
     }
   };
-  var WfuDebug = class {
+  var Sa5Debug = class {
     constructor(label) {
-      this.localStorageDebugFlag = "wfuDebug";
+      this.localStorageDebugFlag = "sa5-debug";
       this._enabled = false;
       this._label = label;
     }
@@ -35,10 +35,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("WFU persistent debug enabled.");
+        console.debug("sa5-core debug enabled (persistent).");
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("WFU persistent debug disabled.");
+        console.debug("sa5-core debug disabled (persistent).");
       }
     }
     get enabled() {
@@ -64,13 +64,13 @@
   };
 
   // src/webflow-html/dynamic-attributes.ts
-  var WfuHtmlDynamicAttributes = class {
+  var Sa5HtmlDynamicAttributes = class {
     constructor(config) {
       this.config = config;
     }
-    Process() {
-      let debug = new WfuDebug("wfu-html");
-      debug.debug("Dynamic attributes processed.", this.config);
+    init() {
+      let debug = new Sa5Debug("sa5-html");
+      debug.debug("Dynamic attributes initialized.", this.config);
       var allElements = document.querySelectorAll("*");
       allElements.forEach(function(element) {
         for (var i = 0; i < element.attributes.length; i++) {
@@ -83,29 +83,95 @@
       });
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 
-  // src/webflow-html.ts
-  var WfuHtml = class {
+  // src/webflow-html/breakpoints.ts
+  var sa5Breakpoints = {
+    large1920: "(min-width: 1920px)",
+    large1440: "(min-width: 1440px) and (max-width: 1919px)",
+    large1280: "(min-width: 1280px) and (max-width: 1439px)",
+    desktop: "(min-width: 992px) and (max-width: 1279px)",
+    tablet: "(min-width: 768px) and (max-width: 991px)",
+    mobileLandscape: "(min-width: 480px) and (max-width: 767px)",
+    mobilePortrait: "(max-width: 479px)"
+  };
+  var Sa5Breakpoints = class {
     constructor(config) {
+      this.handleBreakpointChange = (e) => {
+        if (!e.matches)
+          return;
+        var device = null;
+        for (let d in sa5Breakpoints) {
+          if (e.media == sa5Breakpoints[d]) {
+            console.log(`Current device: ${d}`);
+            device = d;
+          }
+        }
+        if (this.config.handleBreakpointChange)
+          this.config.handleBreakpointChange(
+            device,
+            e
+          );
+      };
       this.config = config;
     }
-    Process() {
-      if (this.config.dynamicAttributes) {
-        let obj = new WfuHtmlDynamicAttributes({});
-        obj.Process();
+    init() {
+      let debug = new Sa5Debug("sa5-html");
+      debug.debug("Breakpoints initialized.", this.config);
+      for (let device in sa5Breakpoints) {
+        let mediaQueryList = window.matchMedia(sa5Breakpoints[device]);
+        mediaQueryList.addEventListener("change", this.handleBreakpointChange);
+        if (mediaQueryList.matches) {
+          this.handleBreakpointChange(
+            {
+              media: mediaQueryList.media,
+              matches: mediaQueryList.matches
+            }
+          );
+        }
       }
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
+
+  // src/webflow-html.ts
+  var Sa5Html = class {
+    constructor(config) {
+      this.config = config;
+    }
+    init() {
+      console.log("sa5-html init.");
+      let breakpoints = new Sa5Breakpoints({
+        handleBreakpointChange: (breakpointName, e) => {
+          window["sa5"] = window["sa5"] || {};
+          const sa5 = window["sa5"];
+          const breakpointChangeHandler = sa5["breakpointChangeHandler"];
+          console.log("x breakpointChangeHandler", breakpointChangeHandler);
+          if (breakpointChangeHandler)
+            breakpointChangeHandler(breakpointName, e);
+        }
+      });
+      breakpoints.init();
+      if (this.config.dynamicAttributes) {
+        let obj = new Sa5HtmlDynamicAttributes({});
+        obj.init();
+      }
+    }
+  };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Html"] = Sa5Html;
 
   // src/nocode/webflow-html.ts
   var init = () => {
-    new WfuCore().init();
-    let debug = new WfuDebug("wfu-html");
+    new Sa5Core().init();
+    let debug = new Sa5Debug("sa5-html");
     debug.debug("Initializing");
-    let obj = new WfuHtml({
+    let obj = new Sa5Html({
       dynamicAttributes: true
     });
-    obj.Process();
+    obj.init();
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

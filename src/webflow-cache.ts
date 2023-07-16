@@ -11,7 +11,7 @@
  */
 
 
-import { WfuDebug } from './webflow-core';
+import { Sa5Debug } from './webflow-core';
 
 
 //#region WfuCacheItem
@@ -25,7 +25,7 @@ enum CacheStorage {
 }
 
 
-interface WfuCacheConfig {
+interface Sa5CacheConfig {
 
     store: CacheStorage;
     prefix: string;
@@ -36,7 +36,7 @@ interface WfuCacheConfig {
 }
 
 
-var defaultConfig: WfuCacheConfig = {
+var defaultConfig: Sa5CacheConfig = {
 
     // sessionStorage | localStorage | cookies
     store: CacheStorage.sessionStorage, // 'sessionStorage', // ONLY supported 
@@ -48,12 +48,12 @@ var defaultConfig: WfuCacheConfig = {
 }
 
 
-export class WfuCache {
+export class Sa5Cache {
 
 //    console = new WfuDebug("wfu-cache");
 
-    config: WfuCacheConfig; // Optional config
-    debug: WfuDebug; 
+    config: Sa5CacheConfig; // Optional config
+    debug: Sa5Debug; 
  
     constructor(customConfig = {}) {
 
@@ -61,7 +61,7 @@ export class WfuCache {
         this.config = { ...defaultConfig, ...customConfig };
 
         // Enable debugging, if specified
-        this.debug = new WfuDebug("wfu-cache");
+        this.debug = new Sa5Debug("sa5-cache");
         this.debug.enabled = this.config.debug; 
 
     }
@@ -111,8 +111,9 @@ export class WfuCache {
 //#region WfuCache
 
 
-window["WfuCache"] = WfuCache;
-
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Cache"] = Sa5Cache;
 
 
 

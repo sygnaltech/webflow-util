@@ -18,7 +18,7 @@ import { CountUp, CountUpOptions } from 'countup.js';
 // BUG: import { Waypoint } from 'waypoints'; // 'waypoint'; 
 
 
-import { WfuCore, WfuDebug } from '../webflow-core';
+import { Sa5Core, Sa5Debug } from '../webflow-core';
 
 
 
@@ -29,7 +29,7 @@ import { WfuCore, WfuDebug } from '../webflow-core';
 // https://attr.sygnal.com/webflow-countup/countup 
 
 
-interface WfuCountUpConfig {
+interface Sa5CountUpConfig {
     waypointSelfTrigger: {
       offset: number; // string;
     },
@@ -41,7 +41,7 @@ interface WfuCountUpConfig {
 }
 
 
-var defaultConfig: WfuCountUpConfig = {
+var defaultConfig: Sa5CountUpConfig = {
 
     waypointSelfTrigger: {
         offset: 90, //'90%',
@@ -56,16 +56,16 @@ var defaultConfig: WfuCountUpConfig = {
 }
 
 
-export class WfuCountUp {
+export class Sa5CountUp {
 
-    config: WfuCountUpConfig; // Optional config
-    debug: WfuDebug; 
+    config: Sa5CountUpConfig; // Optional config
+    debug: Sa5Debug; 
  
     // Initialize
     constructor(customConfig = {}) {
 
         // Initialize debugging
-        this.debug = new WfuDebug("wfu-countup");
+        this.debug = new Sa5Debug("sa5-countup");
         this.debug.debug ("Initializing");
 
         // Merge configs
@@ -82,7 +82,7 @@ export class WfuCountUp {
 
 //        console.log("init countup");
 
-        new WfuCore().init();
+        new Sa5Core().init();
 
         this.debug.debug("countup init");
 
@@ -212,5 +212,6 @@ export class WfuCountUp {
 
 }
 
-window["WfuCountUp"] = WfuCountUp;
-
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5CountUp"] = Sa5CountUp;

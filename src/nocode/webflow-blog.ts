@@ -9,14 +9,14 @@
  */
 
 import { GitHubGist } from '../webflow-blog';
-import { WfuCore, WfuDebug } from '../webflow-core.js';
+import { Sa5Core, Sa5Debug } from '../webflow-core.js';
 
 const init = () => { 
 
-    new WfuCore().init();
+    new Sa5Core().init();
 
     // Initialize debugging
-    let debug = new WfuDebug("wfu-blog");
+    let debug = new Sa5Debug("sa5-blog");
     debug.debug ("Initializing");
 
     const gitHubGist = new GitHubGist();
@@ -34,5 +34,6 @@ const init = () => {
     // });
 
 }
-  
+
+// Auto-execute on DOM load 
 document.addEventListener("DOMContentLoaded", init)

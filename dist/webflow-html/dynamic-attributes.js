@@ -1,8 +1,8 @@
 (() => {
   // src/webflow-core.ts
-  var WfuDebug = class {
+  var Sa5Debug = class {
     constructor(label) {
-      this.localStorageDebugFlag = "wfuDebug";
+      this.localStorageDebugFlag = "sa5-debug";
       this._enabled = false;
       this._label = label;
     }
@@ -12,10 +12,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("WFU persistent debug enabled.");
+        console.debug("sa5-core debug enabled (persistent).");
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("WFU persistent debug disabled.");
+        console.debug("sa5-core debug disabled (persistent).");
       }
     }
     get enabled() {
@@ -41,13 +41,13 @@
   };
 
   // src/webflow-html/dynamic-attributes.ts
-  var WfuHtmlDynamicAttributes = class {
+  var Sa5HtmlDynamicAttributes = class {
     constructor(config) {
       this.config = config;
     }
-    Process() {
-      let debug = new WfuDebug("wfu-html");
-      debug.debug("Dynamic attributes processed.", this.config);
+    init() {
+      let debug = new Sa5Debug("sa5-html");
+      debug.debug("Dynamic attributes initialized.", this.config);
       var allElements = document.querySelectorAll("*");
       allElements.forEach(function(element) {
         for (var i = 0; i < element.attributes.length; i++) {
@@ -60,5 +60,7 @@
       });
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 })();
 //# sourceMappingURL=dynamic-attributes.js.map

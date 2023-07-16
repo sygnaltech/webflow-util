@@ -107,7 +107,7 @@
   }();
 
   // src/webflow-core.ts
-  var WfuCore = class {
+  var Sa5Core = class {
     init() {
       this.initDebugMode();
     }
@@ -116,7 +116,7 @@
       let params = new URLSearchParams(window.location.search);
       let hasDebug = params.has(debugParamKey);
       if (hasDebug) {
-        let wfuDebug = new WfuDebug(`wfu init`);
+        let wfuDebug = new Sa5Debug(`sa5 init`);
         wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
       }
     }
@@ -130,9 +130,9 @@
       }
     }
   };
-  var WfuDebug = class {
+  var Sa5Debug = class {
     constructor(label) {
-      this.localStorageDebugFlag = "wfuDebug";
+      this.localStorageDebugFlag = "sa5-debug";
       this._enabled = false;
       this._label = label;
     }
@@ -142,10 +142,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("WFU persistent debug enabled.");
+        console.debug("sa5-core debug enabled (persistent).");
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("WFU persistent debug disabled.");
+        console.debug("sa5-core debug disabled (persistent).");
       }
     }
     get enabled() {
@@ -181,15 +181,15 @@
     countupSettings: {},
     debug: false
   };
-  var WfuCountUp = class {
+  var Sa5CountUp = class {
     constructor(customConfig = {}) {
-      this.debug = new WfuDebug("wfu-countup");
+      this.debug = new Sa5Debug("sa5-countup");
       this.debug.debug("Initializing");
       this.config = __spreadValues(__spreadValues({}, defaultConfig), customConfig);
       this.debug.enabled = this.config.debug;
     }
     init() {
-      new WfuCore().init();
+      new Sa5Core().init();
       this.debug.debug("countup init");
       this.installCountupWaypoints();
     }
@@ -241,6 +241,7 @@
       });
     }
   };
-  window["WfuCountUp"] = WfuCountUp;
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5CountUp"] = Sa5CountUp;
 })();
 //# sourceMappingURL=webflow-countup.js.map

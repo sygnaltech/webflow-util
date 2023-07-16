@@ -13,8 +13,12 @@
 /*
  * Debugging class.
  */
+export interface Sa5Handler {
+    [0]: string;
+    [1]: Function;
+}
 
-export class WfuCore {
+export class Sa5Core {
 
     init() {
 
@@ -26,19 +30,13 @@ export class WfuCore {
 
         const debugParamKey = 'debug'; // ?debug=true
 
-        // if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        //     console.log('Running in a browser environment');
-        // } else {
-        //     console.log('Not running in a browser environment');
-        // }
-
 //        var wfuDebugValue = Boolean(localStorage.setItem('wfuDebug', 'true')); 
 
         let params = new URLSearchParams(window.location.search);
         let hasDebug = params.has(debugParamKey);
 
         if (hasDebug) {
-            let wfuDebug = new WfuDebug(`wfu init`);
+            let wfuDebug = new Sa5Debug(`sa5 init`);
             wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
         }
 
@@ -59,9 +57,9 @@ export class WfuCore {
 
 }
 
-export class WfuDebug {
+export class Sa5Debug {
     
-    private localStorageDebugFlag: string = 'wfuDebug';
+    private localStorageDebugFlag: string = 'sa5-debug';
 
     private _enabled: boolean = false;
     private _label: string;
@@ -74,10 +72,10 @@ export class WfuDebug {
     set persistentDebug(active: boolean) {
         if (active) {
             localStorage.setItem(this.localStorageDebugFlag, "true");
-            console.debug ("WFU persistent debug enabled.");
+            console.debug ("sa5-core debug enabled (persistent).");
         } else {
             localStorage.removeItem(this.localStorageDebugFlag); 
-            console.debug ("WFU persistent debug disabled.");
+            console.debug ("sa5-core debug disabled (persistent).");
         }
     }
 

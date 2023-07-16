@@ -9,14 +9,14 @@
  */
 
 import { WebflowFormat } from '../webflow-format';
-import { WfuCore, WfuDebug } from '../webflow-core';
+import { Sa5Core, Sa5Debug } from '../webflow-core';
 
 const init = () => { 
 
-    new WfuCore().init();
+    new Sa5Core().init();
 
     // Initialize debugging
-    let debug = new WfuDebug("wfu-demo");
+    let debug = new Sa5Debug("sa5-demo");
     debug.debug ("Initializing");
 
     const webflowFormat = new WebflowFormat();

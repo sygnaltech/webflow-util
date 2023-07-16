@@ -9,14 +9,14 @@
  */
 
 import { WebflowVideo } from '../webflow-video';
-import { WfuCore, WfuDebug } from '../webflow-core.js';
+import { Sa5Core, Sa5Debug } from '../webflow-core.js';
 
 const init = () => { 
 
-    new WfuCore().init();
+    new Sa5Core().init();
 
     // Initialize debugging
-    let debug = new WfuDebug("wfu-video");
+    let debug = new Sa5Debug("sa5-video");
     debug.debug ("Initializing");
 
     const webflowVideo = new WebflowVideo();
