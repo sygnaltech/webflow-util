@@ -8,24 +8,25 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
-import { WfuHtml } from '../webflow-html'
-import { WfuCore, WfuDebug } from '../webflow-core';
+import { Sa5Html } from '../webflow-html'
+import { Sa5Core, Sa5Debug } from '../webflow-core';
 
 
 const init = () => { 
 
-    new WfuCore().init();
+    new Sa5Core().init();
 
     // Initialize debugging
-    let debug = new WfuDebug("wfu-html");
+    let debug = new Sa5Debug("sa5-html");
     debug.debug ("Initializing");
 
-    let obj = new WfuHtml({
+    let obj = new Sa5Html({
         dynamicAttributes: true
     });
 
     obj.init();
 
 }
-  
+
+// Auto-execute on DOM load
 document.addEventListener("DOMContentLoaded", init)

@@ -7,29 +7,52 @@
  * HTML Utilities
  */
 
-import { WfuHtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
-import { WfuBreakpoints } from './webflow-html/breakpoints'
+import { Sa5Handler } from './webflow-core'
+import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
+import { Sa5Breakpoints } from './webflow-html/breakpoints'
 
-interface Config {
+interface Sa5HtmlConfig {
     dynamicAttributes?: boolean | true;
-    handleBreakpointChange?: ((e: MediaQueryListEvent) => void) | null;
+    handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
 }
 
 
 
 
-export class WfuHtml {
-    config: Config;
+  
 
-    constructor(config: Config) {
+
+export class Sa5Html {
+    config: Sa5HtmlConfig;
+
+    constructor(config: Sa5HtmlConfig) {
         this.config = config;
     }
 
     init() {
 
+        console.log ("sa5-html init.");
+
         // Init breakpoints
-        let breakpoints = new WfuBreakpoints({
-            handleBreakpointChange: (e: MediaQueryListEvent) => {
+        let breakpoints = new Sa5Breakpoints({
+            handleBreakpointChange: (breakpointName: string, e: MediaQueryListEvent) => {
+
+//                if (!e.matches)
+//                    return;
+
+                window['sa5'] = window['sa5'] || {};
+                const sa5: any = window['sa5'];
+    
+//console.log("sa5", sa5);
+
+                const breakpointChangeHandler = sa5['breakpointChangeHandler']; // sa5.find(item => item[0] === 'breakpointChange');
+                
+                console.log("x breakpointChangeHandler", breakpointChangeHandler);
+
+if(breakpointChangeHandler) 
+    breakpointChangeHandler(breakpointName, e);
+
+                // if(window['sa5'])
                 // handle the breakpoint change here
             }
         });
@@ -37,7 +60,7 @@ export class WfuHtml {
 
         // Init dynamic attributes
         if(this.config.dynamicAttributes) {
-            let obj = new WfuHtmlDynamicAttributes({});
+            let obj = new Sa5HtmlDynamicAttributes({});
             obj.init();
         }
 
@@ -45,4 +68,8 @@ export class WfuHtml {
 
 }
   
-  
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Html"] = Sa5Html;
+
+

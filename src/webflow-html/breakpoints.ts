@@ -10,15 +10,15 @@
  */
 
 
-import { WfuDebug } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core';
 
 
 interface Config {
-    handleBreakpointChange?: ((e: MediaQueryListEvent) => void) | null;
+    handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
 }
 
 // Webflow breakpoints
-export const wfuBreakpoints = {
+export const sa5Breakpoints = {
     large1920: '(min-width: 1920px)',
     large1440: '(min-width: 1440px) and (max-width: 1919px)',
     large1280: '(min-width: 1280px) and (max-width: 1439px)',
@@ -29,7 +29,7 @@ export const wfuBreakpoints = {
 }
 
 
-export class WfuBreakpoints {
+export class Sa5Breakpoints {
     config: Config;
 
     constructor(config: Config) {
@@ -39,18 +39,33 @@ export class WfuBreakpoints {
     init() {
 
         // Initialize debugging
-        let debug = new WfuDebug("wfu-html");
+        let debug = new Sa5Debug("sa5-html");
         debug.debug ("Breakpoints initialized.", this.config);
     
         // Create MediaQueryList and attach listeners for each breakpoint
-        for (let device in wfuBreakpoints) {
-            let mediaQueryList = window.matchMedia(wfuBreakpoints[device]);
+        for (let device in sa5Breakpoints) {
+            let mediaQueryList = window.matchMedia(sa5Breakpoints[device]);
 
+            // Register internal handler
+            mediaQueryList.addEventListener('change', this.handleBreakpointChange);
+
+            if (mediaQueryList.matches) {
+                this.handleBreakpointChange(
+                { 
+                    media: mediaQueryList.media, 
+                    matches: mediaQueryList.matches 
+                } as MediaQueryListEvent); 
+            }
+
+/*
+            // If a handler is defined, we install it
             if(this.config.handleBreakpointChange) {
 
                 // Install change listener
                 mediaQueryList.addEventListener('change', this.config.handleBreakpointChange);
 
+
+                if (device)
                 // Call the callback now to initialize current breakpoint
                 this.config.handleBreakpointChange({ 
                     media: mediaQueryList.media, 
@@ -58,10 +73,55 @@ export class WfuBreakpoints {
                 } as MediaQueryListEvent); 
 
             }
+*/
+
         }
 
     }
 
+    // Breakpoint changed
+    handleBreakpointChange = ((e: MediaQueryListEvent) => {
+
+        // We only want matching events 
+        if (!e.matches)
+            return;
+
+        // Identify breakpoint
+        var device = null;
+        for (let d in sa5Breakpoints) {
+            if (e.media == sa5Breakpoints[d]) {
+                console.log(`Current device: ${d}`);
+                device = d; 
+            }
+          }
+
+        // Notify any config-specified handler
+        if(this.config.handleBreakpointChange) 
+            this.config.handleBreakpointChange(
+                device as string, 
+                e
+/*                { 
+                media: e.media, 
+                matches: e.matches 
+            } as MediaQueryListEvent
+            */
+            ); 
+/*
+        // Notify any globally registered handlers 
+        if(this.config.handleBreakpointChange) 
+            this.config.handleBreakpointChange({ 
+                media: e.media, 
+                matches: e.matches 
+            } as MediaQueryListEvent); 
+  */
+
+    });
+
 }
-  
+
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
+
+
   
