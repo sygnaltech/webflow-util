@@ -1,73 +1,94 @@
 (() => {
   // src/webflow-core/tabs.ts
   var WebflowTabs = class {
-    constructor(element) {
-      this.init(element);
+    get element() {
+      return this._element;
     }
-    init(element) {
-      this.element = element;
-      console.log("init.");
-      this.elementTabMenu = element.querySelector(".w-tab-menu");
-      this.elementTabContent = element.querySelector(".w-tab-content");
-      console.log("count", this.tabCount());
-      console.log("index", this.currentTabIndex());
+    get elementTabMenu() {
+      return this._elementTabMenu;
     }
-    setTab(index) {
-      if (index < 0)
-        return;
-      if (index >= this.tabCount())
-        return;
-      let clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      this.getTab(index).dispatchEvent(clickEvent);
+    get elementTabContent() {
+      return this._elementTabContent;
     }
-    getTab(index) {
-      if (index < 0)
-        return;
-      if (index >= this.tabCount())
-        return;
-      return this.elementTabMenu.children[index];
-    }
-    tabCount() {
-      return this.elementTabMenu.children.length;
-    }
-    currentTabIndex() {
+    get tabIndex() {
       let currentIndex = null;
-      for (let i = 0; i < this.elementTabMenu.children.length; i++) {
-        if (this.elementTabMenu.children[i].classList.contains("w--current")) {
+      for (let i = 0; i < this._elementTabMenu.children.length; i++) {
+        if (this._elementTabMenu.children[i].classList.contains("w--current")) {
           currentIndex = i;
           break;
         }
       }
       return currentIndex;
     }
-    onClick() {
+    set tabIndex(index) {
+      if (index < 0)
+        return;
+      if (index >= this.tabCount)
+        return;
+      let clickEvent = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      this.elementTab(index).dispatchEvent(clickEvent);
     }
-    currentTab() {
+    get tabCount() {
+      return this._elementTabMenu.children.length;
     }
-    nextTab() {
-      var newTab = this.currentTabIndex() + 1;
-      if (newTab >= this.tabCount())
-        newTab = 0;
-      console.log(newTab);
-      this.setTab(newTab);
+    constructor(element) {
+      this.init(element);
     }
-    prevTab() {
-      var newTab = this.currentTabIndex() - 1;
-      if (newTab < 0)
-        newTab = this.tabCount() - 1;
-      console.log(newTab);
-      this.setTab(newTab);
+    init(element) {
+      if (!element.classList.contains("w-tabs")) {
+        console.error("[wfu-tabs] is not on a tabs element");
+        return;
+      }
+      console.log("init.");
+      this._element = element;
+      this._elementTabMenu = element.querySelector(".w-tab-menu");
+      this._elementTabContent = element.querySelector(".w-tab-content");
+      console.log("count", this.tabCount);
+      console.log("index", this.tabIndex);
     }
-    firstTab() {
-      this.setTab(0);
+    elementTab(index) {
+      if (index < 0)
+        return;
+      if (index >= this.tabCount)
+        return;
+      return this._elementTabMenu.children[index];
     }
-    lastTab() {
-      var newTab = this.tabCount() - 1;
-      this.setTab(newTab);
+    goToTabIndex(index) {
+      console.log(index);
+      this.tabIndex = index;
+    }
+    goToNextTab() {
+      if (this.tabIndex == null) {
+        this.tabIndex = 0;
+        return;
+      }
+      var newTabIndex = this.tabIndex + 1;
+      if (newTabIndex >= this.tabCount)
+        newTabIndex = 0;
+      this.goToTabIndex(newTabIndex);
+    }
+    goToPrevTab() {
+      if (this.tabIndex == null) {
+        this.tabIndex = 0;
+        return;
+      }
+      var newTabIndex = this.tabIndex - 1;
+      if (newTabIndex < 0)
+        newTabIndex = this.tabCount - 1;
+      this.goToTabIndex(newTabIndex);
+    }
+    goToFirstTab() {
+      this.goToTabIndex(0);
+    }
+    goToLastTab() {
+      var newTabIndex = this.tabCount - 1;
+      this.goToTabIndex(newTabIndex);
+    }
+    onTabChanged() {
     }
   };
   window["WebflowTabs"] = WebflowTabs;

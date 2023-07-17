@@ -37,48 +37,72 @@
 - hide/show tabs
 - reorder tabs
 
+Events
+  tab change
+
+Select no tabs
+
+Querystring
+    Scroll and navigate to 
+
 .w--current
 [data-w-tab] weems to be the identifier 
 */
 
+// [wfu-tabs=IDENTIFIER]
+
+// Separately, we...
+// 1. create this element for anything [wfu-tabs].w-tabs 
+// 1. install click handlers for [wfu-tabs=x] other elements
+//      anything? 
+// Have the internal handlers perform actions
+// wfu-tab-action=first|last|next|prev|clear ? 
+
 export class WebflowTabs {
     
- //    urlTemplate;
-    element: HTMLElement;
-    elementTabMenu: HTMLElement;
-    elementTabContent: HTMLElement;
+    private _element: HTMLElement;
+    private _elementTabMenu: HTMLElement;
+    private _elementTabContent: HTMLElement;
 
-    // Initialize
-    constructor(element: HTMLElement) {
+    //#region PROPERTYS
 
-// Verify it's a tabs element .w-tabs
+    get element(): HTMLElement {
+        return this._element;
+    }
+    get elementTabMenu(): HTMLElement {
+        return this._elementTabMenu;
+    }
+    get elementTabContent(): HTMLElement {
+        return this._elementTabContent;
+    }
 
+    get tabIndex(): number | null {
+        //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
+
+        let currentIndex: number | null = null;
         
-        this.init(element);
+        // Find current tab
+        for (let i = 0; i < this._elementTabMenu.children.length; i++) {
+            if (this._elementTabMenu.children[i].classList.contains('w--current')) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        // if (currentIndex !== null) {
+        //   console.log(`The child with class 'w--current' is at index ${currentIndex}`);
+        // } else {
+        //   console.log("No child with class 'w--current' was found");
+        // }
+
+        return currentIndex; 
     }
+    set tabIndex(index: number) {
 
-    init(element: HTMLElement) {
-
-        this.element = element; 
-
-        console.log("init."); 
-
-        this.elementTabMenu = element.querySelector('.w-tab-menu');
-        this.elementTabContent = element.querySelector('.w-tab-content');
-//.w-tab-menu
-
-console.log("count", this.tabCount());
-console.log("index", this.currentTabIndex()); 
-//.w-tab-content
-
-//        this.initCopyGist();
-    }
-
-    setTab(index: number) {
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.tabCount())
+        if (index >= this.tabCount)
             return;
 
         let clickEvent = new MouseEvent('click', {
@@ -89,148 +113,137 @@ console.log("index", this.currentTabIndex());
             // More properties can be added as needed
             }); 
 
-        this.getTab(index).dispatchEvent(clickEvent);
+        this.elementTab(index).dispatchEvent(clickEvent);
 
 //        this.elementTabMenu.children[index].click
     }
 
-    getTab(index: number): HTMLElement { 
+    get tabCount(): number {
+        return this._elementTabMenu.children.length;
+    }
+
+    //#endregion
+
+    //#region CONSTRUCTORS
+
+    constructor(element: HTMLElement) {
+
+        // Initialize
+        this.init(element);
+
+    }
+
+    //#endregion
+
+    //#region METHODS
+
+    // Initialize the class to the element
+    init(element: HTMLElement) {
+
+        // Verify it's a tabs element .w-tabs
+        if(!element.classList.contains("w-tabs")) {
+            console.error ("[wfu-tabs] is not on a tabs element");
+            return;
+        }
+
+        console.log("init."); 
+
+        // Inventory parts
+        this._element = element; 
+        this._elementTabMenu = element.querySelector('.w-tab-menu');
+        this._elementTabContent = element.querySelector('.w-tab-content');
+        //.w-tab-menu
+
+        console.log("count", this.tabCount);
+        console.log("index", this.tabIndex); 
+        //.w-tab-content
+
+    }
+
+    // Get the tab element at the specified index
+    elementTab(index: number): HTMLElement { 
 
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.tabCount())
+        if (index >= this.tabCount)
             return;
 
-        return this.elementTabMenu.children[index] as HTMLElement;
+        return this._elementTabMenu.children[index] as HTMLElement;
     }
 
-    tabCount(): number {
-        return this.elementTabMenu.children.length;
-    }
+    // Goes to the identified tab 
+    // raises navigation events
+    goToTabIndex(index: number) {
 
-    currentTabIndex(): number | null {
-//        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
+        // Eventing tab change (pre)
+        // from & to tabs
 
-        let currentIndex: number | null = null;
+        console.log(index);
         
-        for (let i = 0; i < this.elementTabMenu.children.length; i++) {
-          if (this.elementTabMenu.children[i].classList.contains('w--current')) {
-            currentIndex = i;
-            break;
-          }
+        this.tabIndex = index;
+
+        // Eventing tab change (post)
+        // from & to tabs
+    }
+
+    goToNextTab() {
+
+        // If no tab selected, select first
+        if(this.tabIndex == null) {
+            this.tabIndex = 0;
+            return;
         }
-        
-        // if (currentIndex !== null) {
-        //   console.log(`The child with class 'w--current' is at index ${currentIndex}`);
-        // } else {
-        //   console.log("No child with class 'w--current' was found");
-        // }
-        
-        return currentIndex; 
+
+        // Determine new tab
+        var newTabIndex: number = this.tabIndex + 1;
+        if (newTabIndex >= this.tabCount)
+            newTabIndex = 0;
+
+        this.goToTabIndex(newTabIndex);
+
     }
 
-    onClick() {
+    goToPrevTab() {
+
+        // If no tab selected, select first
+        if(this.tabIndex == null) {
+            this.tabIndex = 0;
+            return;
+        }
+
+        // Determine new tab
+        var newTabIndex: number = this.tabIndex - 1;
+        if (newTabIndex < 0)
+            newTabIndex = this.tabCount - 1;
+        
+        this.goToTabIndex(newTabIndex);
+
+    }
+
+    goToFirstTab() {
+                
+        this.goToTabIndex(0);
+
+    }
+
+    goToLastTab() {
+
+        var newTabIndex: number = this.tabCount - 1;
+
+        this.goToTabIndex(newTabIndex);
+
+    }
+
+    //#endregion
+
+    //#region EVENTS
+
+    onTabChanged() {
         // Raise event
     }
 
-// get set
-    currentTab() {
-//        .w--current
-
-    }
-
-    nextTab() {
-        var newTab: number = this.currentTabIndex() + 1;
-        if (newTab >= this.tabCount())
-            newTab = 0;
-
-        console.log(newTab);
-        
-        this.setTab(newTab);
-    }
-
-    prevTab() {
-        var newTab: number = this.currentTabIndex() - 1;
-        if (newTab < 0)
-            newTab = this.tabCount() - 1;
-
-        console.log(newTab);
-        
-        this.setTab(newTab);
-    }
-
-    firstTab() {
-        this.setTab(0);
-    }
-
-    lastTab() {
-        var newTab: number = this.tabCount() - 1;
-        this.setTab(newTab);
-    }
-
-/*         
-    initCopyGist() {
-
-        document.querySelectorAll('[wfu-gist-copy]').forEach((el: HTMLElement) => {
-            el.addEventListener('click', (e: Event) => {
-                
-//                console.log("clicked"); 
-                
-                let a: string | null = el.getAttribute('wfu-gist-copy');
-//                console.log(a); 
-                
-                let gist: Element | null = document.querySelector(`[wfu-gist="${a}"]`);
-                
-                if (gist !== null) {
-                    this.copyToClipboard(this.getGistCode(gist));
-                }
-                
-            });
-        });
-
-    }
-
-    copyToClipboard(text: string) {
-
-        navigator.clipboard.writeText(text).then(() => {
-//            console.log('Copying to clipboard was successful!');
-        }, (err: any) => {
-            console.error('Could not copy text: ', err);
-        });
-
-    }
-
-    getGistCode(el: Element | null): string {
-    
-        if(!el) return;
-        
-        // Extract the GIST content
-        let code = el.querySelector(".gist-file")?.textContent || '';
-        
-        // Remove whitespace-only lines
-        let cleanString = code.replace(/\n\s*\n/g, '\n');
-        
-//        console.log(cleanString);
-  
-        // Trim the last four lines 
-        let lines = cleanString.split('\n');
-        lines = lines.slice(0, -4);  
-        let finalString = lines.join('\n');
-    
-//        console.log(finalString);
-        
-        // Trim 10 pre-whitespaces
-        let finalLines = finalString.split('\n').map((line: string) => {
-            return line.startsWith('          ') ? line.slice(10) : line;
-        });
-        let trimmedString = finalLines.join('\n');
-    
-//        console.log(trimmedString);
-
-        return trimmedString;
-    }
-*/
+    //#endregion
 
 }
 
