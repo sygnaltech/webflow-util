@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@types/waypoints": "^4.0.4",
-    "countup.js": "github:inorganik/countUp.js"
+    "countup.js": "github:inorganik/countUp.js",
+    "hotkeys-js": "^3.11.2"
   }
 }
