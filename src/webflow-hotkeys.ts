@@ -54,7 +54,17 @@ export class Sa5Hotkeys {
         ){ // ,  function(event, handler){
 
         // TODO: prevent certain keys 
+
         // TODO: reserve some for SA5? 
+        // e.g. ctrl+shift+f1 to list them and purpose note 
+
+        // duplicate option & control on win/mac 
+
+        // logging 
+        // google analytics 
+
+        // ToC
+        // Secret 
 
 //        console.debug(`registered ${key}.`); 
 
