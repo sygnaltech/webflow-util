@@ -14,34 +14,29 @@
 
 
 
-// export interface Sa5Handler {
-//     [0]: string;
-//     [1]: Function;
-// }
 
 
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Scripts } from './webflow-core/scripts'
 import hotkeys, { KeyHandler } from 'hotkeys-js';
 
-/*
- * Debugging class.
- */
 
 export class Sa5Hotkeys {
 
     init() {
+
+        // ⌘+s, ctrl+s 
 
         // https://github.com/jaywcjlove/hotkeys-js
 // <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
 
 //        this.initDebugMode();
 
-// var scripts: Sa5Scripts = new Sa5Scripts();
-// scripts.install(
-//     "https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"
-// );
-
+        // Not needed, integrated via TS 
+        // var scripts: Sa5Scripts = new Sa5Scripts();
+        // scripts.install(
+        //     "https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"
+        // );
 
         window['sa5'] = window['sa5'] || {};
         const sa5: any = window['sa5'];
@@ -51,10 +46,10 @@ export class Sa5Hotkeys {
         if(hotkeysHandler) 
             hotkeysHandler(this);
 
-
     }
 
-    register(key: string,
+    // Register a hotkey combination + callback 
+    register(combination: string,
         callback: (arg:any) => void
         ){ // ,  function(event, handler){
 
@@ -64,7 +59,7 @@ export class Sa5Hotkeys {
 //        console.debug(`registered ${key}.`); 
 
         // Register key with hotkeys
-        hotkeys(key, function(event, handler){
+        hotkeys(combination, function(event, handler){
             // Prevent the default event
             event.preventDefault();
 

@@ -485,8 +485,8 @@
       if (hotkeysHandler)
         hotkeysHandler(this);
     }
-    register(key, callback) {
-      hotkeys(key, function(event, handler) {
+    register(combination, callback) {
+      hotkeys(combination, function(event, handler) {
         event.preventDefault();
         if (callback)
           callback(handler);
