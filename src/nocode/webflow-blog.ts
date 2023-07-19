@@ -8,8 +8,9 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
-import { GitHubGist } from '../webflow-blog';
-import { Sa5Core, Sa5Debug } from '../webflow-core.js';
+import { GitHubGist } from '../webflow-blog/github-gist';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 
 const init = () => { 
 

@@ -18,7 +18,8 @@ import { CountUp, CountUpOptions } from 'countup.js';
 // BUG: import { Waypoint } from 'waypoints'; // 'waypoint'; 
 
 
-import { Sa5Core, Sa5Debug } from '../webflow-core';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 
 
 

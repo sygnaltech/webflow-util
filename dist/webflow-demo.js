@@ -17,5 +17,7 @@
       linkElem.href = modifiedUrl;
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Demo"] = WebflowInfo;
 })();
 //# sourceMappingURL=webflow-demo.js.map

@@ -7,7 +7,7 @@
  * HTML Utilities
  */
 
-import { Sa5Handler, Sa5Debug } from './webflow-core'
+import { Sa5Debug } from './webflow-core/debug'
 import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 import { Sa5Breakpoints } from './webflow-html/breakpoints'
 

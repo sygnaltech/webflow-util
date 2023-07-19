@@ -1,5 +1,5 @@
 (() => {
-  // src/webflow-blog.ts
+  // src/webflow-blog/github-gist.ts
   var GitHubGist = class {
     constructor() {
     }
@@ -41,30 +41,7 @@
   };
   window["GitHubGist"] = GitHubGist;
 
-  // src/webflow-core.ts
-  var Sa5Core = class {
-    init() {
-      this.initDebugMode();
-    }
-    initDebugMode() {
-      const debugParamKey = "debug";
-      let params = new URLSearchParams(window.location.search);
-      let hasDebug = params.has(debugParamKey);
-      if (hasDebug) {
-        let wfuDebug = new Sa5Debug(`sa5 init`);
-        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
-      }
-    }
-    stringToBoolean(str) {
-      const truthyValues = ["1", "true", "yes"];
-      const falsyValues = ["0", "false", "no"];
-      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  };
+  // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
       this.localStorageDebugFlag = "sa5-debug";
@@ -104,6 +81,33 @@
         console.debug(this._label, ...args);
     }
   };
+
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    init() {
+      this.initDebugMode();
+    }
+    initDebugMode() {
+      const debugParamKey = "sa-debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Core"] = Sa5Core;
 
   // src/nocode/webflow-blog.ts
   var init = () => {

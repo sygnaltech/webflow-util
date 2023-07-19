@@ -51,3 +51,8 @@ export class WebflowInfo {
 
 
 
+
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Demo"] = WebflowInfo;
+

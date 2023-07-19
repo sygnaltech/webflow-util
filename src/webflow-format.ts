@@ -104,3 +104,7 @@ export class WebflowFormat {
 
 
 
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Format"] = WebflowFormat;
+

@@ -39,28 +39,5 @@
         console.debug(this._label, ...args);
     }
   };
-
-  // src/webflow-html/dynamic-attributes.ts
-  var Sa5HtmlDynamicAttributes = class {
-    constructor(config) {
-      this.config = config;
-    }
-    init() {
-      let debug = new Sa5Debug("sa5-html");
-      debug.debug("Dynamic attributes initialized.", this.config);
-      var allElements = document.querySelectorAll("*");
-      allElements.forEach(function(element) {
-        for (var i = 0; i < element.attributes.length; i++) {
-          var attr = element.attributes[i];
-          if (attr.name.startsWith("x-")) {
-            var newAttrName = attr.name.slice(2);
-            element.setAttribute(newAttrName, attr.value);
-          }
-        }
-      });
-    }
-  };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 })();
-//# sourceMappingURL=dynamic-attributes.js.map
+//# sourceMappingURL=debug.js.map

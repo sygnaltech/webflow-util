@@ -9,7 +9,8 @@
  */
 
 import { WebflowFormat } from '../webflow-format';
-import { Sa5Core, Sa5Debug } from '../webflow-core';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 
 const init = () => { 
 

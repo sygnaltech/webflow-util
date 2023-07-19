@@ -36,7 +36,7 @@
     });
   };
 
-  // src/webflow-core.ts
+  // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
       this.localStorageDebugFlag = "sa5-debug";

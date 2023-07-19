@@ -57,5 +57,7 @@
       elem.innerHTML = formatter.format(val);
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Format"] = WebflowFormat;
 })();
 //# sourceMappingURL=webflow-format.js.map

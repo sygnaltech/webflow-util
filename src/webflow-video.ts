@@ -34,5 +34,10 @@ export class WebflowVideo {
 
 }
 
+// Register
+window["sa5"] = window["sa5"] || {};
+window["sa5"]["Sa5Video"] = WebflowVideo;
+
+
 
 

@@ -13,5 +13,7 @@
       });
     }
   };
+  window["sa5"] = window["sa5"] || {};
+  window["sa5"]["Sa5Video"] = WebflowVideo;
 })();
 //# sourceMappingURL=webflow-video.js.map

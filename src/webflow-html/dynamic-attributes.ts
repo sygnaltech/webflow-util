@@ -13,7 +13,7 @@
  */
 
 
-import { Sa5Debug } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 
 
 
