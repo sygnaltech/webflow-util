@@ -89,8 +89,8 @@ export class Sa5Breakpoints {
 }
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
 
 
   

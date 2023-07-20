@@ -60,7 +60,5 @@
       });
     }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 })();
 //# sourceMappingURL=dynamic-attributes.js.map

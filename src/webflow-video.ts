@@ -8,7 +8,7 @@
  * Webflow Video
  */
 
-
+import { Sa5Core } from './webflow-core'
 
 export class WebflowVideo {
 
@@ -35,8 +35,9 @@ export class WebflowVideo {
 }
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Video"] = WebflowVideo;
+Sa5Core.startup(WebflowVideo);
+// window["sa5"] = window["sa5"] || []; //{};
+// window["sa5"]["Sa5Video"] = WebflowVideo;
 
 
 

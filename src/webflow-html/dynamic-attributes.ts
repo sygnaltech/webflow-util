@@ -63,7 +63,7 @@ export class Sa5HtmlDynamicAttributes {
 }
   
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 
 

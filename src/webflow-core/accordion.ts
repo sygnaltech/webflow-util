@@ -280,6 +280,6 @@ export class WebflowAccordion {
 
 }
 
-window["WebflowAccordion"] = WebflowAccordion;
+// window["WebflowAccordion"] = WebflowAccordion;
 
 

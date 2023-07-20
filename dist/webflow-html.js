@@ -40,6 +40,51 @@
     }
   };
 
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
+    init() {
+      this.initDebugMode();
+    }
+    initDebugMode() {
+      const debugParamKey = "sa-debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      console.log("startup");
+      if (!(window["sa5"] instanceof Sa5Core)) {
+        console.log("CORE");
+        var core = new Sa5Core();
+        if (Array.isArray(window["sa5"]))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+      }
+      if (module) {
+        window["sa5"][module.constructor.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
+
   // src/webflow-html/dynamic-attributes.ts
   var Sa5HtmlDynamicAttributes = class {
     constructor(config) {
@@ -60,8 +105,6 @@
       });
     }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5HtmlDynamicAttributes"] = Sa5HtmlDynamicAttributes;
 
   // src/webflow-html/breakpoints.ts
   var sa5Breakpoints = {
@@ -109,8 +152,6 @@
       }
     }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
 
   // src/webflow-html.ts
   var Sa5Html = class {
@@ -137,7 +178,6 @@
       }
     }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Html"] = Sa5Html;
+  Sa5Core.startup(Sa5Html);
 })();
 //# sourceMappingURL=webflow-html.js.map

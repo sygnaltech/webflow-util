@@ -7,6 +7,7 @@
  * HTML Utilities
  */
 
+import { Sa5Core } from './webflow-core'
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 import { Sa5Breakpoints } from './webflow-html/breakpoints'
@@ -68,7 +69,8 @@ export class Sa5Html {
 }
   
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Html"] = Sa5Html;
+Sa5Core.startup(Sa5Html);
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Html"] = Sa5Html;
 
 

@@ -15,7 +15,7 @@
 
 
 
-
+import { Sa5Core } from './webflow-core'
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Scripts } from './webflow-core/scripts'
 import hotkeys, { KeyHandler } from 'hotkeys-js';
@@ -38,13 +38,27 @@ export class Sa5Hotkeys {
         //     "https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"
         // );
 
-        window['sa5'] = window['sa5'] || {};
-        const sa5: any = window['sa5'];
+        // verify
+        window['sa5'] = window['sa5'] || [];
+        const sa5: Sa5Core = window['sa5'] as Sa5Core;
 
-        // Get any global handler
-        const hotkeysHandler = sa5['hotkeys'];
-        if(hotkeysHandler) 
-            hotkeysHandler(this);
+//console.log("sa5 handlers", sa5.handlers);
+
+        // Get hotkeys handlers
+        let hotkeysItems = sa5.handlers.filter(([str, fn]) => str === 'hotkeys');
+
+//console.log("hotk handlers", hotkeysItems);
+
+        // Iterate and install
+        hotkeysItems.forEach(([str, fn]) => {
+            if (typeof fn === 'function') {
+                fn(this); // Call the handler function
+            }
+        });
+
+        // const hotkeysHandler = sa5['hotkeys'];
+        // if(hotkeysHandler) 
+        //     hotkeysHandler(this);
 
     }
 
@@ -88,7 +102,7 @@ export class Sa5Hotkeys {
 
 
 
-
+Sa5Core.startup(Sa5Hotkeys);
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Hotkeys"] = Sa5Hotkeys;
+//window["sa5"] = window["sa5"] || []; // {};
+//window["sa5"]["Sa5Hotkeys"] = Sa5Hotkeys;

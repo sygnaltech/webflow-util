@@ -149,6 +149,9 @@
 
   // src/webflow-core.ts
   var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
     init() {
       this.initDebugMode();
     }
@@ -170,9 +173,24 @@
         return false;
       }
     }
+    static startup(module = null) {
+      console.log("startup");
+      if (!(window["sa5"] instanceof Sa5Core)) {
+        console.log("CORE");
+        var core = new Sa5Core();
+        if (Array.isArray(window["sa5"]))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+      }
+      if (module) {
+        window["sa5"][module.constructor.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Core"] = Sa5Core;
+  Sa5Core.startup();
 
   // src/experimental/webflow-countup.ts
   var defaultConfig = {

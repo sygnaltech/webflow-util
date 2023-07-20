@@ -1,25 +1,4 @@
 (() => {
-  // src/webflow-demo.ts
-  var WebflowInfo = class {
-    constructor() {
-      this.siteId = document.documentElement.getAttribute("data-wf-site");
-      this.pageId = document.documentElement.getAttribute("data-wf-page");
-    }
-    getWebflowPreviewLink(url) {
-      var _a;
-      const parsedUrl = new URL(url);
-      parsedUrl.searchParams.set("pageId", (_a = this.pageId) != null ? _a : "");
-      return parsedUrl.href;
-    }
-    updateHrefToWebflowPreviewLink(linkElem) {
-      var parsedUrl = linkElem.href;
-      var modifiedUrl = this.getWebflowPreviewLink(parsedUrl != null ? parsedUrl : "");
-      linkElem.href = modifiedUrl;
-    }
-  };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Demo"] = WebflowInfo;
-
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -63,6 +42,9 @@
 
   // src/webflow-core.ts
   var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
     init() {
       this.initDebugMode();
     }
@@ -84,9 +66,44 @@
         return false;
       }
     }
+    static startup(module = null) {
+      console.log("startup");
+      if (!(window["sa5"] instanceof Sa5Core)) {
+        console.log("CORE");
+        var core = new Sa5Core();
+        if (Array.isArray(window["sa5"]))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+      }
+      if (module) {
+        window["sa5"][module.constructor.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Core"] = Sa5Core;
+  Sa5Core.startup();
+
+  // src/webflow-demo.ts
+  var WebflowInfo = class {
+    constructor() {
+      this.siteId = document.documentElement.getAttribute("data-wf-site");
+      this.pageId = document.documentElement.getAttribute("data-wf-page");
+    }
+    getWebflowPreviewLink(url) {
+      var _a;
+      const parsedUrl = new URL(url);
+      parsedUrl.searchParams.set("pageId", (_a = this.pageId) != null ? _a : "");
+      return parsedUrl.href;
+    }
+    updateHrefToWebflowPreviewLink(linkElem) {
+      var parsedUrl = linkElem.href;
+      var modifiedUrl = this.getWebflowPreviewLink(parsedUrl != null ? parsedUrl : "");
+      linkElem.href = modifiedUrl;
+    }
+  };
+  Sa5Core.startup(WebflowInfo);
 
   // src/nocode/webflow-demo.ts
   var init = () => {

@@ -8,6 +8,7 @@
  * Blog Utilities
  */
 
+import { Sa5Core } from './webflow-core'
 
 import { Sa5Debug } from './webflow-core/debug';
 
@@ -109,5 +110,8 @@ this.debug.debug("Initializing SA5 Blog")
 
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Blog"] = Sa5Blog;
+Sa5Core.startup(Sa5Blog);
+
+
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Blog"] = Sa5Blog;

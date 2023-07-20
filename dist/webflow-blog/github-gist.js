@@ -39,6 +39,5 @@
       return trimmedString;
     }
   };
-  window["GitHubGist"] = GitHubGist;
 })();
 //# sourceMappingURL=github-gist.js.map

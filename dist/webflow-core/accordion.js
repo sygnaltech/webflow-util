@@ -107,6 +107,5 @@
     onTabChanged() {
     }
   };
-  window["WebflowAccordion"] = WebflowAccordion;
 })();
 //# sourceMappingURL=accordion.js.map

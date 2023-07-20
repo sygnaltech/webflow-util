@@ -1,21 +1,4 @@
 (() => {
-  // src/webflow-video.ts
-  var WebflowVideo = class {
-    constructor() {
-    }
-    processAllDataPosterUrls() {
-      const elements = document.querySelectorAll(`div[wfu-data-poster-url]`);
-      elements.forEach((element) => {
-        element.setAttribute(
-          "data-poster-url",
-          element.getAttribute("wfu-data-poster-url")
-        );
-      });
-    }
-  };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Video"] = WebflowVideo;
-
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -59,6 +42,9 @@
 
   // src/webflow-core.ts
   var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
     init() {
       this.initDebugMode();
     }
@@ -80,9 +66,40 @@
         return false;
       }
     }
+    static startup(module = null) {
+      console.log("startup");
+      if (!(window["sa5"] instanceof Sa5Core)) {
+        console.log("CORE");
+        var core = new Sa5Core();
+        if (Array.isArray(window["sa5"]))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+      }
+      if (module) {
+        window["sa5"][module.constructor.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Core"] = Sa5Core;
+  Sa5Core.startup();
+
+  // src/webflow-video.ts
+  var WebflowVideo = class {
+    constructor() {
+    }
+    processAllDataPosterUrls() {
+      const elements = document.querySelectorAll(`div[wfu-data-poster-url]`);
+      elements.forEach((element) => {
+        element.setAttribute(
+          "data-poster-url",
+          element.getAttribute("wfu-data-poster-url")
+        );
+      });
+    }
+  };
+  Sa5Core.startup(WebflowVideo);
 
   // src/nocode/webflow-video.ts
   var init = () => {

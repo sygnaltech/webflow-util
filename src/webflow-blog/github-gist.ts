@@ -89,7 +89,7 @@ export class GitHubGist {
     
 }
 
-window["GitHubGist"] = GitHubGist;
+// window["GitHubGist"] = GitHubGist;
 
 
 

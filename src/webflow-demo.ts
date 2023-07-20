@@ -9,6 +9,7 @@
  */
 
 
+import { Sa5Core } from './webflow-core'
 
 export class WebflowInfo {
     
@@ -53,6 +54,7 @@ export class WebflowInfo {
 
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Demo"] = WebflowInfo;
+Sa5Core.startup(WebflowInfo);
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Demo"] = WebflowInfo;
 

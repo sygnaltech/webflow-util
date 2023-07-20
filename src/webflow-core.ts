@@ -24,6 +24,8 @@ import { Sa5Debug } from './webflow-core/debug'
 
 export class Sa5Core {
 
+    public handlers = [];
+
     init() {
 
         this.initDebugMode();
@@ -61,11 +63,43 @@ export class Sa5Core {
         }
     }
 
+    static startup(module: any | null = null) {
+
+console.log("startup");
+
+        // Not installed, initialize
+        if(!(window["sa5"] instanceof Sa5Core)) {
+            console.log("CORE");
+
+            var core = new Sa5Core();
+
+            if(Array.isArray(window["sa5"]))
+                core.handlers = window["sa5"];
+
+            window["sa5"] = core;
+
+        } 
+
+        // Add new module
+        //window["sa5"] = window["sa5"] || []; // {};
+        if (module) {
+            window["sa5"][module.constructor.name] = module;
+        }
+
+        // instance.constructor.name
+
+    }
+
+    // Add new handlers
+    push(o) {
+        this.handlers.push(o);
+    }
+
 }
 
 
 
-
+Sa5Core.startup();
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Core"] = Sa5Core;
+//window["sa5"] = window["sa5"] || []; // {};
+//window["sa5"]["Sa5Core"] = Sa5Core;

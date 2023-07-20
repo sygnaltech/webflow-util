@@ -1,5 +1,6 @@
 
 /*
+ * DEPRECATED
  * webflow-video
  * 
  * Sygnal Technology Group
@@ -10,6 +11,8 @@
 
 
 $(function () {
+
+    console.warn("DEPRECATED, update webflow-video to SA5")
 
     // Find poster video overrides and apply them
     $("div[wfu-data-poster-url]").each(function () {

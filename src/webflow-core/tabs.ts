@@ -247,6 +247,6 @@ export class WebflowTabs {
 
 }
 
-window["WebflowTabs"] = WebflowTabs;
+// window["WebflowTabs"] = WebflowTabs;
 
 

@@ -86,7 +86,5 @@
       }
     }
   };
-  window["sa5"] = window["sa5"] || {};
-  window["sa5"]["Sa5Breakpoints"] = Sa5Breakpoints;
 })();
 //# sourceMappingURL=breakpoints.js.map

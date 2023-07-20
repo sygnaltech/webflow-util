@@ -10,6 +10,7 @@
  * An advanced utility for retriving and caching values online, for maximum performance.
  */
 
+import { Sa5Core } from './webflow-core'
 
 import { Sa5Debug } from './webflow-core/debug';
 
@@ -110,8 +111,10 @@ export class Sa5Cache {
 
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Cache"] = Sa5Cache;
+Sa5Core.startup(Sa5Cache);
+
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Cache"] = Sa5Cache;
 
 
 

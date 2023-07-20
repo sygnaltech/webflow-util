@@ -1,28 +1,25 @@
-
 /*
  * CSS for Sygnal Webflow Util UI component library
  */
-
 /* Ratings Component */
-
 .wfu-rating-stars {
-    position: relative;
-    display: inline-block;
-    white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
 }
 
-    .wfu-rating-stars svg {
-        width: 20%;
-        fill: gold;
-    }
+.wfu-rating-stars svg {
+  width: 20%;
+  fill: gold;
+}
 
 .wfu-rating-stars-cover {
-    background: white;
-    height: 100%;
-    overflow: hidden;
-    mix-blend-mode: color;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-}
+  background: white;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: color;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+}/*# sourceMappingURL=webflow-ui.css.map */

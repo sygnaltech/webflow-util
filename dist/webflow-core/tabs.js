@@ -91,6 +91,5 @@
     onTabChanged() {
     }
   };
-  window["WebflowTabs"] = WebflowTabs;
 })();
 //# sourceMappingURL=tabs.js.map

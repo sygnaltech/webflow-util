@@ -9,6 +9,7 @@
  */
 
 
+import { Sa5Core } from './webflow-core'
 
 
 export class WebflowFormat {
@@ -105,6 +106,7 @@ export class WebflowFormat {
 
 
 // Register
-window["sa5"] = window["sa5"] || {};
-window["sa5"]["Sa5Format"] = WebflowFormat;
+Sa5Core.startup(WebflowFormat);
+// window["sa5"] = window["sa5"] || []; // {};
+// window["sa5"]["Sa5Format"] = WebflowFormat;
 
