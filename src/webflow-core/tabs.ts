@@ -75,7 +75,7 @@ export class WebflowTabs {
     get elementTabContent(): HTMLElement {
         return this._elementTabContent;
     }
-
+ 
     get tabIndex(): number | null {
         //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
 
