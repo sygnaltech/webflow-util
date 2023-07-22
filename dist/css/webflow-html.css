@@ -505,4 +505,39 @@ html:not([data-wf-mode=editor]) .wfu-con::marker {
   display: none;
 }
 
-/* test *//*# sourceMappingURL=webflow-html.css.map */
+/* test */
+/*
+ * HTML Table Themes 
+ */
+[wfu-theme=default] table {
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+[wfu-theme=default] table tr td {
+  padding: 0.2rem 1rem;
+  border: 1px solid white;
+  vertical-align: top;
+  margin-bottom: 5px;
+}
+[wfu-theme=default] table tr td p {
+  line-height: 22px;
+  font-size: 14px;
+}
+[wfu-theme=default] table tr td ul {
+  padding-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 0.2rem;
+}
+[wfu-theme=default] table tr td ul li::marker {
+  content: "⁃";
+  color: #2e9dff;
+}
+[wfu-theme=default] table tr td ul li {
+  line-height: 22px;
+  font-size: 14px;
+  padding-left: 1ch;
+}
+[wfu-theme=default] table tr:nth-child(1) {
+  font-weight: 800;
+  background-color: rgba(255, 255, 255, 0.2);
+}/*# sourceMappingURL=webflow-html.css.map */
