@@ -62,6 +62,66 @@ export class Sa5Hotkeys {
 
     }
 
+    // Numeric keypad? 
+
+    // https://codepen.io/memetican/pen/rNQKPeL/5cc22485a64699ff328ba78e1892e9d0?editors=0010
+    registerModifier(modifier: string,
+        callbackTrigger: (modifier: string, action: string, event: KeyboardEvent) => void,
+        callbackRelease: (modifier: string, action: string, event: KeyboardEvent) => void,
+        ){
+            let timer;
+            let isCtrlDown = false;
+          
+            // Future shift, alt, and combos ctrl+shift, etc. 
+
+            // Config check
+            if(modifier != "ctrl") {
+                console.error("sa5-hotkeys", "Can only registerModifier the 'ctrl' key");
+                return;
+            }
+
+            document.addEventListener('keydown', function(event) {
+              if (event.key === 'Control' && !isCtrlDown) {
+                isCtrlDown = true;
+                
+//                console.log("foo"); 
+                
+                // Clear any existing timer
+                if (timer) {
+                  clearTimeout(timer);
+                }
+            
+                // Start a new timer
+                timer = setTimeout(function() {
+                  console.log('Ctrl key held for 500ms');
+                  
+                  // Get the root element (usually <html>)
+  
+                  if (callbackTrigger)
+                      callbackTrigger(modifier, 'keydown', event);
+
+            // Set the CSS variable --theme-color to 'blue'
+//            document.documentElement.style.setProperty('--display-value', 'block');
+                  
+                }, 500);
+              }
+            });
+            
+            document.addEventListener('keyup', function(event) {
+              if (event.key === 'Control') {
+                // Clear the timer when the key is released
+                clearTimeout(timer);
+                isCtrlDown = false;
+                
+                if (callbackRelease)
+                    callbackRelease(modifier, 'keyup', event);
+//                document.documentElement.style.setProperty('--display-value', 'none'); 
+
+              }
+            });
+            
+        };
+
     // Register a hotkey combination + callback 
     register(combination: string,
         callback: (arg:any) => void
