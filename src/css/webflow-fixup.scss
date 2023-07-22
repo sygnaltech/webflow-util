@@ -5,7 +5,24 @@
 
 /* Editor bugs */
 
+// override editor warning on small screen 
+// also Search engine results warning
+// "Unsupported Page"
+.w-editor-bem-EditorFallback {
+//    visibility: hidden;
+    display: none !important;
+}
 .w-editor-bem-EditorFallback-mobile {
     display: none !important;
 }
+
+// hide Publish button from Editors
+// https://discourse.webflow.com/t/published-by-editor-also-publish-my-staging-design/63483/10?u=memetican
+// https://webflow.com/feature/publish-individual-cms-items
+
+/*
+.w-editor-publish-controls .w-editor-publish {
+    display: none !important;
+}
+*/
 

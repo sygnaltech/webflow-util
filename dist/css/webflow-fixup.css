@@ -2,6 +2,16 @@
  * Webflow fixups
  */
 /* Editor bugs */
+.w-editor-bem-EditorFallback {
+  display: none !important;
+}
+
 .w-editor-bem-EditorFallback-mobile {
   display: none !important;
-}/*# sourceMappingURL=webflow-fixup.css.map */
+}
+
+/*
+.w-editor-publish-controls .w-editor-publish {
+    display: none !important;
+}
+*//*# sourceMappingURL=webflow-fixup.css.map */
