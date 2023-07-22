@@ -86,12 +86,62 @@
   };
   Sa5Core.startup();
 
-  // src/nocode/webflow-404.ts
-  var init = () => {
-    new Sa5Core().init();
-    let debug = new Sa5Debug("sa5-404");
-    debug.debug("Initializing");
+  // src/webflow-core/dropdown.ts
+  var WebflowDropdown = class {
+    get element() {
+      return this._element;
+    }
+    get elementToggle() {
+      return this._elementToggle;
+    }
+    get elementList() {
+      return this._elementList;
+    }
+    get opened() {
+      if (!this._elementToggle)
+        return null;
+      if (this._elementToggle.classList.contains("w--open")) {
+        return true;
+      }
+      return false;
+    }
+    set opened(state) {
+      if (state)
+        open();
+      else
+        close();
+    }
+    constructor(element) {
+      this.init(element);
+    }
+    init(element) {
+      if (!element.classList.contains("w-dropdown")) {
+        console.error("sa5-core", "element is not on a dropdown element");
+        return;
+      }
+      console.log("init.");
+      this._element = element;
+      this._elementToggle = element.querySelector(".w-dropdown-toggle");
+      this._elementList = element.querySelector(".w-dropdown-list");
+    }
+    open() {
+      console.log("open");
+      if (!this.opened)
+        this.toggle();
+    }
+    close() {
+      console.log("close");
+      if (this.opened)
+        this.toggle();
+    }
+    toggle() {
+      console.log("toggle");
+      this._elementToggle.dispatchEvent(new Event("mousedown"));
+      this._elementToggle.dispatchEvent(new Event("mouseup"));
+    }
+    onOpenChanged() {
+    }
   };
-  document.addEventListener("DOMContentLoaded", init);
+  Sa5Core.startup(WebflowDropdown);
 })();
-//# sourceMappingURL=webflow-404.js.map
+//# sourceMappingURL=dropdown.js.map

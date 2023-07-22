@@ -67,16 +67,17 @@
       }
     }
     static startup(module = null) {
-      console.log("startup");
+      console.debug("sa5core", "startup");
       if (!(window["sa5"] instanceof Sa5Core)) {
-        console.log("CORE");
+        console.debug("CORE");
         var core = new Sa5Core();
         if (Array.isArray(window["sa5"]))
           core.handlers = window["sa5"];
         window["sa5"] = core;
       }
       if (module) {
-        window["sa5"][module.constructor.name] = module;
+        console.debug("Registered module", module.name);
+        window["sa5"][module.name] = module;
       }
     }
     push(o) {
@@ -571,6 +572,35 @@
       hotkeysItems.forEach(([str, fn]) => {
         if (typeof fn === "function") {
           fn(this);
+        }
+      });
+    }
+    registerModifier(modifier, callbackTrigger, callbackRelease) {
+      let timer;
+      let isCtrlDown = false;
+      if (modifier != "ctrl") {
+        console.error("sa5-hotkeys", "Can only registerModifier the 'ctrl' key");
+        return;
+      }
+      document.addEventListener("keydown", function(event) {
+        if (event.key === "Control" && !isCtrlDown) {
+          isCtrlDown = true;
+          if (timer) {
+            clearTimeout(timer);
+          }
+          timer = setTimeout(function() {
+            console.log("Ctrl key held for 500ms");
+            if (callbackTrigger)
+              callbackTrigger(modifier, "keydown", event);
+          }, 500);
+        }
+      });
+      document.addEventListener("keyup", function(event) {
+        if (event.key === "Control") {
+          clearTimeout(timer);
+          isCtrlDown = false;
+          if (callbackRelease)
+            callbackRelease(modifier, "keyup", event);
         }
       });
     }
