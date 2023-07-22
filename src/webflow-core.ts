@@ -65,11 +65,11 @@ export class Sa5Core {
 
     static startup(module: any | null = null) {
 
-console.log("startup");
+        console.debug("sa5core", "startup");
 
         // Not installed, initialize
         if(!(window["sa5"] instanceof Sa5Core)) {
-            console.log("CORE");
+            console.debug("CORE");
 
             var core = new Sa5Core();
 
@@ -83,7 +83,10 @@ console.log("startup");
         // Add new module
         //window["sa5"] = window["sa5"] || []; // {};
         if (module) {
-            window["sa5"][module.constructor.name] = module;
+
+            console.debug("Registered module", module.name); 
+
+            window["sa5"][module.name] = module;
         }
 
         // instance.constructor.name
