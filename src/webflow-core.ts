@@ -16,6 +16,7 @@
 // }
 
 
+// import { HtmlBuilder } from './modules/webflow-html-builder';
 import { Sa5Debug } from './webflow-core/debug'
 
 /*
@@ -26,7 +27,19 @@ export class Sa5Core {
 
     public handlers = [];
 
+    // Map for elements wired to Sa5 objects 
+//    public elements: WeakMap<HTMLElement, object>;
+//     map.set(elem, myObject);
+
+// // Later, you can retrieve the object like this
+// let retrievedObject = map.get(elem);
+
+    constructor() {
+//        this.elements = new WeakMap<HTMLElement, object>();
+    }
+
     init() {
+
 
         this.initDebugMode();
 
@@ -86,7 +99,7 @@ export class Sa5Core {
 
             window["sa5"] = core;
             window["Sa5"] = window["sa5"];
-            console.log("post", window["sa5"] instanceof Sa5Core);
+//            console.log("post", window["sa5"] instanceof Sa5Core);
 
         } 
 
@@ -94,10 +107,10 @@ export class Sa5Core {
         //window["sa5"] = window["sa5"] || []; // {};
         if (module) {
 
-            console.debug("Registered module", module.name); 
+//            console.debug("Registered module", module.name); 
 
             window["sa5"][module.name] = module;
-            console.log(window["sa5"][module.name]);
+//            console.log(window["sa5"][module.name]);
         }
 
         // instance.constructor.name
