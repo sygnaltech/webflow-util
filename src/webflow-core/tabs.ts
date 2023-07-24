@@ -5,7 +5,7 @@
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Core Utilities
+ * Tabs Utilities
  */
 
 
@@ -14,6 +14,7 @@
  * Webflow Tabs.
  */
 
+//#region Sample HTML
 
 /*
 <div wfu-tabs="main" data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs">
@@ -31,6 +32,8 @@
   </div>
 </div>
 */
+
+//#endregion
 
 /*
 - can we add/remove tabs
@@ -57,12 +60,34 @@ Querystring
 //      anything? 
 // Have the internal handlers perform actions
 // wfu-tab-action=first|last|next|prev|clear ? 
+import { Sa5Core } from '../webflow-core'
+import { Sa5Debug } from '../webflow-core/debug'
 
 export class WebflowTabs {
     
     private _element: HTMLElement;
     private _elementTabMenu: HTMLElement;
     private _elementTabContent: HTMLElement;
+
+    private debug: Sa5Debug; 
+
+    //#region CONSTRUCTORS
+
+    constructor(element: HTMLElement) {
+
+        this.debug = new Sa5Debug("sa5-webflow-tabs");
+this.debug.enabled = true;
+
+        // Initialize
+        this.init(element);
+
+    }
+
+// changeTab
+// https://discourse.webflow.com/t/solution-setting-default-active-tab/66476/3 
+// Webflow.require("tabs") 
+
+    //#endregion
 
     //#region PROPERTYS
 
@@ -76,6 +101,14 @@ export class WebflowTabs {
         return this._elementTabContent;
     }
  
+    // 1-based convenience functions
+    get tabNum(): number | null {
+        return this.tabIndex + 1;
+    }
+    set tabNum(num: number) {
+        this.tabIndex = num - 1;
+    }
+
     get tabIndex(): number | null {
         //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
 
@@ -99,6 +132,8 @@ export class WebflowTabs {
     }
     set tabIndex(index: number) {
 
+// TODO: support null sets 
+
         // verify number in range
         if (index < 0) 
             return; 
@@ -106,36 +141,90 @@ export class WebflowTabs {
             return;
 
         let clickEvent = new MouseEvent('click', {
-            // Event properties
             bubbles: true,
             cancelable: true,
             view: window,
-            // More properties can be added as needed
             }); 
 
-        this.elementTab(index).dispatchEvent(clickEvent);
+        this.debug.debug("setting tab", index); 
 
-//        this.elementTabMenu.children[index].click
+        // Select the tab
+        // HACK: dealing with the fact that Webflow events may not have run yet 
+        setTimeout(() => {
+            this.elementTab(index).dispatchEvent(clickEvent);
+        }, 0);
+        
     }
 
     get tabCount(): number {
         return this._elementTabMenu.children.length;
     }
 
-    //#endregion
+    private goToTabNone() { 
+    
+        // https://discourse.webflow.com/t/solution-setting-default-active-tab/66476 
+        this.goToTabIndexForced(null); 
 
-    //#region CONSTRUCTORS
+    }
 
-    constructor(element: HTMLElement) {
+    // Direct element manipulation
+    // IMPORTANT: this does not change the internal state of the tab element classes. 
+    // only use when necessary, such as deselecting all tabs 
+    private goToTabIndexForced(index: number | null) {
 
-        // Initialize
-        this.init(element);
+        // Deselect current tab 
+        Array.from(this._elementTabMenu.querySelectorAll(".w-tab-link")).forEach(
+            elem => {
+                elem.classList.remove("w--current"); 
+                elem.removeAttribute("tabindex"); 
+                elem.setAttribute("aria-selected", "true"); 
+            });
+        Array.from(this._elementTabContent.querySelectorAll(".w-tab-pane")).forEach(
+            elem => {
+                elem.classList.remove("w--tab-active");
+            });
+            
+        // If specified, select specified tab index
+        if(index) {
+
+            console.log("setting forced index", index); 
+
+            // make the nth-child the active tab
+            Array.from(this._elementTabMenu.querySelectorAll(`.w-tab-link:nth-child(${index + 1})`)).forEach(
+                elem => {
+                    elem.classList.add("w--current");
+                });
+            Array.from(this._elementTabContent.querySelectorAll(`.w-tab-pane:nth-child(${index + 1})`)).forEach(
+                elem => {
+                    elem.classList.add("w--tab-active");
+                    (elem as HTMLElement).style.cssText = 
+                        "style=opacity: 1; transition: opacity 300ms ease 0s;"; 
+                });
+        }
 
     }
 
     //#endregion
 
     //#region METHODS
+
+    // Given an element, identifies which tab it represents
+    getTabIndex(tab: HTMLElement): number | null {
+
+        // Check tab menu
+        let index = Array.from(this._elementTabMenu.children).indexOf(tab);
+
+        // Check tab content
+        if (index == -1) {
+            index = Array.from(this._elementTabContent.children).indexOf(tab);
+        }
+
+        // No match found
+        if (index == -1)
+            return null;
+        
+        return index;
+    }
 
     // Initialize the class to the element
     init(element: HTMLElement) {
@@ -146,7 +235,7 @@ export class WebflowTabs {
             return;
         }
 
-        console.log("init."); 
+//        console.log("init."); 
 
         // Inventory parts
         this._element = element; 
@@ -154,9 +243,27 @@ export class WebflowTabs {
         this._elementTabContent = element.querySelector('.w-tab-content');
         //.w-tab-menu
 
-        console.log("count", this.tabCount);
-        console.log("index", this.tabIndex); 
+//        console.log("count", this.tabCount);
+//        console.log("index", this.tabIndex); 
         //.w-tab-content
+
+        // Initial setup
+        for (let elem of this._elementTabMenu.children) { 
+
+//            console.log(elem);
+
+            if(elem.hasAttribute('wfu-tab-default')) {
+                this.debug.debug("default");
+                let defaultTabIndex = this.getTabIndex(elem as HTMLElement); 
+
+                this.debug.debug(defaultTabIndex); 
+
+                // If a default tab was specified, select it 
+                if (defaultTabIndex != null)
+                    this.tabIndex = defaultTabIndex; 
+            }
+
+        };
 
     }
 
@@ -179,7 +286,7 @@ export class WebflowTabs {
         // Eventing tab change (pre)
         // from & to tabs
 
-        console.log(index);
+        this.debug.debug(index);
         
         this.tabIndex = index;
 
@@ -248,5 +355,10 @@ export class WebflowTabs {
 }
 
 // window["WebflowTabs"] = WebflowTabs;
+
+// console.log("TABS LOADED.");
+
+// (window as any).WebflowDropdown = WebflowDropdown;
+Sa5Core.startup(WebflowTabs);
 
 
