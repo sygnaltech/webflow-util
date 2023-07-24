@@ -65,18 +65,28 @@ export class Sa5Core {
 
     static startup(module: any | null = null) {
 
-        console.debug("sa5core", "startup");
+//        console.debug("sa5core", "startup");
 
-        // Not installed, initialize
-        if(!(window["sa5"] instanceof Sa5Core)) {
-            console.debug("CORE");
+//        console.debug("INITIALIZING SA5CORE");
+//        console.log(window["sa5"]);
+        
+        let sa5instance = window['sa5'];
+
+        // Initialize Sa5Core if needed
+        if(!(sa5instance?.constructor?.name == "Sa5Core")) {
+
+    //         if(window["sa5"])
+    // console.log("name", window["sa5"].name);
 
             var core = new Sa5Core();
 
-            if(Array.isArray(window["sa5"]))
+            // Absorb handlers
+            if(Array.isArray(sa5instance))
                 core.handlers = window["sa5"];
 
             window["sa5"] = core;
+            window["Sa5"] = window["sa5"];
+            console.log("post", window["sa5"] instanceof Sa5Core);
 
         } 
 
@@ -87,6 +97,7 @@ export class Sa5Core {
             console.debug("Registered module", module.name); 
 
             window["sa5"][module.name] = module;
+            console.log(window["sa5"][module.name]);
         }
 
         // instance.constructor.name
