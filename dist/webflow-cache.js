@@ -104,16 +104,16 @@
       }
     }
     static startup(module = null) {
-      console.debug("sa5core", "startup");
-      if (!(window["sa5"] instanceof Sa5Core)) {
-        console.debug("CORE");
+      var _a;
+      let sa5instance = window["sa5"];
+      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
         var core = new Sa5Core();
-        if (Array.isArray(window["sa5"]))
+        if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];
         window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
       }
       if (module) {
-        console.debug("Registered module", module.name);
         window["sa5"][module.name] = module;
       }
     }

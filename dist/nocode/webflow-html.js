@@ -67,16 +67,16 @@
       }
     }
     static startup(module = null) {
-      console.debug("sa5core", "startup");
-      if (!(window["sa5"] instanceof Sa5Core)) {
-        console.debug("CORE");
+      var _a;
+      let sa5instance = window["sa5"];
+      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
         var core = new Sa5Core();
-        if (Array.isArray(window["sa5"]))
+        if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];
         window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
       }
       if (module) {
-        console.debug("Registered module", module.name);
         window["sa5"][module.name] = module;
       }
     }
@@ -181,15 +181,169 @@
   };
   Sa5Core.startup(Sa5Html);
 
+  // src/webflow-core/tabs.ts
+  var WebflowTabs = class {
+    constructor(element) {
+      this.debug = new Sa5Debug("sa5-webflow-tabs");
+      this.debug.enabled = true;
+      this.init(element);
+    }
+    get element() {
+      return this._element;
+    }
+    get elementTabMenu() {
+      return this._elementTabMenu;
+    }
+    get elementTabContent() {
+      return this._elementTabContent;
+    }
+    get tabNum() {
+      return this.tabIndex + 1;
+    }
+    set tabNum(num) {
+      this.tabIndex = num - 1;
+    }
+    get tabIndex() {
+      let currentIndex = null;
+      for (let i = 0; i < this._elementTabMenu.children.length; i++) {
+        if (this._elementTabMenu.children[i].classList.contains("w--current")) {
+          currentIndex = i;
+          break;
+        }
+      }
+      return currentIndex;
+    }
+    set tabIndex(index) {
+      if (index < 0)
+        return;
+      if (index >= this.tabCount)
+        return;
+      let clickEvent = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      this.debug.debug("setting tab", index);
+      setTimeout(() => {
+        this.elementTab(index).dispatchEvent(clickEvent);
+      }, 0);
+    }
+    get tabCount() {
+      return this._elementTabMenu.children.length;
+    }
+    goToTabNone() {
+      this.goToTabIndexForced(null);
+    }
+    goToTabIndexForced(index) {
+      Array.from(this._elementTabMenu.querySelectorAll(".w-tab-link")).forEach(
+        (elem) => {
+          elem.classList.remove("w--current");
+          elem.removeAttribute("tabindex");
+          elem.setAttribute("aria-selected", "true");
+        }
+      );
+      Array.from(this._elementTabContent.querySelectorAll(".w-tab-pane")).forEach(
+        (elem) => {
+          elem.classList.remove("w--tab-active");
+        }
+      );
+      if (index) {
+        console.log("setting forced index", index);
+        Array.from(this._elementTabMenu.querySelectorAll(`.w-tab-link:nth-child(${index + 1})`)).forEach(
+          (elem) => {
+            elem.classList.add("w--current");
+          }
+        );
+        Array.from(this._elementTabContent.querySelectorAll(`.w-tab-pane:nth-child(${index + 1})`)).forEach(
+          (elem) => {
+            elem.classList.add("w--tab-active");
+            elem.style.cssText = "style=opacity: 1; transition: opacity 300ms ease 0s;";
+          }
+        );
+      }
+    }
+    getTabIndex(tab) {
+      let index = Array.from(this._elementTabMenu.children).indexOf(tab);
+      if (index == -1) {
+        index = Array.from(this._elementTabContent.children).indexOf(tab);
+      }
+      if (index == -1)
+        return null;
+      return index;
+    }
+    init(element) {
+      if (!element.classList.contains("w-tabs")) {
+        console.error("[wfu-tabs] is not on a tabs element");
+        return;
+      }
+      this._element = element;
+      this._elementTabMenu = element.querySelector(".w-tab-menu");
+      this._elementTabContent = element.querySelector(".w-tab-content");
+      for (let elem of this._elementTabMenu.children) {
+        if (elem.hasAttribute("wfu-tab-default")) {
+          this.debug.debug("default");
+          let defaultTabIndex = this.getTabIndex(elem);
+          this.debug.debug(defaultTabIndex);
+          if (defaultTabIndex != null)
+            this.tabIndex = defaultTabIndex;
+        }
+      }
+      ;
+    }
+    elementTab(index) {
+      if (index < 0)
+        return;
+      if (index >= this.tabCount)
+        return;
+      return this._elementTabMenu.children[index];
+    }
+    goToTabIndex(index) {
+      this.debug.debug(index);
+      this.tabIndex = index;
+    }
+    goToNextTab() {
+      if (this.tabIndex == null) {
+        this.tabIndex = 0;
+        return;
+      }
+      var newTabIndex = this.tabIndex + 1;
+      if (newTabIndex >= this.tabCount)
+        newTabIndex = 0;
+      this.goToTabIndex(newTabIndex);
+    }
+    goToPrevTab() {
+      if (this.tabIndex == null) {
+        this.tabIndex = 0;
+        return;
+      }
+      var newTabIndex = this.tabIndex - 1;
+      if (newTabIndex < 0)
+        newTabIndex = this.tabCount - 1;
+      this.goToTabIndex(newTabIndex);
+    }
+    goToFirstTab() {
+      this.goToTabIndex(0);
+    }
+    goToLastTab() {
+      var newTabIndex = this.tabCount - 1;
+      this.goToTabIndex(newTabIndex);
+    }
+    onTabChanged() {
+    }
+  };
+  Sa5Core.startup(WebflowTabs);
+
   // src/nocode/webflow-html.ts
   var init = () => {
-    new Sa5Core().init();
     let debug = new Sa5Debug("sa5-html");
     debug.debug("Initializing");
     let obj = new Sa5Html({
       dynamicAttributes: true
+    }).init();
+    let tabElements = document.querySelectorAll("[wfu-tabs]");
+    tabElements.forEach((element) => {
+      var tabObj = new WebflowTabs(element);
     });
-    obj.init();
   };
   document.addEventListener("DOMContentLoaded", init);
 })();
