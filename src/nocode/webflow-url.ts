@@ -8,15 +8,18 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
+import { WfuQuery, WfuRelativeLinkFixup, WfuTargetLinks } from '../webflow-url';
+import { Sa5Core } from '../webflow-core'; 
+import { Sa5Debug } from '../webflow-core/debug';
 
-import { WfuQuery, WfuRelativeLinkFixup, WfuTargetLinks } from '../modules/webflow-url.js';
+const init = () => { 
 
-$(function () {
+    new Sa5Core().init();
 
-    console.debug("running WFU-URL");
+    // Initialize debugging
+    let debug = new Sa5Debug("sa5-url");
+    debug.debug ("Initializing");
 
-    // Apply query key/values in-page
-    // To tagged elements
     const wfuQuery = new WfuQuery();
     wfuQuery.processAll();
 
@@ -29,5 +32,6 @@ $(function () {
     const wfuTargetLinks = new WfuTargetLinks();
     wfuTargetLinks.processAll();
 
-});
-
+}
+  
+document.addEventListener("DOMContentLoaded", init)
