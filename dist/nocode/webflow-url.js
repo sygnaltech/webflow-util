@@ -86,61 +86,84 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-url.ts
+  // src/webflow-url/query.ts
   var WfuQuery = class {
     constructor() {
     }
+    init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (Array.from(urlParams).length == 0)
+        return;
+      const that = this;
+      let elements = Array.from(
+        document.querySelectorAll("*[wfu-query-param], a")
+      );
+      elements.forEach((element) => {
+        let wfuQueryParam = element.getAttribute("wfu-query-param");
+        if (element.tagName.toLowerCase() === "input" && wfuQueryParam) {
+          element.value = urlParams.get(wfuQueryParam) || "";
+        } else if (element.tagName.toLowerCase() === "a") {
+        } else if (wfuQueryParam) {
+          element.textContent = urlParams.get(wfuQueryParam) || "";
+        }
+      });
+    }
     processLink(linkElem) {
       const urlParams = new URLSearchParams(window.location.search);
-      if (linkElem.attr("href") == null)
+      if (linkElem.getAttribute("href") == null)
         return;
-      var hrefParts = linkElem.attr("href").split("?");
+      var hrefParts = linkElem.getAttribute("href").split("?");
       var hrefBase = hrefParts[0];
       var hrefQuery = hrefParts[1];
       const newParams = new URLSearchParams(hrefQuery);
-      if (linkElem.attr("wfu-query-param") == "-") {
-      } else if (linkElem.attr("wfu-query-param") == "*" || linkElem.attr("wfu-query-param") == void 0 || linkElem.attr("wfu-query-param") == false) {
+      if (linkElem.getAttribute("wfu-query-param") == "-") {
+      } else if (linkElem.getAttribute("wfu-query-param") == "*" || linkElem.getAttribute("wfu-query-param") == void 0 || linkElem.hasAttribute("wfu-query-param") == false) {
         for (let p of urlParams) {
           newParams.set(p[0], urlParams.get(p[0]));
         }
         ;
         var newHref = hrefBase + "?" + newParams.toString();
-        linkElem.attr("href", newHref);
+        linkElem.setAttribute("href", newHref);
       } else {
-        var overrideParams = linkElem.attr("wfu-query-param").split(",");
+        var overrideParams = linkElem.getAttribute("wfu-query-param").split(",");
         for (let p of overrideParams) {
           if (urlParams.get(p) != null)
             newParams.set(p, urlParams.get(p));
         }
         ;
         var newHref = hrefBase + "?" + newParams.toString();
-        linkElem.attr("href", newHref);
+        linkElem.setAttribute("href", newHref);
       }
     }
-    processAll() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (Array.from(urlParams).length == 0)
-        return;
-      const that = this;
-      let elements = Array.from(document.querySelectorAll("*[wfu-query-param], a"));
-      elements.forEach((element) => {
-        let wfuQueryParam = element.getAttribute("wfu-query-param");
-        if (element.tagName.toLowerCase() === "input" && wfuQueryParam) {
-          element.value = urlParams.get(wfuQueryParam) || "";
-        } else if (element.tagName.toLowerCase() === "a") {
-          this.processLink(element);
-        } else if (wfuQueryParam) {
-          element.textContent = urlParams.get(wfuQueryParam) || "";
+  };
+
+  // src/webflow-url/relativeLinkFixup.ts
+  var WfuRelativeLinkFixup = class {
+    constructor(element) {
+      this._element = element;
+    }
+    init() {
+      let elems = Array.from(
+        this._element.querySelectorAll(
+          "a[href^='http://.' i], a[href^='https://.' i], a[href^='http://?' i], a[href^='https://?' i]"
+        )
+      );
+      elems.forEach((elem) => {
+        let href = elem.getAttribute("href");
+        if (href) {
+          if (href.startsWith("http://."))
+            href = href.substring(8);
+          if (href.startsWith("https://."))
+            href = href.substring(9);
+          if (href.startsWith("http://?"))
+            href = href.substring(7);
+          if (href.startsWith("https://?"))
+            href = href.substring(8);
+          elem.setAttribute("href", href);
         }
       });
-    }
-  };
-  var WfuRelativeLinkFixup = class {
-    constructor() {
-    }
-    processAll() {
       let elements = Array.from(
-        document.querySelectorAll("a[href*='//self/' i], a[href$='//self' i]")
+        this._element.querySelectorAll("a[href*='//self/' i], a[href$='//self' i]")
       );
       elements.forEach((element) => {
         let href = element.getAttribute("href");
@@ -151,35 +174,19 @@
       });
     }
   };
-  var WfuTargetLinks = class {
-    constructor() {
-    }
-    processAll() {
-      let elements = Array.from(
-        document.querySelectorAll("a[href^='http://']:not([target]), a[href^='https://']:not([target])")
-      );
-      elements.forEach((element) => {
-        let href = element.getAttribute("href");
-        if (href) {
-          console.debug(`retargeting ${href}.`);
-          element.setAttribute("target", "_blank");
-        }
-      });
-    }
-  };
-  Sa5Core.startup(WfuQuery);
 
   // src/nocode/webflow-url.ts
   var init = () => {
     new Sa5Core().init();
     let debug = new Sa5Debug("sa5-url");
     debug.debug("Initializing");
-    const wfuQuery = new WfuQuery();
-    wfuQuery.processAll();
-    const wfuRelativeLinkFixup = new WfuRelativeLinkFixup();
-    wfuRelativeLinkFixup.processAll();
-    const wfuTargetLinks = new WfuTargetLinks();
-    wfuTargetLinks.processAll();
+    new WfuQuery().init();
+    let elements = Array.from(
+      document.querySelectorAll("[wfu-relative-links]")
+    );
+    elements.forEach((element) => {
+      new WfuRelativeLinkFixup(element).init();
+    });
   };
   document.addEventListener("DOMContentLoaded", init);
 })();
