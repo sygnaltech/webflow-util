@@ -175,6 +175,25 @@
     }
   };
 
+  // src/webflow-url/targetLinks.ts
+  var WfuTargetLinks = class {
+    constructor(element) {
+      this._element = element;
+    }
+    init() {
+      let elements = Array.from(
+        document.querySelectorAll("a[href^='http://']:not([target]), a[href^='https://']:not([target])")
+      );
+      elements.forEach((element) => {
+        let href = element.getAttribute("href");
+        if (href) {
+          console.debug(`retargeting ${href}.`);
+          element.setAttribute("target", "_blank");
+        }
+      });
+    }
+  };
+
   // src/nocode/webflow-url.ts
   var init = () => {
     new Sa5Core().init();
@@ -186,6 +205,12 @@
     );
     elements.forEach((element) => {
       new WfuRelativeLinkFixup(element).init();
+    });
+    elements = Array.from(
+      document.querySelectorAll("[wfu-external-links]")
+    );
+    elements.forEach((element) => {
+      new WfuTargetLinks(element).init();
     });
   };
   document.addEventListener("DOMContentLoaded", init);

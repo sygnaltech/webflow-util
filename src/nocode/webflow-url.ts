@@ -38,7 +38,14 @@ const init = () => {
 
     // Target external links to _blank
     // BUGGED: designer change on how links work ?? 
-//    new WfuTargetLinks().init();
+    elements = Array.from(
+        document.querySelectorAll("[wfu-external-links]"));
+
+    elements.forEach((element: HTMLAnchorElement) => {
+        new WfuTargetLinks(element).init();
+    });
+
+    //    new WfuTargetLinks().init();
 
 }
   

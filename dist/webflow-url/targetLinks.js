@@ -1,7 +1,8 @@
 (() => {
   // src/webflow-url/targetLinks.ts
   var WfuTargetLinks = class {
-    constructor() {
+    constructor(element) {
+      this._element = element;
     }
     init() {
       let elements = Array.from(

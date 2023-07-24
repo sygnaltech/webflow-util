@@ -21,12 +21,15 @@ import { Sa5Core } from '../webflow-core'
 export class WfuTargetLinks {
 
     //    config; // Optional config
+    private _element: HTMLElement;
     
         // TODO: Allow forcing target override 
     
-        constructor() {
+        constructor(element: HTMLElement) { 
+            
     //        this.config = config;
-    
+            this._element = element;
+
         }
     
         // Process elements with the custom attr wfu-query-param
