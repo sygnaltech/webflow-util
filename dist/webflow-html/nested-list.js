@@ -35,10 +35,12 @@
         }
         items.push(item);
       });
-      this._element.replaceWith(this.createList(items));
+      this._element.replaceWith(
+        this.createList(this._element.nodeName, items)
+      );
     }
-    createList(items) {
-      let root = document.createElement("ul");
+    createList(listElementType = "UL", items) {
+      let root = document.createElement(listElementType);
       root.setAttribute("role", "list");
       let currentParent = root;
       let parents = [root];
@@ -52,7 +54,7 @@
           li.classList.add("wfu-con");
         if (item.indent > parents.length) {
           for (let j = parents.length; j < item.indent; j++) {
-            const newUL = document.createElement("ul");
+            const newUL = document.createElement(listElementType);
             let newULparent = parents[j - 1].lastChild || parents[j - 1];
             newULparent.appendChild(newUL);
             parents.push(newUL);

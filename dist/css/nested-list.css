@@ -1,0 +1,70 @@
+@charset "UTF-8";
+/**
+ * SA5 Nested lists
+ */
+.w-richtext ul > ul, .w-richtext ol > ol {
+  margin-top: 0;
+}
+
+.w-richtext ul ul, .w-richtext ol ol {
+  margin-top: 0.2rem;
+}
+
+ol .wfu-list-level-2 {
+  list-style-type: decimal-leading-zero;
+}
+
+ol .wfu-list-level-3 {
+  list-style-type: lower-roman;
+}
+
+.wfu-pro {
+  list-style-type: none;
+  color: green;
+}
+
+.wfu-pro::marker {
+  content: "☑  ";
+}
+
+.wfu-con {
+  list-style-type: none;
+  color: red;
+}
+
+.wfu-con::marker {
+  content: "☒  ";
+}
+
+/*
+ * Editor mode detection 
+ */
+html:not([data-wf-mode=editor]) .w-richtext ul ul, .w-richtext ol ol {
+  margin-top: 0.5rem;
+}
+
+html:not([data-wf-mode=editor]) ol .wfu-list-level-2 {
+  list-style-type: lower-latin;
+}
+
+html:not([data-wf-mode=editor]) ol .wfu-list-level-3 {
+  list-style-type: lower-roman;
+}
+
+html:not([data-wf-mode=editor]) .wfu-pro {
+  list-style-type: none;
+  color: green;
+}
+
+html:not([data-wf-mode=editor]) .wfu-pro::marker {
+  content: "☑  ";
+}
+
+html:not([data-wf-mode=editor]) .wfu-con {
+  list-style-type: none;
+  color: red;
+}
+
+html:not([data-wf-mode=editor]) .wfu-con::marker {
+  content: "☒  ";
+}/*# sourceMappingURL=nested-list.css.map */

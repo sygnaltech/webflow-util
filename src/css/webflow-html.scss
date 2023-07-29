@@ -6,6 +6,7 @@
  
  @use 'feature/webflow-html-limit-items';
 
+@import '../webflow-html/nested-list.scss';
 
  // Temporarily hide until decoded
 [wfu-decode] {
@@ -81,6 +82,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
 
+
 .w-richtext[wfu-lists-loading] li {
     font-family: 'Redacted', cursive;
     color: black;
@@ -112,7 +114,6 @@
 
 /*
  * Nested lists
- */
 
 .w-richtext ul ul, .w-richtext ol ol {
     margin-top: 0.5rem;
@@ -151,11 +152,11 @@ ol .wfu-list-level-3 {
     content: "\2612   ";
 }
 
+ */
 
 
 /*
  * Editor mode detection 
- */
 
 html:not([data-wf-mode="editor"]) .w-richtext ul ul, .w-richtext ol ol {
     margin-top: 0.5rem;
@@ -187,6 +188,7 @@ html:not([data-wf-mode="editor"]) .wfu-con {
         content: "☒  ";
     }
 
+ */
 
 
 /*

@@ -2,6 +2,9 @@
 /*
  * sCSS for Sygnal Webflow Util HTML library
  */
+/**
+ * SA5 Nested lists
+ */
 @import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 /*
  * SCSS Limit collection list items, at breakpoint levels
@@ -348,6 +351,69 @@
     display: none;
   }
 }
+.w-richtext ul ul, .w-richtext ol ol {
+  margin-top: 10.5rem;
+}
+
+ol .wfu-list-level-2 {
+  list-style-type: decimal-leading-zero;
+}
+
+ol .wfu-list-level-3 {
+  list-style-type: lower-roman;
+}
+
+.wfu-pro {
+  list-style-type: none;
+  color: green;
+}
+
+.wfu-pro::marker {
+  content: "☑  ";
+}
+
+.wfu-con {
+  list-style-type: none;
+  color: red;
+}
+
+.wfu-con::marker {
+  content: "☒  ";
+}
+
+/*
+ * Editor mode detection 
+ */
+html:not([data-wf-mode=editor]) .w-richtext ul ul, .w-richtext ol ol {
+  margin-top: 0.5rem;
+}
+
+html:not([data-wf-mode=editor]) ol .wfu-list-level-2 {
+  list-style-type: lower-latin;
+}
+
+html:not([data-wf-mode=editor]) ol .wfu-list-level-3 {
+  list-style-type: lower-roman;
+}
+
+html:not([data-wf-mode=editor]) .wfu-pro {
+  list-style-type: none;
+  color: green;
+}
+
+html:not([data-wf-mode=editor]) .wfu-pro::marker {
+  content: "☑  ";
+}
+
+html:not([data-wf-mode=editor]) .wfu-con {
+  list-style-type: none;
+  color: red;
+}
+
+html:not([data-wf-mode=editor]) .wfu-con::marker {
+  content: "☒  ";
+}
+
 [wfu-decode] {
   display: none;
 }
@@ -434,70 +500,79 @@
 }
 /*
  * Nested lists
- */
+
 .w-richtext ul ul, .w-richtext ol ol {
-  margin-top: 0.5rem;
+    margin-top: 0.5rem;
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+
 ol .wfu-list-level-2 {
-  list-style-type: decimal-leading-zero;
+    list-style-type: decimal-leading-zero;
 }
 
 ol .wfu-list-level-3 {
-  list-style-type: lower-roman;
+    list-style-type: lower-roman;
 }
 
 .wfu-pro {
-  list-style-type: none;
-  color: green;
+    list-style-type: none;
+    color: green;
 }
 
-.wfu-pro::marker {
-  content: "☑  ";
+// https://www.toptal.com/designers/htmlarrows/symbols/
+// https://caniuse.com/css-marker-pseudo
+.wfu-pro::marker { // ::before
+    content: "\2611   ";
 }
 
 .wfu-con {
-  list-style-type: none;
-  color: red;
+    list-style-type: none;
+    color: red;
 }
 
+// https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+// https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
 .wfu-con::marker {
-  content: "☒  ";
+    content: "\2612   ";
 }
 
+ */
 /*
  * Editor mode detection 
+
+html:not([data-wf-mode="editor"]) .w-richtext ul ul, .w-richtext ol ol {
+    margin-top: 0.5rem;
+}
+
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-2 {
+    list-style-type: lower-latin;
+}
+
+html:not([data-wf-mode="editor"]) ol .wfu-list-level-3 {
+    list-style-type: lower-roman;
+}
+
+html:not([data-wf-mode="editor"]) .wfu-pro {
+    list-style-type: none;
+    color: green;
+}
+
+    html:not([data-wf-mode="editor"]) .wfu-pro::marker {
+        content: "☑  ";
+    }
+
+html:not([data-wf-mode="editor"]) .wfu-con {
+    list-style-type: none;
+    color: red;
+}
+
+    html:not([data-wf-mode="editor"]) .wfu-con::marker {
+        content: "☒  ";
+    }
+
  */
-html:not([data-wf-mode=editor]) .w-richtext ul ul, .w-richtext ol ol {
-  margin-top: 0.5rem;
-}
-
-html:not([data-wf-mode=editor]) ol .wfu-list-level-2 {
-  list-style-type: lower-latin;
-}
-
-html:not([data-wf-mode=editor]) ol .wfu-list-level-3 {
-  list-style-type: lower-roman;
-}
-
-html:not([data-wf-mode=editor]) .wfu-pro {
-  list-style-type: none;
-  color: green;
-}
-
-html:not([data-wf-mode=editor]) .wfu-pro::marker {
-  content: "☑  ";
-}
-
-html:not([data-wf-mode=editor]) .wfu-con {
-  list-style-type: none;
-  color: red;
-}
-
-html:not([data-wf-mode=editor]) .wfu-con::marker {
-  content: "☒  ";
-}
-
 /*
  * Hide elements on spec 
  */

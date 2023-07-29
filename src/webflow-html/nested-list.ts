@@ -31,6 +31,9 @@ export class Sa5NestedList {
     _element: HTMLElement;
 
     constructor(listElement: HTMLElement, config: Config = null) {
+
+        // Verify OL or UL
+
         this._element = listElement;
         this.config = config;
     }
@@ -93,12 +96,15 @@ export class Sa5NestedList {
         //     { indent: 2, mode: '', text: 'Level 2 Item 1' },
         // ];
 
-        this._element.replaceWith(this.createList(items));
+        // Replace list entirely
+        this._element.replaceWith(
+            this.createList(this._element.nodeName, items)
+            );
 
     }
     
-    private createList(items: NestedListItem[]): HTMLElement {
-        let root = document.createElement('ul');
+    private createList(listElementType: string = 'UL', items: NestedListItem[]): HTMLElement {
+        let root = document.createElement(listElementType);
         root.setAttribute("role", "list"); // every level? a11y 
         let currentParent = root;
         let parents = [root];
@@ -116,7 +122,7 @@ export class Sa5NestedList {
             if (item.indent > parents.length) {
 
                 for (let j = parents.length; j < item.indent; j++) {
-                    const newUL = document.createElement('ul');
+                    const newUL = document.createElement(listElementType);
                     let newULparent = parents[j - 1].lastChild || parents[j - 1];
                     newULparent.appendChild(newUL);
                     parents.push(newUL);
