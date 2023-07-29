@@ -12,6 +12,7 @@
 
 // Credit James Padolsey 
 // https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
+// migrated to utils.ts
 (function($){
  
     $.fn.shuffle = function() {
@@ -39,6 +40,7 @@
 
 // HTML Decode
 // https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+// MIGRATED to utils.ts
 export var decodeHtml = function (text) {
     
     console.log(text);
@@ -62,7 +64,7 @@ console.log(decoded);
 
 
 // Simplest-case encoding for HTML5
-// TODO: move to util lib 
+// MIGRATED to utils.ts
 export var encodeHtml = function (text) {
 
     // Important- this approach handles common scenarios,
@@ -79,6 +81,7 @@ export var encodeHtml = function (text) {
 
 //#region IFRAMES
 
+// MIGRATED to utils.ts
 export var autosizeIFrames = function () {
 
     // Identify all IFRAMES with autosize tag
@@ -105,6 +108,7 @@ export var autosizeIFrames = function () {
 
 // Applies custom attributes to HTML elements throughout the page
 // from relatively-positioned <data> elements.
+// MIGRATED to utils.ts
 export var applyDynamicAttributes = function () {
 
     // Find all <data> elements which specify a data-source
@@ -156,6 +160,7 @@ export var applyDynamicAttributes = function () {
 
 //#region Data Formatting
 
+// MIGRATED to utils.ts
 export var formatJson = function (data) {
 
     var json;
@@ -168,6 +173,7 @@ export var formatJson = function (data) {
     return json;
 }
 
+// MIGRATED to utils.ts
 export var formatJsonAsHtml = function (data) {
 
     // Convert JSON to string
@@ -196,6 +202,7 @@ export var formatJsonAsHtml = function (data) {
 
 }
 
+// MIGRATED to utils.ts 
 export var displayDataAsHtml = function (el, data) {
 
 //    var json = formatJson(data);
@@ -218,6 +225,7 @@ export var displayDataAsHtml = function (el, data) {
  * Expands {{ var }} constructs in an elements innerHtml
  * using dictionary lookup, and replaces the element content.
  */
+// MIGRATED to utils.ts 
 export var expandMacrosInElement = function (el, dict) {
 
     var html = $(el).html();
@@ -233,6 +241,7 @@ export var expandMacrosInElement = function (el, dict) {
 /* expandMacrosInText
  * Expands {{ var }} constructs in text
  */
+// MIGRATED to utils.ts 
 export var expandMacrosInText = function (text, dict) {
 
     // https://regexr.com/
@@ -259,6 +268,7 @@ export var expandMacrosInText = function (text, dict) {
  * Parses markup in LI's to create nested lists
  * https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
  */
+// MIGRATED to webflow-html / nested-list.ts 
 export var processList = function (list) {
     //        console.log(`LIST -------------------------`);
 
@@ -364,6 +374,7 @@ export var processList = function (list) {
 
 //#endregion
 
+// MIGRATED to utils.ts 
 export var sequence = function (l) {
 
     const $group = $(l);
@@ -385,6 +396,7 @@ export var sequence = function (l) {
  * Sorts a Collection List
  * https://codepen.io/memetican/pen/oNygGLj/259b05cd6be71a16d2f4787e0714278f
  */
+// MIGRATED to utils.ts 
 export var sortCollectionList = function (l) {
 
     console.group("SORT");

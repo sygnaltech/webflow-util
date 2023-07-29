@@ -157,6 +157,7 @@ export var getVars = function (elem) {
  * Detects the current editor mode.
  */
 
+// MIGRATED - webflow-core / webflow-editor 
 export class WfuEditor {
 
     config; // Optional config

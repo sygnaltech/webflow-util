@@ -71,5 +71,123 @@
     }
     return context[func].apply(context, args);
   }
+  function shuffleElements(elements) {
+    const allElems = Array.from(elements);
+    const getRandom = (max) => Math.floor(Math.random() * max);
+    const shuffled = allElems.map(() => {
+      const random = getRandom(allElems.length);
+      const randEl = allElems[random].cloneNode(true);
+      allElems.splice(random, 1);
+      return randEl;
+    });
+    allElems.forEach((elem, i) => {
+      if (elem.parentNode) {
+        elem.parentNode.replaceChild(shuffled[i], elem);
+      }
+    });
+    return shuffled;
+  }
+  function autosizeIFrames() {
+    const iframes = Array.from(
+      document.querySelectorAll("iframe[wfu='html.iframe.autofit']")
+    );
+    iframes.forEach((iframe) => {
+      iframe.addEventListener("load", () => {
+        setInterval(() => {
+          if (iframe.contentDocument) {
+            iframe.style.height = `${iframe.contentDocument.body.scrollHeight}px`;
+          }
+        }, 200);
+      });
+    });
+  }
+  function applyDynamicAttributes() {
+    const dynamicAttributeDatas = Array.from(
+      document.querySelectorAll("data[wfu-attr]")
+    );
+    dynamicAttributeDatas.forEach((data) => {
+      const dataContainer = data.parentElement;
+      if (dataContainer) {
+        dataContainer.style.display = "none";
+      }
+      let target = null;
+      switch (data.getAttribute("wfu-attr-target")) {
+        case "prev":
+          target = dataContainer == null ? void 0 : dataContainer.previousElementSibling;
+          break;
+        case "next":
+          target = dataContainer == null ? void 0 : dataContainer.nextElementSibling;
+          break;
+        case "parent":
+          target = dataContainer == null ? void 0 : dataContainer.parentElement;
+          break;
+        default:
+          console.warn("Unknown apply setting for param.");
+      }
+      if (target) {
+        target.setAttribute(data.getAttribute("wfu-attr") || "", data.getAttribute("wfu-attr-val") || "");
+      }
+    });
+  }
+  var formatJson = (data) => {
+    let json;
+    if (typeof data !== "string") {
+      json = JSON.stringify(data, void 0, 2);
+    }
+    return json;
+  };
+  var formatJsonAsHtml = (data) => {
+    let json = formatJson(data);
+    json = json == null ? void 0 : json.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return (json == null ? void 0 : json.replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      (match) => {
+        let cls = "wfu-json-number";
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = "wfu-json-key";
+          } else {
+            cls = "wfu-json-string";
+          }
+        } else if (/true|false/.test(match)) {
+          cls = "wfu-json-boolean";
+        } else if (/null/.test(match)) {
+          cls = "wfu-json-null";
+        }
+        return `<span class="${cls}">${match}</span>`;
+      }
+    )) || "";
+  };
+  var displayDataAsHtml = (el, data) => {
+    const pre = document.createElement("pre");
+    pre.className = "wfu-code";
+    pre.innerHTML = formatJsonAsHtml(data);
+    el.innerHTML = "";
+    el.appendChild(pre);
+  };
+  function expandMacrosInElement(el, dict) {
+    let html = el.innerHTML;
+    html = expandMacrosInText(html, dict);
+    el.innerHTML = html;
+  }
+  var expandMacrosInText = (text, dict) => {
+    const replacer = (match, p1, p2, p3, offset, string) => {
+      return dict.get(p2) || "";
+    };
+    text = text.replace(
+      new RegExp("{\\s*(?<cmd>\\w*)\\s*\\{\\s*(?<params>\\w*)\\s*\\}\\s*(?<options>\\w*)\\s*\\}", "g"),
+      replacer
+    );
+    return text;
+  };
+  function sequence(l) {
+    const group = l;
+    const groupName = group.getAttribute("wfu-seq-group");
+    let i = 0;
+    const elements = group.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    elements.forEach((element) => {
+      element.innerHTML = (++i).toString();
+    });
+  }
 })();
 //# sourceMappingURL=utils.js.map

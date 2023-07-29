@@ -133,3 +133,446 @@ export function executeFunctionByName2(functionName, context /*, args */) {
     return context[func].apply(context, args);
 }
 
+//#region Shuffle
+
+// Shuffles a group of elements in the DOM
+// and also returns a set 
+export function shuffleElements(elements: Element[]): Element[] {
+    const allElems = Array.from(elements);
+    const getRandom = (max: number) => Math.floor(Math.random() * max);
+
+    const shuffled = allElems.map(() => {
+        const random = getRandom(allElems.length);
+        const randEl = allElems[random].cloneNode(true) as Element;
+        allElems.splice(random, 1);
+        return randEl;
+    });
+
+    allElems.forEach((elem, i) => {
+        if (elem.parentNode) {
+            elem.parentNode.replaceChild(shuffled[i], elem);
+        }
+    });
+
+    return shuffled;
+}
+
+// Usage:
+// const elements = document.querySelectorAll('.some-class');
+// const shuffledElements = shuffleElements(Array.from(elements));
+
+//#endregion
+
+/* previous code
+
+// Credit James Padolsey 
+// https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
+(function($){
+ 
+    $.fn.shuffle = function() {
+ 
+        var allElems = this.get(),
+            getRandom = function(max) {
+                return Math.floor(Math.random() * max);
+            },
+            shuffled = $.map(allElems, function(){
+                var random = getRandom(allElems.length),
+                    randEl = $(allElems[random]).clone(true)[0];
+                allElems.splice(random, 1);
+                return randEl;
+           });
+ 
+        this.each(function(i){
+            $(this).replaceWith($(shuffled[i]));
+        });
+ 
+        return $(shuffled);
+ 
+    };
+ 
+})(jQuery);
+*/
+
+
+//#region IFRAMES
+
+export function autosizeIFrames(): void {
+    // Identify all IFRAMES with autosize tag
+    const iframes = Array.from(
+        // BUG: weird tagging 
+        document.querySelectorAll("iframe[wfu='html.iframe.autofit']")
+        );
+
+    iframes.forEach((iframe: HTMLIFrameElement) => {
+        // Add event listener and wait for content to load
+        iframe.addEventListener('load', () => {
+            setInterval(() => {
+                if (iframe.contentDocument) {
+                    iframe.style.height = `${iframe.contentDocument.body.scrollHeight}px`;
+                }
+            }, 200);
+        });
+    });
+};
+
+/* prev
+
+export var autosizeIFrames = function () {
+
+    // Identify all IFRAMES with autosize tag
+    let iframes = $("iframe[wfu='html.iframe.autofit']");
+
+    iframes.each(function (index) {
+
+        var iframe = this;
+
+        // Add event listener and wait for content to load
+        this.addEventListener('load', function () {
+            setInterval(function () {
+                iframe.style.height = iframe.contentDocument.body.scrollHeight + 'px';
+            }, 200);
+        });
+
+    });
+
+}
+
+*/
+
+//#endregion
+
+
+//#region Dynamic Attributes
+
+// Applies custom attributes to HTML elements throughout the page
+// from relatively-positioned <data> elements.
+
+
+export function applyDynamicAttributes(): void {
+
+    // Find all <data> elements which specify a data-source for data binding
+    const dynamicAttributeDatas = Array.from(
+        document.querySelectorAll('data[wfu-attr]')
+        );
+
+    // Iterate and bind each individually
+    dynamicAttributeDatas.forEach((data: HTMLElement) => {
+
+        // Webflow wraps EMBEDS in a DIV, so we work from that parent as a positional reference
+        const dataContainer = data.parentElement;
+
+        // hide this node
+        if (dataContainer) {
+            dataContainer.style.display = 'none';
+        }
+
+        let target: HTMLElement | null = null;
+
+        // Webflow wraps EMBEDS in a DIV[wf-embed], so we work from that parent as a reference
+        switch (data.getAttribute('wfu-attr-target')) {
+            case 'prev':
+                target = dataContainer?.previousElementSibling as HTMLElement;
+                break;
+            case 'next':
+                target = dataContainer?.nextElementSibling as HTMLElement;
+                break;
+            case 'parent':
+                target = dataContainer?.parentElement;
+                break;
+            default:
+                console.warn('Unknown apply setting for param.');
+        }
+
+        // Apply attribute
+        if (target) {
+            target.setAttribute(data.getAttribute('wfu-attr') || '', data.getAttribute('wfu-attr-val') || '');
+        }
+
+    });
+};
+
+
+/*
+
+
+export var applyDynamicAttributes = function () {
+
+    // Find all <data> elements which specify a data-source
+    // for data binding
+    var dynamicAttributeDatas = $('data[wfu-attr]');
+
+    // Iterate and bind each individually
+    $.each(dynamicAttributeDatas, function (i, elem) {
+
+        var data = this;
+
+        // Webflow wraps EMBEDS in a DIV, so we work from that parent as a positional reference
+        var dataContainer = $(data).parent();
+
+        // hide this node
+        $(dataContainer).attr("style", "display: none;");
+
+        var target = null;
+
+        // Webflow wraps EMBEDS in a DIV[wf-embed], so we work from that parent as a reference
+        switch ($(data).attr("wfu-attr-target")) {
+            case "prev":
+                target = $(dataContainer).prev();
+                break;
+            case "next":
+                target = $(dataContainer).next();
+                break;
+            case "parent":
+                target = $(dataContainer).parent();
+                break;
+            default:
+
+                if (vars.logging)
+                    console.warn("Unknown apply setting for param.");
+        }
+
+        // Apply attribute
+        var dataItem = this;
+        $(target).attr(
+            $(dataItem).attr("wfu-attr"),
+            $(dataItem).attr("wfu-attr-val")
+        );
+
+    });
+
+}
+
+*/
+
+//#endregion
+
+
+
+
+//#region Data Formatting
+
+export const formatJson = (data: any): string | undefined => {
+    let json;
+
+    // Convert JSON to string
+    if (typeof data !== 'string') {
+        json = JSON.stringify(data, undefined, 2);
+    }
+
+    return json;
+}
+
+export const formatJsonAsHtml = (data: any): string => {
+    // Convert JSON to string
+    let json = formatJson(data);
+
+    json = json?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Add JSON styling classes
+    return json?.replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        (match) => {
+            let cls = 'wfu-json-number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'wfu-json-key';
+                } else {
+                    cls = 'wfu-json-string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'wfu-json-boolean';
+            } else if (/null/.test(match)) {
+                cls = 'wfu-json-null';
+            }
+            return `<span class="${cls}">${match}</span>`;
+        }) || '';
+}
+
+export const displayDataAsHtml = (el: HTMLElement, data: any): void => {
+    // Create <pre> element
+    const pre = document.createElement('pre');
+    pre.className = 'wfu-code';
+
+    // Populate <pre> element with formatted JSON data
+    pre.innerHTML = formatJsonAsHtml(data);
+
+    // Append <pre> element to the target element
+    el.innerHTML = '';
+    el.appendChild(pre);
+}
+
+/*
+
+export var formatJson = function (data) {
+
+    var json;
+
+    // Convert JSON to string
+    if (typeof data != 'string') {
+        json = JSON.stringify(data, undefined, 2);
+    }
+
+    return json;
+}
+
+export var formatJsonAsHtml = function (data) {
+
+    // Convert JSON to string
+    var json = formatJson(data);
+
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Add JSON styling classes
+    return json.replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        function (match) {
+            var cls = 'wfu-json-number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'wfu-json-key';
+                } else {
+                    cls = 'wfu-json-string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'wfu-json-boolean';
+            } else if (/null/.test(match)) {
+                cls = 'wfu-json-null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+
+}
+
+export var displayDataAsHtml = function (el, data) {
+
+//    var json = formatJson(data);
+
+    // Create <pre> element
+    $(el).html("<pre class='wfu-code'></pre>");
+
+    // Populate <pre> element with formatted JSON data
+    $(el).children("pre").html(
+        formatJsonAsHtml(data)
+    );
+
+}
+
+*/
+
+//#endregion 
+
+
+
+//#region Macros
+
+/* expandMacrosInElement
+ * Expands {{ var }} constructs in an elements innerHtml
+ * using dictionary lookup, and replaces the element content.
+ */
+
+export function expandMacrosInElement (el: HTMLElement, dict: Map<string, string>): void {
+    let html = el.innerHTML;
+
+    html = expandMacrosInText(html, dict);
+
+    el.innerHTML = html;
+}
+
+/* expandMacrosInText
+ * Expands {{ var }} constructs in text
+ */
+
+export const expandMacrosInText = (text: string, dict: Map<string, string>): string => {
+    // Must be positioned before regex replace call
+    const replacer = (match: string, p1: string, p2: string, p3: string, offset: number, string: string): string => {
+        return dict.get(p2) || '';
+    }
+
+    text = text.replace(
+        /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+        replacer
+    );
+
+    return text;
+}
+
+
+
+/*
+
+export var expandMacrosInElement = function (el, dict) {
+
+    var html = $(el).html();
+
+    html = expandMacrosInText(html, dict);
+
+    $(el).html(
+        html
+    );
+
+}
+
+
+export var expandMacrosInText = function (text, dict) {
+
+
+
+    // https://regexr.com/
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+    // Must be positioned before regex replace call
+    var replacer = function (match, p1, p2, p3, offset, string) {
+
+        return dict.get(p2);
+    }
+
+    text = text.replace(
+        /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+        replacer
+    );
+
+    return text;
+}
+
+*/
+
+
+//#endregion
+
+
+
+export function sequence (l: HTMLElement): void {
+    const group = l;
+    
+    // Get the group name
+    const groupName = group.getAttribute("wfu-seq-group");
+
+    // Find matching items 
+    let i = 0;
+    const elements = group.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    elements.forEach((element: Element) => {
+        element.innerHTML = (++i).toString();
+    }); 
+}
+
+
+/*
+
+export var sequence = function (l) {
+
+    const $group = $(l);
+    
+    // Get the group name
+    const groupName = $group.attr("wfu-seq-group");
+
+    // Find matching items 
+    var i = 0;
+    $group.find(`[wfu-seq="${groupName}"]`).each(function() {
+        $(this).html(++i);
+    }); 
+
+}
+
+*/
+
+
+
