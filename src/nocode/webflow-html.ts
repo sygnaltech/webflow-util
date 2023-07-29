@@ -118,7 +118,7 @@ const init = () => {
     // Process filtered items
     document.querySelectorAll('[wfu-filter]')
         .forEach((element: HTMLElement) => {
-
+// console.error("wfu-filter not yet implemented."); 
             let visible = eval(element.getAttribute('wfu-filter') as string);
             if (visible) {
                 element.style.display = 'block';
@@ -231,7 +231,7 @@ const init = () => {
     .forEach((listElem: HTMLElement) => {
 
         new Sa5NestedList(listElem)
-            .processNestedLists();
+            .processNestedList();
 
     });
 
@@ -243,14 +243,13 @@ const init = () => {
 */
 
     document.querySelectorAll('.w-richtext[wfu-lists]')
-    .forEach((rtfElem: HTMLElement) => {
+      .forEach((rtfElem: HTMLElement) => {
 
-        let lists = rtfElem.querySelectorAll(':scope > ul, :scope > ol');
-        lists.forEach((list: HTMLElement) => {
+        rtfElem.querySelectorAll(':scope > ul, :scope > ol')
+          .forEach((list: HTMLElement) => {
 
-//            processList(list);
-            new Sa5NestedList(rtfElem)
-            .processNestedLists();
+            new Sa5NestedList(list)
+                .processNestedList();
 
         });
     

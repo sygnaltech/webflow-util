@@ -17,6 +17,12 @@ interface Config {
 //    handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
 }
 
+interface NestedListItem {
+    indent: number;
+    mode: string;
+    text: string;
+}
+
 // Webflow breakpoints
 
 
@@ -36,26 +42,29 @@ export class Sa5NestedList {
     * https://codepen.io/memetican/pen/vYjGbrd/8052e3c39d42e8c1e326b2f6ead371c5
     */
 
-    processNestedLists(): void {
+    processNestedList(): void {
+
         const content = this._element.innerHTML;
         const data = new DOMParser().parseFromString(content, 'text/html').body.childNodes;
-        const items: Array<{indent: number, mode: string, text: string}> = [];
+        let items: NestedListItem[] = []; 
 
+        // Create list of items, for nesting
         data.forEach((el: ChildNode, i: number) => {
+
             if (el.nodeName !== "LI") return; // skip
 
+            // Set defaults
             let item = {
                 indent: 1,
                 mode: '',
                 text: el.textContent?.trim() || ''
             };
 
-            items.push(item);
-
-            const limit = 10;
-            for (let j = 1; j < limit; j += 1) {
-                if (item.text.startsWith("&gt;")) {
-                    item.text = item.text.substring(4).trim(); // remove directive 
+            // Parse / resolve item detail
+            const LIST_DEPTH_LIMIT = 10;
+            for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
+                if (item.text.startsWith(">")) {
+                    item.text = item.text.substring(1).trim(); // remove directive 
                     item.indent++;
                 } else if (item.text.startsWith("+")) {
                     item.text = item.text.substring(1).trim(); // remove directive 
@@ -67,115 +76,60 @@ export class Sa5NestedList {
                     break; // done
                 }
             }
-        });
-    }
-
-    /*
-
-    export var processList = function (list) {
-        //        console.log(`LIST -------------------------`);
-
-        var content = $(list).html();
-    //    console.log(content);
-
-        var data = $.parseHTML(content);
-        var items = [];
-
-        $.each(data, function (i, el) {
-
-    //        console.log(el);
-            
-    //        console.log(JSON.stringify(el));
-    //        console.log(el.nodeName);
-    //        console.log(el.nodeType);
-
-            if (el.nodeName != "LI")
-                return; // skip
-
-            var item = {
-                indent: 1,
-                mode: '',
-                text: $(el).html().trim()
-            };
 
             items.push(item);
-            //        console.log(`${i} ${item.text} ${items.length}`);
-
-            var limit = 10;
-            for (var j = 1; j < limit; j += 1) {
-
-                if (item.text.startsWith("&gt;")) {
-                    item.text = item.text.substring(4).trim(); // remove directive 
-                    item.indent++;
-                } else if (item.text.startsWith("+")) {
-                    item.text = item.text.substring(1).trim(); // remove directive 
-                    item.mode = "pro";
-                } else if (item.text.startsWith("-")) {
-                    item.text = item.text.substring(1).trim(); // remove directive 
-                    item.mode = "con";
-                } else {
-                    break; // done
-                }
-
-            }
-
-        });
+        }); 
 
         // Render HTML
         // Creates structured embedded list from the 
         // array data set. 
 
-        var outHtml = '';
-        var level = 1;
-        var tag = list.tagName.toLowerCase();
-        var prevLevel = 1;
+        // Usage:
+        // items = [
+        //     { indent: 1, mode: '', text: 'Level 1 Item 1' },
+        //     { indent: 3, mode: '', text: 'Level 3 Item 1' },
+        //     { indent: 3, mode: '', text: 'Level 3 Item 2' },
+        //     { indent: 1, mode: '', text: 'Level 1 Item 2' },
+        //     { indent: 2, mode: '', text: 'Level 2 Item 1' },
+        // ];
 
-        $.each(items, function (i, item) {
-
-            // Add optional PRO/CON class 
-            var attr = '';
-            if (item.mode == 'pro')
-                attr = " class='wfu-pro'";
-            if (item.mode == 'con')
-                attr = " class='wfu-con'";
-
-            prevLevel = level;
-
-            if (item.indent > level) {
-
-                for (var l = level + 1; l <= item.indent; l += 1)
-                    outHtml += `<${tag} class="wfu-list-level-${l}">`;
-                outHtml += `<li${attr}>${item.text}`;
-
-                level = item.indent;
-
-            } else if (item.indent < level) {
-
-                outHtml += `</li></${tag}>`.repeat(level - item.indent);
-                outHtml += `</li>`;
-                outHtml += `<li${attr}>${item.text}`;
-                level = item.indent;
-
-            } else {
-
-                if (i > 0)
-                    outHtml += `</li>`;
-                outHtml += `<li${attr}>${item.text}`;
-
-            }
-
-        });
-
-        if (level > 1)
-            outHtml += `</li></${tag}>`.repeat(level - 1);
-        outHtml += `</li>`;
-        level = 1;
-
-        $(list).html(outHtml);
+        this._element.replaceWith(this.createList(items));
 
     }
+    
+    private createList(items: NestedListItem[]): HTMLElement {
+        let root = document.createElement('ul');
+        root.setAttribute("role", "list"); // every level? a11y 
+        let currentParent = root;
+        let parents = [root];
+      
+        for (let i = 0; i < items.length; i++) {
 
-    */
+            const item = items[i];
+            const li = document.createElement('li');
+            li.textContent = item.text;
+            if (item.mode == 'pro')
+                li.classList.add("wfu-pro");
+            if (item.mode == 'con')
+                li.classList.add("wfu-con");
+
+            if (item.indent > parents.length) {
+
+                for (let j = parents.length; j < item.indent; j++) {
+                    const newUL = document.createElement('ul');
+                    let newULparent = parents[j - 1].lastChild || parents[j - 1];
+                    newULparent.appendChild(newUL);
+                    parents.push(newUL);
+                }
+            } else if (item.indent < parents.length) {
+                parents = parents.slice(0, item.indent);
+            }
+
+            parents[parents.length - 1].appendChild(li);
+        }
+      
+        return root;
+    }
 
     //#endregion
 

@@ -5,10 +5,10 @@
       this._element = listElement;
       this.config = config;
     }
-    processNestedLists() {
+    processNestedList() {
       const content = this._element.innerHTML;
       const data = new DOMParser().parseFromString(content, "text/html").body.childNodes;
-      const items = [];
+      let items = [];
       data.forEach((el, i) => {
         var _a;
         if (el.nodeName !== "LI")
@@ -18,11 +18,10 @@
           mode: "",
           text: ((_a = el.textContent) == null ? void 0 : _a.trim()) || ""
         };
-        items.push(item);
-        const limit = 10;
-        for (let j = 1; j < limit; j += 1) {
-          if (item.text.startsWith("&gt;")) {
-            item.text = item.text.substring(4).trim();
+        const LIST_DEPTH_LIMIT = 10;
+        for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
+          if (item.text.startsWith(">")) {
+            item.text = item.text.substring(1).trim();
             item.indent++;
           } else if (item.text.startsWith("+")) {
             item.text = item.text.substring(1).trim();
@@ -34,7 +33,36 @@
             break;
           }
         }
+        items.push(item);
       });
+      this._element.replaceWith(this.createList(items));
+    }
+    createList(items) {
+      let root = document.createElement("ul");
+      root.setAttribute("role", "list");
+      let currentParent = root;
+      let parents = [root];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const li = document.createElement("li");
+        li.textContent = item.text;
+        if (item.mode == "pro")
+          li.classList.add("wfu-pro");
+        if (item.mode == "con")
+          li.classList.add("wfu-con");
+        if (item.indent > parents.length) {
+          for (let j = parents.length; j < item.indent; j++) {
+            const newUL = document.createElement("ul");
+            let newULparent = parents[j - 1].lastChild || parents[j - 1];
+            newULparent.appendChild(newUL);
+            parents.push(newUL);
+          }
+        } else if (item.indent < parents.length) {
+          parents = parents.slice(0, item.indent);
+        }
+        parents[parents.length - 1].appendChild(li);
+      }
+      return root;
     }
   };
 })();
