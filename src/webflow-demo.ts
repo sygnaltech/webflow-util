@@ -55,6 +55,4 @@ export class WebflowInfo {
 
 // Register
 Sa5Core.startup(WebflowInfo);
-// window["sa5"] = window["sa5"] || []; // {};
-// window["sa5"]["Sa5Demo"] = WebflowInfo;
 
