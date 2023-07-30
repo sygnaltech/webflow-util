@@ -640,12 +640,6 @@
           element2.innerHTML = decodeHTML(element2.innerHTML);
           element2.removeAttribute("wfu-decode");
         });
-        document.querySelectorAll("[wfu-filter]").forEach((element) => {
-          let visible = eval(element.getAttribute("wfu-filter"));
-          if (visible) {
-            element.style.display = "block";
-          }
-        });
         document.querySelectorAll("[wfu-sort] [wfu-sort] [wfu-sort]").forEach((element2) => {
           new Sa5CollectionList(element2).sort();
         });
@@ -654,6 +648,12 @@
         });
         document.querySelectorAll("[wfu-sort]").forEach((element2) => {
           new Sa5CollectionList(element2).sort();
+        });
+        document.querySelectorAll("[wfu-filter]").forEach((element) => {
+          let visible = eval(element.getAttribute("wfu-filter"));
+          if (visible) {
+            element.removeAttribute("wfu-filter");
+          }
         });
         document.querySelectorAll("[wfu-filter-func]").forEach((element2) => {
           let funcName = element2.getAttribute("wfu-filter-func");

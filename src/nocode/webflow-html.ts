@@ -93,54 +93,15 @@ const init = () => {
 */
 
 
-    // HTML decode items 
+    /** 
+     * Decode html chunk
+     */
+
     document.querySelectorAll('[wfu-decode]')
-        .forEach((element) => {
-            element.innerHTML = decodeHTML(element.innerHTML);
-            element.removeAttribute('wfu-decode');
-        });
-    
-    // function decodeHtml(html: string) {
-    //     let txt = document.createElement('textarea');
-    //     txt.innerHTML = html;
-    //     return txt.value;
-    // }
-
-/*
-    $("[wfu-decode]").each(function (index) {
-        $(this).html(
-            decodeHtml($(this).html())
-            );
-        $(this).removeAttr("wfu-decode");
+      .forEach((element) => {
+        element.innerHTML = decodeHTML(element.innerHTML);
+        element.removeAttribute('wfu-decode');
     });
-*/
-
-    // Process filtered items
-    document.querySelectorAll('[wfu-filter]')
-        .forEach((element: HTMLElement) => {
-// console.error("wfu-filter not yet implemented."); 
-            let visible = eval(element.getAttribute('wfu-filter') as string);
-            if (visible) {
-                element.style.display = 'block';
-            }
-
-            // element.innerHTML = decodeHTML(element.innerHTML);
-            // element.removeAttribute('wfu-decode');
-        });
-
-/*
-    $("[wfu-filter]").each(function (index) {
-        var visible = eval($(this).attr("wfu-filter"));
-        if (visible)
-            $(this).css("display", "block");
-    });
-*/
-
-
-
-
-
-
 
 
 
@@ -168,7 +129,7 @@ const init = () => {
         });
 
 
-// filter1
+
 
     /**
      * Filter items
@@ -176,14 +137,28 @@ const init = () => {
      * TODO: add remove mode? 
      */
 
+
+
+    // Process filtered items
+    document.querySelectorAll('[wfu-filter]')
+      .forEach((element: HTMLElement) => {
+
+        let visible = eval(element.getAttribute('wfu-filter') as string);
+        if (visible) {
+            element.removeAttribute("wfu-filter");
+        }
+
+    });
+
+
+
+
     // Process filtered items
     document.querySelectorAll('[wfu-filter-func]')
       .forEach((element: HTMLElement) => { 
 
         let funcName = element.getAttribute('wfu-filter-func');
         let fqFuncName = `window.${funcName}`;
-    
-//        console.debug(fqFuncName);
     
         let f = new Function(fqFuncName);
     
