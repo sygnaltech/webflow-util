@@ -423,11 +423,11 @@
     );
     return dom.body.textContent || "";
   }
-  function sequence(l) {
-    const group = l;
-    const groupName = group.getAttribute("wfu-seq-group");
+  function sequence(groupElement) {
+    const groupName = groupElement.getAttribute("wfu-seq-group");
+    console.log("sequence group", groupName);
     let i = 0;
-    const elements = group.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    const elements = groupElement.querySelectorAll(`[wfu-seq="${groupName}"]`);
     elements.forEach((element2) => {
       element2.innerHTML = (++i).toString();
     });

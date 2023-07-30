@@ -60,6 +60,10 @@ const init = () => {
     const editor = new Sa5Editor(); 
 
 
+    /**
+     * Sequence items
+     */
+
     // Sequence items 
     let sequenceGroupElements = Array.from(
         document.querySelectorAll("[wfu-seq-group]")
@@ -103,10 +107,6 @@ const init = () => {
         element.removeAttribute('wfu-decode');
     });
 
-
-
-
-
     /** 
      * Sort items 
      * Innermost first, to support nested sorts
@@ -128,18 +128,12 @@ const init = () => {
                 .sort();
         });
 
-
-
-
     /**
      * Filter items
      * Place on item you want to conditionally hide 
      * TODO: add remove mode? 
      */
 
-
-
-    // Process filtered items
     document.querySelectorAll('[wfu-filter]')
       .forEach((element: HTMLElement) => {
 
@@ -149,9 +143,6 @@ const init = () => {
         }
 
     });
-
-
-
 
     // Process filtered items
     document.querySelectorAll('[wfu-filter-func]')
@@ -174,28 +165,9 @@ const init = () => {
 
     });
 
-
-
-
     /** 
      * Process nested lists
      */
-
-    // // Process standalone lists
-    // document.querySelectorAll('ul[wfu-lists], ol[wfu-lists]')
-    // .forEach((listElem: HTMLElement) => {
-
-    //     new Sa5NestedList(listElem)
-    //         .processNestedList();
-
-    // });
-
-/*
-    var listElems = $("ul[wfu-lists], ol[wfu-lists]");
-    $.each(listElems, function (id, listElem) {
-        processList(listElem);
-    });
-*/
 
     document.querySelectorAll('.w-richtext[wfu-lists]')
       .forEach((rtfElem: HTMLElement) => {
@@ -214,8 +186,6 @@ const init = () => {
         rtfElem.removeAttribute('wfu-lists');
 
     });
-
-
 
     /**
      * Limit to a multiple of X items 
@@ -251,14 +221,6 @@ const init = () => {
         }
 
     });
-
-
-
-//    obj.init();
-
-
-// Layout 
-
 
 }
 

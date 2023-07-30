@@ -538,17 +538,20 @@ export var expandMacrosInText = function (text, dict) {
 
 //#endregion
 
+/**
+ * Sequence a group of items
+ * @param groupElement 
+ */
 
-
-export function sequence (l: HTMLElement): void {
-    const group = l;
-    
+export function sequence (groupElement: HTMLElement): void {
+ 
     // Get the group name
-    const groupName = group.getAttribute("wfu-seq-group");
+    const groupName = groupElement.getAttribute("wfu-seq-group");
+    console.log("sequence group", groupName)
 
     // Find matching items 
     let i = 0;
-    const elements = group.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    const elements = groupElement.querySelectorAll(`[wfu-seq="${groupName}"]`);
     elements.forEach((element: Element) => {
         element.innerHTML = (++i).toString();
     }); 
