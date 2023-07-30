@@ -9,7 +9,7 @@
  */
 
 
-import { WfuLightbox } from '../webflow-core/lightbox';
+import { Sa5Lightbox } from '../webflow-core/lightbox';
 
 
 
@@ -22,7 +22,7 @@ const init = () => {
     elements.forEach((element) => { 
 
       // Do something with each element
-      const wfuLightbox = new WfuLightbox(element).init();
+      const wfuLightbox = new Sa5Lightbox(element).init();
 
     });
     

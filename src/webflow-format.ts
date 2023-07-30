@@ -15,12 +15,11 @@ import { Sa5Core } from './webflow-core'
 export class WebflowFormat {
 
     // Initialize
-    constructor() {
-
+    constructor() { 
     }
 
     // Simplest-case encoding for HTML5
-    formatField  (elem : HTMLElement) {
+    formatField(elem: HTMLElement) {
 
         // How to assign JSON string to Javascript variable?
         // https://stackoverflow.com/a/31372143
@@ -104,9 +103,6 @@ export class WebflowFormat {
 }
 
 
-
 // Register
 Sa5Core.startup(WebflowFormat);
-// window["sa5"] = window["sa5"] || []; // {};
-// window["sa5"]["Sa5Format"] = WebflowFormat;
 

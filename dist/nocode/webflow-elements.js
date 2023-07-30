@@ -1,6 +1,6 @@
 (() => {
   // src/webflow-core/lightbox.ts
-  var WfuLightbox = class {
+  var Sa5Lightbox = class {
     constructor(element, config = {}) {
       this._element = element;
     }
@@ -21,7 +21,7 @@
   var init = () => {
     const elements = document.querySelectorAll("[wfu-lightbox-captions]");
     elements.forEach((element) => {
-      const wfuLightbox = new WfuLightbox(element).init();
+      const wfuLightbox = new Sa5Lightbox(element).init();
     });
     let observer = new MutationObserver(lightBoxStateCallback);
     observer.observe(document.getElementsByTagName("html")[0], {

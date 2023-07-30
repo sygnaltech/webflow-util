@@ -1,6 +1,6 @@
 (() => {
   // src/webflow-core/lightbox.ts
-  var WfuLightbox = class {
+  var Sa5Lightbox = class {
     constructor(element, config = {}) {
       this._element = element;
     }

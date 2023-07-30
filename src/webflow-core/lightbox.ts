@@ -9,20 +9,14 @@
  */
 
 
-/*
- * Elements class.
+/** 
+ * Lightbox class.
  */
 
 var defaultConfig = {
-
-    // sessionStorage | localStorage | cookies
-//    method: 'sessionStorage',
-    
-//    prefix: 'track' 
-
 }
 
-export class WfuLightbox {
+export class Sa5Lightbox {
 
     config; // Optional config
     _element: HTMLElement;
