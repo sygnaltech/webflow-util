@@ -136,6 +136,11 @@ const init = () => {
     });
 */
 
+
+    /** 
+     * Sort items 
+     */
+
     // Process sorted items 
     // Innermost first, to make sure the sorting does not
     // break jQuery references 
@@ -168,9 +173,18 @@ const init = () => {
     });
 */
 
+// filter1
+
+    /**
+     * Filter items
+     * Place on item you want to conditionally hide 
+     * TODO: add remove mode? 
+     */
+
     // Process filtered items
     document.querySelectorAll('[wfu-filter-func]')
-    .forEach((element: HTMLElement) => {
+      .forEach((element: HTMLElement) => { 
+
         let funcName = element.getAttribute('wfu-filter-func');
         let fqFuncName = `window.${funcName}`;
     
@@ -184,56 +198,27 @@ const init = () => {
         if (typeof func === 'function') {
             let visible = func(element);
             if (visible) {
-                element.style.display = 'block';
+                element.removeAttribute("wfu-filter-func"); 
             }
         }
-    });
-    
-
-
-
-
-
-/* 
-    $("[wfu-filter-func]").each(function (index) {
-
-        var funcName = $(this).attr("wfu-filter-func");
-        var fqFuncName = `window.${funcName}`;  // ()`;
-//        var func = eval(`window["top"]["${funcName}"]`);
-
-        console.debug(fqFuncName);
-
-        var f = new Function(fqFuncName);
-
-//        console.log(f($(this)));
-//        alert(window);
-
-        // Test for function
-        // jquery isFunction deprecated
-        // https://stackoverflow.com/a/66824642
-//        console.log(typeof window[`"${funcName}"`] === "function");
-
-        var visible = eval(`${fqFuncName}($(this))`);
-//        console.log(visible);
-
-        if (visible)
-            $(this).css("display", "block");
-    });
-*/
-
-
-    //
-    // Nested Lists
-    //
-
-    // Process standalone lists
-    document.querySelectorAll('ul[wfu-lists], ol[wfu-lists]')
-    .forEach((listElem: HTMLElement) => {
-
-        new Sa5NestedList(listElem)
-            .processNestedList();
 
     });
+
+
+
+
+    /** 
+     * Process nested lists
+     */
+
+    // // Process standalone lists
+    // document.querySelectorAll('ul[wfu-lists], ol[wfu-lists]')
+    // .forEach((listElem: HTMLElement) => {
+
+    //     new Sa5NestedList(listElem)
+    //         .processNestedList();
+
+    // });
 
 /*
     var listElems = $("ul[wfu-lists], ol[wfu-lists]");
@@ -260,65 +245,48 @@ const init = () => {
 
     });
 
-/*
-    // Process RTF's with embedded lists
-    var rtfs = $(".w-richtext[wfu-lists]");
-    $.each(rtfs, function (rtfid, rtf) {
 
-        //    console.log(`RTF ${rtfid} -------------------------`);
 
-        var lists = $(rtf).children("ul,ol");
-
-        $.each(lists, function (il, list) {
-            processList(list);
-        });
-
-        // Remove the attribute
-        // So that the skeleton CSS will reveal the underlying
-        // processed content.
-        $(rtf).removeAttr("wfu-lists");
-
-    });
-*/
+    /**
+     * Limit to a multiple of X items 
+     */
 
     // Process limit multiple items
     // e.g. limit a list to a multiple of N items
     document.querySelectorAll('[wfu-limit-multiple]')
-    .forEach((element: HTMLElement) => {
+      .forEach((element: HTMLElement) => { 
+
+// .w-dyn-list
+// .w-dyn-items
+// .w-dyn-item
+
+        // If collection list wrapper, adjust to list
+        var listElement: HTMLElement = element;
+        if(element.classList.contains("w-dyn-list"))
+            listElement = element.children[0] as HTMLElement; 
+
+
+
         // Determine multiple limit
-        const items = element.children.length;
-        const multiple = Number(element.getAttribute('wfu-limit-multiple'));
-        const min = Number(element.getAttribute('wfu-limit-multiple-min')); // Minimum
-        let lastItem = Math.floor(items / multiple) * multiple;
-        if (lastItem < min) lastItem = min; // Apply minimum
+        const itemCount = listElement.children.length;
+        const itemMultipleCount = Number(element.getAttribute('wfu-limit-multiple'));
+        const itemMinimumCount = Number(element.getAttribute('wfu-limit-multiple-min')); // Minimum
+        let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
+        if (lastItem < itemMinimumCount) lastItem = itemMinimumCount; // Apply minimum
     
+console.log("itemCount", itemCount); 
+console.log("itemMultipleCount", itemMultipleCount); 
+console.log("lastItem", lastItem); 
+
         // Hide extra items over multiple limit
-        for (let hideItem = 1; hideItem < multiple; hideItem++) {
-            let child: HTMLElement = element.querySelector(`:nth-child(${lastItem + hideItem})`);
+        for (let hideItem = 1; hideItem < itemMultipleCount; hideItem++) {
+            let child: HTMLElement = listElement.querySelector(`:nth-child(${lastItem + hideItem})`);
             if (child) {
                 child.style.display = 'none';
             }
         }
-    });
-
-
-/* 
-    $("[wfu-limit-multiple]").each(function (index) {
-
-        // Determine multiple limit
-        const items = $(this).children().length;
-        const multiple = $(this).attr("wfu-limit-multiple");
-        const min = $(this).attr("wfu-limit-multiple-min"); // Minimum
-        var lastItem = Math.floor(items / multiple) * multiple;
-        if (lastItem < min) lastItem = min; // Apply minimum
-
-        // Hide extra items over multiple limit
-        for (var hideItem = 1; hideItem < multiple; hideItem++) {
-            $(this).children(`*:nth-child(${lastItem + hideItem})`).hide();
-        } 
 
     });
-*/
 
 
 

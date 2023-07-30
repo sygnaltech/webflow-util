@@ -667,12 +667,9 @@
           if (typeof func === "function") {
             let visible2 = func(element2);
             if (visible2) {
-              element2.style.display = "block";
+              element2.removeAttribute("wfu-filter-func");
             }
           }
-        });
-        document.querySelectorAll("ul[wfu-lists], ol[wfu-lists]").forEach((listElem) => {
-          new Sa5NestedList(listElem).processNestedList();
         });
         document.querySelectorAll(".w-richtext[wfu-lists]").forEach((rtfElem) => {
           rtfElem.querySelectorAll(":scope > ul, :scope > ol").forEach((list) => {
@@ -681,14 +678,20 @@
           rtfElem.removeAttribute("wfu-lists");
         });
         document.querySelectorAll("[wfu-limit-multiple]").forEach((element2) => {
-          const items = element2.children.length;
-          const multiple = Number(element2.getAttribute("wfu-limit-multiple"));
-          const min = Number(element2.getAttribute("wfu-limit-multiple-min"));
-          let lastItem = Math.floor(items / multiple) * multiple;
-          if (lastItem < min)
-            lastItem = min;
-          for (let hideItem = 1; hideItem < multiple; hideItem++) {
-            let child = element2.querySelector(`:nth-child(${lastItem + hideItem})`);
+          var listElement = element2;
+          if (element2.classList.contains("w-dyn-list"))
+            listElement = element2.children[0];
+          const itemCount = listElement.children.length;
+          const itemMultipleCount = Number(element2.getAttribute("wfu-limit-multiple"));
+          const itemMinimumCount = Number(element2.getAttribute("wfu-limit-multiple-min"));
+          let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
+          if (lastItem < itemMinimumCount)
+            lastItem = itemMinimumCount;
+          console.log("itemCount", itemCount);
+          console.log("itemMultipleCount", itemMultipleCount);
+          console.log("lastItem", lastItem);
+          for (let hideItem = 1; hideItem < itemMultipleCount; hideItem++) {
+            let child = listElement.querySelector(`:nth-child(${lastItem + hideItem})`);
             if (child) {
               child.style.display = "none";
             }
