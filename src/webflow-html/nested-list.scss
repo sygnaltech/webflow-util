@@ -54,31 +54,35 @@ html:not([data-wf-mode="editor"])
 html:not([data-wf-mode="editor"]) 
   [wfu-list-theme=default] {
 
-    .wfu-pro {
+    li.wfu-pro {
         list-style-type: none;
-        color: green;
 
         // https://www.toptal.com/designers/htmlarrows/symbols/
         // https://caniuse.com/css-marker-pseudo
-        ::marker { // ::before
-            content: "\2714   ";
-//            content: "\2611   ";
+        ::marker { 
+            content: "\2714   "; 
         }
 
     }
 
-    .wfu-con {
+    span.wfu-pro {
+        color: green;
+    }
+
+    li.wfu-con {
         list-style-type: none;
-        color: red;
 
         // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
         // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
         // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
         ::marker {
             content: "\2716   "; // x
-//            content: "\2612   ";
         }
- 
+
+    }
+
+    span.wfu-con {
+        color: red;
     }
 
 }
@@ -116,29 +120,35 @@ html:not([data-wf-mode="editor"])
 html:not([data-wf-mode="editor"]) 
   [wfu-list-theme=default] {
 
-    .wfu-pro {
+    li.wfu-pro {
         list-style-type: none;
-        color: green;
 
         // https://www.toptal.com/designers/htmlarrows/symbols/
         // https://caniuse.com/css-marker-pseudo
-        ::marker { // ::before
-         //   content: "\2611   ";
+        ::marker { 
+            content: "\2714   "; 
         }
 
     }
 
-    .wfu-con {
+    span.wfu-pro {
+        color: green;
+    }
+
+    li.wfu-con {
         list-style-type: none;
-        color: red;
 
         // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
         // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
         // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
         ::marker {
-       //     content: "\2612   ";
+            content: "\2716   "; // x
         }
 
+    }
+
+    span.wfu-con {
+        color: red;
     }
 
 }

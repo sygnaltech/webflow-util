@@ -36,19 +36,23 @@ html:not([data-wf-mode=editor]) [wfu-list-theme=default] ol.wfu-list-level-5 {
   list-style-type: circle;
 }
 
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-pro {
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-pro {
   list-style-type: none;
-  color: green;
 }
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-pro ::marker {
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-pro ::marker {
   content: "✔  ";
 }
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-con {
-  list-style-type: none;
-  color: red;
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] span.wfu-pro {
+  color: green;
 }
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-con ::marker {
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-con {
+  list-style-type: none;
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-con ::marker {
   content: "✖  ";
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] span.wfu-con {
+  color: red;
 }
 
 html:not([data-wf-mode=editor]) [wfu-list-theme=modern] ol.wfu-list-level-1 {
@@ -67,14 +71,25 @@ html:not([data-wf-mode=editor]) [wfu-list-theme=modern] ol.wfu-list-level-5 {
   list-style-type: circle;
 }
 
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-pro {
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-pro {
   list-style-type: none;
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-pro ::marker {
+  content: "✔  ";
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] span.wfu-pro {
   color: green;
 }
-html:not([data-wf-mode=editor]) [wfu-list-theme=default] .wfu-con {
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-con {
   list-style-type: none;
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] li.wfu-con ::marker {
+  content: "✖  ";
+}
+html:not([data-wf-mode=editor]) [wfu-list-theme=default] span.wfu-con {
   color: red;
 }
+
 /*
  * Editor mode detection 
  */
