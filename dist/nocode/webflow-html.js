@@ -463,15 +463,13 @@
             dir,
             children: `${items.length} children`
           });
-          console.debug("before.");
-          console.debug(list.children);
           if (dir == "random") {
             items.sort(() => Math.random() - 0.5);
           } else {
             items.sort((a, b) => {
               var _a, _b;
-              const key1 = ((_a = a.querySelector("[wfu-sort-key]")) == null ? void 0 : _a.getAttribute("wfu-sort-key")) || "";
-              const key2 = ((_b = b.querySelector("[wfu-sort-key]")) == null ? void 0 : _b.getAttribute("wfu-sort-key")) || "";
+              const key1 = a.getAttribute("wfu-sort-key") || ((_a = a.querySelector("[wfu-sort-key]")) == null ? void 0 : _a.getAttribute("wfu-sort-key")) || "";
+              const key2 = b.getAttribute("wfu-sort-key") || ((_b = b.querySelector("[wfu-sort-key]")) == null ? void 0 : _b.getAttribute("wfu-sort-key")) || "";
               let sortResult = 1;
               switch (sortType) {
                 case "date":
@@ -495,12 +493,11 @@
               }
               return sortResult;
             });
-            console.debug("writing.");
-            while (list.firstChild) {
-              list.firstChild.remove();
-            }
-            items.forEach((item) => list.appendChild(item));
           }
+          while (list.firstChild) {
+            list.firstChild.remove();
+          }
+          items.forEach((item) => list.appendChild(item));
           list.removeAttribute("wfu-sort");
           console.groupEnd();
         }
@@ -661,7 +658,6 @@
         document.querySelectorAll("[wfu-filter-func]").forEach((element2) => {
           let funcName = element2.getAttribute("wfu-filter-func");
           let fqFuncName = `window.${funcName}`;
-          console.debug(fqFuncName);
           let f = new Function(fqFuncName);
           let func = window[funcName];
           if (typeof func === "function") {
@@ -687,9 +683,6 @@
           let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
           if (lastItem < itemMinimumCount)
             lastItem = itemMinimumCount;
-          console.log("itemCount", itemCount);
-          console.log("itemMultipleCount", itemMultipleCount);
-          console.log("lastItem", lastItem);
           for (let hideItem = 1; hideItem < itemMultipleCount; hideItem++) {
             let child = listElement.querySelector(`:nth-child(${lastItem + hideItem})`);
             if (child) {

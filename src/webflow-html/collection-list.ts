@@ -51,18 +51,23 @@ export class Sa5CollectionList {
             children: `${items.length} children`
         });
 
-        console.debug('before.');
-
-        console.debug(list.children); 
+//        console.debug(list.children); 
 
         // If Random sort, do it now 
         if(dir == "random") {
+
             // Randomize
-            items.sort(() => Math.random() - 0.5);
+            items.sort(() => Math.random() - 0.5); 
+
         } else {
+
             items.sort((a: Element, b: Element) => {
-                const key1 = a.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
-                const key2 = b.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
+                const key1 = 
+                    a.getAttribute("wfu-sort-key") || 
+                        a.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
+                const key2 = 
+                    b.getAttribute("wfu-sort-key") ||
+                        b.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
 
                 // Determine asc sort result
                 let sortResult = 1;
@@ -80,6 +85,9 @@ export class Sa5CollectionList {
                         break;
                     case "string":
                     default:
+
+
+
                         sortResult = key1.localeCompare(key2);
                         console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
                         break;
@@ -93,12 +101,13 @@ export class Sa5CollectionList {
                 return sortResult;
             });
 
-            console.debug('writing.');
-            while (list.firstChild) {
-                list.firstChild.remove();
-            }
-            items.forEach(item => list.appendChild(item));
         }
+
+        // Write children back 
+        while (list.firstChild) {
+            list.firstChild.remove();
+        }
+        items.forEach(item => list.appendChild(item));
 
         // Remove attribute to display 
         list.removeAttribute("wfu-sort");

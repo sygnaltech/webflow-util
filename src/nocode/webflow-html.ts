@@ -137,13 +137,20 @@ const init = () => {
 */
 
 
+
+
+
+
+
+
+
+
+
     /** 
      * Sort items 
+     * Innermost first, to support nested sorts
      */
 
-    // Process sorted items 
-    // Innermost first, to make sure the sorting does not
-    // break jQuery references 
     document.querySelectorAll('[wfu-sort] [wfu-sort] [wfu-sort]')
         .forEach((element: HTMLElement) => {
             new Sa5CollectionList(element)
@@ -161,18 +168,6 @@ const init = () => {
         });
 
 
-/*
-    $("[wfu-sort] [wfu-sort] [wfu-sort]").each(function () {
-        sortCollectionList($(this));
-    });
-    $("[wfu-sort] [wfu-sort]").each(function () {
-        sortCollectionList($(this));
-    });
-    $("[wfu-sort]").each(function () {
-        sortCollectionList($(this));
-    });
-*/
-
 // filter1
 
     /**
@@ -188,7 +183,7 @@ const init = () => {
         let funcName = element.getAttribute('wfu-filter-func');
         let fqFuncName = `window.${funcName}`;
     
-        console.debug(fqFuncName);
+//        console.debug(fqFuncName);
     
         let f = new Function(fqFuncName);
     
@@ -265,18 +260,12 @@ const init = () => {
         if(element.classList.contains("w-dyn-list"))
             listElement = element.children[0] as HTMLElement; 
 
-
-
         // Determine multiple limit
         const itemCount = listElement.children.length;
         const itemMultipleCount = Number(element.getAttribute('wfu-limit-multiple'));
         const itemMinimumCount = Number(element.getAttribute('wfu-limit-multiple-min')); // Minimum
         let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
         if (lastItem < itemMinimumCount) lastItem = itemMinimumCount; // Apply minimum
-    
-console.log("itemCount", itemCount); 
-console.log("itemMultipleCount", itemMultipleCount); 
-console.log("lastItem", lastItem); 
 
         // Hide extra items over multiple limit
         for (let hideItem = 1; hideItem < itemMultipleCount; hideItem++) {
