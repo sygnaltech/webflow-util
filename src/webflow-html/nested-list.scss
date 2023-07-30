@@ -3,53 +3,153 @@
  * SA5 Nested lists
  */
 
+// TODO: Add sk-loader
+// Remove list-level tag after 
 
-.w-richtext ul > ul, .w-richtext ol > ol {
-    margin-top: 0;
+.w-richtext {
+
+    ul > ul, ol > ol {
+        margin-top: 0;
+    }
+    
+    ul ul, ol ol {
+        margin-top: 0.2rem;
+    }
+
 }
 
-.w-richtext ul ul, .w-richtext ol ol {
-    margin-top: 0.2rem;
+//#region THEME - Default
+
+html:not([data-wf-mode="editor"]) 
+  [wfu-list-theme=default] {
+
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+    ol.wfu-list-level-1 {
+        list-style-type: decimal;
+    }
+
+    ol.wfu-list-level-2 {
+        list-style-type: lower-alpha;
+    }
+
+    ol.wfu-list-level-3 {
+        list-style-type: lower-roman;
+    }
+
+    ol.wfu-list-level-4 {
+        list-style-type: disc;
+    }
+
+    ol.wfu-list-level-5 {
+        list-style-type: circle;
+    }
+
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+// ul {
+//     list-style: circle inside url('marker.png');
+//   }
+  
 
-ol .wfu-list-level-2 {
-    list-style-type: decimal-leading-zero;
+html:not([data-wf-mode="editor"]) 
+  [wfu-list-theme=default] {
+
+    .wfu-pro {
+        list-style-type: none;
+        color: green;
+
+        // https://www.toptal.com/designers/htmlarrows/symbols/
+        // https://caniuse.com/css-marker-pseudo
+        ::marker { // ::before
+            content: "\2714   ";
+//            content: "\2611   ";
+        }
+
+    }
+
+    .wfu-con {
+        list-style-type: none;
+        color: red;
+
+        // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+        // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+        ::marker {
+            content: "\2716   "; // x
+//            content: "\2612   ";
+        }
+ 
+    }
+
 }
 
-ol .wfu-list-level-3 {
-    list-style-type: lower-roman;
+//#endregion
+
+//#region THEME - Modern
+
+html:not([data-wf-mode="editor"])
+  [wfu-list-theme=modern] {
+
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+    ol.wfu-list-level-1 {
+        list-style-type: decimal-leading-zero;
+    }
+
+    ol.wfu-list-level-2 {
+        list-style-type: lower-alpha;
+    }
+
+    ol.wfu-list-level-3 {
+        list-style-type: lower-roman;
+    }
+
+    ol.wfu-list-level-4 {
+        list-style-type: disc;
+    }
+
+    ol.wfu-list-level-5 {
+        list-style-type: circle;
+    }
+
+} 
+
+html:not([data-wf-mode="editor"]) 
+  [wfu-list-theme=default] {
+
+    .wfu-pro {
+        list-style-type: none;
+        color: green;
+
+        // https://www.toptal.com/designers/htmlarrows/symbols/
+        // https://caniuse.com/css-marker-pseudo
+        ::marker { // ::before
+         //   content: "\2611   ";
+        }
+
+    }
+
+    .wfu-con {
+        list-style-type: none;
+        color: red;
+
+        // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+        // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+        ::marker {
+       //     content: "\2612   ";
+        }
+
+    }
+
 }
 
-.wfu-pro {
-    list-style-type: none;
-    color: green;
-}
-
-// https://www.toptal.com/designers/htmlarrows/symbols/
-// https://caniuse.com/css-marker-pseudo
-.wfu-pro::marker { // ::before
-    content: "\2611   ";
-}
-
-.wfu-con {
-    list-style-type: none;
-    color: red;
-}
-
-// https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
-// https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
-// https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
-.wfu-con::marker {
-    content: "\2612   ";
-}
-
-
+//#endregion
 
 /*
  * Editor mode detection 
  */
+
+/*
 
 html:not([data-wf-mode="editor"]) .w-richtext ul ul, .w-richtext ol ol {
     margin-top: 0.5rem;
@@ -82,3 +182,4 @@ html:not([data-wf-mode="editor"]) .wfu-con {
     }
 
 
+*/

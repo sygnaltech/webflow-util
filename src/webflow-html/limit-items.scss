@@ -1,9 +1,9 @@
 
 
-/*
+/**
  * SCSS Limit collection list items, at breakpoint levels
  */
-
+  
 @media screen {
 
   [wfu-limit-items="1"] > div:nth-child(n+2):nth-child(-n+1000) {

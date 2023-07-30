@@ -97,15 +97,30 @@ export class Sa5NestedList {
         // ];
 
         // Replace list entirely
+        let listWrapper = document.createElement("div"); 
+        listWrapper.setAttribute("wfu-list-theme", 
+            this._element.getAttribute("wfu-list-theme") || "default"
+            );
+        listWrapper.appendChild(
+            this.createNestedListFromArray(this._element.nodeName, items)
+            );
+
         this._element.replaceWith(
-            this.createList(this._element.nodeName, items)
+            listWrapper
+//            this.createNestedListFromArray(this._element.nodeName, items)
             );
 
     }
     
-    private createList(listElementType: string = 'UL', items: NestedListItem[]): HTMLElement {
+    private createNestedListFromArray(listElementType: string = 'UL', items: NestedListItem[]): HTMLElement {
+
+        // Create root list
         let root = document.createElement(listElementType);
         root.setAttribute("role", "list"); // every level? a11y 
+        root.classList.add(`wfu-list-level-1`);  
+        // root.setAttribute("wfu-list-theme", 
+        //     this._element.getAttribute("wfu-list-theme") || "default"
+        //     );
         let currentParent = root;
         let parents = [root];
       
@@ -113,20 +128,49 @@ export class Sa5NestedList {
 
             const item = items[i];
             const li = document.createElement('li');
-            li.textContent = item.text;
-            if (item.mode == 'pro')
-                li.classList.add("wfu-pro");
-            if (item.mode == 'con')
-                li.classList.add("wfu-con");
+            switch(item.mode) {
+                case 'pro':
+                    li.classList.add("wfu-pro");
+                    break;
+                case 'con':
+                    li.classList.add("wfu-con");
+                    break;
+            }
+
+            // Add item LI text
+            // as SPAN 
+            if(item.text) {
+                let span = document.createElement("span"); 
+                span.textContent = item.text; 
+                switch(item.mode) {
+                    case 'pro':
+                        span.classList.add("wfu-pro");
+                        break;
+                    case 'con':
+                        span.classList.add("wfu-con");
+                        break;
+                } 
+                li.appendChild(span); 
+            }
 
             if (item.indent > parents.length) {
 
                 for (let j = parents.length; j < item.indent; j++) {
+
+                    // No LI children? create one 
+                    if(!parents[j - 1].lastChild) {
+                        const newLI = document.createElement("li");
+                        parents[j - 1].appendChild(newLI);
+                    }
+
+                    // Create UL
                     const newUL = document.createElement(listElementType);
-                    let newULparent = parents[j - 1].lastChild || parents[j - 1];
+                    let newULparent: HTMLElement = parents[j - 1].lastChild as HTMLElement || parents[j - 1];
+                    newUL.classList.add(`wfu-list-level-${j + 1}`);  
                     newULparent.appendChild(newUL);
                     parents.push(newUL);
-                }
+                } 
+
             } else if (item.indent < parents.length) {
                 parents = parents.slice(0, item.indent);
             }
