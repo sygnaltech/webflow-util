@@ -54,31 +54,29 @@ html:not([data-wf-mode="editor"])
 html:not([data-wf-mode="editor"]) 
   [wfu-list-theme=default] {
 
-    li.wfu-pro {
+    // https://www.toptal.com/designers/htmlarrows/symbols/
+    // https://caniuse.com/css-marker-pseudo
+    li:has(> span.wfu-pro) {
         list-style-type: none;
-
-        // https://www.toptal.com/designers/htmlarrows/symbols/
-        // https://caniuse.com/css-marker-pseudo
-        ::marker { 
-            content: "\2714   "; 
-        }
-
+    }
+    li:has(> span.wfu-pro)::marker { 
+        content: "\2714   "; 
+        color: green;
     }
 
     span.wfu-pro {
         color: green;
     }
 
-    li.wfu-con {
+    // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+    // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+    li:has(> span.wfu-con) {
         list-style-type: none;
-
-        // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
-        // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
-        ::marker {
-            content: "\2716   "; // x
-        }
-
+    }
+    li:has(> span.wfu-con)::marker {
+        content: "\2716   "; // x
+        color: red;
     }
 
     span.wfu-con {
@@ -118,33 +116,31 @@ html:not([data-wf-mode="editor"])
 } 
 
 html:not([data-wf-mode="editor"]) 
-  [wfu-list-theme=default] {
+  [wfu-list-theme=modern] {
 
-    li.wfu-pro {
+    // https://www.toptal.com/designers/htmlarrows/symbols/
+    // https://caniuse.com/css-marker-pseudo
+    li:has(> span.wfu-pro) {
         list-style-type: none;
-
-        // https://www.toptal.com/designers/htmlarrows/symbols/
-        // https://caniuse.com/css-marker-pseudo
-        ::marker { 
-            content: "\2714   "; 
-        }
-
+    }
+    li:has(> span.wfu-pro)::marker { 
+        content: "\2191   "; // ↑ 
+        color: green;
     }
 
     span.wfu-pro {
         color: green;
     }
 
-    li.wfu-con {
+    // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+    // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+    li:has(> span.wfu-con) {
         list-style-type: none;
-
-        // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
-        // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
-        ::marker {
-            content: "\2716   "; // x
-        }
-
+    }
+    li:has(> span.wfu-con)::marker {
+        content: "\2193   "; // ↓
+        color: red;
     }
 
     span.wfu-con {
@@ -155,6 +151,68 @@ html:not([data-wf-mode="editor"])
 
 //#endregion
 
+//#region THEME - Fun
+
+html:not([data-wf-mode="editor"])
+  [wfu-list-theme=fun] {
+
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type
+    ol.wfu-list-level-1 {
+        list-style-type: decimal-leading-zero;
+    }
+
+    ol.wfu-list-level-2 {
+        list-style-type: lower-alpha;
+    }
+
+    ol.wfu-list-level-3 {
+        list-style-type: lower-roman;
+    }
+
+    ol.wfu-list-level-4 {
+        list-style-type: disc;
+    }
+
+    ol.wfu-list-level-5 {
+        list-style-type: circle;
+    }
+
+} 
+
+html:not([data-wf-mode="editor"]) 
+  [wfu-list-theme=fun] {
+
+    li:has(> span.wfu-pro) {
+        list-style-type: none;
+    }
+    li:has(> span.wfu-pro)::marker { 
+        content: "👍   "; 
+    }
+
+    span.wfu-pro {
+//        color: green;
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_lists
+    // https://webdesign.tutsplus.com/tutorials/next-level-list-bullets-with-css-marker--cms-37212
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/list-style
+    li:has(> span.wfu-con) {
+        list-style-type: none;
+    }
+    li:has(> span.wfu-con)::marker { 
+        content: "👎   "; 
+    }
+
+    span.wfu-con {
+//        color: red;
+    }
+
+}
+
+//#endregion
+
+// ✅ ❌ 
+ 
 /*
  * Editor mode detection 
  */

@@ -10,7 +10,7 @@
  * the imported file have to be accessed with a namespace based on the filename. 
  * This helps to prevent naming conflicts and makes the code easier to understand.
  */
-      
+        
   
 @use '../webflow-html/nested-list.scss';
 
@@ -20,7 +20,7 @@
 [wfu-decode] {
     display: none;
 }
-
+   
 /*
  * Text trucation w/ ellipsis support
  */
@@ -90,14 +90,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
 
-
+ 
 .w-richtext[wfu-lists-loading] li {
     font-family: 'Redacted', cursive;
     color: black;
     em {
         font-style: normal;
     }
-   
+    
     a {
         color: inherit;
     }
