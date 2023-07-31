@@ -49,8 +49,8 @@
   })(WebflowFormMode || {});
   var Sa5Form = class {
     constructor(element) {
-      let debug = new Sa5Debug("sa5-form");
-      debug.debug("Initializing");
+      this.debug = new Sa5Debug("sa5-form");
+      this.debug.debug("Initializing");
       if (element.tagName == "FORM")
         this.formBlockElement = element.parentElement;
       else
@@ -63,26 +63,27 @@
     init() {
     }
     setMode(mode, message = "") {
-      this.debug.debug("setting form mode.");
+      this.debug.debug("setting mode.", mode, message);
       let success = this.formBlockElement.querySelector("div.w-form-done");
       let error = this.formBlockElement.querySelector("div.w-form-fail");
       switch (mode) {
         case 0 /* Active */:
-          this.debug.debug("Change Webflow form mode to active.");
           this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "none";
           break;
         case 1 /* Success */:
-          this.debug.debug("Change Webflow form mode to success (done).");
-          success.querySelector("[wfu-form-message]").innerHTML = message;
+          let successMessage = error.querySelector("[wfu-form-message]");
+          if (successMessage)
+            successMessage.innerHTML = message;
           this.formElement.style.display = "none";
           success.style.display = "block";
           error.style.display = "none";
           break;
         case 2 /* Error */:
-          this.debug.debug("Change Webflow form mode to error.");
-          error.querySelector("[wfu-form-message]").innerHTML = message;
+          let errorMessage = error.querySelector("[wfu-form-message]");
+          if (errorMessage)
+            errorMessage.innerHTML = message;
           this.formElement.style.display = "none";
           success.style.display = "none";
           error.style.display = "block";

@@ -1,4 +1,25 @@
 (() => {
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -89,8 +110,8 @@
   // src/webflow-form.ts
   var Sa5Form = class {
     constructor(element) {
-      let debug = new Sa5Debug("sa5-form");
-      debug.debug("Initializing");
+      this.debug = new Sa5Debug("sa5-form");
+      this.debug.debug("Initializing");
       if (element.tagName == "FORM")
         this.formBlockElement = element.parentElement;
       else
@@ -103,31 +124,234 @@
     init() {
     }
     setMode(mode, message = "") {
-      this.debug.debug("setting form mode.");
+      this.debug.debug("setting mode.", mode, message);
       let success = this.formBlockElement.querySelector("div.w-form-done");
       let error = this.formBlockElement.querySelector("div.w-form-fail");
       switch (mode) {
         case 0 /* Active */:
-          this.debug.debug("Change Webflow form mode to active.");
           this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "none";
           break;
         case 1 /* Success */:
-          this.debug.debug("Change Webflow form mode to success (done).");
-          success.querySelector("[wfu-form-message]").innerHTML = message;
+          let successMessage = error.querySelector("[wfu-form-message]");
+          if (successMessage)
+            successMessage.innerHTML = message;
           this.formElement.style.display = "none";
           success.style.display = "block";
           error.style.display = "none";
           break;
         case 2 /* Error */:
-          this.debug.debug("Change Webflow form mode to error.");
-          error.querySelector("[wfu-form-message]").innerHTML = message;
+          let errorMessage = error.querySelector("[wfu-form-message]");
+          if (errorMessage)
+            errorMessage.innerHTML = message;
           this.formElement.style.display = "none";
           success.style.display = "none";
           error.style.display = "block";
           break;
       }
+    }
+  };
+
+  // src/webflow-form/handler/form-handler.ts
+  var WfuFormHandler = class {
+    constructor(form, config = {}) {
+      this.debug = new Sa5Debug("sa5-form-handler");
+      this.debug.debug("Initializing");
+      this.form = form;
+      let action = this.form.formElement.getAttribute("action");
+      this.debug.debug("action", action);
+      let waitMessage = this.form.formElement.querySelector("input[type=submit]").getAttribute("data-wait");
+      this.debug.debug(`waitMessage: ${waitMessage}`);
+    }
+    handleResponse(data, status, xhr) {
+      console.log("response", data);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.form.setMode(1 /* Success */);
+    }
+    handleFailResponse(jqxhr, settings, ex) {
+      this.debug.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+      this.debug.debug(`Webhook response FAILED settings: ${settings}`);
+      this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+    }
+    formDataToJson(formElement) {
+      let formData = new FormData(formElement);
+      let jsonObject = {};
+      for (const [key, value] of formData.entries()) {
+        jsonObject[key] = value;
+      }
+      return JSON.stringify(jsonObject);
+    }
+    init() {
+      const form = this.form;
+      this.debug.debug("WFU Handle Form submit to webhook (success response).");
+      this.form.formElement.addEventListener("submit", (e) => __async(this, null, function* () {
+        e.preventDefault();
+        this.debug.debug("Posting data.");
+        this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
+        let formData = new FormData(this.form.formElement);
+        fetch(this.form.formElement.action, {
+          method: "POST",
+          body: formData
+        }).then((response) => response.json()).then((data) => this.handleResponse(data, "success", null)).catch((error) => this.handleFailResponse(error, "error", error));
+        return false;
+      }));
+    }
+  };
+
+  // src/webflow-form/handler/basin-handler.ts
+  var WfuFormHandlerBasin = class extends WfuFormHandler {
+    constructor(form, config = {}) {
+      super(form, config);
+    }
+  };
+
+  // src/webflow-form/handler/make-handler.ts
+  var WfuFormHandlerMake = class extends WfuFormHandler {
+    constructor(form, config) {
+      super(form, config);
+    }
+    handleResponse(data, status, xhr) {
+      var _a, _b;
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        this.form.setMode(
+          1 /* Success */,
+          (_a = xhr.responseJSON) == null ? void 0 : _a.message
+        );
+      } else {
+        this.form.setMode(
+          2 /* Error */,
+          (_b = xhr.responseJSON) == null ? void 0 : _b.message
+        );
+      }
+    }
+    handleFailResponse(jqxhr, settings, ex) {
+      var _a, _b;
+      this.debug.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
+      this.debug.debug(`Webhook response FAILED settings: ${settings}`);
+      this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+      if (jqxhr.status == 400) {
+        console.error(jqxhr.responseText);
+        this.form.setMode(
+          2 /* Error */,
+          (_a = jqxhr.responseJSON) == null ? void 0 : _a.message
+        );
+      } else {
+        this.form.setMode(
+          2 /* Error */,
+          (_b = jqxhr.responseJSON) == null ? void 0 : _b.message
+        );
+      }
+    }
+  };
+
+  // src/webflow-form/handler/n8n-handler.ts
+  var WfuFormHandlerN8N = class extends WfuFormHandler {
+    constructor(form, config) {
+      super(form, config);
+    }
+    handleResponse(data, status, xhr) {
+      var _a, _b;
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        this.form.setMode(
+          1 /* Success */,
+          (_a = xhr.responseJSON) == null ? void 0 : _a.message
+        );
+      } else {
+        this.form.setMode(
+          2 /* Error */,
+          (_b = xhr.responseJSON) == null ? void 0 : _b.message
+        );
+      }
+    }
+    handleFailResponse(jqxhr, settings, ex) {
+      var _a, _b;
+      this.debug.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
+      this.debug.debug(`Webhook response FAILED settings: ${settings}`);
+      this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+      if (jqxhr.status == 400) {
+        console.error(jqxhr.responseText);
+        this.form.setMode(
+          2 /* Error */,
+          (_a = jqxhr.responseJSON) == null ? void 0 : _a.message
+        );
+      } else {
+        this.form.setMode(
+          2 /* Error */,
+          (_b = jqxhr.responseJSON) == null ? void 0 : _b.message
+        );
+      }
+    }
+  };
+
+  // src/webflow-form/handler/zapier-handler.ts
+  var WfuFormHandlerZapier = class extends WfuFormHandler {
+    constructor(form, config) {
+      super(form, config);
+    }
+    handleResponse(data, status, xhr) {
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Zapier result: ${data.status}`);
+      if (data.status == "success") {
+        this.form.setMode(1 /* Success */);
+      } else {
+        this.form.setMode(2 /* Error */);
+      }
+    }
+    handleFailResponse(jqxhr, settings, ex) {
+      this.debug.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+      this.debug.debug(`Webhook response FAILED settings: ${settings}`);
+      this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+    }
+  };
+
+  // src/webflow-form/handler/form-handler-factory.ts
+  var WfuFormHandlerFactory = class {
+    constructor(form, config = {}) {
+    }
+    static create(form, config = {}) {
+      var handler;
+      let type = form.formBlockElement.getAttribute("wfu-form-handler");
+      switch (type) {
+        case "zapier":
+          handler = new WfuFormHandlerZapier(form, config);
+          handler.init();
+          break;
+        case "n8n":
+          handler = new WfuFormHandlerN8N(form, config);
+          handler.init();
+          break;
+        case "make":
+          handler = new WfuFormHandlerMake(form, config);
+          handler.init();
+          break;
+        case "basin":
+          handler = new WfuFormHandlerBasin(form, config);
+          handler.init();
+          break;
+        case "other":
+        case "":
+          handler = new WfuFormHandler(form, config);
+          handler.init();
+          break;
+        default:
+          console.error(`Unknown wfu-form-handler ${type}`);
+          break;
+      }
+      return handler;
+    }
+    static createFromElement(elem) {
+      let form = new Sa5Form(elem);
+      if (!form.isValid) {
+        console.error("Cannot only instantiate Sa5 form handler from a Form element.");
+      }
+      return WfuFormHandlerFactory.create(form);
     }
   };
 
@@ -173,7 +397,8 @@
       Sa5FormIPInfo.createFromElement(element).init();
     });
     document.querySelectorAll("[wfu-form-handler]").forEach((element) => {
-      Sa5FormIPInfo.createFromElement(element).init();
+      console.log("installing form handler.");
+      WfuFormHandlerFactory.createFromElement(element).init();
     });
   };
   document.addEventListener("DOMContentLoaded", init);

@@ -3,10 +3,10 @@ import { Sa5Core } from '../../webflow-core';
 import { Sa5Debug } from '../../webflow-core/debug';
 import { Sa5Form, WebflowFormMode } from '../../webflow-form';
 
-import { WfuFormHandlerBasin } from './basin-handler';
-import { WfuFormHandlerMake } from './make-handler';
-import { WfuFormHandlerN8N } from './n8n-handler';
-import { WfuFormHandlerZapier } from './zapier-handler';
+// import { WfuFormHandlerBasin } from './basin-handler';
+// import { WfuFormHandlerMake } from './make-handler';
+// import { WfuFormHandlerN8N } from './n8n-handler';
+// import { WfuFormHandlerZapier } from './zapier-handler';
 
 
 /*
@@ -25,23 +25,25 @@ export class WfuFormHandler {
     debug: Sa5Debug;
     form: Sa5Form;
 
-    formBlock;
+//    formBlock;
     config; // Optional config
-    action;
-    waitMessage;
+    // action;
+    // waitMessage;
     handler;
 
     // static get WebflowFormMode() {
     //     return WebflowFormMode;
     // }
 
-    constructor(form: Sa5Form, config) {
+    constructor(form: Sa5Form, config = {}) {
 
         // Initialize debugging
-        let debug = new Sa5Debug("sa5-form-handler");
-        debug.debug ("Initializing");
+        this.debug = new Sa5Debug("sa5-form-handler");
+        this.debug.debug ("Initializing");
 
-        this.handler = this;
+        this.form = form; 
+
+//        this.handler = this;
 
 //        this.config = $.extend({}, defaultFormHandlerConfig, config);
 
@@ -58,18 +60,20 @@ export class WfuFormHandler {
         // this.form = this.formBlock.children("form");
         // this.debug.debug(this.form);
 
-        this.action = this.form.formElement.getAttribute("action");
-        this.debug.debug("action", this.action);
+        let action = this.form.formElement.getAttribute("action");
+        this.debug.debug("action", action);
 
         // Get the Webflow wait message
-        this.waitMessage = this.form.formElement.querySelector("input[type=submit]")
+        let waitMessage = this.form.formElement.querySelector("input[type=submit]")
             .getAttribute("data-wait");
-        this.debug.debug(`waitMessage: ${this.waitMessage}`);
+        this.debug.debug(`waitMessage: ${waitMessage}`);
 
     }
 
 
     handleResponse(data, status, xhr) {
+
+console.log("response", data); 
 
         // How to access the correct `this` inside a callback 
         // https://stackoverflow.com/a/20279485
@@ -89,39 +93,90 @@ export class WfuFormHandler {
 
     }
 
+    formDataToJson(formElement: HTMLFormElement): string {
+        let formData = new FormData(formElement);
+        let jsonObject: { [key: string]: FormDataEntryValue; } = {};
+    
+        for (const [key, value] of formData.entries()) {
+            jsonObject[key] = value;
+        }
+    
+        return JSON.stringify(jsonObject);
+    }
+    
+
+    
+
     init() {
 
-        const handler = this.handler;
+//        const handler = this.handler;
         const form = this.form;
 
         this.debug.debug("WFU Handle Form submit to webhook (success response).");
 
-        const that = this;
+//        const that = this;
 
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
 
-        this.form.formElement.addEventListener('submit', (e) => {
+        this.form.formElement.addEventListener('submit', async (e) => {
 
             e.preventDefault();
 
             // Get form post data
             //    var data = $(form).serialize();
 
-            that.debug.debug("Posting data.");
-            that.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
-            that.debug.debug(`Data - ${this.form.formElement.serialize()}`);
+            this.debug.debug("Posting data.");
+            this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
+//            this.debug.debug(`Data - ${this.form.formElement.serialize()}`);
 
             // Post to hook,
             // Capture & handle result
             let formData = new FormData(this.form.formElement);
+
+// // let formElement = <HTMLFormElement>document.getElementById('your-form-id');
+// let json = this.formDataToJson(this.form.formElement);
+
+// console.log(json);  // Outputs the JSON string
+
+//console.log(this.form.formElement.action);
+
+//console.log(formData); 
+
+/** 
+            try {
+
+                let response = await fetch(this.form.formElement.action, {
+                    method: 'POST',
+                    body: formData,
+                });
+        
+//console.log(response); 
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+  //              console.log(response.ok); 
+        
+                let jsonResponse = await response.json();
+                console.log(jsonResponse); // Outputs the server response
+
+//                console.log("done"); 
+
+
+            } catch (error) {
+
+                console.error('Error:', error);
+
+            }
+*/
             fetch(this.form.formElement.action, {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
-            .then(data => handler.handleResponse(data, "success")) //, response))
-            .catch((error) => handler.handleFailResponse(error, "error", error));
+            .then(data => this.handleResponse(data, "success", null)) // response
+            .catch((error) => this.handleFailResponse(error, "error", error));
             // .finally(() => {
             //     // Any cleanup code goes here
             // });
@@ -148,66 +203,66 @@ export class WfuFormHandler {
 
     }
 
-    static create(form: Sa5Form, config = {}) {
-        //type, elem, config) {
-        var handler;
+    // static create(form: Sa5Form, config = {}) {
+    //     //type, elem, config) {
+    //     var handler;
 
-        let type = form.formElement.getAttribute("wfu-form-handler"); 
+    //     let type = form.formElement.getAttribute("wfu-form-handler"); 
 
-        switch (type) {
-            case "zapier":
+    //     switch (type) {
+    //         case "zapier":
 
-                handler = new WfuFormHandlerZapier(form, config);
-                handler.init();
+    //             handler = new WfuFormHandlerZapier(form, config);
+    //             handler.init();
 
-                break;
-            case "n8n":
+    //             break;
+    //         case "n8n":
 
-                handler = new WfuFormHandlerN8N(form, config);
-                handler.init();
+    //             handler = new WfuFormHandlerN8N(form, config);
+    //             handler.init();
 
-                break;
-            case "make":
+    //             break;
+    //         case "make":
 
-                handler = new WfuFormHandlerMake(form, config);
-                handler.init();
+    //             handler = new WfuFormHandlerMake(form, config);
+    //             handler.init();
 
-                break;
-            case "basin":
+    //             break;
+    //         case "basin":
 
-                handler = new WfuFormHandlerBasin(form, config);
-                handler.init();
+    //             handler = new WfuFormHandlerBasin(form, config);
+    //             handler.init();
 
-                break;
-            case "other":
-            case "": // unspecified 
+    //             break;
+    //         case "other":
+    //         case "": // unspecified 
 
-                handler = new WfuFormHandler(form, config);
-                handler.init();
+    //             handler = new WfuFormHandler(form, config);
+    //             handler.init();
 
-                break;
-            default:
+    //             break;
+    //         default:
 
-                console.error(`Unknown wfu-form-handler ${type}`);
+    //             console.error(`Unknown wfu-form-handler ${type}`);
 
-                break;
-        }
+    //             break;
+    //     }
 
-        return handler;
-    }
+    //     return handler;
+    // }
 
-    static createFromElement(elem: HTMLElement) {
+    // static createFromElement(elem: HTMLElement) {
 
-        let form: Sa5Form = new Sa5Form(elem);
+    //     let form: Sa5Form = new Sa5Form(elem);
 
-        // if form is valid
-        if (!form.isValid) {
-            console.error("Cannot only instantiate Sa5 form handler from a Form element."); 
-        }
+    //     // if form is valid
+    //     if (!form.isValid) {
+    //         console.error("Cannot only instantiate Sa5 form handler from a Form element."); 
+    //     }
 
-        return WfuFormHandler.create(form); 
+    //     return WfuFormHandler.create(form); 
 
-    }
+    // }
 
 }
 

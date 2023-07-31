@@ -8,11 +8,13 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
+// import {  } from '../modules/webflow-form';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Form } from '../webflow-form';
 import { WfuFormHandler } from '../webflow-form/handler/form-handler'; 
+import { WfuFormHandlerFactory } from '../webflow-form/handler/form-handler-factory'; 
 import { Sa5FormIPInfo } from '../webflow-form/ip-info';
 
 const init = () => { 
@@ -42,7 +44,9 @@ const init = () => {
     document.querySelectorAll('[wfu-form-handler]')
       .forEach((element: HTMLElement) => {
 
-        Sa5FormIPInfo.createFromElement(element)
+ console.log("installing form handler."); 
+
+        WfuFormHandlerFactory.createFromElement(element)
             .init();
 
 

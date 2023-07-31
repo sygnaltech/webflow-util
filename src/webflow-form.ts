@@ -14,9 +14,9 @@ import { Sa5Debug } from './webflow-core/debug';
 
 
 export enum WebflowFormMode {
-    Active = 0,
-    Success = 1,
-    Error = 2
+    Active,
+    Success,
+    Error, 
 }
 
 
@@ -33,8 +33,8 @@ export class Sa5Form {
     constructor(element: HTMLElement) {
 //        this._element = element;
 
-        let debug = new Sa5Debug("sa5-form");
-        debug.debug ("Initializing");
+        this.debug = new Sa5Debug("sa5-form");
+        this.debug.debug ("Initializing");
 
         // Resolve Form Block pointer
         if (element.tagName == "FORM")
@@ -63,15 +63,14 @@ export class Sa5Form {
 
     setMode(mode: WebflowFormMode, message = "") {
 
-        this.debug.debug("setting form mode.");
+        this.debug.debug("setting mode.", mode, message); 
 
-        let success = this.formBlockElement.querySelector("div.w-form-done") as HTMLElement;
-        let error = this.formBlockElement.querySelector("div.w-form-fail") as HTMLElement;
+        let success: HTMLElement = this.formBlockElement.querySelector("div.w-form-done");
+        let error: HTMLElement = this.formBlockElement.querySelector("div.w-form-fail");
 
-        switch (mode) {
+        switch (mode as WebflowFormMode) {
             case WebflowFormMode.Active:
-                this.debug.debug("Change Webflow form mode to active.");
-                
+
                 this.formElement.style.display = "block";
                 success.style.display = "none";
                 error.style.display = "none";
@@ -79,9 +78,10 @@ export class Sa5Form {
                 break;
             case WebflowFormMode.Success:
 
-                this.debug.debug("Change Webflow form mode to success (done).");
-                
-                success.querySelector("[wfu-form-message]").innerHTML = message;
+                // Display message
+                let successMessage = error.querySelector("[wfu-form-message]");
+                if (successMessage)
+                    successMessage.innerHTML = message;
 
                 this.formElement.style.display = "none";
                 success.style.display = "block";
@@ -89,10 +89,11 @@ export class Sa5Form {
 
                 break;
             case WebflowFormMode.Error:
-
-                this.debug.debug("Change Webflow form mode to error.");
                 
-                error.querySelector("[wfu-form-message]").innerHTML = message;
+                // Display message
+                let errorMessage = error.querySelector("[wfu-form-message]");
+                if (errorMessage)
+                    errorMessage.innerHTML = message;
                 
                 this.formElement.style.display = "none";
                 success.style.display = "none";
