@@ -143,13 +143,15 @@
       const handler = this.handler;
       console.debug("WFU append IP Info to form.");
       fetch("https://get.geojs.io/v1/ip/geo.json").then((response) => response.json()).then((data) => {
-        const fields = ["address", "country", "country-code", "region", "city", "timezone", "latitude", "longitude"];
+        const fields = ["ip", "continent_code", "address", "country", "country-code", "region", "city", "timezone", "latitude", "longitude"];
         fields.forEach((field) => {
-          let input = document.createElement("input");
-          input.type = "hidden";
-          input.name = `${handler.prefix}-${field}`;
-          input.value = data[field];
-          this.form.formElement.appendChild(input);
+          if (data[field]) {
+            let input = document.createElement("input");
+            input.type = "hidden";
+            input.name = `${handler.prefix}-${field}`;
+            input.value = data[field];
+            this.form.formElement.appendChild(input);
+          }
         });
       }).catch((error) => console.error("Error:", error));
     }
