@@ -75,14 +75,17 @@ export class WfuRelativeLinkFixup {
 
         elements.forEach((element) => {
             // Get the href attribute
-            let href = element.getAttribute('href');
+            let originalHref = element.getAttribute('href');
 
-            if (href) {
+            if (originalHref) {
                 // Create a new URL object
-                const url = new URL(href);
+                const originalUrl = new URL(originalHref);
+
+                // Create relative path
+                let relativeHref: string = originalUrl.pathname + originalUrl.search + originalUrl.hash;
 
                 // Set the href attribute to the pathname of the URL
-                element.setAttribute('href', url.pathname);
+                element.setAttribute('href', relativeHref);
             }
         });
 

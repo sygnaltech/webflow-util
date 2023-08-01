@@ -166,10 +166,11 @@
         this._element.querySelectorAll("a[href*='//self/' i], a[href$='//self' i]")
       );
       elements.forEach((element) => {
-        let href = element.getAttribute("href");
-        if (href) {
-          const url = new URL(href);
-          element.setAttribute("href", url.pathname);
+        let originalHref = element.getAttribute("href");
+        if (originalHref) {
+          const originalUrl = new URL(originalHref);
+          let relativeHref = originalUrl.pathname + originalUrl.search + originalUrl.hash;
+          element.setAttribute("href", relativeHref);
         }
       });
     }
