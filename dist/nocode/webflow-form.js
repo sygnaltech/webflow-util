@@ -185,11 +185,13 @@
     init() {
       const form = this.form;
       this.debug.debug("WFU Handle Form submit to webhook (success response).");
+      console.log("init form handler.");
       this.form.formElement.addEventListener("submit", (e) => __async(this, null, function* () {
         e.preventDefault();
         this.debug.debug("Posting data.");
         this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
         let formData = new FormData(this.form.formElement);
+        console.log("sending data");
         fetch(this.form.formElement.action, {
           method: "POST",
           body: formData
@@ -202,6 +204,7 @@
   // src/webflow-form/handler/basin-handler.ts
   var WfuFormHandlerBasin = class extends WfuFormHandler {
     constructor(form, config = {}) {
+      console.log("BASIN HANDLER.");
       super(form, config);
     }
   };
@@ -321,24 +324,19 @@
       switch (type) {
         case "zapier":
           handler = new WfuFormHandlerZapier(form, config);
-          handler.init();
           break;
         case "n8n":
           handler = new WfuFormHandlerN8N(form, config);
-          handler.init();
           break;
         case "make":
           handler = new WfuFormHandlerMake(form, config);
-          handler.init();
           break;
         case "basin":
           handler = new WfuFormHandlerBasin(form, config);
-          handler.init();
           break;
         case "other":
         case "":
           handler = new WfuFormHandler(form, config);
-          handler.init();
           break;
         default:
           console.error(`Unknown wfu-form-handler ${type}`);

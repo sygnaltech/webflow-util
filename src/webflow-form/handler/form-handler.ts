@@ -116,10 +116,16 @@ console.log("response", data);
 
 //        const that = this;
 
+// console.log("installing form handler 1."); 
+
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
 
+console.log ("init form handler.");
+
         this.form.formElement.addEventListener('submit', async (e) => {
+
+
 
             e.preventDefault();
 
@@ -170,6 +176,9 @@ console.log("response", data);
 
             }
 */
+
+console.log("sending data");
+
             fetch(this.form.formElement.action, {
                 method: 'POST',
                 body: formData

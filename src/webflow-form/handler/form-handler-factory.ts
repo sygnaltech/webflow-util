@@ -30,32 +30,32 @@ export class WfuFormHandlerFactory {
             case "zapier":
 
                 handler = new WfuFormHandlerZapier(form, config);
-                handler.init();
+//                handler.init();
 
                 break;
             case "n8n":
 
                 handler = new WfuFormHandlerN8N(form, config);
-                handler.init();
+    //            handler.init();
 
                 break;
             case "make":
 
                 handler = new WfuFormHandlerMake(form, config);
-                handler.init();
+   //             handler.init();
 
                 break;
             case "basin":
 
                 handler = new WfuFormHandlerBasin(form, config);
-                handler.init();
+      //          handler.init();
 
                 break;
             case "other":
             case "": // unspecified 
 
                 handler = new WfuFormHandler(form, config);
-                handler.init();
+      //          handler.init();
 
                 break;
             default:
