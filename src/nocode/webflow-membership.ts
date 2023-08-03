@@ -11,7 +11,7 @@
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
-import { Sa5UserInfo, Sa5Membership } from '../webflow-membership';
+import { Sa5Membership } from '../webflow-membership';
 
 
 const init = () => { 
@@ -58,14 +58,15 @@ const init = () => {
     });
 
     /**
-     * User Info 
+     * Load Current User Info 
      */
 
-    var userInfo = new Sa5UserInfo({
-//        userInfoUpdatedCallback: myCallback
-      }).init(); 
+    membership.init();
+//     var userInfo = new Sa5UserInfo({
+// //        userInfoUpdatedCallback: myCallback
+//       }).init(); 
 
 }
 
 // Auto-execute on DOM load
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", init); 

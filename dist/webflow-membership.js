@@ -18,6 +18,59 @@
     return value;
   };
 
+  // src/utils.ts
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match)
+      return match[2];
+  }
+  function toTitleCase(str) {
+    return str.toLowerCase().split(" ").map(function(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(" ");
+  }
+
+  // src/webflow-core/debug.ts
+  var Sa5Debug = class {
+    constructor(label) {
+      this.localStorageDebugFlag = "sa5-debug";
+      this._enabled = false;
+      this._label = label;
+    }
+    get persistentDebug() {
+      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+    }
+    set persistentDebug(active) {
+      if (active) {
+        localStorage.setItem(this.localStorageDebugFlag, "true");
+        console.debug("sa5-core debug enabled (persistent).");
+      } else {
+        localStorage.removeItem(this.localStorageDebugFlag);
+        console.debug("sa5-core debug disabled (persistent).");
+      }
+    }
+    get enabled() {
+      var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
+      wfuDebugValue = wfuDebugValue || this._enabled;
+      return wfuDebugValue;
+    }
+    set enabled(active) {
+      this._enabled = active;
+    }
+    group(name) {
+      if (this.enabled)
+        console.group(name);
+    }
+    groupEnd() {
+      if (this.enabled)
+        console.groupEnd();
+    }
+    debug(...args) {
+      if (this.enabled)
+        console.debug(this._label, ...args);
+    }
+  };
+
   // src/webflow-crypto.ts
   var PRIME64_1 = 11400714785074694791n;
   var PRIME64_2 = 14029467366897019727n;
@@ -182,69 +235,7 @@
   _len = new WeakMap();
   _memsize = new WeakMap();
 
-  // src/utils.ts
-  function getCookie(name) {
-    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    if (match)
-      return match[2];
-  }
-  function toTitleCase(str) {
-    return str.toLowerCase().split(" ").map(function(word) {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    }).join(" ");
-  }
-
-  // src/webflow-core/debug.ts
-  var Sa5Debug = class {
-    constructor(label) {
-      this.localStorageDebugFlag = "sa5-debug";
-      this._enabled = false;
-      this._label = label;
-    }
-    get persistentDebug() {
-      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
-    }
-    set persistentDebug(active) {
-      if (active) {
-        localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
-      } else {
-        localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
-      }
-    }
-    get enabled() {
-      var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
-      wfuDebugValue = wfuDebugValue || this._enabled;
-      return wfuDebugValue;
-    }
-    set enabled(active) {
-      this._enabled = active;
-    }
-    group(name) {
-      if (this.enabled)
-        console.group(name);
-    }
-    groupEnd() {
-      if (this.enabled)
-        console.groupEnd();
-    }
-    debug(...args) {
-      if (this.enabled)
-        console.debug(this._label, ...args);
-    }
-  };
-
-  // src/webflow-membership.ts
-  Date.prototype.addDays = function(days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-  };
-  var StorageKeys = Object.freeze({
-    user: "wfuUser",
-    userKey: "wfuUserKey"
-  });
+  // src/webflow-membership/user.ts
   var Sa5User = class {
     constructor() {
       this.user_data_loaded = {
@@ -295,6 +286,12 @@
       this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
     }
   };
+
+  // src/webflow-membership.ts
+  var StorageKeys = Object.freeze({
+    user: "wfuUser",
+    userKey: "wfuUserKey"
+  });
   var defaultUserInfoConfig = {
     loadUserInfoCallback: void 0,
     userInfoUpdatedCallback: void 0,
@@ -304,79 +301,80 @@
       accountInfoLoadDelay: 300
     }
   };
-  var Sa5UserInfo = class {
+  var Sa5Membership = class {
     constructor(config = {}) {
-      this.init = function() {
-        if (window.self != window.top)
-          return;
-        if (window.location.pathname == `/user-account`)
-          return;
-        this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
-        let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
-        forms.forEach((form) => {
-          form.addEventListener("submit", (e) => {
-            let emailInput = form.querySelector("#wf-log-in-email");
-            let userEmail = emailInput.value;
-            let userKey = btoa(userEmail);
-            localStorage.setItem("StorageKeys.userKey", userKey);
-          });
-        });
-        this.readyUserInfo();
-        this.debug.groupEnd();
-      };
-      this.isLoggedIn = function() {
-        return getCookie("wf_loggedin") || false;
-      };
-      this.clearUserInfo = function() {
-        this.debug.group("clearUserInfo");
-        this.debug.debug("logged out, cleaning info.");
-        sessionStorage.removeItem(StorageKeys.user);
-        localStorage.removeItem(StorageKeys.userKey);
-        if (this.config.userLogoutPurge)
-          this.config.userLogoutPurge();
-        this.debug.groupEnd();
-      };
-      this.readyUserInfo = async function() {
-        this.debug.group("readyUserInfo");
-        if (!this.isLoggedIn()) {
-          this.clearUserInfo();
-          this.debug.groupEnd();
-          return;
-        }
-        var user = this.loadUserInfoCache();
-        if (user) {
-          this.debug.debug("Notify listeners", user);
-          if (this.config.userInfoUpdatedCallback)
-            this.config.userInfoUpdatedCallback(user);
-        }
-        if (!user)
-          await this.loadUserInfoAsync();
-        this.debug.groupEnd();
-      };
-      this.getUserKey = async function() {
-        var userKey;
-        const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
-        if (userKeyEncoded) {
-          return atob(userKeyEncoded);
-        }
-      };
-      this.loadUserInfoAsync = async function() {
-        this.debug.group("loadUserInfoAsync");
-        this.debug.debug(`isLoggedIn = ${this.isLoggedIn()}`);
-        if (!this.isLoggedIn()) {
-          this.clearUserInfo();
-          this.debug.groupEnd();
-          return;
-        }
-        sessionStorage.removeItem(StorageKeys.user);
-        this.loadUserInfoAsync_loginInfo();
-        this.loadUserInfoAsync_accountInfo();
-        this.loadUserInfoAsync_accessGroups();
-        this.debug.groupEnd();
-      };
       this.debug = new Sa5Debug("sa5-membership");
       this.config = { ...defaultUserInfoConfig, ...config };
       this.debug.enabled = this.config.debug;
+    }
+    init() {
+      if (window.self != window.top)
+        return;
+      if (window.location.pathname == `/user-account`)
+        return;
+      this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
+      let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
+      forms.forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          let emailInput = form.querySelector("#wf-log-in-email");
+          let userEmail = emailInput.value;
+          let userKey = btoa(userEmail);
+          localStorage.setItem("StorageKeys.userKey", userKey);
+        });
+      });
+      this.readyUserInfo();
+      this.debug.groupEnd();
+    }
+    isLoggedIn() {
+      return getCookie("wf_loggedin") || false;
+    }
+    clearUserInfo() {
+      this.debug.group("clearUserInfo");
+      this.debug.debug("logged out, cleaning info.");
+      sessionStorage.removeItem(StorageKeys.user);
+      localStorage.removeItem(StorageKeys.userKey);
+      if (this.config.userLogoutPurge)
+        this.config.userLogoutPurge();
+      this.debug.groupEnd();
+    }
+    async readyUserInfo() {
+      this.debug.group("readyUserInfo");
+      if (!this.isLoggedIn()) {
+        this.clearUserInfo();
+        this.debug.groupEnd();
+        return;
+      }
+      var user = this.loadUserInfoCache();
+      if (user) {
+        this.debug.debug("Notify listeners", user);
+        console.log(user);
+        if (this.config.userInfoUpdatedCallback)
+          this.config.userInfoUpdatedCallback(user);
+      }
+      if (!user)
+        await this.loadUserInfoAsync();
+      this.debug.groupEnd();
+    }
+    async getUserKey() {
+      var userKey;
+      const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
+      if (userKeyEncoded) {
+        return atob(userKeyEncoded);
+      }
+    }
+    async loadUserInfoAsync() {
+      this.debug.group("loadUserInfoAsync");
+      this.debug.debug(`isLoggedIn = ${this.isLoggedIn()}`);
+      if (!this.isLoggedIn()) {
+        this.clearUserInfo();
+        this.debug.groupEnd();
+        return;
+      }
+      sessionStorage.removeItem(StorageKeys.user);
+      this.loadUserInfoAsync_loginInfo();
+      this.loadUserInfoAsync_accountInfo();
+      this.loadUserInfoAsync_accessGroups();
+      this.debug.groupEnd();
     }
     async loadUserInfoAsync_loginInfo() {
       this.debug.group("loadUserInfoAsync_loginInfo");
@@ -563,13 +561,6 @@
       );
       this.debug.groupEnd();
       return user;
-    }
-  };
-  var Sa5Membership = class {
-    constructor() {
-    }
-    isLoggedIn() {
-      return getCookie("wf_loggedin") || false;
     }
     expandLoginButton($elem) {
       const $wfLoginButton = $elem.find("[data-wf-user-logout]");
