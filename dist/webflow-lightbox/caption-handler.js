@@ -1,25 +1,4 @@
 (() => {
-  // src/webflow-core/lightbox.ts
-  var Sa5Lightbox = class {
-    constructor(element, config = {}) {
-      this._element = element;
-    }
-    init() {
-      this.setCaptionToImageAlt();
-    }
-    setCaptionToImageAlt() {
-      let imgElement = this._element.querySelector("img");
-      let scriptElement = this._element.querySelector("script");
-      if (imgElement && scriptElement) {
-        const imageAltText = imgElement.getAttribute("alt");
-        const imageJSON = JSON.parse(scriptElement.innerHTML);
-        imageJSON.items[0].caption = imageAltText;
-        scriptElement.innerHTML = JSON.stringify(imageJSON);
-        imgElement.setAttribute("ref-key", imageJSON.items[0].url);
-      }
-    }
-  };
-
   // src/webflow-lightbox/caption-handler.ts
   var Sa5LightboxCaptionHandler = class {
     constructor() {
@@ -93,19 +72,5 @@
       }
     }
   };
-
-  // src/nocode/webflow-elements.ts
-  var init = () => {
-    let useLightboxCaptionHandler = false;
-    const elements = document.querySelectorAll("[wfu-lightbox-captions]");
-    elements.forEach((element) => {
-      const wfuLightbox = new Sa5Lightbox(element).init();
-      useLightboxCaptionHandler = true;
-    });
-    if (useLightboxCaptionHandler) {
-      new Sa5LightboxCaptionHandler().init();
-    }
-  };
-  document.addEventListener("DOMContentLoaded", init);
 })();
-//# sourceMappingURL=webflow-elements.js.map
+//# sourceMappingURL=caption-handler.js.map

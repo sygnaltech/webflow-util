@@ -1,6 +1,7 @@
 
 /*
  * webflow-elements
+ * Lightbox
  * 
  * Sygnal Technology Group
  * http://sygnal.com
@@ -10,35 +11,41 @@
 
 
 import { Sa5Lightbox } from '../webflow-core/lightbox';
-
+import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
 
 
 const init = () => { 
- 
 
-    // Show all elements tagged for logged-in users only
+    let useLightboxCaptionHandler = false;
 
     const elements = document.querySelectorAll('[wfu-lightbox-captions]') as NodeListOf<HTMLElement>; 
     elements.forEach((element) => { 
 
-      // Do something with each element
-      const wfuLightbox = new Sa5Lightbox(element).init();
+        // Do something with each element
+        const wfuLightbox = new Sa5Lightbox(element).init();
+        useLightboxCaptionHandler = true;
 
     });
+
+    if(useLightboxCaptionHandler) {
+        new Sa5LightboxCaptionHandler().init(); 
+    }
     
-    let observer = new MutationObserver(lightBoxStateCallback);
-    observer.observe(document.getElementsByTagName("html")[0], {
-        childList: false, // observe direct children
-        subtree: false, // and lower descendants too
-        characterDataOldValue: false, // pass old data to callback 
-        attributes: true, 
-        attributeFilter: ["class"]
-    });
+    // let observer = new MutationObserver(lightBoxStateCallback);
+    // observer.observe(document.getElementsByTagName("html")[0], {
+    //     childList: false, // observe direct children
+    //     subtree: false, // and lower descendants too
+    //     characterDataOldValue: false, // pass old data to callback 
+    //     attributes: true, 
+    //     attributeFilter: ["class"]
+    // });
 
 }
   
 document.addEventListener("DOMContentLoaded", init)
 
+
+/* 
 const lightBoxStateCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
     for (const mutation of mutationList) {
         if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
@@ -52,6 +59,7 @@ const lightBoxStateCallback = (mutationList: MutationRecord[], observer: Mutatio
         }
     }
 };
+*/
 
 /* 
 const lightBoxStateCallback = (mutationList, observer) => {
@@ -72,23 +80,9 @@ const lightBoxStateCallback = (mutationList, observer) => {
 */
   
 var lightboxNavObserver;
-  
+
+/* 
 function setupCaption() {
-  
-    /*
-    const figure = $("figure.w-lightbox-figure");
-    const img = figure.children("img");
-    const key = img.attr("src");
-    const thumb = $(`img[ref-key='${key}'`); 
-    const caption = thumb.attr("alt");
-    
-    figure.children("figcaption").remove();
-    
-    if (caption)
-        figure.append(
-            $(`<figcaption class="w-lightbox-caption">${caption}</figcaption>`)
-            );
- */ 
 
     let figure = document.querySelector("figure.w-lightbox-figure");
 
@@ -144,13 +138,6 @@ function installLightBoxNavObserver() {
         lightboxNavObserver.observe(lightboxContainer, config);
     }
 
-/* 
-    lightboxNavObserver = new MutationObserver(lightBoxNavCallback);
-    lightboxNavObserver.observe($(".w-lightbox-container")[0], {
-        childList: true, // observe direct children
-        subtree: true // and lower descendants too
-    });
-    */
 } 
 
 
@@ -164,18 +151,6 @@ const lightBoxNavCallback = (mutationList: MutationRecord[], observer: MutationO
     }
 };
 
-/* 
-const lightBoxNavCallback = (mutationList, observer) => {
-    for (let mutation of mutationList) {
-  
-        // if ($(mutation.target).hasClass("w-lightbox-view")) { 
-        //     $(mutation.target).children("figcaption").remove();
-        // }
-
-        if ($(mutation.target).hasClass("w-lightbox-content")) { 
-            setupCaption(); 
-        }
-    }
-    
-};
 */
+
+

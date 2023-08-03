@@ -5,6 +5,9 @@
       this._element = element;
     }
     init() {
+      this.setCaptionToImageAlt();
+    }
+    setCaptionToImageAlt() {
       let imgElement = this._element.querySelector("img");
       let scriptElement = this._element.querySelector("script");
       if (imgElement && scriptElement) {

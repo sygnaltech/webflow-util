@@ -30,9 +30,16 @@ export class Sa5Lightbox {
 
     init() {
 
+        this.setCaptionToImageAlt(); 
+
+    }
+
+    setCaptionToImageAlt() {
+
         let imgElement = this._element.querySelector("img");
         let scriptElement = this._element.querySelector("script");
       
+        // Set the caption to the image alt text
         if (imgElement && scriptElement) {
           const imageAltText = imgElement.getAttribute("alt");
           const imageJSON = JSON.parse(scriptElement.innerHTML);
