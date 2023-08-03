@@ -293,15 +293,14 @@ console.log(user);
         this.debug.group("loadUserInfoAsync_accountInfo");
 
         // Suppress IFRAME loads & user-account page loads 
-        // BUG: 
         if (window.self != window.top) {
             console.log("suppressing accountInfo load - iframe child");
             return;
         }
-        if (window.location.pathname == `/user-account`) {
-            console.log("suppressing accountInfo load - on /user-account page"); 
-            return;
-        }
+        // if (window.location.pathname == `/user-account`) {
+        //     console.log("suppressing accountInfo load - on /user-account page"); 
+        //     return;
+        // }
 
         // Create the iframe element
         let userInfoPixel = document.createElement('iframe');

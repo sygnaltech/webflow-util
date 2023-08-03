@@ -465,10 +465,6 @@
         console.log("suppressing accountInfo load - iframe child");
         return;
       }
-      if (window.location.pathname == `/user-account`) {
-        console.log("suppressing accountInfo load - on /user-account page");
-        return;
-      }
       let userInfoPixel = document.createElement("iframe");
       userInfoPixel.src = "/user-account";
       userInfoPixel.id = "userInfoPixel";
