@@ -16,141 +16,69 @@ import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
 
 const init = () => { 
 
+    /**
+     * Init lightbox captions 
+     */
+
     let useLightboxCaptionHandler = false;
 
     const elements = document.querySelectorAll('[wfu-lightbox-captions]') as NodeListOf<HTMLElement>; 
+    useLightboxCaptionHandler = elements.length > 0;
     elements.forEach((element) => { 
 
         // Do something with each element
         const wfuLightbox = new Sa5Lightbox(element).init();
-        useLightboxCaptionHandler = true;
 
     });
 
     if(useLightboxCaptionHandler) {
         new Sa5LightboxCaptionHandler().init(); 
     }
-    
-    // let observer = new MutationObserver(lightBoxStateCallback);
-    // observer.observe(document.getElementsByTagName("html")[0], {
-    //     childList: false, // observe direct children
-    //     subtree: false, // and lower descendants too
-    //     characterDataOldValue: false, // pass old data to callback 
-    //     attributes: true, 
-    //     attributeFilter: ["class"]
-    // });
 
+    /**
+     * Init lightbox CMS groups
+     */
+
+    let lightBoxCmsGroups = false;
+
+    const groups = document.querySelectorAll('[wfu-lightbox-group]') as NodeListOf<HTMLElement>; 
+    lightBoxCmsGroups = groups.length > 0;
+    groups.forEach((element) => { 
+
+        // Get the value of the wfu-lightbox-group attribute
+        let groupValue = element.getAttribute("wfu-lightbox-group");
+
+        // Find all descendant script elements with the class .w-json
+        let scripts = element.querySelectorAll("script.w-json");
+
+        // For each script
+        scripts.forEach((script) => {
+        // Parse the JSON
+        let json = JSON.parse(script.textContent);
+
+        // Update the group value
+        json.group = groupValue;
+
+        // Convert the JSON back to a string and update the script's content
+        script.textContent = JSON.stringify(json, null, 2);
+        });
+
+    });
+
+    // Re-initialize lightbox
+    // to pick up new group names
+    if(lightBoxCmsGroups) {
+        var Webflow = Webflow || [];
+        Webflow.push(function () {
+            Webflow.require("lightbox").ready();
+        });
+    }
+    
 }
   
 document.addEventListener("DOMContentLoaded", init)
-
-
-/* 
-const lightBoxStateCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
-    for (const mutation of mutationList) {
-        if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
-            if (mutation.target.classList.contains("w-lightbox-noscroll")) {
-                console.debug("Lightbox opened.");
-                installLightBoxNavObserver();
-            } else {
-                console.debug("Lightbox closed.");
-                uninstallLightBoxNavObserver();
-            }
-        }
-    }
-};
-*/
-
-/* 
-const lightBoxStateCallback = (mutationList, observer) => {
-    for (const mutation of mutationList) {
-        if (mutation.type === 'attributes') {
-        
-            if ($("html").hasClass("w-lightbox-noscroll")) {
-                console.debug("Lightbox opened.");
-                installLightBoxNavObserver();
-            } else {
-                console.debug("Lightbox closed."); 
-                uninstallLightBoxNavObserver();
-            }
-            
-        }
-    }
-};
-*/
   
-var lightboxNavObserver;
-
-/* 
-function setupCaption() {
-
-    let figure = document.querySelector("figure.w-lightbox-figure");
-
-    if (figure) {
-        let img = figure.querySelector("img");
-        let captionElement = figure.querySelector("figcaption");
-    
-        if (img) {
-        let key = img.getAttribute("src");
-        let thumb = document.querySelector(`img[ref-key='${key}']`);
-    
-        if (captionElement) {
-            // Remove existing figcaption
-            captionElement.remove();
-        }
-    
-        if (thumb) {
-            let caption = thumb.getAttribute("alt");
-            
-            if (caption) {
-            // Append new figcaption
-            let newCaption = document.createElement("figcaption");
-            newCaption.textContent = caption;
-            newCaption.classList.add("w-lightbox-caption");
-            figure.appendChild(newCaption);
-            }
-        }
-        }
-    }
-            
-            
-
-}
-  
-function uninstallLightBoxNavObserver() {
-    if (lightboxNavObserver)
-        lightboxNavObserver.disconnect();
-}
-  
-function installLightBoxNavObserver() {
-    
-    setupCaption();
-
-    let lightboxContainer = document.querySelector(".w-lightbox-container");
-
-    if (lightboxContainer) {
-        let lightboxNavObserver = new MutationObserver(lightBoxNavCallback);
-
-        // Options for the observer (which mutations to observe)
-        const config = { childList: true, subtree: true };
-
-        // Start observing the target node for configured mutations
-        lightboxNavObserver.observe(lightboxContainer, config);
-    }
-
-} 
 
 
-const lightBoxNavCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
-    for (let mutation of mutationList) {
-        if (mutation.target instanceof HTMLElement) {
-            if (mutation.target.classList.contains("w-lightbox-content")) {
-                setupCaption();
-            }
-        }
-    }
-};
-
-*/
 
 

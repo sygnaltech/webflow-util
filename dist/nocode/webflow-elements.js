@@ -56,6 +56,19 @@
         attributeFilter: ["class"]
       });
     }
+    installLightBoxNavObserver() {
+      this.setupCaption();
+      let lightboxContainer = document.querySelector(".w-lightbox-container");
+      if (lightboxContainer) {
+        let lightboxNavObserver = new MutationObserver(this.lightBoxNavCallback);
+        const config = { childList: true, subtree: true };
+        lightboxNavObserver.observe(lightboxContainer, config);
+      }
+    }
+    uninstallLightBoxNavObserver() {
+      if (this.lightboxNavObserver)
+        this.lightboxNavObserver.disconnect();
+    }
     setupCaption() {
       let figure = document.querySelector("figure.w-lightbox-figure");
       if (figure) {
@@ -79,31 +92,36 @@
         }
       }
     }
-    uninstallLightBoxNavObserver() {
-      if (this.lightboxNavObserver)
-        this.lightboxNavObserver.disconnect();
-    }
-    installLightBoxNavObserver() {
-      this.setupCaption();
-      let lightboxContainer = document.querySelector(".w-lightbox-container");
-      if (lightboxContainer) {
-        let lightboxNavObserver = new MutationObserver(this.lightBoxNavCallback);
-        const config = { childList: true, subtree: true };
-        lightboxNavObserver.observe(lightboxContainer, config);
-      }
-    }
   };
 
   // src/nocode/webflow-elements.ts
   var init = () => {
     let useLightboxCaptionHandler = false;
     const elements = document.querySelectorAll("[wfu-lightbox-captions]");
+    useLightboxCaptionHandler = elements.length > 0;
     elements.forEach((element) => {
       const wfuLightbox = new Sa5Lightbox(element).init();
-      useLightboxCaptionHandler = true;
     });
     if (useLightboxCaptionHandler) {
       new Sa5LightboxCaptionHandler().init();
+    }
+    let lightBoxCmsGroups = false;
+    const groups = document.querySelectorAll("[wfu-lightbox-group]");
+    lightBoxCmsGroups = groups.length > 0;
+    groups.forEach((element) => {
+      let groupValue = element.getAttribute("wfu-lightbox-group");
+      let scripts = element.querySelectorAll("script.w-json");
+      scripts.forEach((script) => {
+        let json = JSON.parse(script.textContent);
+        json.group = groupValue;
+        script.textContent = JSON.stringify(json, null, 2);
+      });
+    });
+    if (lightBoxCmsGroups) {
+      var Webflow = Webflow || [];
+      Webflow.push(function() {
+        Webflow.require("lightbox").ready();
+      });
     }
   };
   document.addEventListener("DOMContentLoaded", init);
