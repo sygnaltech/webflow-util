@@ -15,33 +15,6 @@ import { toTitleCase, getCookie } from '../utils';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
-// Install utility function if needed 
-// window.getCookie = window.getCookie || function(name) {
-//     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-//     if (match) return match[2];
-// }
-
-// How to add days to Date?
-// https://stackoverflow.com/a/563442
-// Date.prototype.addDays = function(days) {
-//     var date = new Date(this.valueOf());
-//     date.setDate(date.getDate() + days);
-//     return date;
-// }
-
-// declare global {
-//     interface Date {
-//         addDays(days: number): Date;
-//     }
-// }
-
-// Date.prototype.addDays = function(days: number): Date {
-//     var date = new Date(this.valueOf());
-//     date.setDate(date.getDate() + days);
-//     return date;
-// }
-
-
     
 
 

@@ -380,10 +380,6 @@
       this.debug.enabled = this.config.debug;
     }
     init() {
-      if (window.self != window.top)
-        return;
-      if (window.location.pathname == `/user-account`)
-        return;
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
       let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
       forms.forEach((form) => {
@@ -465,6 +461,14 @@
     }
     async loadUserInfoAsync_accountInfo() {
       this.debug.group("loadUserInfoAsync_accountInfo");
+      if (window.self != window.top) {
+        console.log("suppressing accountInfo load - iframe child");
+        return;
+      }
+      if (window.location.pathname == `/user-account`) {
+        console.log("suppressing accountInfo load - on /user-account page");
+        return;
+      }
       let userInfoPixel = document.createElement("iframe");
       userInfoPixel.src = "/user-account";
       userInfoPixel.id = "userInfoPixel";
@@ -548,7 +552,6 @@
                     case "Bool":
                       let checkbox = element;
                       user.data[id] = checkbox.checked;
-                      console.log(id, user.data[id]);
                       return;
                     case "FileRef":
                       break;

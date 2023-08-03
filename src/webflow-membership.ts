@@ -68,12 +68,12 @@ export class Sa5Membership {
 
     init() {
 
-        // Suppress IFRAME loads & user-account page loads 
-        // BUG: 
-        if (window.self != window.top)
-            return;
-        if (window.location.pathname == `/user-account`) 
-            return;
+        // // Suppress IFRAME loads & user-account page loads 
+        // // BUG: 
+        // if (window.self != window.top)
+        //     return;
+        // if (window.location.pathname == `/user-account`) 
+        //     return;
 
         this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
 
@@ -202,6 +202,8 @@ console.log(user);
 
     }
 
+    //#region CONSTRUCT USER INFO OBJECT
+
     // Loads user info, from local and server data.
     // readying it for use. 
     // Should be called on every page at the start. 
@@ -241,6 +243,8 @@ console.log(user);
 
     }
 
+    // Get account info
+    // from cache 
     async loadUserInfoAsync_loginInfo() { 
 
         this.debug.group("loadUserInfoAsync_loginInfo");
@@ -282,9 +286,22 @@ console.log(user);
         this.debug.groupEnd();
     }
 
+    // Get account info 
+    // from /user-account page 
     async loadUserInfoAsync_accountInfo() {
 
         this.debug.group("loadUserInfoAsync_accountInfo");
+
+        // Suppress IFRAME loads & user-account page loads 
+        // BUG: 
+        if (window.self != window.top) {
+            console.log("suppressing accountInfo load - iframe child");
+            return;
+        }
+        if (window.location.pathname == `/user-account`) {
+            console.log("suppressing accountInfo load - on /user-account page"); 
+            return;
+        }
 
         // Create the iframe element
         let userInfoPixel = document.createElement('iframe');
@@ -377,8 +394,7 @@ console.log(user);
 
                     user.email = userKey;
 
-// Get pixel 
-
+                    // Get pixel 
                     let doc = userInfoPixel.contentDocument || userInfoPixel.contentWindow?.document;
 
                     if (doc) {
@@ -402,9 +418,6 @@ console.log(user);
                             const fieldType = element.getAttribute("data-wf-user-field-type"); 
                             let val = (element as HTMLInputElement).value;
 
-                            // your code here...
-
-
                             if (!id)
                                 return;
 
@@ -426,15 +439,12 @@ console.log(user);
                                 case "Bool": // checkbox
                                     let checkbox: HTMLInputElement = element as HTMLInputElement;
                                     user.data[id] = checkbox.checked; 
-console.log(id, user.data[id]); 
+// console.log(id, user.data[id]); 
                                     return;
 
                                 case "FileRef": // file - suppressed 
                                     break;
                             }
-
-
-
 
                         });
 
@@ -477,6 +487,10 @@ console.log(id, user.data[id]);
         this.debug.groupEnd();
 
     }
+
+    //#endregion
+
+    //#region USER CACHE
 
     saveUserInfoCache(newUserData) {
         
@@ -569,6 +583,10 @@ console.log(id, user.data[id]);
         return user;
     } 
 
+    //#endregion
+
+    //#region MEMBERSHIPS UX
+
     // Expanded login button
     // Used on a containing DIV to expand the trigger area of 
     // Webflow's Log-In / Log-Out button  
@@ -589,5 +607,7 @@ console.log(id, user.data[id]);
         });
 
     }
+
+    //#endregion
 
 }
