@@ -35,6 +35,19 @@
         attributeFilter: ["class"]
       });
     }
+    installLightBoxNavObserver() {
+      this.setupCaption();
+      let lightboxContainer = document.querySelector(".w-lightbox-container");
+      if (lightboxContainer) {
+        let lightboxNavObserver = new MutationObserver(this.lightBoxNavCallback);
+        const config = { childList: true, subtree: true };
+        lightboxNavObserver.observe(lightboxContainer, config);
+      }
+    }
+    uninstallLightBoxNavObserver() {
+      if (this.lightboxNavObserver)
+        this.lightboxNavObserver.disconnect();
+    }
     setupCaption() {
       let figure = document.querySelector("figure.w-lightbox-figure");
       if (figure) {
@@ -56,19 +69,6 @@
             }
           }
         }
-      }
-    }
-    uninstallLightBoxNavObserver() {
-      if (this.lightboxNavObserver)
-        this.lightboxNavObserver.disconnect();
-    }
-    installLightBoxNavObserver() {
-      this.setupCaption();
-      let lightboxContainer = document.querySelector(".w-lightbox-container");
-      if (lightboxContainer) {
-        let lightboxNavObserver = new MutationObserver(this.lightBoxNavCallback);
-        const config = { childList: true, subtree: true };
-        lightboxNavObserver.observe(lightboxContainer, config);
       }
     }
   };

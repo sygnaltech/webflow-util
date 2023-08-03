@@ -20,13 +20,9 @@ var defaultConfig = {
 export class Sa5LightboxCaptionHandler {
 
     config; // Optional config
-//    _element: HTMLElement;
+    lightboxNavObserver;
 
     constructor() {
-
-//        this._element = element;
-//        this.config = $.extend({}, defaultConfig, config);
-    
     }
 
     init() {
@@ -43,93 +39,6 @@ export class Sa5LightboxCaptionHandler {
 
     }
 
-    lightBoxStateCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
-        for (const mutation of mutationList) {
-            if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
-                if (mutation.target.classList.contains("w-lightbox-noscroll")) {
-                    console.debug("Lightbox opened.");
-                    this.installLightBoxNavObserver();
-                } else {
-                    console.debug("Lightbox closed.");
-                    this.uninstallLightBoxNavObserver();
-                }
-            }
-        }
-    };
-
-    /* 
-    const lightBoxStateCallback = (mutationList, observer) => {
-        for (const mutation of mutationList) {
-            if (mutation.type === 'attributes') {
-            
-                if ($("html").hasClass("w-lightbox-noscroll")) {
-                    console.debug("Lightbox opened.");
-                    installLightBoxNavObserver();
-                } else {
-                    console.debug("Lightbox closed."); 
-                    uninstallLightBoxNavObserver();
-                }
-                
-            }
-        }
-    };
-    */
-    
-    lightboxNavObserver;
-    
-    setupCaption() {
-    
-        /*
-        const figure = $("figure.w-lightbox-figure");
-        const img = figure.children("img");
-        const key = img.attr("src");
-        const thumb = $(`img[ref-key='${key}'`); 
-        const caption = thumb.attr("alt");
-        
-        figure.children("figcaption").remove();
-        
-        if (caption)
-            figure.append(
-                $(`<figcaption class="w-lightbox-caption">${caption}</figcaption>`)
-                );
-    */ 
-
-        let figure = document.querySelector("figure.w-lightbox-figure");
-
-        if (figure) {
-            let img = figure.querySelector("img");
-            let captionElement = figure.querySelector("figcaption");
-        
-            if (img) {
-            let key = img.getAttribute("src");
-            let thumb = document.querySelector(`img[ref-key='${key}']`);
-        
-            if (captionElement) {
-                // Remove existing figcaption
-                captionElement.remove();
-            }
-        
-            if (thumb) {
-                let caption = thumb.getAttribute("alt");
-                
-                if (caption) {
-                // Append new figcaption
-                let newCaption = document.createElement("figcaption");
-                newCaption.textContent = caption;
-                newCaption.classList.add("w-lightbox-caption");
-                figure.appendChild(newCaption);
-                }
-            }
-            }
-        }
-                
-    }
-        
-    uninstallLightBoxNavObserver() {
-        if (this.lightboxNavObserver)
-            this.lightboxNavObserver.disconnect();
-    }
-  
     installLightBoxNavObserver() {
         
         this.setupCaption();
@@ -146,15 +55,63 @@ export class Sa5LightboxCaptionHandler {
             lightboxNavObserver.observe(lightboxContainer, config);
         }
 
-    /* 
-        lightboxNavObserver = new MutationObserver(lightBoxNavCallback);
-        lightboxNavObserver.observe($(".w-lightbox-container")[0], {
-            childList: true, // observe direct children
-            subtree: true // and lower descendants too
-        });
-        */
     } 
+        
+    uninstallLightBoxNavObserver() {
 
+        if (this.lightboxNavObserver)
+            this.lightboxNavObserver.disconnect();
+            
+    }
+    
+    setupCaption() {
+
+        let figure = document.querySelector("figure.w-lightbox-figure");
+
+        if (figure) {
+            let img = figure.querySelector("img");
+            let captionElement = figure.querySelector("figcaption");
+        
+            if (img) {
+                let key = img.getAttribute("src");
+                let thumb = document.querySelector(`img[ref-key='${key}']`);
+            
+                if (captionElement) {
+                    // Remove existing figcaption
+                    captionElement.remove();
+                }
+            
+                if (thumb) {
+                    let caption = thumb.getAttribute("alt");
+                    
+                    if (caption) {
+                        // Append new figcaption
+                        let newCaption = document.createElement("figcaption");
+                        newCaption.textContent = caption;
+                        newCaption.classList.add("w-lightbox-caption");
+                        figure.appendChild(newCaption);
+                    }
+                }
+            }
+        }
+                
+    }
+
+    lightBoxStateCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
+
+        for (const mutation of mutationList) {
+            if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
+                if (mutation.target.classList.contains("w-lightbox-noscroll")) {
+                    console.debug("Lightbox opened.");
+                    this.installLightBoxNavObserver();
+                } else {
+                    console.debug("Lightbox closed.");
+                    this.uninstallLightBoxNavObserver();
+                }
+            }
+        }
+
+    };
 
     lightBoxNavCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
         for (let mutation of mutationList) {
@@ -165,22 +122,6 @@ export class Sa5LightboxCaptionHandler {
             }
         }
     }
-
-    /* 
-    const lightBoxNavCallback = (mutationList, observer) => {
-        for (let mutation of mutationList) {
-    
-            // if ($(mutation.target).hasClass("w-lightbox-view")) { 
-            //     $(mutation.target).children("figcaption").remove();
-            // }
-
-            if ($(mutation.target).hasClass("w-lightbox-content")) { 
-                setupCaption(); 
-            }
-        }
-        
-    };
-    */
 
 }
 
