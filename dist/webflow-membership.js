@@ -304,7 +304,7 @@
       accountInfoLoadDelay: 300
     }
   };
-  var WfuUserInfo = class {
+  var Sa5UserInfo = class {
     constructor(config = {}) {
       this.init = function() {
         if (window.self != window.top)
@@ -374,126 +374,126 @@
         this.loadUserInfoAsync_accessGroups();
         this.debug.groupEnd();
       };
-      this.loadUserInfoAsync_loginInfo = async function() {
-        this.debug.group("loadUserInfoAsync_loginInfo");
-        var user = new Sa5User();
-        user.user_data_loaded.email = true;
-        const userKey = await this.getUserKey();
-        if (!userKey) {
-          this.debug.debug("No user key for loading.");
-          this.debug.groupEnd();
-          return;
-        }
-        user.email = userKey;
-        this.debug.debug("Caching user object [login].", user);
-        this.saveUserInfoCache(user);
-        this.debug.groupEnd();
-      };
-      this.loadUserInfoAsync_accountInfo = async function() {
-        this.debug.group("loadUserInfoAsync_accountInfo");
-        let userInfoPixel = document.createElement("iframe");
-        userInfoPixel.src = "/user-account";
-        userInfoPixel.id = "userInfoPixel";
-        userInfoPixel.style.display = "none";
-        document.body.append(userInfoPixel);
-        userInfoPixel.addEventListener("load", async () => {
-          this.debug.debug("Loading user account info.");
-          this.debug.debug(`%c here`, "color: #ff0000; background-color: yellow;");
-          var user = new Sa5User();
-          user.user_data_loaded.email = true;
-          user.user_data_loaded.account_info = true;
-          user.user_data_loaded.custom_fields = true;
-          let userAccountEmailInput = null;
-          if (userInfoPixel.contentDocument) {
-            userAccountEmailInput = userInfoPixel.contentDocument.querySelector("input#wf-user-account-email");
-          } else if (userInfoPixel.contentWindow) {
-            userAccountEmailInput = userInfoPixel.contentWindow.document.querySelector("input#wf-user-account-email");
-          }
-          if (!userAccountEmailInput) {
-            console.debug("Cannot access iframe's content");
-            return;
-          }
-          const input = userAccountEmailInput;
-          const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
-          Object.defineProperty(input, "value", {
-            get: desc.get,
-            set: function(v) {
-              desc.set.call(this, v);
-              if ("createEvent" in document) {
-                var evt = document.createEvent("HTMLEvents");
-                evt.initEvent("change", false, true);
-                input.dispatchEvent(evt);
-              } else {
-                if (userAccountEmailInput) {
-                  let event = new Event("change", {
-                    bubbles: true,
-                    cancelable: true
-                  });
-                  userAccountEmailInput.dispatchEvent(event);
-                }
-              }
-            }
-          });
-          userAccountEmailInput.addEventListener("change", async () => {
-            this.debug.debug("email field load detected.");
-            this.debug.debug(`waiting ${this.config.advanced.accountInfoLoadDelay}ms`);
-            setTimeout(
-              async () => {
-                this.debug.debug(`%c USER-ACCOUNT LOADED`, "color: #ff0000; background-color: yellow;");
-                const userKey = userAccountEmailInput.value;
-                user.email = userKey;
-                let doc = userInfoPixel.contentDocument || userInfoPixel.contentWindow?.document;
-                if (doc) {
-                  let userNameElement = doc.querySelector("[data-wf-user-field='wf-user-field-name']");
-                  if (userNameElement) {
-                    user.name = userNameElement.value;
-                  }
-                  let acceptCommunicationsCheckbox = doc.querySelector("#wf-user-account-accept-communications");
-                  if (acceptCommunicationsCheckbox) {
-                    user.accept_communications = acceptCommunicationsCheckbox.checked;
-                  }
-                  let userDataFields = doc.querySelectorAll("[data-wf-user-field]");
-                  userDataFields.forEach((element) => {
-                    const id = element.id;
-                    const fieldType = element.getAttribute("data-wf-user-field-type");
-                    let val = element.value;
-                    if (!id)
-                      return;
-                    if (id.startsWith("wf-user-account-"))
-                      return;
-                    switch (fieldType) {
-                      case "PlainText":
-                      case "Email":
-                      case "Link":
-                      case "Option":
-                        user.data[id] = val;
-                        return;
-                      case "Number":
-                        user.data[id] = val;
-                        return;
-                      case "Bool":
-                        let checkbox = element;
-                        user.data[id] = checkbox.checked;
-                        console.log(id, user.data[id]);
-                        return;
-                      case "FileRef":
-                        break;
-                    }
-                  });
-                }
-                this.debug.debug("Final version", user);
-                this.debug.debug("Caching user object [account_info].", user);
-                this.saveUserInfoCache(user);
-              },
-              this.config.advanced.accountInfoLoadDelay
-            );
-          });
-          this.debug.groupEnd();
-        });
-      };
       this.debug = new Sa5Debug("sa5-membership");
       this.config = { ...defaultUserInfoConfig, ...config };
       this.debug.enabled = this.config.debug;
+    }
+    async loadUserInfoAsync_loginInfo() {
+      this.debug.group("loadUserInfoAsync_loginInfo");
+      var user = new Sa5User();
+      user.user_data_loaded.email = true;
+      const userKey = await this.getUserKey();
+      if (!userKey) {
+        this.debug.debug("No user key for loading.");
+        this.debug.groupEnd();
+        return;
+      }
+      user.email = userKey;
+      this.debug.debug("Caching user object [login].", user);
+      this.saveUserInfoCache(user);
+      this.debug.groupEnd();
+    }
+    async loadUserInfoAsync_accountInfo() {
+      this.debug.group("loadUserInfoAsync_accountInfo");
+      let userInfoPixel = document.createElement("iframe");
+      userInfoPixel.src = "/user-account";
+      userInfoPixel.id = "userInfoPixel";
+      userInfoPixel.style.display = "none";
+      document.body.append(userInfoPixel);
+      userInfoPixel.addEventListener("load", async () => {
+        this.debug.debug("Loading user account info.");
+        this.debug.debug(`%c here`, "color: #ff0000; background-color: yellow;");
+        var user = new Sa5User();
+        user.user_data_loaded.email = true;
+        user.user_data_loaded.account_info = true;
+        user.user_data_loaded.custom_fields = true;
+        let userAccountEmailInput = null;
+        if (userInfoPixel.contentDocument) {
+          userAccountEmailInput = userInfoPixel.contentDocument.querySelector("input#wf-user-account-email");
+        } else if (userInfoPixel.contentWindow) {
+          userAccountEmailInput = userInfoPixel.contentWindow.document.querySelector("input#wf-user-account-email");
+        }
+        if (!userAccountEmailInput) {
+          console.debug("Cannot access iframe's content");
+          return;
+        }
+        const input = userAccountEmailInput;
+        const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+        Object.defineProperty(input, "value", {
+          get: desc.get,
+          set: function(v) {
+            desc.set.call(this, v);
+            if ("createEvent" in document) {
+              var evt = document.createEvent("HTMLEvents");
+              evt.initEvent("change", false, true);
+              input.dispatchEvent(evt);
+            } else {
+              if (userAccountEmailInput) {
+                let event = new Event("change", {
+                  bubbles: true,
+                  cancelable: true
+                });
+                userAccountEmailInput.dispatchEvent(event);
+              }
+            }
+          }
+        });
+        userAccountEmailInput.addEventListener("change", async () => {
+          this.debug.debug("email field load detected.");
+          this.debug.debug(`waiting ${this.config.advanced.accountInfoLoadDelay}ms`);
+          setTimeout(
+            async () => {
+              this.debug.debug(`%c USER-ACCOUNT LOADED`, "color: #ff0000; background-color: yellow;");
+              const userKey = userAccountEmailInput.value;
+              user.email = userKey;
+              let doc = userInfoPixel.contentDocument || userInfoPixel.contentWindow?.document;
+              if (doc) {
+                let userNameElement = doc.querySelector("[data-wf-user-field='wf-user-field-name']");
+                if (userNameElement) {
+                  user.name = userNameElement.value;
+                }
+                let acceptCommunicationsCheckbox = doc.querySelector("#wf-user-account-accept-communications");
+                if (acceptCommunicationsCheckbox) {
+                  user.accept_communications = acceptCommunicationsCheckbox.checked;
+                }
+                let userDataFields = doc.querySelectorAll("[data-wf-user-field]");
+                userDataFields.forEach((element) => {
+                  const id = element.id;
+                  const fieldType = element.getAttribute("data-wf-user-field-type");
+                  let val = element.value;
+                  if (!id)
+                    return;
+                  if (id.startsWith("wf-user-account-"))
+                    return;
+                  switch (fieldType) {
+                    case "PlainText":
+                    case "Email":
+                    case "Link":
+                    case "Option":
+                      user.data[id] = val;
+                      return;
+                    case "Number":
+                      user.data[id] = val;
+                      return;
+                    case "Bool":
+                      let checkbox = element;
+                      user.data[id] = checkbox.checked;
+                      console.log(id, user.data[id]);
+                      return;
+                    case "FileRef":
+                      break;
+                  }
+                });
+              }
+              this.debug.debug("Final version", user);
+              this.debug.debug("Caching user object [account_info].", user);
+              this.saveUserInfoCache(user);
+            },
+            this.config.advanced.accountInfoLoadDelay
+          );
+        });
+        this.debug.groupEnd();
+      });
     }
     async loadUserInfoAsync_accessGroups() {
       this.debug.group("loadUserInfoAsync_accessGroups");
@@ -565,17 +565,21 @@
       return user;
     }
   };
-  function isLoggedIn() {
-    return getCookie("wf_loggedin") || false;
-  }
-  function expandLoginButton($elem) {
-    const $wfLoginButton = $elem.find("[data-wf-user-logout]");
-    $elem.click(function() {
-      $wfLoginButton.trigger("click");
-    });
-    $wfLoginButton.click(function(e) {
-      e.stopPropagation();
-    });
-  }
+  var Sa5Membership = class {
+    constructor() {
+    }
+    isLoggedIn() {
+      return getCookie("wf_loggedin") || false;
+    }
+    expandLoginButton($elem) {
+      const $wfLoginButton = $elem.find("[data-wf-user-logout]");
+      $elem.click(function() {
+        $wfLoginButton.trigger("click");
+      });
+      $wfLoginButton.click(function(e) {
+        e.stopPropagation();
+      });
+    }
+  };
 })();
 //# sourceMappingURL=webflow-membership.js.map

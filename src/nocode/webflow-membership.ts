@@ -11,16 +11,18 @@
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
-import { isLoggedIn, expandLoginButton, WfuUserInfo } from '../webflow-membership';
+import { Sa5UserInfo, Sa5Membership } from '../webflow-membership';
 
 
 const init = () => { 
+
+    let membership = new Sa5Membership(); 
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-html");
     debug.debug ("Initializing");
 
-    console.debug(`isLoggedIn = %c${isLoggedIn()}`, "color: #ff0000;"); 
+    console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;"); 
 
     /**
      * Conditional visiblity 
@@ -30,7 +32,7 @@ const init = () => {
     document.querySelectorAll('[wfu-show-logged-in]')
       .forEach((element: HTMLElement) => { 
 
-        if (isLoggedIn())
+        if (membership.isLoggedIn())
             element.removeAttribute("wfu-show-logged-in"); 
 
     });
@@ -39,7 +41,7 @@ const init = () => {
     document.querySelectorAll('[wfu-hide-logged-in]')
       .forEach((element: HTMLElement) => { 
 
-        if (!isLoggedIn())
+        if (!membership.isLoggedIn())
             element.removeAttribute("wfu-hide-logged-in"); 
 
     });
@@ -51,7 +53,7 @@ const init = () => {
     document.querySelectorAll('[wfu-login-button]')
       .forEach((element: HTMLElement) => { 
 
-        expandLoginButton(element);
+        membership.expandLoginButton(element);
 
     });
 
@@ -59,7 +61,7 @@ const init = () => {
      * User Info 
      */
 
-    var membership = new WfuUserInfo({
+    var userInfo = new Sa5UserInfo({
 //        userInfoUpdatedCallback: myCallback
       }).init(); 
 

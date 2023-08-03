@@ -12,7 +12,7 @@
 import { HtmlBuilder } from './webflow-html-builder';
 
 //import { Database } from './webflow-data.js';
-import { Sa5User, WfuUserInfo } from './webflow-membership';
+import { Sa5User, Sa5UserInfo } from './webflow-membership';
 
 
 
@@ -103,7 +103,7 @@ export class WfuDataBinder {
     
         // Prepare sources
         if (!this.config.user)
-            this.config.user = new WfuUserInfo().loadUserInfoCache();
+            this.config.user = new Sa5UserInfo().loadUserInfoCache();
     
         // Iterate and bind each individually
         dataBind.forEach((elem: HTMLElement) => {

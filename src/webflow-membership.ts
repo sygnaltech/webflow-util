@@ -55,7 +55,7 @@ const StorageKeys = Object.freeze({
 //import Md5 from "crypto-api/src/hasher/md5";
 export class Sa5User {
 
-//    user_data_layer; // 1 = shallow | 2 = deep | 3 = external
+    // Track what data has been loaded
     user_data_loaded = {
         email: false,
         account_info: false,
@@ -75,7 +75,6 @@ export class Sa5User {
 
     accept_communications;
 
-    // https://stackoverflow.com/questions/22156326/private-properties-in-javascript-es6-classes
     email;
 
     name;
@@ -185,7 +184,13 @@ var defaultUserInfoConfig = {
 
 }
 
-export class WfuUserInfo {
+
+
+/**
+ * Get User Info 
+ */
+
+export class Sa5UserInfo {
 
     debug;
 
@@ -197,15 +202,7 @@ export class WfuUserInfo {
 
         this.config = {...defaultUserInfoConfig, ...config};
 
-//        this.config = $.extend({}, defaultUserInfoConfig, config);
-
         this.debug.enabled = this.config.debug; 
-
-        // // Install utility function if needed 
-        // window.getCookie = window.getCookie || function(name) {
-        //     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        //     if (match) return match[2];
-        // }
 
     }
 
@@ -367,9 +364,9 @@ export class WfuUserInfo {
         // merge dynamically as results are gathered
 //        debug.log("calling promise block.");
 //        await Promise.all([
-            this.loadUserInfoAsync_loginInfo(); // async
-            this.loadUserInfoAsync_accountInfo(); // async
-            this.loadUserInfoAsync_accessGroups(); // async
+        this.loadUserInfoAsync_loginInfo(); // async
+        this.loadUserInfoAsync_accountInfo(); // async
+        this.loadUserInfoAsync_accessGroups(); // async
 //        ]);
     
         // Load or create blank
@@ -381,7 +378,7 @@ export class WfuUserInfo {
 
     }
 
-    loadUserInfoAsync_loginInfo = async function() { 
+    async loadUserInfoAsync_loginInfo() { 
 
         this.debug.group("loadUserInfoAsync_loginInfo");
     
@@ -422,7 +419,7 @@ export class WfuUserInfo {
         this.debug.groupEnd();
     }
 
-    loadUserInfoAsync_accountInfo = async function() {
+    async loadUserInfoAsync_accountInfo() {
 
         this.debug.group("loadUserInfoAsync_accountInfo");
 
@@ -451,7 +448,6 @@ export class WfuUserInfo {
 
 //             var $userAccountEmail = await userInfoPixel.contents().find("input#wf-user-account-email");
 
-
             let userAccountEmailInput: HTMLInputElement | null = null;
 
             if (userInfoPixel.contentDocument) {
@@ -461,8 +457,8 @@ export class WfuUserInfo {
             }
             
             if (!userAccountEmailInput) {
-              // Now you can use userAccountEmailInput...
-              console.debug("Cannot access iframe's content");
+                // Now you can use userAccountEmailInput...
+                console.debug("Cannot access iframe's content");
                     return;
             }
             
@@ -479,12 +475,12 @@ export class WfuUserInfo {
                     // How can I trigger an onchange event manually? [duplicate]
                     // https://stackoverflow.com/a/2856602
                     if ("createEvent" in document) {
+
                         var evt = document.createEvent("HTMLEvents");
                         evt.initEvent("change", false, true);
                         input.dispatchEvent(evt);
-                    }
-                    else {
 
+                    } else {
 
                         if (userAccountEmailInput) {
                             // Create a new event
@@ -497,7 +493,6 @@ export class WfuUserInfo {
                             userAccountEmailInput.dispatchEvent(event);
                           }
                           
-
                     }
 //                    input.fireEvent("onchange");
 
@@ -713,31 +708,40 @@ console.log(id, user.data[id]);
 
 }
 
-export function isLoggedIn() {
+/**
+ * Memberships 
+ */
 
-    return getCookie("wf_loggedin") || false;
+export class Sa5Membership {
+
+    constructor() {
+
+    }
+
+    isLoggedIn() {
+
+        return getCookie("wf_loggedin") || false;
+    }
+
+    // Expanded login button
+    // Used on a containing DIV to expand the trigger area of 
+    // Webflow's Log-In / Log-Out button  
+    expandLoginButton($elem) {
+
+        // Get Webflow Login/Logout button
+        const $wfLoginButton = $elem.find("[data-wf-user-logout]");
+
+        // Setup click event handler on outer DIV
+        $elem.click(function() {
+            // Click inner element
+            $wfLoginButton.trigger('click');
+        });
+
+        // Also interecept and stop propogation so event is not doubled
+        $wfLoginButton.click(function(e) {
+            e.stopPropagation();
+        });
+
+    }
+
 }
-
-// Expanded login button
-// Used on a containing DIV to expand the trigger area of 
-// Webflow's Log-In / Log-Out button  
-export function expandLoginButton($elem) {
-
-    // Get Webflow Login/Logout button
-    const $wfLoginButton = $elem.find("[data-wf-user-logout]");
-
-    // Setup click event handler on outer DIV
-    $elem.click(function() {
-        // Click inner element
-        $wfLoginButton.trigger('click');
-    });
-
-    // Also interecept and stop propogation so event is not doubled
-    $wfLoginButton.click(function(e) {
-        e.stopPropagation();
-    });
-
-}
-
-
-
