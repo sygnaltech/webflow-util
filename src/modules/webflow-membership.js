@@ -9,7 +9,7 @@
  */
 
 import { XXH64 } from './webflow-crypto.js';
-import { toTitleCase, jsonMapReplacer, jsonMapReviver } from './webflow-utils.js';
+import { toTitleCase } from '../nocode/webflow-utils.js';
 import { WfuDebug } from './webflow-core.js';
 
 // Install utility function if needed 

@@ -12,6 +12,11 @@
 
 // https://www.w3docs.com/snippets/javascript/how-to-convert-string-to-title-case-with-javascript.html
 
+export function getCookie(name) {
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+}
+
 export function toTitleCase(str) {
 
     return str.toLowerCase().split(' ').map(function (word) {

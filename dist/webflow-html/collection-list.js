@@ -26,9 +26,8 @@
         items.sort(() => Math.random() - 0.5);
       } else {
         items.sort((a, b) => {
-          var _a, _b;
-          const key1 = a.getAttribute("wfu-sort-key") || ((_a = a.querySelector("[wfu-sort-key]")) == null ? void 0 : _a.getAttribute("wfu-sort-key")) || "";
-          const key2 = b.getAttribute("wfu-sort-key") || ((_b = b.querySelector("[wfu-sort-key]")) == null ? void 0 : _b.getAttribute("wfu-sort-key")) || "";
+          const key1 = a.getAttribute("wfu-sort-key") || a.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || "";
+          const key2 = b.getAttribute("wfu-sort-key") || b.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || "";
           let sortResult = 1;
           switch (sortType) {
             case "date":

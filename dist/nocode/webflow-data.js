@@ -92,9 +92,8 @@
       }
     }
     static startup(module = null) {
-      var _a;
       let sa5instance = window["sa5"];
-      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
         var core = new Sa5Core();
         if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];

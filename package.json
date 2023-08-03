@@ -17,7 +17,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "serve -p 4000",
     "tsbuild": "tsc --watch",
-    "build": "esbuild ./src/**/*.ts ./src/*.ts --bundle --sourcemap --outdir=dist --watch --external:custom-typings/*",
+    "build": "esbuild ./src/**/*.ts ./src/*.ts --bundle --sourcemap --outdir=dist --watch --external:custom-typings/* --target=es2020",
     "format": "prettier src/*.ts -w"
   },
   "devDependencies": {

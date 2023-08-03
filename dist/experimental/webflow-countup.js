@@ -1,21 +1,4 @@
 (() => {
-  var __defProp = Object.defineProperty;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-  var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b ||= {})
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
-      }
-    return a;
-  };
-
   // node_modules/countup.js/dist/countUp.min.js
   var t = function() {
     return t = Object.assign || function(t2) {
@@ -174,9 +157,8 @@
       }
     }
     static startup(module = null) {
-      var _a;
       let sa5instance = window["sa5"];
-      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
         var core = new Sa5Core();
         if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];
@@ -208,7 +190,7 @@
     constructor(customConfig = {}) {
       this.debug = new Sa5Debug("sa5-countup");
       this.debug.debug("Initializing");
-      this.config = __spreadValues(__spreadValues({}, defaultConfig), customConfig);
+      this.config = { ...defaultConfig, ...customConfig };
       this.debug.enabled = this.config.debug;
     }
     init() {
@@ -221,8 +203,7 @@
       const that = this;
       const elements = document.querySelectorAll(`[wfu-countup='${group}']`);
       elements.forEach((element) => {
-        var _a;
-        const n = parseFloat((_a = element.textContent) != null ? _a : "0");
+        const n = parseFloat(element.textContent ?? "0");
         const counter = new i(
           element,
           n,
@@ -239,9 +220,8 @@
         var countups = [];
         const elements = document.querySelectorAll(`[wfu-countup='${group}']`);
         elements.forEach((element) => {
-          var _a;
           const v = element.textContent;
-          const n = parseFloat((_a = element.textContent) != null ? _a : "0");
+          const n = parseFloat(element.textContent ?? "0");
           const counter = new i(
             element,
             n,
@@ -254,8 +234,7 @@
       });
       const counters = document.querySelectorAll(`[wfu-countup]`);
       counters.forEach((c) => {
-        var _a;
-        const n = parseFloat((_a = c.textContent) != null ? _a : "0");
+        const n = parseFloat(c.textContent ?? "0");
         const counter = new i(
           c,
           n,

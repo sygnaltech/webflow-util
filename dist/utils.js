@@ -1,5 +1,10 @@
 (() => {
   // src/utils.ts
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match)
+      return match[2];
+  }
   function toTitleCase(str) {
     return str.toLowerCase().split(" ").map(function(word) {
       return word.charAt(0).toUpperCase() + word.slice(1);
@@ -113,13 +118,13 @@
       let target = null;
       switch (data.getAttribute("wfu-attr-target")) {
         case "prev":
-          target = dataContainer == null ? void 0 : dataContainer.previousElementSibling;
+          target = dataContainer?.previousElementSibling;
           break;
         case "next":
-          target = dataContainer == null ? void 0 : dataContainer.nextElementSibling;
+          target = dataContainer?.nextElementSibling;
           break;
         case "parent":
-          target = dataContainer == null ? void 0 : dataContainer.parentElement;
+          target = dataContainer?.parentElement;
           break;
         default:
           console.warn("Unknown apply setting for param.");
@@ -138,8 +143,8 @@
   };
   var formatJsonAsHtml = (data) => {
     let json = formatJson(data);
-    json = json == null ? void 0 : json.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    return (json == null ? void 0 : json.replace(
+    json = json?.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return json?.replace(
       /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
         let cls = "wfu-json-number";
@@ -156,7 +161,7 @@
         }
         return `<span class="${cls}">${match}</span>`;
       }
-    )) || "";
+    ) || "";
   };
   var displayDataAsHtml = (el, data) => {
     const pre = document.createElement("pre");
@@ -175,7 +180,7 @@
       return dict.get(p2) || "";
     };
     text = text.replace(
-      new RegExp("{\\s*(?<cmd>\\w*)\\s*\\{\\s*(?<params>\\w*)\\s*\\}\\s*(?<options>\\w*)\\s*\\}", "g"),
+      /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
       replacer
     );
     return text;

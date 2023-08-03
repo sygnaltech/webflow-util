@@ -24,10 +24,9 @@
       });
     }
     getGistCode(el) {
-      var _a;
       if (!el)
         return;
-      let code = ((_a = el.querySelector(".gist-file")) == null ? void 0 : _a.textContent) || "";
+      let code = el.querySelector(".gist-file")?.textContent || "";
       let cleanString = code.replace(/\n\s*\n/g, "\n");
       let lines = cleanString.split("\n");
       lines = lines.slice(0, -4);
@@ -108,9 +107,8 @@
       }
     }
     static startup(module = null) {
-      var _a;
       let sa5instance = window["sa5"];
-      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
         var core = new Sa5Core();
         if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];

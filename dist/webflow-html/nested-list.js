@@ -10,13 +10,12 @@
       const data = new DOMParser().parseFromString(content, "text/html").body.childNodes;
       let items = [];
       data.forEach((el, i) => {
-        var _a;
         if (el.nodeName !== "LI")
           return;
         let item = {
           indent: 1,
           mode: "",
-          text: ((_a = el.textContent) == null ? void 0 : _a.trim()) || ""
+          text: el.textContent?.trim() || ""
         };
         const LIST_DEPTH_LIMIT = 10;
         for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {

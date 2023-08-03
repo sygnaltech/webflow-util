@@ -1,25 +1,4 @@
 (() => {
-  var __async = (__this, __arguments, generator) => {
-    return new Promise((resolve, reject) => {
-      var fulfilled = (value) => {
-        try {
-          step(generator.next(value));
-        } catch (e) {
-          reject(e);
-        }
-      };
-      var rejected = (value) => {
-        try {
-          step(generator.throw(value));
-        } catch (e) {
-          reject(e);
-        }
-      };
-      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-      step((generator = generator.apply(__this, __arguments)).next());
-    });
-  };
-
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -88,9 +67,8 @@
       }
     }
     static startup(module = null) {
-      var _a;
       let sa5instance = window["sa5"];
-      if (!(((_a = sa5instance == null ? void 0 : sa5instance.constructor) == null ? void 0 : _a.name) == "Sa5Core")) {
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
         var core = new Sa5Core();
         if (Array.isArray(sa5instance))
           core.handlers = window["sa5"];
@@ -186,7 +164,7 @@
       const form = this.form;
       this.debug.debug("WFU Handle Form submit to webhook (success response).");
       console.log("init form handler.");
-      this.form.formElement.addEventListener("submit", (e) => __async(this, null, function* () {
+      this.form.formElement.addEventListener("submit", async (e) => {
         e.preventDefault();
         this.debug.debug("Posting data.");
         this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
@@ -197,7 +175,7 @@
           body: formData
         }).then((response) => response.json()).then((data) => this.handleResponse(data, "success", null)).catch((error) => this.handleFailResponse(error, "error", error));
         return false;
-      }));
+      });
     }
   };
 
@@ -215,24 +193,22 @@
       super(form, config);
     }
     handleResponse(data, status, xhr) {
-      var _a, _b;
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
       this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
       if (xhr.status >= 200 && xhr.status < 300) {
         this.form.setMode(
           1 /* Success */,
-          (_a = xhr.responseJSON) == null ? void 0 : _a.message
+          xhr.responseJSON?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          (_b = xhr.responseJSON) == null ? void 0 : _b.message
+          xhr.responseJSON?.message
         );
       }
     }
     handleFailResponse(jqxhr, settings, ex) {
-      var _a, _b;
       this.debug.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
       this.debug.debug(`Webhook response FAILED settings: ${settings}`);
       this.debug.debug(`Webhook response FAILED ex: ${ex}`);
@@ -240,12 +216,12 @@
         console.error(jqxhr.responseText);
         this.form.setMode(
           2 /* Error */,
-          (_a = jqxhr.responseJSON) == null ? void 0 : _a.message
+          jqxhr.responseJSON?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          (_b = jqxhr.responseJSON) == null ? void 0 : _b.message
+          jqxhr.responseJSON?.message
         );
       }
     }
@@ -257,24 +233,22 @@
       super(form, config);
     }
     handleResponse(data, status, xhr) {
-      var _a, _b;
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
       this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
       if (xhr.status >= 200 && xhr.status < 300) {
         this.form.setMode(
           1 /* Success */,
-          (_a = xhr.responseJSON) == null ? void 0 : _a.message
+          xhr.responseJSON?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          (_b = xhr.responseJSON) == null ? void 0 : _b.message
+          xhr.responseJSON?.message
         );
       }
     }
     handleFailResponse(jqxhr, settings, ex) {
-      var _a, _b;
       this.debug.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
       this.debug.debug(`Webhook response FAILED settings: ${settings}`);
       this.debug.debug(`Webhook response FAILED ex: ${ex}`);
@@ -282,12 +256,12 @@
         console.error(jqxhr.responseText);
         this.form.setMode(
           2 /* Error */,
-          (_a = jqxhr.responseJSON) == null ? void 0 : _a.message
+          jqxhr.responseJSON?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          (_b = jqxhr.responseJSON) == null ? void 0 : _b.message
+          jqxhr.responseJSON?.message
         );
       }
     }

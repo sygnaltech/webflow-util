@@ -24,10 +24,9 @@
       });
     }
     getGistCode(el) {
-      var _a;
       if (!el)
         return;
-      let code = ((_a = el.querySelector(".gist-file")) == null ? void 0 : _a.textContent) || "";
+      let code = el.querySelector(".gist-file")?.textContent || "";
       let cleanString = code.replace(/\n\s*\n/g, "\n");
       let lines = cleanString.split("\n");
       lines = lines.slice(0, -4);
