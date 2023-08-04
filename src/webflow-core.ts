@@ -116,13 +116,9 @@ export class Sa5Core {
 
             core = new Sa5Core();
 
-console.log("HANDLERS", sa5instance); // window["sa5"]);
-
             // Absorb handlers
             if(Array.isArray(sa5instance))
                 core.handlers = sa5instance; //window["sa5"];
-
-                console.log("HANDLERS", core.handlers); // window["sa5"]);
 
             window["sa5"] = core;
             window["Sa5"] = window["sa5"];
