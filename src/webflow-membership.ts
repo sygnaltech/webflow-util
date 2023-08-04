@@ -15,7 +15,7 @@ import { Sa5Core } from './webflow-core';
 import { Sa5Debug } from './webflow-core/debug';
 import { Sa5User } from './webflow-membership/user'; 
 
-
+import { WfuDataBinder } from './webflow-databind';
 
 const StorageKeys = Object.freeze({
     user: 'wfuUser',
@@ -35,10 +35,13 @@ var defaultUserInfoConfig = {
 
     debug: false, // Debugging mode
 
+    dataBind: true, // Databind after user object load 
+
     // Advanced settings
     advanced: {
 
         accountInfoLoadDelay: 300, // ms 
+        accountInfoSaveDelay: 500, // ms 
 
     },
 
@@ -52,17 +55,21 @@ var defaultUserInfoConfig = {
 
 export class Sa5Membership {
 
-    debug;
+    debug: Sa5Debug;
 
     config; // Optional config
 
     constructor(config = {}) {
 
+        new Sa5Core().init();
+
+        // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership");
+        this.debug.debug ("Initializing");
 
         this.config = {...defaultUserInfoConfig, ...config};
 
-        this.debug.enabled = this.config.debug; 
+//        this.debug.enabled = this.config.debug; 
 
     }
 
@@ -77,7 +84,7 @@ export class Sa5Membership {
 
         this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
 
-        // Install jQuery-based listeners 
+        // Install listeners 
         // to listen for login events 
         // https://stackoverflow.com/questions/9347282/using-jquery-preventing-form-from-submitting 
         // https://stackoverflow.com/questions/11469616/jquery-form-validation-before-ajax-submit
@@ -100,7 +107,29 @@ export class Sa5Membership {
                 localStorage.setItem('StorageKeys.userKey', userKey); 
             });
         });
-        
+
+        forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");     
+
+        // For each form
+        forms.forEach((form) => {
+            // Add a submit event listener
+            form.addEventListener('submit', (e) => {
+                // e.preventDefault();
+                // e.stopPropagation();
+
+                setTimeout(async () => {
+
+                    console.log("New User info saved");
+
+                    // Refresh user info
+                    await this.loadUserInfoAsync();
+
+                    console.log("User info refreshed");
+
+                }, this.config.advanced.accountInfoSaveDelay);
+
+            });
+        });
 
         // Call on every page on load.
         this.readyUserInfo();
@@ -156,14 +185,20 @@ export class Sa5Membership {
         // Load or create blank
         var user = this.loadUserInfoCache();
         if (user) {
-        
-            // Notify listeners
-            this.debug.debug("Notify listeners", user); // Merged 
 
-console.log(user); 
+            // Databinding
+            if(this.config.dataBind) {
+                this.debug.debug("databinding", user);
+                new WfuDataBinder({
+                    user: user
+                }).bind(); 
+            }
 
-            if (this.config.userInfoUpdatedCallback)
+            // User Callback 
+            if (this.config.userInfoUpdatedCallback) {
+                this.debug.debug("userCallback", user);
                 this.config.userInfoUpdatedCallback(user); // async
+            }
 
         }
 
@@ -291,6 +326,8 @@ console.log(user);
     async loadUserInfoAsync_accountInfo() {
 
         this.debug.group("loadUserInfoAsync_accountInfo");
+
+console.log("accountInfo load")
 
         // Suppress IFRAME loads & user-account page loads 
         if (window.self != window.top) {
@@ -541,11 +578,19 @@ console.log(user);
             btoa(JSON.stringify(userData)) // , jsonMapReplacer))
             ); 
 
-        // Notify listeners
-        this.debug.debug("Notify listeners", userData); // Merged 
+        // Databinding
+        if(this.config.dataBind) {
+            this.debug.debug("databinding", userData);
+            new WfuDataBinder({
+                user: userData
+            }).bind(); 
+        }
 
-        if (this.config.userInfoUpdatedCallback)
+        // Notify listeners
+        if (this.config.userInfoUpdatedCallback) {
+            this.debug.debug("Notify listeners", userData); // Merged 
             this.config.userInfoUpdatedCallback(userData); // async
+        }
 
         this.debug.groupEnd();
     }

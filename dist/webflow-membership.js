@@ -29,6 +29,16 @@
       return word.charAt(0).toUpperCase() + word.slice(1);
     }).join(" ");
   }
+  var expandMacrosInText = (text, dict) => {
+    const replacer = (match, p1, p2, p3, offset, string) => {
+      return dict.get(p2) || "";
+    };
+    text = text.replace(
+      /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+      replacer
+    );
+    return text;
+  };
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -70,6 +80,51 @@
         console.debug(this._label, ...args);
     }
   };
+
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
+    init() {
+      this.initDebugMode();
+    }
+    initDebugMode() {
+      const debugParamKey = "sa-debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      let sa5instance = window["sa5"];
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
+        var core = new Sa5Core();
+        if (Array.isArray(sa5instance))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
+      }
+      if (module) {
+        window["sa5"][module.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
 
   // src/webflow-crypto.ts
   var PRIME64_1 = 11400714785074694791n;
@@ -287,6 +342,188 @@
     }
   };
 
+  // src/modules/webflow-data-csv.js
+  RegExp.escape = function(s) {
+    return s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+  };
+
+  // src/modules/webflow-html.js
+  (function($2) {
+    $2.fn.shuffle = function() {
+      var allElems = this.get(), getRandom = function(max) {
+        return Math.floor(Math.random() * max);
+      }, shuffled = $2.map(allElems, function() {
+        var random = getRandom(allElems.length), randEl = $2(allElems[random]).clone(true)[0];
+        allElems.splice(random, 1);
+        return randEl;
+      });
+      this.each(function(i) {
+        $2(this).replaceWith($2(shuffled[i]));
+      });
+      return $2(shuffled);
+    };
+  })(jQuery);
+
+  // src/webflow-data.ts
+  var getDictionaryFromDataRow2 = function(data, rowIndex) {
+    var dict = /* @__PURE__ */ new Map();
+    for (const v in data[rowIndex]) {
+      dict.set(
+        v,
+        data[rowIndex][v]
+      );
+    }
+    return dict;
+  };
+
+  // src/webflow-html-builder.ts
+  var HtmlBuilder2 = class {
+    constructor() {
+      this.html = [];
+      this.render = function() {
+        return this.html.join("");
+      };
+    }
+    add(html) {
+      this.html.push(html);
+    }
+    addTemplate(templateEl, data) {
+      let template = templateEl.innerHTML;
+      console.log(`addTemplate`);
+      console.log(template);
+      console.log(data);
+      for (let row = 0; row < data.length; row++) {
+        let dict = getDictionaryFromDataRow2(data, row);
+        let item = expandMacrosInText(
+          template,
+          dict
+        );
+        console.log(item);
+        this.add(item);
+      }
+    }
+  };
+
+  // src/webflow-databind.ts
+  var DataSourceType = Object.freeze({
+    db: "db",
+    user: "user",
+    query: "query"
+  });
+  var dataBinderConfig = {
+    db: void 0,
+    user: void 0,
+    handlers: []
+  };
+  var WfuDataBinder = class {
+    constructor(config = {}) {
+      this.config = { ...dataBinderConfig, ...config };
+    }
+    getDataSourceType(dsn) {
+      var dsnTypeIndicator = void 0;
+      if ("!@#%^&*-+=?".includes(dsn[0])) {
+        dsnTypeIndicator = dsn[0];
+      } else if (dsn[0] == "$") {
+        dsnTypeIndicator = dsn.split(".")[0];
+      } else {
+        dsnTypeIndicator = "$db";
+      }
+      var dsnType = void 0;
+      switch (dsnTypeIndicator) {
+        case "$user":
+        case "@":
+          dsnType = DataSourceType.user;
+          break;
+        case "$query":
+        case "?":
+          dsnType = DataSourceType.query;
+          break;
+        default:
+        case "$db":
+        case "+":
+          dsnType = DataSourceType.db;
+          break;
+      }
+      return dsnType;
+    }
+    getDataSourceName(dsn) {
+      var dsnName = void 0;
+      if ("!@#%^&*-+=?".includes(dsn[0])) {
+        dsnName = dsn.substring(1);
+      } else if (dsn[0] == "$") {
+        const dsnZone = dsn.split(".")[0];
+        dsnName = dsn.substring(dsnZone.length + 1);
+      } else {
+        dsnName = dsn;
+      }
+      return dsnName;
+    }
+    bind() {
+      let dataBind = document.querySelectorAll("[wfu-bind]");
+      if (!this.config.user)
+        this.config.user = new Sa5Membership().loadUserInfoCache();
+      dataBind.forEach((elem) => {
+        let dsn = elem.getAttribute("wfu-bind");
+        let dsnType = this.getDataSourceType(dsn);
+        switch (dsnType) {
+          case DataSourceType.user:
+            this.bindData_user(
+              elem,
+              this.config.user
+            );
+            break;
+          case DataSourceType.db:
+            this.bindData_db(
+              elem,
+              this.config.db
+            );
+            break;
+        }
+      });
+    }
+    bindData_user(el, user) {
+      if (!user || !user.email)
+        return;
+      let dsn = el.getAttribute("wfu-bind");
+      let elemType = el.tagName.toLowerCase();
+      let dsnName = this.getDataSourceName(dsn);
+      let dsnNameParts = dsnName.split(".");
+      let val;
+      switch (dsnNameParts[0]) {
+        case "data":
+          val = user.data[dsnNameParts[1]];
+          break;
+        default:
+          val = user[dsnName];
+          break;
+      }
+      switch (elemType) {
+        case "input":
+          el.value = val;
+          break;
+        default:
+          el.textContent = val;
+          break;
+      }
+    }
+    bindData_db(el, db) {
+      let dsn = el.getAttribute("wfu-bind");
+      let data = db.getData(dsn);
+      if (!db) {
+        console.warn(`Data binding requested for elem '${data}', but no db defined.`);
+        return;
+      }
+      let templateId = el.getAttribute("wfu-bind-template");
+      let template = document.querySelector("#" + templateId);
+      let hb = new HtmlBuilder2();
+      hb.addTemplate(
+        template,
+        data
+      );
+      el.innerHTML = hb.render();
+    }
+  };
+
   // src/webflow-membership.ts
   var StorageKeys = Object.freeze({
     user: "wfuUser",
@@ -297,15 +534,18 @@
     userInfoUpdatedCallback: void 0,
     userLogoutPurge: void 0,
     debug: false,
+    dataBind: true,
     advanced: {
-      accountInfoLoadDelay: 300
+      accountInfoLoadDelay: 300,
+      accountInfoSaveDelay: 500
     }
   };
   var Sa5Membership = class {
     constructor(config = {}) {
+      new Sa5Core().init();
       this.debug = new Sa5Debug("sa5-membership");
+      this.debug.debug("Initializing");
       this.config = { ...defaultUserInfoConfig, ...config };
-      this.debug.enabled = this.config.debug;
     }
     init() {
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
@@ -316,6 +556,16 @@
           let userEmail = emailInput.value;
           let userKey = btoa(userEmail);
           localStorage.setItem("StorageKeys.userKey", userKey);
+        });
+      });
+      forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");
+      forms.forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          setTimeout(async () => {
+            console.log("New User info saved");
+            await this.loadUserInfoAsync();
+            console.log("User info refreshed");
+          }, this.config.advanced.accountInfoSaveDelay);
         });
       });
       this.readyUserInfo();
@@ -342,10 +592,16 @@
       }
       var user = this.loadUserInfoCache();
       if (user) {
-        this.debug.debug("Notify listeners", user);
-        console.log(user);
-        if (this.config.userInfoUpdatedCallback)
+        if (this.config.dataBind) {
+          this.debug.debug("databinding", user);
+          new WfuDataBinder({
+            user
+          }).bind();
+        }
+        if (this.config.userInfoUpdatedCallback) {
+          this.debug.debug("userCallback", user);
           this.config.userInfoUpdatedCallback(user);
+        }
       }
       if (!user)
         await this.loadUserInfoAsync();
@@ -389,6 +645,7 @@
     }
     async loadUserInfoAsync_accountInfo() {
       this.debug.group("loadUserInfoAsync_accountInfo");
+      console.log("accountInfo load");
       if (window.self != window.top) {
         console.log("suppressing accountInfo load - iframe child");
         return;
@@ -534,9 +791,16 @@
         StorageKeys.user,
         btoa(JSON.stringify(userData))
       );
-      this.debug.debug("Notify listeners", userData);
-      if (this.config.userInfoUpdatedCallback)
+      if (this.config.dataBind) {
+        this.debug.debug("databinding", userData);
+        new WfuDataBinder({
+          user: userData
+        }).bind();
+      }
+      if (this.config.userInfoUpdatedCallback) {
+        this.debug.debug("Notify listeners", userData);
         this.config.userInfoUpdatedCallback(userData);
+      }
       this.debug.groupEnd();
     }
     loadUserInfoCache() {

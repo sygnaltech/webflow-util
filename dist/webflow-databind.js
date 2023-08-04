@@ -143,6 +143,51 @@
     }
   };
 
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
+    init() {
+      this.initDebugMode();
+    }
+    initDebugMode() {
+      const debugParamKey = "sa-debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      let sa5instance = window["sa5"];
+      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
+        var core = new Sa5Core();
+        if (Array.isArray(sa5instance))
+          core.handlers = window["sa5"];
+        window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
+      }
+      if (module) {
+        window["sa5"][module.name] = module;
+      }
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
+
   // src/webflow-crypto.ts
   var PRIME64_1 = 11400714785074694791n;
   var PRIME64_2 = 14029467366897019727n;
@@ -369,15 +414,18 @@
     userInfoUpdatedCallback: void 0,
     userLogoutPurge: void 0,
     debug: false,
+    dataBind: true,
     advanced: {
-      accountInfoLoadDelay: 300
+      accountInfoLoadDelay: 300,
+      accountInfoSaveDelay: 500
     }
   };
   var Sa5Membership = class {
     constructor(config = {}) {
+      new Sa5Core().init();
       this.debug = new Sa5Debug("sa5-membership");
+      this.debug.debug("Initializing");
       this.config = { ...defaultUserInfoConfig, ...config };
-      this.debug.enabled = this.config.debug;
     }
     init() {
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
@@ -388,6 +436,16 @@
           let userEmail = emailInput.value;
           let userKey = btoa(userEmail);
           localStorage.setItem("StorageKeys.userKey", userKey);
+        });
+      });
+      forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");
+      forms.forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          setTimeout(async () => {
+            console.log("New User info saved");
+            await this.loadUserInfoAsync();
+            console.log("User info refreshed");
+          }, this.config.advanced.accountInfoSaveDelay);
         });
       });
       this.readyUserInfo();
@@ -414,10 +472,16 @@
       }
       var user = this.loadUserInfoCache();
       if (user) {
-        this.debug.debug("Notify listeners", user);
-        console.log(user);
-        if (this.config.userInfoUpdatedCallback)
+        if (this.config.dataBind) {
+          this.debug.debug("databinding", user);
+          new WfuDataBinder({
+            user
+          }).bind();
+        }
+        if (this.config.userInfoUpdatedCallback) {
+          this.debug.debug("userCallback", user);
           this.config.userInfoUpdatedCallback(user);
+        }
       }
       if (!user)
         await this.loadUserInfoAsync();
@@ -461,6 +525,7 @@
     }
     async loadUserInfoAsync_accountInfo() {
       this.debug.group("loadUserInfoAsync_accountInfo");
+      console.log("accountInfo load");
       if (window.self != window.top) {
         console.log("suppressing accountInfo load - iframe child");
         return;
@@ -606,9 +671,16 @@
         StorageKeys.user,
         btoa(JSON.stringify(userData))
       );
-      this.debug.debug("Notify listeners", userData);
-      if (this.config.userInfoUpdatedCallback)
+      if (this.config.dataBind) {
+        this.debug.debug("databinding", userData);
+        new WfuDataBinder({
+          user: userData
+        }).bind();
+      }
+      if (this.config.userInfoUpdatedCallback) {
+        this.debug.debug("Notify listeners", userData);
         this.config.userInfoUpdatedCallback(userData);
+      }
       this.debug.groupEnd();
     }
     loadUserInfoCache() {
