@@ -10,11 +10,19 @@
  */
 
 
+import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
 
-interface Config {
-    handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
+type BreakpointChangedCallback = (breakpointName: string, e: MediaQueryListEvent) => void; 
+
+
+
+interface Sa5BreakpointsConfig {
+
+    breakpointChangedCallback?: BreakpointChangedCallback; 
+//    ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
+
 }
 
 // Webflow breakpoints
@@ -30,10 +38,51 @@ export const sa5Breakpoints = {
 
 
 export class Sa5Breakpoints {
-    config: Config;
 
-    constructor(config: Config) {
-        this.config = config;
+    config: Sa5BreakpointsConfig;
+
+
+    // Type guard to check if a function is a UserInfoChangedCallback
+    private isBreakpointsChangedCallback(func: Function): func is BreakpointChangedCallback {
+
+        if(!func) return false;
+
+        // Adjust this check as needed
+        return func.length === 1;
+    }
+
+
+
+    constructor(config: Partial<Sa5BreakpointsConfig> = {}) {
+//        this.config = config; 
+
+        // Merge configs, with defaults
+        this.config = {
+            breakpointChangedCallback: config.breakpointChangedCallback,
+        }
+
+
+        let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
+
+        console.log("MEMBER HANDLERS", core.handlers); 
+
+
+
+        //        const userInfoChanged = core.handlers['userInfoChanged'];
+        const breakpointChanged = core.getHandler('breakpointChanged'); 
+        console.log("%cgetting handler", "background-color: yellow;", breakpointChanged); 
+//        if (this.isBreakpointsChangedCallback(breakpointChanged)) {
+            console.log("%csetting handler", "background-color: yellow;"); 
+            console.log("%chandler", "background-color: yellow;", this.config.breakpointChangedCallback); 
+
+            this.config.breakpointChangedCallback = breakpointChanged as BreakpointChangedCallback;
+
+            console.log("%chandler", "background-color: yellow;", this.config.breakpointChangedCallback); 
+
+
+//        }
+
+
     }
 
     init() {
@@ -64,6 +113,8 @@ export class Sa5Breakpoints {
     // Breakpoint changed
     handleBreakpointChange = ((e: MediaQueryListEvent) => {
 
+
+
         // We only want matching events 
         if (!e.matches)
             return;
@@ -75,14 +126,19 @@ export class Sa5Breakpoints {
 //                console.log(`Current device: ${d}`);
                 device = d; 
             }
-          }
+        }
+
+        console.log("breakpointchange."); 
 
         // Notify any config-specified handler
-        if(this.config.handleBreakpointChange) 
-            this.config.handleBreakpointChange(
+        if(this.config.breakpointChangedCallback) {
+            console.log("breakpointchangedmatch."); 
+
+            this.config.breakpointChangedCallback(
                 device as string, 
                 e
             ); 
+        }
 
     });
 
