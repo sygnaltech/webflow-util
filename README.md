@@ -1,14 +1,16 @@
-# Sygnal Attributes [WFU] v5
-
-> NOTE: in v5, the library is undergoing significant migration 
-from JS/CSS to TS/SCSS, which means significant code restructuring. Basic library functionality and APIs should remain unchanged. 
+# Sygnal Attributes 5
 
 The **WFU** library is a collection of utilities that add capability to 
 [Webflow](https://webflow.com/)
 sites. It focuses on overcoming certain limitations of Webflow, and adding certain functionality.
 
+> NOTE: in v5, the library is undergoing significant migration 
+from JS/CSS to TS/SCSS, which means significant code restructuring. Basic library functionality and APIs should remain unchanged. 
+
 Some of the most popular features include;
 
+- Webflow membership & current user info access
+- Enhanced Webflow elements such as lightbox and tabs 
 - Data-binding form INPUT and SELECT elements to your collection lists
 - Adding custom attributes dynamically to elements within a collection list.
 - Adding tables support, with data sourced from Google Sheets
