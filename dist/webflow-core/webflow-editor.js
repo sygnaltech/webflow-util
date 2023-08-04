@@ -17,7 +17,6 @@
       config = config || {};
       this.config = config;
       this.init();
-      console.debug(`WFU Edit mode monitor installed`);
     }
     init() {
       let titleElement = document.getElementsByTagName("title")[0];

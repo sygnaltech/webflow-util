@@ -45,11 +45,18 @@
     constructor() {
       this.handlers = [];
     }
+    getHandlers(name) {
+      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
+    }
+    getHandler(name) {
+      const item = this.handlers.find((item2) => item2[0] === name);
+      return item ? item[1] : void 0;
+    }
     init() {
       this.initDebugMode();
     }
     initDebugMode() {
-      const debugParamKey = "sa-debug";
+      const debugParamKey = "debug";
       let params = new URLSearchParams(window.location.search);
       let hasDebug = params.has(debugParamKey);
       if (hasDebug) {
@@ -68,16 +75,20 @@
     }
     static startup(module = null) {
       let sa5instance = window["sa5"];
-      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
-        var core = new Sa5Core();
+      var core;
+      if (sa5instance?.constructor?.name == "Sa5Core") {
+        core = sa5instance;
+      } else {
+        core = new Sa5Core();
         if (Array.isArray(sa5instance))
-          core.handlers = window["sa5"];
+          core.handlers = sa5instance;
         window["sa5"] = core;
         window["Sa5"] = window["sa5"];
       }
       if (module) {
         window["sa5"][module.name] = module;
       }
+      return core;
     }
     push(o) {
       this.handlers.push(o);
@@ -117,7 +128,7 @@
     mobilePortrait: "(max-width: 479px)"
   };
   var Sa5Breakpoints = class {
-    constructor(config) {
+    constructor(config = {}) {
       this.handleBreakpointChange = (e) => {
         if (!e.matches)
           return;
@@ -127,13 +138,24 @@
             device = d;
           }
         }
-        if (this.config.handleBreakpointChange)
-          this.config.handleBreakpointChange(
+        if (this.config.breakpointChangedCallback) {
+          this.config.breakpointChangedCallback(
             device,
             e
           );
+        }
       };
-      this.config = config;
+      this.config = {
+        breakpointChangedCallback: config.breakpointChangedCallback
+      };
+      let core = Sa5Core.startup();
+      const breakpointChanged = core.getHandler("breakpointChanged");
+      this.config.breakpointChangedCallback = breakpointChanged;
+    }
+    isBreakpointsChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
     }
     init() {
       let debug = new Sa5Debug("sa5-html");

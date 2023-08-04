@@ -86,11 +86,18 @@
     constructor() {
       this.handlers = [];
     }
+    getHandlers(name) {
+      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
+    }
+    getHandler(name) {
+      const item = this.handlers.find((item2) => item2[0] === name);
+      return item ? item[1] : void 0;
+    }
     init() {
       this.initDebugMode();
     }
     initDebugMode() {
-      const debugParamKey = "sa-debug";
+      const debugParamKey = "debug";
       let params = new URLSearchParams(window.location.search);
       let hasDebug = params.has(debugParamKey);
       if (hasDebug) {
@@ -109,16 +116,20 @@
     }
     static startup(module = null) {
       let sa5instance = window["sa5"];
-      if (!(sa5instance?.constructor?.name == "Sa5Core")) {
-        var core = new Sa5Core();
+      var core;
+      if (sa5instance?.constructor?.name == "Sa5Core") {
+        core = sa5instance;
+      } else {
+        core = new Sa5Core();
         if (Array.isArray(sa5instance))
-          core.handlers = window["sa5"];
+          core.handlers = sa5instance;
         window["sa5"] = core;
         window["Sa5"] = window["sa5"];
       }
       if (module) {
         window["sa5"][module.name] = module;
       }
+      return core;
     }
     push(o) {
       this.handlers.push(o);
@@ -529,23 +540,35 @@
     user: "wfuUser",
     userKey: "wfuUserKey"
   });
-  var defaultUserInfoConfig = {
-    loadUserInfoCallback: void 0,
-    userInfoUpdatedCallback: void 0,
-    userLogoutPurge: void 0,
-    debug: false,
-    dataBind: true,
-    advanced: {
-      accountInfoLoadDelay: 300,
-      accountInfoSaveDelay: 500
-    }
-  };
   var Sa5Membership = class {
     constructor(config = {}) {
-      new Sa5Core().init();
+      this.userInfoUpdatedCallback = (user) => {
+        if (this.config.userInfoUpdatedCallback)
+          this.config.userInfoUpdatedCallback(
+            user
+          );
+      };
+      this.config = {
+        userInfoUpdatedCallback: config.userInfoUpdatedCallback,
+        debug: config.debug ?? false,
+        dataBind: config.dataBind ?? true,
+        advanced: {
+          accountInfoLoadDelay: config.advanced?.accountInfoLoadDelay ?? 300,
+          accountInfoSaveDelay: config.advanced?.accountInfoSaveDelay ?? 500
+        }
+      };
+      let core = Sa5Core.startup();
       this.debug = new Sa5Debug("sa5-membership");
       this.debug.debug("Initializing");
-      this.config = { ...defaultUserInfoConfig, ...config };
+      const userInfoChanged = core.getHandler("userInfoChanged");
+      if (this.isUserInfoChangedCallback(userInfoChanged)) {
+        this.config.userInfoUpdatedCallback = userInfoChanged;
+      }
+    }
+    isUserInfoChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
     }
     init() {
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
@@ -562,9 +585,7 @@
       forms.forEach((form) => {
         form.addEventListener("submit", (e) => {
           setTimeout(async () => {
-            console.log("New User info saved");
             await this.loadUserInfoAsync();
-            console.log("User info refreshed");
           }, this.config.advanced.accountInfoSaveDelay);
         });
       });
@@ -579,8 +600,6 @@
       this.debug.debug("logged out, cleaning info.");
       sessionStorage.removeItem(StorageKeys.user);
       localStorage.removeItem(StorageKeys.userKey);
-      if (this.config.userLogoutPurge)
-        this.config.userLogoutPurge();
       this.debug.groupEnd();
     }
     async readyUserInfo() {
@@ -645,9 +664,7 @@
     }
     async loadUserInfoAsync_accountInfo() {
       this.debug.group("loadUserInfoAsync_accountInfo");
-      console.log("accountInfo load");
       if (window.self != window.top) {
-        console.log("suppressing accountInfo load - iframe child");
         return;
       }
       let userInfoPixel = document.createElement("iframe");
@@ -669,7 +686,6 @@
           userAccountEmailInput = userInfoPixel.contentWindow.document.querySelector("input#wf-user-account-email");
         }
         if (!userAccountEmailInput) {
-          console.debug("Cannot access iframe's content");
           return;
         }
         const input = userAccountEmailInput;
@@ -799,7 +815,7 @@
       }
       if (this.config.userInfoUpdatedCallback) {
         this.debug.debug("Notify listeners", userData);
-        this.config.userInfoUpdatedCallback(userData);
+        this.userInfoUpdatedCallback(userData);
       }
       this.debug.groupEnd();
     }
