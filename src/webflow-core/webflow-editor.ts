@@ -67,7 +67,7 @@ export class Sa5Editor {
 
         this.init();
 
-        console.debug(`WFU Edit mode monitor installed`);
+//        console.debug(`WFU Edit mode monitor installed`);
 
     }
 
