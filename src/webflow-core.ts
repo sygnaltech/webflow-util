@@ -25,7 +25,22 @@ import { Sa5Debug } from './webflow-core/debug'
 
 export class Sa5Core {
 
+    // let sa5: [string, Function][] = window.sa5 || [];
     public handlers = [];
+
+    getHandlers(name: string): Function[] {
+
+        return this.handlers.filter(item => item[0] === name)
+            .map(item => item[1]);
+
+//        return null;
+    }
+
+    getHandler(name: string): Function | undefined {
+        const item = this.handlers
+            .find(item => item[0] === name);
+        return item ? item[1] : undefined;
+    }
 
     // Map for elements wired to Sa5 objects 
 //    public elements: WeakMap<HTMLElement, object>;
@@ -40,7 +55,6 @@ export class Sa5Core {
 
     init() {
 
-
         this.initDebugMode();
 
     }
@@ -49,7 +63,7 @@ export class Sa5Core {
     // based on ?sa-debug=true querystring param
     initDebugMode() {
 
-        const debugParamKey = 'sa-debug'; // ?sa-debug=true
+        const debugParamKey = 'debug'; // ?sa-debug=true
 
 //        var wfuDebugValue = Boolean(localStorage.setItem('wfuDebug', 'true')); 
 
@@ -76,7 +90,9 @@ export class Sa5Core {
         }
     }
 
-    static startup(module: any | null = null) {
+    // Factory 
+    // Get or create Sa5Core 
+    static startup(module: any | null = null): Sa5Core {
 
 //        console.debug("sa5core", "startup");
 
@@ -85,17 +101,28 @@ export class Sa5Core {
         
         let sa5instance = window['sa5'];
 
+        var core: Sa5Core; // = new Sa5Core();
+
         // Initialize Sa5Core if needed
-        if(!(sa5instance?.constructor?.name == "Sa5Core")) {
+
+        if(sa5instance?.constructor?.name == "Sa5Core") {
+
+            core = sa5instance;
+
+        } else {
 
     //         if(window["sa5"])
     // console.log("name", window["sa5"].name);
 
-            var core = new Sa5Core();
+            core = new Sa5Core();
+
+console.log("HANDLERS", sa5instance); // window["sa5"]);
 
             // Absorb handlers
             if(Array.isArray(sa5instance))
-                core.handlers = window["sa5"];
+                core.handlers = sa5instance; //window["sa5"];
+
+                console.log("HANDLERS", core.handlers); // window["sa5"]);
 
             window["sa5"] = core;
             window["Sa5"] = window["sa5"];
@@ -115,6 +142,7 @@ export class Sa5Core {
 
         // instance.constructor.name
 
+        return core;
     }
 
     // Add new handlers
@@ -125,8 +153,11 @@ export class Sa5Core {
 }
 
 
+// Complete initialization 
+// even though we don't need it yet 
+Sa5Core.startup(); 
 
-Sa5Core.startup();
+
 // Register
 //window["sa5"] = window["sa5"] || []; // {};
 //window["sa5"]["Sa5Core"] = Sa5Core;
