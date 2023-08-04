@@ -16,7 +16,29 @@ import { Sa5Membership } from '../webflow-membership';
 
 const init = () => { 
 
-    let membership = new Sa5Membership(); 
+//    let membership = new Sa5Membership(); 
+
+    // Init membership
+    let membership = new Sa5Membership(
+/* 
+      {
+      handleBreakpointChange: (breakpointName: string, e: MediaQueryListEvent) => {
+
+          window['sa5'] = window['sa5'] || {};
+          const sa5: any = window['sa5'];
+
+          // Get any global handler
+          const breakpointChangeHandler = sa5['userInfoChanged'];
+          if(breakpointChangeHandler) 
+              breakpointChangeHandler(breakpointName, e);
+
+        }
+    }
+*/
+    );
+//    breakpoints.init();
+
+
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-html");
@@ -56,6 +78,11 @@ const init = () => {
         membership.expandLoginButton(element);
 
     });
+
+
+
+
+
 
     /**
      * Load Current User Info 

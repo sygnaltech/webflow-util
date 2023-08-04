@@ -22,9 +22,48 @@ const StorageKeys = Object.freeze({
     userKey: 'wfuUserKey',
 });
 
+interface Sa5MembershipConfig2 {
+
+//    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
+    userInfoUpdatedCallback?: ((user: Sa5User) => void) | undefined;
+//    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
+
+    debug?: boolean | false;
+
+    dataBind?: boolean | true; // Databind after user object load 
+
+    // Advanced settings
+    advanced: {
+
+        accountInfoLoadDelay: number | 300; // ms 
+        accountInfoSaveDelay: number | 500; // ms 
+
+    }
+} 
+
+type UserInfoChangedCallback = (user: Sa5User) => void;
+
+interface Sa5MembershipConfig {
+//    type Callback = (user: Sa5User) => void;
+//    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
+    userInfoUpdatedCallback?: UserInfoChangedCallback; // (user: Sa5User) => void;
+//    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
+
+    debug?: boolean;
+
+    dataBind?: boolean; // Databind after user object load 
+
+    // Advanced settings
+    advanced: {
+
+        accountInfoLoadDelay: number; // ms 
+        accountInfoSaveDelay: number; // ms 
+
+    }
+}
+
 /*
  * WfuUserInfo class.
- */
 
 var defaultUserInfoConfig = {
 
@@ -46,6 +85,7 @@ var defaultUserInfoConfig = {
     },
 
 }
+ */
 
 
 
@@ -57,17 +97,86 @@ export class Sa5Membership {
 
     debug: Sa5Debug;
 
-    config; // Optional config
+    config: Sa5MembershipConfig; // Optional config
 
-    constructor(config = {}) {
+    // Define the default settings 
+    /* 
+    static defaultConfig: Sa5MembershipConfig = {
+        debug: false,
+        dataBind: true,
+        advanced: {
+            accountInfoLoadDelay: 300,
+            accountInfoSaveDelay: 500,
+        },
+    }; */
 
-        new Sa5Core().init();
+// Type guard to check if a function is a UserInfoChangedCallback
+private isUserInfoChangedCallback(func: Function): func is UserInfoChangedCallback {
+
+if(!func) return false;
+
+    // Adjust this check as needed
+    return func.length === 1;
+  }
+
+    constructor(config: Partial<Sa5MembershipConfig> = {}) {
+
+        // Merge configs, with defaults
+        this.config = {
+            userInfoUpdatedCallback: config.userInfoUpdatedCallback,
+            debug: config.debug ?? false,
+            dataBind: config.dataBind ?? true,
+            advanced: {
+                accountInfoLoadDelay: 
+                    config.advanced?.accountInfoLoadDelay ?? 300,
+                accountInfoSaveDelay: 
+                    config.advanced?.accountInfoSaveDelay ?? 500,
+            },
+        }
+
+        let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
+
+//        sa5.init();
+console.log("MEMBER HANDLERS", core.handlers); 
+
 
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership");
         this.debug.debug ("Initializing");
 
-        this.config = {...defaultUserInfoConfig, ...config};
+        // Load config
+
+        // window['sa5'] = window['sa5'] || {};
+        // const sa5: any = window['sa5'];
+
+        // Get any global handler
+//        console.log("%csetting handler", "background-color: yellow;");
+//         const userInfoChanged = sa5['userInfoChanged']; 
+
+console.log("%csa5", "background-color: yellow;", core, core.handlers);
+
+//        const userInfoChanged = core.handlers['userInfoChanged'];
+        const userInfoChanged = core.getHandler('userInfoChanged');
+if (this.isUserInfoChangedCallback(userInfoChanged)) {
+     console.log("%csetting handler", "background-color: yellow;");
+
+this.config.userInfoUpdatedCallback = userInfoChanged 
+
+}
+
+
+        // console.log("%csa5", "background-color: yellow;", core, core.handlers);
+        // if(userInfoChanged is UserInfoChangedCallback) {
+        //     console.log("%csetting handler", "background-color: yellow;");
+
+        //     this.config.userInfoUpdatedCallback = userInfoChanged; 
+        // }
+
+
+
+            //            breakpointChangeHandler(breakpointName, e);
+
+//        this.config = {...defaultUserInfoConfig, ...config};
 
 //        this.debug.enabled = this.config.debug; 
 
@@ -153,8 +262,8 @@ export class Sa5Membership {
         localStorage.removeItem(StorageKeys.userKey); 
 
         // Notify listeners 
-        if (this.config.userLogoutPurge)
-            this.config.userLogoutPurge(); // async 
+        // if (this.config.userLogoutPurge)
+        //     this.config.userLogoutPurge(); // async 
 
             this.debug.groupEnd();
 
@@ -194,8 +303,16 @@ export class Sa5Membership {
                 }).bind(); 
             }
 
+            console.log("%cchecking for handler", "background-color: yellow;");
+
+console.log(this.config); 
+
             // User Callback 
             if (this.config.userInfoUpdatedCallback) {
+
+                console.log("%cfound handler", "background-color: yellow;");
+
+
                 this.debug.debug("userCallback", user);
                 this.config.userInfoUpdatedCallback(user); // async
             }
@@ -587,11 +704,16 @@ console.log("accountInfo load")
         }
 
         // Notify listeners
-        if (this.config.userInfoUpdatedCallback) {
-            this.debug.debug("Notify listeners", userData); // Merged 
-            this.config.userInfoUpdatedCallback(userData); // async
-        }
+        console.log("%cchecking for handler", "background-color: yellow;");
 
+        if (this.config.userInfoUpdatedCallback) {
+            console.log("%ccalling handler", "background-color: yellow;");
+            this.debug.debug("Notify listeners", userData); // Merged 
+
+            this.userInfoUpdatedCallback(userData); 
+//            this.config.userInfoUpdatedCallback(userData); // async
+        }
+//this.userInfoUpdatedCallback
         this.debug.groupEnd();
     }
 
@@ -651,6 +773,45 @@ console.log("accountInfo load")
         });
 
     }
+
+    //#endregion
+
+    //#region EVENT
+
+    // Breakpoint changed
+    // loadUserInfoCallback = ((user: Sa5User) => {
+
+    //     // Notify any config-specified handler
+    //     if(this.config.loadUserInfoCallback) 
+    //         this.config.loadUserInfoCallback(
+    //             user
+    //         ); 
+
+    // });
+
+    // User Info Updated
+    userInfoUpdatedCallback = ((user: Sa5User) => { 
+
+        console.log("%ccalled handler", "background-color: yellow;", user);
+
+        // Notify any config-specified handler
+        if(this.config.userInfoUpdatedCallback) 
+            this.config.userInfoUpdatedCallback(
+                user
+            ); 
+
+    });
+
+    // Breakpoint changed
+    // userLogoutPurge = ((user: Sa5User) => {
+
+    //     // Notify any config-specified handler
+    //     if(this.config.userLogoutPurge) 
+    //         this.config.userLogoutPurge(
+    //             user
+    //         ); 
+
+    // });
 
     //#endregion
 
