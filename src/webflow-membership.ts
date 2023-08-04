@@ -22,6 +22,7 @@ const StorageKeys = Object.freeze({
     userKey: 'wfuUserKey',
 });
 
+/*
 interface Sa5MembershipConfig2 {
 
 //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
@@ -40,6 +41,7 @@ interface Sa5MembershipConfig2 {
 
     }
 } 
+*/
 
 type UserInfoChangedCallback = (user: Sa5User) => void;
 
@@ -110,14 +112,14 @@ export class Sa5Membership {
         },
     }; */
 
-// Type guard to check if a function is a UserInfoChangedCallback
-private isUserInfoChangedCallback(func: Function): func is UserInfoChangedCallback {
+    // Type guard to check if a function is a UserInfoChangedCallback
+    private isUserInfoChangedCallback(func: Function): func is UserInfoChangedCallback {
 
-if(!func) return false;
+        if(!func) return false;
 
-    // Adjust this check as needed
-    return func.length === 1;
-  }
+        // Adjust this check as needed
+        return func.length === 1;
+    }
 
     constructor(config: Partial<Sa5MembershipConfig> = {}) {
 
@@ -136,8 +138,8 @@ if(!func) return false;
 
         let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
 
-//        sa5.init();
-console.log("MEMBER HANDLERS", core.handlers); 
+//        sa5.init(); 
+//        console.log("MEMBER HANDLERS", core.handlers); 
 
 
         // Initialize debugging
@@ -153,16 +155,16 @@ console.log("MEMBER HANDLERS", core.handlers);
 //        console.log("%csetting handler", "background-color: yellow;");
 //         const userInfoChanged = sa5['userInfoChanged']; 
 
-console.log("%csa5", "background-color: yellow;", core, core.handlers);
+//        console.log("%csa5", "background-color: yellow;", core, core.handlers);
 
 //        const userInfoChanged = core.handlers['userInfoChanged'];
-        const userInfoChanged = core.getHandler('userInfoChanged');
-if (this.isUserInfoChangedCallback(userInfoChanged)) {
-     console.log("%csetting handler", "background-color: yellow;");
+        const userInfoChanged = core.getHandler('userInfoChanged'); 
+        if (this.isUserInfoChangedCallback(userInfoChanged)) {
+ //           console.log("%csetting handler", "background-color: yellow;"); 
 
-this.config.userInfoUpdatedCallback = userInfoChanged 
+            this.config.userInfoUpdatedCallback = userInfoChanged;
 
-}
+        }
 
 
         // console.log("%csa5", "background-color: yellow;", core, core.handlers);
@@ -228,12 +230,12 @@ this.config.userInfoUpdatedCallback = userInfoChanged
 
                 setTimeout(async () => {
 
-                    console.log("New User info saved");
+//                    console.log("New User info saved");
 
                     // Refresh user info
                     await this.loadUserInfoAsync();
 
-                    console.log("User info refreshed");
+//                    console.log("User info refreshed");
 
                 }, this.config.advanced.accountInfoSaveDelay);
 
@@ -303,14 +305,14 @@ this.config.userInfoUpdatedCallback = userInfoChanged
                 }).bind(); 
             }
 
-            console.log("%cchecking for handler", "background-color: yellow;");
+//            console.log("%cchecking for handler", "background-color: yellow;");
 
-console.log(this.config); 
+//console.log(this.config); 
 
             // User Callback 
             if (this.config.userInfoUpdatedCallback) {
 
-                console.log("%cfound handler", "background-color: yellow;");
+//                console.log("%cfound handler", "background-color: yellow;");
 
 
                 this.debug.debug("userCallback", user);
@@ -444,11 +446,11 @@ console.log(this.config);
 
         this.debug.group("loadUserInfoAsync_accountInfo");
 
-console.log("accountInfo load")
+//console.log("accountInfo load")
 
         // Suppress IFRAME loads & user-account page loads 
         if (window.self != window.top) {
-            console.log("suppressing accountInfo load - iframe child");
+//            console.log("suppressing accountInfo load - iframe child");
             return;
         }
         // if (window.location.pathname == `/user-account`) {
@@ -490,8 +492,8 @@ console.log("accountInfo load")
             }
             
             if (!userAccountEmailInput) {
-                // Now you can use userAccountEmailInput...
-                console.debug("Cannot access iframe's content");
+                // Now you can use userAccountEmailInput... 
+//                console.debug("Cannot access iframe's content");
                     return;
             }
             
@@ -703,11 +705,11 @@ console.log("accountInfo load")
             }).bind(); 
         }
 
-        // Notify listeners
-        console.log("%cchecking for handler", "background-color: yellow;");
+        // Notify listeners 
+//        console.log("%cchecking for handler", "background-color: yellow;");
 
         if (this.config.userInfoUpdatedCallback) {
-            console.log("%ccalling handler", "background-color: yellow;");
+//            console.log("%ccalling handler", "background-color: yellow;");
             this.debug.debug("Notify listeners", userData); // Merged 
 
             this.userInfoUpdatedCallback(userData); 
@@ -792,7 +794,7 @@ console.log("accountInfo load")
     // User Info Updated
     userInfoUpdatedCallback = ((user: Sa5User) => { 
 
-        console.log("%ccalled handler", "background-color: yellow;", user);
+//        console.log("%ccalled handler", "background-color: yellow;", user);
 
         // Notify any config-specified handler
         if(this.config.userInfoUpdatedCallback) 
