@@ -109,12 +109,9 @@
     }
     init() {
       let core = Sa5Core.startup();
-      console.log("check for handler");
       if (!core.getHandler("getMembershipRoutingConfig"))
         return;
-      console.log("found handler");
       this.config.getConfigCallback = core.getHandler("getMembershipRoutingConfig");
-      console.log("found handler", this.config.getConfigCallback);
       if (this.config.getConfigCallback) {
         this.config = this.config.getConfigCallback(
           this.config

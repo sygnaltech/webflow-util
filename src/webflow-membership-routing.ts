@@ -18,7 +18,7 @@
 import { Sa5Core } from './webflow-core';
 import { Sa5Debug } from './webflow-core/debug';
 
-
+/*
 var defaultRoutingConfig = {
     
     routeAfterFirstLogin: false, // false | URL
@@ -31,8 +31,8 @@ var defaultAccessGroupConfig = {
     accessGroupAllowed: "", // all allowed 
 
 }
+*/
 
-//type GetConfigCallback = () => void;
 type GetConfigCallback = (Sa5MembershipRoutingConfig) 
     => Sa5MembershipRoutingConfig;
 
@@ -40,9 +40,8 @@ interface Sa5MembershipRoutingConfig {
 
     getConfigCallback?: GetConfigCallback; 
 
-//    routeAfterSignUp: string;
-    routeAfterFirstLogin: string; // false | URL
-    routeAfterLogin: string; // false | "." | URL 
+    routeAfterFirstLogin: string; // url
+    routeAfterLogin: string; // url
     
 }
 
@@ -56,7 +55,6 @@ export class Sa5MembershipRouting {
 
         this.config = {
             getConfigCallback: config.getConfigCallback,
-//            routeAfterSignUp: config.routeAfterSignUp ?? '/',
             routeAfterFirstLogin: config.routeAfterFirstLogin ?? '/',
             routeAfterLogin: config.routeAfterLogin ?? '/',
         }
@@ -64,24 +62,6 @@ export class Sa5MembershipRouting {
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership-routing");
         this.debug.debug ("Initializing");
-
-        
-//         const userInfoChanged = core.getHandler('getMembershipRoutingConfig'); 
-// //         if (this.isUserInfoChangedCallback(userInfoChanged)) {
-// //  //           console.log("%csetting handler", "background-color: yellow;"); 
-
-// //             this.config.userInfoUpdatedCallback = userInfoChanged;
-
-// //         }
-//         if(this.config.getConfigCallback) {
-//             this.config.getConfigCallback(
-//                 this.config
-//             ); 
-//         }
-
-        // Get login state
-    //    const loggedIn = window.getCookie("wf_loggedin") || false;
-    //    console.log (`logged in = ${loggedIn}`);
     
     }
 
@@ -90,25 +70,12 @@ export class Sa5MembershipRouting {
 
         let core: Sa5Core = Sa5Core.startup();
 
-console.log("check for handler");
-
         if(!core.getHandler("getMembershipRoutingConfig")) 
             return; // do nothing
     
-console.log("found handler");
-        
         this.config.getConfigCallback 
             = core.getHandler('getMembershipRoutingConfig') as GetConfigCallback; 
 
-            console.log("found handler", this.config.getConfigCallback);
-
-
-            //         if (this.isUserInfoChangedCallback(userInfoChanged)) {
-//  //           console.log("%csetting handler", "background-color: yellow;"); 
-
-//             this.config.userInfoUpdatedCallback = userInfoChanged;
-
-//         }
         if(this.config.getConfigCallback) {
             this.config = this.config.getConfigCallback(
                 this.config
@@ -119,13 +86,7 @@ console.log("found handler");
             this.routeUser(); 
         }
 
-
     }
-
-    // isLoggedIn = function() {
-
-    //     return window.getCookie("wf_loggedin") || false;
-    // }
 
     // Handle user routing, starting point
     // based on page, referrer situation
@@ -204,21 +165,12 @@ console.log("found handler");
         }
 
         // If no login forms, exit
-
         if (!document.querySelectorAll("form[data-wf-user-form-type='login']").length) {
             console.debug("no login forms found.");
             console.groupEnd();
         
             return false;
         }
-        
-
-        // if (!$("form[data-wf-user-form-type='login']").length) {
-        //     console.debug("no login forms found.");
-        //     console.groupEnd();
-
-        //     return false;
-        // }
 
         // Setup context
         var url = new URL(window.location.href);
@@ -290,11 +242,6 @@ console.log("found handler");
         document.querySelectorAll("form[data-wf-user-form-type='login']").forEach(function(form) {
             form.setAttribute("data-wf-user-form-redirect", url);
         });
-        
-        // Original approach
-        // window.location.replace(
-        //     `/log-in?usredir=${encodeURIComponent(url)}`
-        //     ); 
 
       }
 

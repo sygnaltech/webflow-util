@@ -22,33 +22,11 @@ const StorageKeys = Object.freeze({
     userKey: 'wfuUserKey',
 });
 
-/*
-interface Sa5MembershipConfig2 {
-
-//    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
-    userInfoUpdatedCallback?: ((user: Sa5User) => void) | undefined;
-//    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
-
-    debug?: boolean | false;
-
-    dataBind?: boolean | true; // Databind after user object load 
-
-    // Advanced settings
-    advanced: {
-
-        accountInfoLoadDelay: number | 300; // ms 
-        accountInfoSaveDelay: number | 500; // ms 
-
-    }
-} 
-*/
-
 type UserInfoChangedCallback = (user: Sa5User) => void;
 
 interface Sa5MembershipConfig {
-//    type Callback = (user: Sa5User) => void;
 //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
-    userInfoUpdatedCallback?: UserInfoChangedCallback; // (user: Sa5User) => void;
+    userInfoUpdatedCallback?: UserInfoChangedCallback; 
 //    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
 
     debug?: boolean;
@@ -64,32 +42,6 @@ interface Sa5MembershipConfig {
     }
 }
 
-/*
- * WfuUserInfo class.
-
-var defaultUserInfoConfig = {
-
-    loadUserInfoCallback: undefined, // Function callback 
-    userInfoUpdatedCallback: undefined, 
-
-    userLogoutPurge: undefined, // Used for external data cleanup such as OAuth cookies 
-
-    debug: false, // Debugging mode
-
-    dataBind: true, // Databind after user object load 
-
-    // Advanced settings
-    advanced: {
-
-        accountInfoLoadDelay: 300, // ms 
-        accountInfoSaveDelay: 500, // ms 
-
-    },
-
-}
- */
-
-
 
 /**
  * Memberships 
@@ -100,17 +52,6 @@ export class Sa5Membership {
     debug: Sa5Debug;
 
     config: Sa5MembershipConfig; // Optional config
-
-    // Define the default settings 
-    /* 
-    static defaultConfig: Sa5MembershipConfig = {
-        debug: false,
-        dataBind: true,
-        advanced: {
-            accountInfoLoadDelay: 300,
-            accountInfoSaveDelay: 500,
-        },
-    }; */
 
     // Type guard to check if a function is a UserInfoChangedCallback
     private isUserInfoChangedCallback(func: Function): func is UserInfoChangedCallback {
@@ -136,11 +77,7 @@ export class Sa5Membership {
             },
         }
 
-        let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
-
-//        sa5.init(); 
-//        console.log("MEMBER HANDLERS", core.handlers); 
-
+        let core: Sa5Core = Sa5Core.startup();
 
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership");
@@ -148,39 +85,13 @@ export class Sa5Membership {
 
         // Load config
 
-        // window['sa5'] = window['sa5'] || {};
-        // const sa5: any = window['sa5'];
-
         // Get any global handler
-//        console.log("%csetting handler", "background-color: yellow;");
-//         const userInfoChanged = sa5['userInfoChanged']; 
-
-//        console.log("%csa5", "background-color: yellow;", core, core.handlers);
-
-//        const userInfoChanged = core.handlers['userInfoChanged'];
         const userInfoChanged = core.getHandler('userInfoChanged'); 
         if (this.isUserInfoChangedCallback(userInfoChanged)) {
- //           console.log("%csetting handler", "background-color: yellow;"); 
 
             this.config.userInfoUpdatedCallback = userInfoChanged;
 
         }
-
-
-        // console.log("%csa5", "background-color: yellow;", core, core.handlers);
-        // if(userInfoChanged is UserInfoChangedCallback) {
-        //     console.log("%csetting handler", "background-color: yellow;");
-
-        //     this.config.userInfoUpdatedCallback = userInfoChanged; 
-        // }
-
-
-
-            //            breakpointChangeHandler(breakpointName, e);
-
-//        this.config = {...defaultUserInfoConfig, ...config};
-
-//        this.debug.enabled = this.config.debug; 
 
     }
 
@@ -305,16 +216,8 @@ export class Sa5Membership {
                 }).bind(); 
             }
 
-//            console.log("%cchecking for handler", "background-color: yellow;");
-
-//console.log(this.config); 
-
             // User Callback 
             if (this.config.userInfoUpdatedCallback) {
-
-//                console.log("%cfound handler", "background-color: yellow;");
-
-
                 this.debug.debug("userCallback", user);
                 this.config.userInfoUpdatedCallback(user); // async
             }
@@ -325,20 +228,6 @@ export class Sa5Membership {
         if (!user)
             // user = 
             await this.loadUserInfoAsync();
-
-        // If still cannot create user info object
-        // typically first load
-        // if (!user) {
-        //     this.debug.groupEnd();
-        //     return;
-        // }
-    
-        // Load or create blank
-//        var user = this.loadUserInfoCache();
-
-        // Notify listeners 
-//        if (this.config.userInfoUpdatedCallback)
-//            this.config.userInfoUpdatedCallback(user); // async 
 
         this.debug.groupEnd();
 
@@ -381,19 +270,13 @@ export class Sa5Membership {
         // Load layers asynchronously
         // for maximum performance
         // merge dynamically as results are gathered
-//        debug.log("calling promise block.");
-//        await Promise.all([
         this.loadUserInfoAsync_loginInfo(); // async
         this.loadUserInfoAsync_accountInfo(); // async
         this.loadUserInfoAsync_accessGroups(); // async
-//        ]);
     
         // Load or create blank
-//        var user = this.loadUserInfoCache();
 
         this.debug.groupEnd();
-
-//        return user;
 
     }
 
@@ -446,17 +329,10 @@ export class Sa5Membership {
 
         this.debug.group("loadUserInfoAsync_accountInfo");
 
-//console.log("accountInfo load")
-
         // Suppress IFRAME loads & user-account page loads 
         if (window.self != window.top) {
-//            console.log("suppressing accountInfo load - iframe child");
             return;
         }
-        // if (window.location.pathname == `/user-account`) {
-        //     console.log("suppressing accountInfo load - on /user-account page"); 
-        //     return;
-        // }
 
         // Create the iframe element
         let userInfoPixel = document.createElement('iframe');
@@ -492,9 +368,7 @@ export class Sa5Membership {
             }
             
             if (!userAccountEmailInput) {
-                // Now you can use userAccountEmailInput... 
-//                console.debug("Cannot access iframe's content");
-                    return;
+                return;
             }
             
             // Detect programmatic changes on input type text [duplicate]
@@ -504,7 +378,7 @@ export class Sa5Membership {
             Object.defineProperty(input, "value", {
                 get: desc.get,
                 set: function(v) {
-//                    that.debug.debug("setting programmatically", v);
+
                     desc.set.call(this, v);
 
                     // How can I trigger an onchange event manually? [duplicate]
@@ -594,7 +468,6 @@ export class Sa5Membership {
                                 case "Bool": // checkbox
                                     let checkbox: HTMLInputElement = element as HTMLInputElement;
                                     user.data[id] = checkbox.checked; 
-// console.log(id, user.data[id]); 
                                     return;
 
                                 case "FileRef": // file - suppressed 
@@ -604,8 +477,6 @@ export class Sa5Membership {
                         });
 
                     }
-
-//                });
 
                     this.debug.debug("Final version", user); 
 
