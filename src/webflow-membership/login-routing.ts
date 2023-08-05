@@ -15,8 +15,8 @@
  * Membership Routing class.
  */
 
-import { Sa5Core } from './webflow-core';
-import { Sa5Debug } from './webflow-core/debug';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 
 /*
 var defaultRoutingConfig = {

@@ -12,7 +12,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Membership } from '../webflow-membership';
-import { Sa5MembershipRouting } from '../webflow-membership-routing';
+import { Sa5MembershipRouting } from '../webflow-membership/login-routing';
 
 const init = () => { 
 
