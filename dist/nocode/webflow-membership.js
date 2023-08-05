@@ -59,28 +59,6 @@
     }
   };
 
-  // src/utils.ts
-  function getCookie(name) {
-    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    if (match)
-      return match[2];
-  }
-  function toTitleCase(str) {
-    return str.toLowerCase().split(" ").map(function(word) {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    }).join(" ");
-  }
-  var expandMacrosInText = (text, dict) => {
-    const replacer = (match, p1, p2, p3, offset, string) => {
-      return dict.get(p2) || "";
-    };
-    text = text.replace(
-      /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
-      replacer
-    );
-    return text;
-  };
-
   // src/webflow-core.ts
   var Sa5Core = class {
     constructor() {
@@ -136,6 +114,28 @@
     }
   };
   Sa5Core.startup();
+
+  // src/utils.ts
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match)
+      return match[2];
+  }
+  function toTitleCase(str) {
+    return str.toLowerCase().split(" ").map(function(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(" ");
+  }
+  var expandMacrosInText = (text, dict) => {
+    const replacer = (match, p1, p2, p3, offset, string) => {
+      return dict.get(p2) || "";
+    };
+    text = text.replace(
+      /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
+      replacer
+    );
+    return text;
+  };
 
   // src/webflow-crypto.ts
   var PRIME64_1 = 11400714785074694791n;
@@ -852,10 +852,117 @@
     }
   };
 
+  // src/webflow-membership-routing.ts
+  var Sa5MembershipRouting = class {
+    constructor(config = {}) {
+      this.config = {
+        getConfigCallback: config.getConfigCallback,
+        routeAfterFirstLogin: config.routeAfterFirstLogin ?? "/",
+        routeAfterLogin: config.routeAfterLogin ?? "/"
+      };
+      this.debug = new Sa5Debug("sa5-membership-routing");
+      this.debug.debug("Initializing");
+    }
+    init() {
+      let core = Sa5Core.startup();
+      console.log("check for handler");
+      if (!core.getHandler("getMembershipRoutingConfig"))
+        return;
+      console.log("found handler");
+      this.config.getConfigCallback = core.getHandler("getMembershipRoutingConfig");
+      console.log("found handler", this.config.getConfigCallback);
+      if (this.config.getConfigCallback) {
+        this.config = this.config.getConfigCallback(
+          this.config
+        );
+        console.log("config handler", this.config);
+        this.routeUser();
+      }
+    }
+    routeUser() {
+      if (this.routeAfterFirstLogin())
+        return;
+      this.routeAfterLogin();
+    }
+    routeAfterFirstLogin() {
+      if (window.location.pathname != "/" && window.location.pathname != "/log-in")
+        return false;
+      if (!this.config.routeAfterFirstLogin)
+        return false;
+      if (!document.referrer)
+        return false;
+      var urlReferrer = new URL(document.referrer);
+      if (urlReferrer.pathname != "/sign-up")
+        return false;
+      switch (window.location.pathname) {
+        case "/":
+          window.location.replace(this.config.routeAfterFirstLogin);
+          break;
+        case "/log-in":
+          this.setLoginPageRedirect(this.config.routeAfterFirstLogin);
+          break;
+      }
+      return true;
+    }
+    routeAfterLogin() {
+      console.group(`wfu routeAfterLogin`);
+      if (!this.config.routeAfterLogin) {
+        console.debug("no routeafterlogin config set.");
+        console.groupEnd();
+        return false;
+      }
+      if (!document.querySelectorAll("form[data-wf-user-form-type='login']").length) {
+        console.debug("no login forms found.");
+        console.groupEnd();
+        return false;
+      }
+      var url = new URL(window.location.href);
+      console.debug(`url: ${url.href}`);
+      console.debug(`referrer: ${document.referrer}`);
+      var urlReferrer = void 0;
+      var urlReferrerPath = "";
+      if (document.referrer) {
+        urlReferrer = new URL(document.referrer);
+        urlReferrerPath = urlReferrer.pathname;
+      }
+      if (url.searchParams.has("usredir")) {
+        console.debug("specific redirection specified.");
+        console.groupEnd();
+        return false;
+      }
+      var routePath = this.config.routeAfterLogin;
+      console.debug(`default routePath: ${routePath}`);
+      if (routePath == ".") {
+        if (url.pathname == "/log-in") {
+          switch (urlReferrerPath) {
+            case "":
+            case "/log-in":
+            case "/sign-up":
+              routePath = "/";
+            default:
+              routePath = urlReferrerPath;
+          }
+        } else {
+          var routePath = url.pathname;
+        }
+      }
+      console.debug(`routePath: ${routePath}`);
+      this.setLoginPageRedirect(routePath);
+      console.groupEnd();
+      return true;
+    }
+    setLoginPageRedirect(url) {
+      document.querySelectorAll("form[data-wf-user-form-type='login']").forEach(function(form) {
+        form.setAttribute("data-wf-user-form-redirect", url);
+      });
+    }
+  };
+
   // src/nocode/webflow-membership.ts
   var init = () => {
     let membership = new Sa5Membership();
-    let debug = new Sa5Debug("sa5-html");
+    let core = Sa5Core.startup();
+    let debug = new Sa5Debug("sa5-membership");
     debug.debug("Initializing");
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;");
     document.querySelectorAll("[wfu-show-logged-in]").forEach((element) => {
@@ -870,6 +977,9 @@
       membership.expandLoginButton(element);
     });
     membership.init();
+    console.log("pre routing");
+    new Sa5MembershipRouting().init();
+    console.log("post routing");
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

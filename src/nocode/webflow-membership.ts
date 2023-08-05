@@ -12,7 +12,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Membership } from '../webflow-membership';
-
+import { Sa5MembershipRouting } from '../webflow-membership-routing';
 
 const init = () => { 
 
@@ -39,9 +39,11 @@ const init = () => {
 //    breakpoints.init();
 
 
+    let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
+
 
     // Initialize debugging
-    let debug = new Sa5Debug("sa5-html");
+    let debug = new Sa5Debug("sa5-membership");
     debug.debug ("Initializing");
 
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;"); 
@@ -92,6 +94,14 @@ const init = () => {
 //     var userInfo = new Sa5UserInfo({
 // //        userInfoUpdatedCallback: myCallback
 //       }).init(); 
+
+    /**
+     * Perform routing, if configured
+     */
+
+console.log("pre routing");
+    (new Sa5MembershipRouting()).init();
+    console.log("post routing");
 
 }
 
