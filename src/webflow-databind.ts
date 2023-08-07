@@ -225,6 +225,18 @@ export class WfuDataBinder {
 
     }
 
+    // Search upward through the DOM for a context for this element 
+    // typically used for [wfu-bind-dsn] and [wfu-bind-item-id]
+    findContextSetting(element: HTMLElement, attr: string) {
+        while (element) {
+            if (element.getAttribute(attr) !== null) {
+              return element.getAttribute(attr);
+            }
+            element = element.parentElement;
+        }
+        return null; // no context found
+    }
+
     bind(elem: HTMLElement) {
 
         // Determine bind type 
@@ -296,19 +308,16 @@ export class WfuDataBinder {
 
     }
     
+    // Binds content in a template 
     bindContent(elem: HTMLElement) {
 
-new DefaultTemplateHandler(this).processElement(elem);
+        new DefaultTemplateHandler(this).processElement(elem);
 
-        // use Handlebars 
-//        new HandlebarsTemplateHandler().process(elem);
-
-   
     }
 
     // Resolve the DSD to a value 
     // or null if none found  
-    getData(dsd: Sa5DataSourceDescriptor, elemContext: HTMLElement = null): string {
+    getData(dsd: Sa5DataSourceDescriptor, elem: HTMLElement = null): string {
 
 // console.log("getdata dsd", dsd);
 // console.log("getdata dsd.type", dsd.type, DataSourceTypeEnum.QUERY); 
@@ -320,12 +329,12 @@ new DefaultTemplateHandler(this).processElement(elem);
                 );
             case DataSourceTypeEnum.DB:
 
-                let dsnContext = null;
-                let itemContext = null;
-                if(elemContext) {
-                    dsnContext = elemContext.getAttribute("wfu-bind-dsn");
-                    itemContext = elemContext.getAttribute("wfu-bind-item-id");
-                }
+                let dsnContext = this.findContextSetting(elem, "wfu-bind-dsn");
+                let itemContext = this.findContextSetting(elem, "wfu-bind-item-id");
+                // if(elemContext) {
+                //     dsnContext = elemContext.getAttribute("wfu-bind-dsn");
+                //     itemContext = elemContext.getAttribute("wfu-bind-item-id");
+                // }
 
                 // console.log("getData db elem", elemContext); 
                 // console.log("getData db", dsnContext, itemContext); 

@@ -805,6 +805,15 @@
         elem.removeAttribute("wfu-bind-content");
       });
     }
+    findContextSetting(element, attr) {
+      while (element) {
+        if (element.getAttribute(attr) !== null) {
+          return element.getAttribute(attr);
+        }
+        element = element.parentElement;
+      }
+      return null;
+    }
     bind(elem) {
       let dsnDescriptor = elem.getAttribute("wfu-bind");
       let dsn = new Sa5DataSourceDescriptor(dsnDescriptor);
@@ -852,19 +861,15 @@
     bindContent(elem) {
       new DefaultTemplateHandler(this).processElement(elem);
     }
-    getData(dsd, elemContext = null) {
+    getData(dsd, elem = null) {
       switch (dsd.type) {
         case "user" /* USER */:
           return this.getData_user(
             dsd
           );
         case "db" /* DB */:
-          let dsnContext = null;
-          let itemContext = null;
-          if (elemContext) {
-            dsnContext = elemContext.getAttribute("wfu-bind-dsn");
-            itemContext = elemContext.getAttribute("wfu-bind-item-id");
-          }
+          let dsnContext = this.findContextSetting(elem, "wfu-bind-dsn");
+          let itemContext = this.findContextSetting(elem, "wfu-bind-item-id");
           return this.getData_db(
             dsd,
             dsnContext,
