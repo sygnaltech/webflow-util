@@ -19,6 +19,57 @@
   };
 
   // src/utils.ts
+  function identifyElement(element) {
+    switch (element.tagName) {
+      case "A":
+        return "HTMLLinkElement";
+      case "INPUT": {
+        const inputElement = element;
+        switch (inputElement.type) {
+          case "checkbox":
+            return "HTMLCheckboxElement";
+          case "radio":
+            return "HTMLRadioElement";
+          case "file":
+            return "HTMLFileInputElement";
+          default:
+            return "HTMLInputElement";
+        }
+      }
+      case "SELECT":
+        return "HTMLSelectElement";
+      case "TEXTAREA":
+        return "HTMLTextAreaElement";
+      case "BUTTON":
+        return "HTMLButtonElement";
+      default:
+        return "HTMLElement";
+    }
+  }
+  function selectOptionByValue(selectElement, value) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (selectElement.options[i].value === value) {
+        selectElement.options[i].selected = true;
+        break;
+      }
+    }
+  }
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
   function getCookie(name) {
     var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
     if (match)
@@ -29,16 +80,6 @@
       return word.charAt(0).toUpperCase() + word.slice(1);
     }).join(" ");
   }
-  var expandMacrosInText = (text, dict) => {
-    const replacer = (match, p1, p2, p3, offset, string) => {
-      return dict.get(p2) || "";
-    };
-    text = text.replace(
-      /{\s*(?<cmd>\w*)\s*\{\s*(?<params>\w*)\s*\}\s*(?<options>\w*)\s*\}/g,
-      replacer
-    );
-    return text;
-  };
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -353,65 +394,21 @@
     }
   };
 
-  // src/modules/webflow-data-csv.js
-  RegExp.escape = function(s) {
-    return s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
-  };
-
-  // src/modules/webflow-html.js
-  (function($2) {
-    $2.fn.shuffle = function() {
-      var allElems = this.get(), getRandom = function(max) {
-        return Math.floor(Math.random() * max);
-      }, shuffled = $2.map(allElems, function() {
-        var random = getRandom(allElems.length), randEl = $2(allElems[random]).clone(true)[0];
-        allElems.splice(random, 1);
-        return randEl;
+  // src/webflow-databind/template/default-template-handler.ts
+  var DefaultTemplateHandler = class {
+    constructor(dataBinder) {
+      this._dataBinder = dataBinder;
+    }
+    processElement(elem) {
+      let html = elem.innerHTML;
+      html = html.replace(/{{(.*?)}}/g, (match, p1) => {
+        return this.processItem(p1, elem);
       });
-      this.each(function(i) {
-        $2(this).replaceWith($2(shuffled[i]));
-      });
-      return $2(shuffled);
-    };
-  })(jQuery);
-
-  // src/webflow-data.ts
-  var getDictionaryFromDataRow2 = function(data, rowIndex) {
-    var dict = /* @__PURE__ */ new Map();
-    for (const v in data[rowIndex]) {
-      dict.set(
-        v,
-        data[rowIndex][v]
-      );
+      elem.innerHTML = html;
     }
-    return dict;
-  };
-
-  // src/webflow-html-builder.ts
-  var HtmlBuilder2 = class {
-    constructor() {
-      this.html = [];
-      this.render = function() {
-        return this.html.join("");
-      };
-    }
-    add(html) {
-      this.html.push(html);
-    }
-    addTemplate(templateEl, data) {
-      let template = templateEl.innerHTML;
-      console.log(`addTemplate`);
-      console.log(template);
-      console.log(data);
-      for (let row = 0; row < data.length; row++) {
-        let dict = getDictionaryFromDataRow2(data, row);
-        let item = expandMacrosInText(
-          template,
-          dict
-        );
-        console.log(item);
-        this.add(item);
-      }
+    processItem(dsdSpecifier, elem) {
+      let dsd = new Sa5DataSourceDescriptor(dsdSpecifier);
+      return this._dataBinder.getData(dsd, elem);
     }
   };
 
@@ -421,117 +418,201 @@
     user: "user",
     query: "query"
   });
-  var dataBinderConfig = {
-    db: void 0,
-    user: void 0,
-    handlers: []
+  var Sa5DataSourceDescriptor = class {
+    get isValid() {
+      if (!this.name)
+        return false;
+      if (!this.type)
+        return false;
+      return true;
+    }
+    constructor(dataSourceDescriptor) {
+      this.parse(dataSourceDescriptor);
+    }
+    expandDataSourceTypeAbbr(dsd) {
+      const DSN_TYPE_ABBR = {
+        "@": "$user",
+        "+": "$db",
+        "?": "$query",
+        "!": "$unknown",
+        "#": "$unknown",
+        "%": "$unknown",
+        "^": "$unknown",
+        "&": "$unknown",
+        "*": "$unknown",
+        "=": "$unknown",
+        "-": "$unknown",
+        "~": "$unknown"
+      };
+      if (DSN_TYPE_ABBR.hasOwnProperty(dsd[0])) {
+        return DSN_TYPE_ABBR[dsd[0]] + "." + dsd.slice(1);
+      }
+      return dsd;
+    }
+    parse(dsd) {
+      this.name = void 0;
+      this.type = void 0;
+      dsd = dsd.trim();
+      dsd = this.expandDataSourceTypeAbbr(dsd);
+      let parts = dsd.split(".");
+      var dsnTypeName = parts.shift();
+      if (dsnTypeName[0] != "$") {
+        return;
+      }
+      dsnTypeName = dsnTypeName.slice(1);
+      this.identifierParts = parts;
+      this.name = this.identifierParts.join(".");
+      this.type = dsnTypeName;
+    }
   };
-  var WfuDataBinder = class {
-    constructor(config = {}) {
-      this.config = { ...dataBinderConfig, ...config };
-    }
-    getDataSourceType(dsn) {
-      var dsnTypeIndicator = void 0;
-      if ("!@#%^&*-+=?".includes(dsn[0])) {
-        dsnTypeIndicator = dsn[0];
-      } else if (dsn[0] == "$") {
-        dsnTypeIndicator = dsn.split(".")[0];
-      } else {
-        dsnTypeIndicator = "$db";
-      }
-      var dsnType = void 0;
-      switch (dsnTypeIndicator) {
-        case "$user":
-        case "@":
-          dsnType = DataSourceType.user;
-          break;
-        case "$query":
-        case "?":
-          dsnType = DataSourceType.query;
-          break;
-        default:
-        case "$db":
-        case "+":
-          dsnType = DataSourceType.db;
-          break;
-      }
-      return dsnType;
-    }
-    getDataSourceName(dsn) {
-      var dsnName = void 0;
-      if ("!@#%^&*-+=?".includes(dsn[0])) {
-        dsnName = dsn.substring(1);
-      } else if (dsn[0] == "$") {
-        const dsnZone = dsn.split(".")[0];
-        dsnName = dsn.substring(dsnZone.length + 1);
-      } else {
-        dsnName = dsn;
-      }
-      return dsnName;
-    }
-    bind() {
-      let dataBind = document.querySelectorAll("[wfu-bind]");
+  var WfuDataBinder2 = class {
+    constructor(store, config = {}) {
+      this.store = store;
+      this.config = {
+        db: config.db ?? null,
+        user: config.user ?? null,
+        handlers: []
+      };
       if (!this.config.user)
         this.config.user = new Sa5Membership().loadUserInfoCache();
+    }
+    bindAll() {
+      let dataBind = document.querySelectorAll("[wfu-bind]");
       dataBind.forEach((elem) => {
-        let dsn = elem.getAttribute("wfu-bind");
-        let dsnType = this.getDataSourceType(dsn);
-        switch (dsnType) {
-          case DataSourceType.user:
-            this.bindData_user(
-              elem,
-              this.config.user
-            );
-            break;
-          case DataSourceType.db:
-            this.bindData_db(
-              elem,
-              this.config.db
-            );
-            break;
-        }
+        this.bind(elem);
+        elem.removeAttribute("wfu-bind");
+      });
+      let dataBindContent = document.querySelectorAll("[wfu-bind-content]");
+      dataBindContent.forEach((elem) => {
+        this.bindContent(elem);
+        elem.removeAttribute("wfu-bind-content");
       });
     }
-    bindData_user(el, user) {
-      if (!user || !user.email)
+    bind(elem) {
+      let dsnDescriptor = elem.getAttribute("wfu-bind");
+      let dsn = new Sa5DataSourceDescriptor(dsnDescriptor);
+      if (!dsn.isValid) {
+        console.error("Invalid dsn.", dsn);
         return;
-      let dsn = el.getAttribute("wfu-bind");
-      let elemType = el.tagName.toLowerCase();
-      let dsnName = this.getDataSourceName(dsn);
-      let dsnNameParts = dsnName.split(".");
-      let val;
-      switch (dsnNameParts[0]) {
-        case "data":
-          val = user.data[dsnNameParts[1]];
-          break;
-        default:
-          val = user[dsnName];
-          break;
       }
-      switch (elemType) {
-        case "input":
-          el.value = val;
+      let val = null;
+      val = this.getData(
+        dsn,
+        elem
+      );
+      if (!val)
+        return;
+      switch (identifyElement(elem)) {
+        case "HTMLLinkElement":
+          elem.href = val;
+          break;
+        case "HTMLCheckboxElement":
+          elem.checked = booleanValue(val);
+          break;
+        case "HTMLRadioElement":
+          break;
+        case "HTMLFileInputElement":
+          break;
+        case "HTMLInputElement":
+          elem.value = val;
+          break;
+        case "HTMLSelectElement":
+          selectOptionByValue(
+            elem,
+            val
+          );
+          break;
+        case "HTMLTextAreaElement":
+          elem.value = val;
+          break;
+        case "HTMLButtonElement":
           break;
         default:
-          el.textContent = val;
+          elem.textContent = val;
           break;
       }
     }
-    bindData_db(el, db) {
-      let dsn = el.getAttribute("wfu-bind");
-      let data = db.getData(dsn);
-      if (!db) {
-        console.warn(`Data binding requested for elem '${data}', but no db defined.`);
-        return;
+    bindContent(elem) {
+      new DefaultTemplateHandler(this).processElement(elem);
+    }
+    getData(dsd, elemContext = null) {
+      switch (dsd.type) {
+        case "user" /* USER */:
+          return this.getData_user(
+            dsd
+          );
+        case "db" /* DB */:
+          let dsnContext = null;
+          let itemContext = null;
+          if (elemContext) {
+            dsnContext = elemContext.getAttribute("wfu-bind-dsn");
+            itemContext = elemContext.getAttribute("wfu-bind-item-id");
+          }
+          return this.getData_db(
+            dsd,
+            dsnContext,
+            itemContext
+          );
+        case "query" /* QUERY */:
+          return this.getData_query(
+            dsd
+          );
+        case "local" /* LOCAL_STORAGE */:
+          return this.getData_localStorage(
+            dsd
+          );
+        case "session" /* SESSION_STORAGE */:
+          return this.getData_sessionStorage(
+            dsd
+          );
+        case "cookie" /* COOKIE */:
+          return this.getData_cookieStorage(
+            dsd
+          );
       }
-      let templateId = el.getAttribute("wfu-bind-template");
-      let template = document.querySelector("#" + templateId);
-      let hb = new HtmlBuilder2();
-      hb.addTemplate(
-        template,
-        data
-      );
-      el.innerHTML = hb.render();
+    }
+    getData_user(dsd) {
+      if (!this.config.user || !this.config.user.email)
+        return null;
+      let val = "";
+      switch (dsd.identifierParts[0]) {
+        case "data":
+          val = this.config.user.data[dsd.identifierParts[1]];
+          break;
+        default:
+          val = this.config.user[dsd.name];
+          break;
+      }
+    }
+    getData_cookieStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return getCookie(dsd.name);
+    }
+    getData_localStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return localStorage.getItem(dsd.name);
+    }
+    getData_sessionStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return sessionStorage.getItem(dsd.name);
+    }
+    getData_query(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      let urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(dsd.name);
+    }
+    getData_db(dsd, dsnContext, itemContext) {
+      console.log("getData_db", dsd, dsnContext, itemContext);
+      console.log(this.store);
+      let db = this.store.store[dsnContext];
+      console.log(db);
+      let item = db.data.get(itemContext);
+      console.log(item);
+      return item[dsd.name];
     }
   };
 
@@ -613,7 +694,7 @@
       if (user) {
         if (this.config.dataBind) {
           this.debug.debug("databinding", user);
-          new WfuDataBinder({
+          new WfuDataBinder2({
             user
           }).bind();
         }
@@ -809,7 +890,7 @@
       );
       if (this.config.dataBind) {
         this.debug.debug("databinding", userData);
-        new WfuDataBinder({
+        new WfuDataBinder2({
           user: userData
         }).bind();
       }

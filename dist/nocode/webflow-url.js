@@ -207,7 +207,7 @@
 
   // src/nocode/webflow-url.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-url");
     debug.debug("Initializing");
     new WfuQuery().init();

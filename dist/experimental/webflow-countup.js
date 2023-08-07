@@ -205,7 +205,7 @@
       this.debug.enabled = this.config.debug;
     }
     init() {
-      new Sa5Core().init();
+      let core = Sa5Core.startup();
       this.debug.debug("countup init");
       this.installCountupWaypoints();
     }

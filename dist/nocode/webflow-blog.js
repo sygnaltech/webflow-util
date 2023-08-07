@@ -138,7 +138,7 @@
 
   // src/nocode/webflow-blog.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-blog");
     debug.debug("Initializing");
     const gitHubGist = new GitHubGist();

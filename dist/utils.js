@@ -1,5 +1,56 @@
 (() => {
   // src/utils.ts
+  function identifyElement(element) {
+    switch (element.tagName) {
+      case "A":
+        return "HTMLLinkElement";
+      case "INPUT": {
+        const inputElement = element;
+        switch (inputElement.type) {
+          case "checkbox":
+            return "HTMLCheckboxElement";
+          case "radio":
+            return "HTMLRadioElement";
+          case "file":
+            return "HTMLFileInputElement";
+          default:
+            return "HTMLInputElement";
+        }
+      }
+      case "SELECT":
+        return "HTMLSelectElement";
+      case "TEXTAREA":
+        return "HTMLTextAreaElement";
+      case "BUTTON":
+        return "HTMLButtonElement";
+      default:
+        return "HTMLElement";
+    }
+  }
+  function selectOptionByValue(selectElement, value) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (selectElement.options[i].value === value) {
+        selectElement.options[i].selected = true;
+        break;
+      }
+    }
+  }
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
   function addDays(date, days) {
     let result = new Date(date);
     result.setDate(result.getDate() + days);

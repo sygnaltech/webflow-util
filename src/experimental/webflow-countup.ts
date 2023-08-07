@@ -83,7 +83,8 @@ export class Sa5CountUp {
 
 //        console.log("init countup");
 
-        new Sa5Core().init();
+//        new Sa5Core().init();
+        let core: Sa5Core = Sa5Core.startup();
 
         this.debug.debug("countup init");
 

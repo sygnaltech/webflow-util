@@ -114,7 +114,7 @@
 
   // src/nocode/webflow-video.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-video");
     debug.debug("Initializing");
     const webflowVideo = new WebflowVideo();

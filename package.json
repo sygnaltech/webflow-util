@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/waypoints": "^4.0.4",
     "countup.js": "github:inorganik/countUp.js",
+    "handlebars": "^4.7.8",
     "hotkeys-js": "^3.11.2"
   }
 }

@@ -626,7 +626,7 @@
 
   // src/nocode/webflow-hotkeys.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("wfu-hotkeys");
     debug.debug("Initializing");
     const sa5Hotkeys = new Sa5Hotkeys();

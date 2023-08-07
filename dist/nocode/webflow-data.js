@@ -1,10 +1,4 @@
 (() => {
-  var __defProp = Object.defineProperty;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __publicField = (obj, key, value) => {
-    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-    return value;
-  };
   var __accessCheck = (obj, member, msg) => {
     if (!member.has(obj))
       throw TypeError("Cannot " + msg);
@@ -120,6 +114,18 @@
     }
   };
   Sa5Core.startup();
+
+  // src/webflow-data/webflow-collectionlist-data.ts
+  var prepareCollectionListDataSource = (dataSource) => {
+    let data = dataSource.querySelectorAll("script");
+    console.log(`items = ${data.length}`);
+    let items = [];
+    data.forEach((elem) => {
+      items.push(elem.textContent || "");
+    });
+    let json = "[" + items.join() + "]";
+    return JSON.parse(json);
+  };
 
   // src/modules/webflow-data-csv.js
   RegExp.escape = function(s) {
@@ -461,28 +467,6 @@
     }
   };
 
-  // src/datasources/webflow-collectionlist-data.js
-  var prepareCollectionListDataSource = function(dataSource) {
-    var data = $(dataSource).find("script");
-    console.log(`items = ${data.length}`);
-    var items = [];
-    data.each(function(index, elem) {
-      items.push(elem.textContent);
-    });
-    var json = "[" + items.join() + "]";
-    return JSON.parse(json);
-  };
-
-  // src/datasources/google-sheet-data.js
-  var loadGoogleSheetFromSpec = function(spec) {
-    switch (spec.version) {
-      default:
-      case "1":
-        return getCsvAsData(spec.url);
-        break;
-    }
-  };
-
   // src/modules/webflow-html.js
   (function($2) {
     $2.fn.shuffle = function() {
@@ -501,94 +485,6 @@
   })(jQuery);
 
   // src/modules/webflow-data.js
-  var Database = class {
-    constructor() {
-      __publicField(this, "data", /* @__PURE__ */ new Map());
-      __publicField(this, "normalizeKey", function(key) {
-        return key.toLowerCase();
-      });
-      __publicField(this, "add", function(key, json) {
-        key = this.normalizeKey(key);
-        if (typeof json == "string") {
-          json = JSON.parse(json);
-        }
-        this.data.set(key, json);
-      });
-      __publicField(this, "getData", function(key) {
-        key = this.normalizeKey(key);
-        return this.data.get(key);
-      });
-      __publicField(this, "getDataSource", this.getData);
-      __publicField(this, "getCountOfRecords", function(dataSourceName) {
-        return this.getDataSource(dataSourceName).length;
-      });
-      __publicField(this, "getDictionary", function(dataSourceName, keyField, valueField) {
-        var dict = /* @__PURE__ */ new Map();
-        var ds = this.getDataSource(dataSourceName);
-        for (var i = 0; i < ds.length; i++) {
-          dict.set(
-            ds[i][keyField],
-            ds[i][valueField]
-          );
-        }
-        console.log(dict);
-        return dict;
-      });
-      __publicField(this, "getDictionaryFromRow", function(dataSourceName, row) {
-        var dict = /* @__PURE__ */ new Map();
-        var ds = this.getDataSource(dataSourceName);
-        for (const v in ds[row]) {
-          dict.set(
-            v,
-            ds[row][v]
-          );
-        }
-        return dict;
-      });
-    }
-  };
-  var loadAllData = function() {
-    var dataSources = $("*[wfu-data]");
-    console.log(`sources found = ${dataSources.length}`);
-    var db = new Database();
-    $.each(dataSources, function(i, elem) {
-      console.log(`processing source - ${elem.getAttribute("wfu-data")}`);
-      var data = loadData(
-        elem.getAttribute("wfu-data")
-      );
-      db.data.set(
-        elem.getAttribute("wfu-data"),
-        data
-      );
-    });
-    return db;
-  };
-  var loadData = function(name) {
-    var dataSource = $(`*[wfu-data='${name}']`);
-    if (!dataSource) {
-      console.warn(`Datasource: '${name}' does not exist`);
-      return;
-    }
-    var dataSourceType = $(dataSource).attr("wfu-data-type");
-    console.log(`preparing data - ${dataSourceType}`);
-    switch (dataSourceType) {
-      case "collection-list":
-        return prepareCollectionListDataSource(dataSource);
-        break;
-      case "json":
-        break;
-      case "google-sheet":
-        return loadGoogleSheetFromSpec(
-          JSON.parse(
-            $(dataSource).text()
-          )
-        );
-        break;
-      default:
-        console.error(`Data-source type: '${dataSourceType}' unknown`);
-        break;
-    }
-  };
   var getCsvAsData = function(url) {
     var data = null;
     $.ajax({
@@ -604,117 +500,985 @@
     return data;
   };
 
-  // src/modules/webflow-core.js
-  var __enabled;
-  var WfuDebug = class {
-    constructor() {
-      __privateAdd(this, __enabled, false);
-    }
-    get enabled() {
-      return localStorage.getItem("wfuDebug") || __privateGet(this, __enabled);
-    }
-    set enabled(active) {
-      __privateSet(this, __enabled, active);
-    }
-    group(name) {
-      if (this.enabled)
-        console.group(name);
-    }
-    groupEnd() {
-      if (this.enabled)
-        console.groupEnd();
-    }
-    debug() {
-      if (this.enabled)
-        console.debug(...arguments);
+  // src/webflow-data/google-sheet-data.ts
+  var loadGoogleSheetFromSpec2 = function(spec) {
+    switch (spec.version) {
+      default:
+      case "1":
+        return getCsvAsData(spec.url);
+        break;
     }
   };
-  __enabled = new WeakMap();
 
-  // src/modules/webflow-form.js
-  var createHtmlDataList = function(dataSourceName, data) {
-    var datalist = document.createElement("datalist");
-    datalist.setAttribute("id", dataSourceName);
-    console.log(`creating dataList '${dataSourceName}'`);
-    console.log(data);
-    $.each(data, function(key, entry) {
-      console.log(`iterate`);
-      var opt = document.createElement("option");
-      console.log(entry.text);
-      var decodedText = $("<textarea/>").html(entry.text).val();
-      opt.setAttribute("value", decodedText);
-      datalist.appendChild(opt);
-    });
-    console.log(datalist);
-    document.body.appendChild(datalist);
+  // src/webflow-data/database.ts
+  var Database = class {
+    constructor() {
+      this.data = /* @__PURE__ */ new Map();
+      this.normalizeKey = function(key) {
+        return key.toLowerCase();
+      };
+      this.add = function(key, json) {
+        key = this.normalizeKey(key);
+        if (typeof json == "string") {
+          json = JSON.parse(json);
+        }
+        this.data.set(key, json);
+      };
+      this.getData = function(key) {
+        key = this.normalizeKey(key);
+        return this.data.get(key);
+      };
+      this.getDataSource = this.getData;
+      this.getCountOfRecords = function(dataSourceName) {
+        return this.getDataSource(dataSourceName).length;
+      };
+      this.getDictionary = function(dataSourceName, keyField, valueField) {
+        var dict = /* @__PURE__ */ new Map();
+        var ds = this.getDataSource(dataSourceName);
+        for (var i = 0; i < ds.length; i++) {
+          dict.set(
+            ds[i][keyField],
+            ds[i][valueField]
+          );
+        }
+        console.log(dict);
+        return dict;
+      };
+      this.getDictionaryFromRow = function(dataSourceName, row) {
+        var dict = /* @__PURE__ */ new Map();
+        var ds = this.getDataSource(dataSourceName);
+        for (const v in ds[row]) {
+          dict.set(
+            v,
+            ds[row][v]
+          );
+        }
+        return dict;
+      };
+    }
   };
-  var dataBindAllForms = function(db) {
-    db.data.forEach((data, dataSourceName) => {
-      createHtmlDataList(
-        createDsnMoniker(dataSourceName),
-        data
+
+  // src/webflow-data.ts
+  var Datastore = class {
+    constructor() {
+      this.store = {};
+    }
+    init() {
+      this.init_dbs();
+    }
+    loadDataItem(elem) {
+      let data = this.loadDataItem_v2(
+        elem
       );
-    });
-    dataBindAllFormSelects(db);
-    dataBindAllFormInputs(db);
-  };
-  var createDsnMoniker = function(dsn) {
-    return `wfu-dsn__${dsn}`;
-  };
-  var dataBindAllFormInputs = function(db) {
-    var dataBoundElements = $("input[wfu-bind]");
-    $.each(dataBoundElements, function(i, elem) {
-      dataBindFormInput(elem, db);
-    });
-  };
-  var dataBindAllFormSelects = function(db) {
-    var dataBoundElements = $("select[wfu-bind]");
-    $.each(dataBoundElements, function(i, elem) {
-      dataBindFormSelect(elem, db);
-    });
-  };
-  var dataBindFormInput = function(elem, db) {
-    if (!(elem instanceof HTMLInputElement)) {
-      console.error(`Attempted to INPUT databind a non-INPUT element.`);
-      return;
     }
-    var dataSourceName = elem.getAttribute("wfu-bind");
-    console.log(`wfu-bind = ${dataSourceName}`);
-    if (!dataSourceName) {
-      console.warn("dataBound element found with no datasource specified.");
-      return;
+    loadDataItem_v2(elem) {
+      const dsn = elem.getAttribute("wfu-data-dsn");
+      const id = elem.getAttribute("wfu-data-item-id");
+      let dataObject = JSON.parse(elem.innerText);
+      if (!this.store[dsn])
+        this.store[dsn] = new Database();
+      this.store[dsn].add(id, dataObject);
     }
-    elem.setAttribute(
-      "list",
-      createDsnMoniker(dataSourceName)
-    );
+    init_dbs() {
+      let dataSources = document.querySelectorAll("script[type=wfu-data-item]");
+      dataSources.forEach((elem) => {
+        this.loadDataItem(elem);
+      });
+    }
+    loadData(name) {
+      let dataSource = document.querySelector(`*[wfu-data='${name}']`);
+      if (!dataSource) {
+        console.warn(`Datasource: '${name}' does not exist`);
+        return;
+      }
+      let dataSourceType = dataSource.getAttribute("wfu-data-type");
+      console.log(`preparing data - ${dataSourceType}`);
+      switch (dataSourceType) {
+        case "collection-list":
+          return prepareCollectionListDataSource(dataSource);
+        case "json":
+          break;
+        case "google-sheet":
+          return loadGoogleSheetFromSpec2(
+            JSON.parse(
+              dataSource.textContent || ""
+            )
+          );
+        default:
+          console.error(`Data-source type: '${dataSourceType}' unknown`);
+          break;
+      }
+    }
+    async getCsv(url) {
+      let csv = null;
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          csv = await response.text();
+        } else {
+          console.error(`Error fetching CSV: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching CSV: ${error}`);
+      }
+      return csv;
+    }
+    csvToData(csvd) {
+      let items = null;
+      return items;
+    }
+    async getCsvAsData(url) {
+      let data = null;
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const csvd = await response.text();
+        } else {
+          console.error(`Error fetching CSV: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching CSV: ${error}`);
+      }
+      return data;
+    }
+    getDictionaryFromDataRow(data, rowIndex) {
+      var dict = /* @__PURE__ */ new Map();
+      for (const v in data[rowIndex]) {
+        dict.set(
+          v,
+          data[rowIndex][v]
+        );
+      }
+      return dict;
+    }
   };
-  var dataBindFormSelect = function(elem, db) {
-    if (!(elem instanceof HTMLSelectElement)) {
-      console.error(`Attempted to SELECT databind a non-SELECT element.`);
-      return;
+
+  // src/utils.ts
+  function identifyElement(element) {
+    switch (element.tagName) {
+      case "A":
+        return "HTMLLinkElement";
+      case "INPUT": {
+        const inputElement = element;
+        switch (inputElement.type) {
+          case "checkbox":
+            return "HTMLCheckboxElement";
+          case "radio":
+            return "HTMLRadioElement";
+          case "file":
+            return "HTMLFileInputElement";
+          default:
+            return "HTMLInputElement";
+        }
+      }
+      case "SELECT":
+        return "HTMLSelectElement";
+      case "TEXTAREA":
+        return "HTMLTextAreaElement";
+      case "BUTTON":
+        return "HTMLButtonElement";
+      default:
+        return "HTMLElement";
     }
-    var dataSourceName = elem.getAttribute("wfu-bind");
-    if (!dataSourceName) {
-      console.warn("dataBound element found with no datasource specified.");
-      return;
+  }
+  function selectOptionByValue(selectElement, value) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (selectElement.options[i].value === value) {
+        selectElement.options[i].selected = true;
+        break;
+      }
     }
-    $.each(db.data.get(dataSourceName), function(key, entry) {
-      var opt = document.createElement("option");
-      var decodedText = $("<textarea/>").html(entry.text).val();
-      opt.appendChild(document.createTextNode(decodedText));
-      opt.value = entry.id;
-      elem.appendChild(opt);
-    });
+  }
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match)
+      return match[2];
+  }
+  function toTitleCase(str) {
+    return str.toLowerCase().split(" ").map(function(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(" ");
+  }
+
+  // src/webflow-crypto.ts
+  var PRIME64_1 = 11400714785074694791n;
+  var PRIME64_2 = 14029467366897019727n;
+  var PRIME64_3 = 1609587929392839161n;
+  var PRIME64_4 = 9650029242287828579n;
+  var PRIME64_5 = 2870177450012600261n;
+  var BITS = 64n;
+  var BITMASK = 2n ** BITS - 1n;
+  var encoder = new TextEncoder();
+  function bitsToBigInt(a00, a16, a32, a48) {
+    return BigInt(a00) | BigInt(a16) << 16n | BigInt(a32) << 32n | BigInt(a48) << 48n;
+  }
+  function memoryToBigInt(memory, offset) {
+    return BigInt(memory[offset]) | BigInt(memory[offset + 1]) << 8n | BigInt(memory[offset + 2]) << 16n | BigInt(memory[offset + 3]) << 24n | BigInt(memory[offset + 4]) << 32n | BigInt(memory[offset + 5]) << 40n | BigInt(memory[offset + 6]) << 48n | BigInt(memory[offset + 7]) << 56n;
+  }
+  function rotl(value, rotation) {
+    return value << rotation & BITMASK | value >> BITS - rotation;
+  }
+  function trunc(value) {
+    return BigInt.asUintN(64, value);
+  }
+  var _seed, _v1, _v2, _v3, _v4, _memory, _len, _memsize;
+  var _XXH64 = class {
+    constructor(seed = 0) {
+      __privateAdd(this, _seed, void 0);
+      __privateAdd(this, _v1, void 0);
+      __privateAdd(this, _v2, void 0);
+      __privateAdd(this, _v3, void 0);
+      __privateAdd(this, _v4, void 0);
+      __privateAdd(this, _memory, void 0);
+      __privateAdd(this, _len, void 0);
+      __privateAdd(this, _memsize, void 0);
+      this.reset(seed);
+    }
+    reset(seed = __privateGet(this, _seed)) {
+      __privateSet(this, _seed, BigInt.asUintN(32, BigInt(seed)));
+      __privateSet(this, _v1, trunc(__privateGet(this, _seed) + PRIME64_1 + PRIME64_2));
+      __privateSet(this, _v2, trunc(__privateGet(this, _seed) + PRIME64_2));
+      __privateSet(this, _v3, __privateGet(this, _seed));
+      __privateSet(this, _v4, trunc(__privateGet(this, _seed) - PRIME64_1));
+      __privateSet(this, _memory, null);
+      __privateSet(this, _len, 0);
+      __privateSet(this, _memsize, 0);
+      return this;
+    }
+    update(input) {
+      if (typeof input === "string") {
+        input = encoder.encode(input);
+      }
+      let p = 0;
+      let len = input.length;
+      let bEnd = p + len;
+      if (len === 0) {
+        return this;
+      }
+      __privateSet(this, _len, __privateGet(this, _len) + len);
+      if (__privateGet(this, _memsize) === 0) {
+        __privateSet(this, _memory, new Uint8Array(32));
+      }
+      if (__privateGet(this, _memsize) + len < 32) {
+        __privateGet(this, _memory).set(input.subarray(0, len), __privateGet(this, _memsize));
+        __privateSet(this, _memsize, __privateGet(this, _memsize) + len);
+        return this;
+      }
+      if (__privateGet(this, _memsize) > 0) {
+        __privateGet(this, _memory).set(input.subarray(0, 32 - __privateGet(this, _memsize)), __privateGet(this, _memsize));
+        let p64 = 0;
+        let other;
+        other = memoryToBigInt(__privateGet(this, _memory), p64);
+        __privateSet(this, _v1, trunc(rotl(trunc(__privateGet(this, _v1) + other * PRIME64_2), 31n) * PRIME64_1));
+        p64 += 8;
+        other = memoryToBigInt(this.memory, p64);
+        __privateSet(this, _v2, trunc(rotl(trunc(__privateGet(this, _v2) + other * PRIME64_2), 31n) * PRIME64_1));
+        p64 += 8;
+        other = memoryToBigInt(this.memory, p64);
+        __privateSet(this, _v3, trunc(rotl(trunc(__privateGet(this, _v3) + other * PRIME64_2), 31n) * PRIME64_1));
+        p64 += 8;
+        other = memoryToBigInt(this.memory, p64);
+        __privateSet(this, _v4, trunc(rotl(trunc(__privateGet(this, _v4) + other * PRIME64_2), 31n) * PRIME64_1));
+        p += 32 - __privateGet(this, _memsize);
+        __privateSet(this, _memsize, 0);
+      }
+      if (p <= bEnd - 32) {
+        const limit = bEnd - 32;
+        do {
+          let other;
+          other = memoryToBigInt(input, p);
+          __privateSet(this, _v1, trunc(rotl(trunc(__privateGet(this, _v1) + other * PRIME64_2), 31n) * PRIME64_1));
+          p += 8;
+          other = memoryToBigInt(input, p);
+          __privateSet(this, _v2, trunc(rotl(trunc(__privateGet(this, _v2) + other * PRIME64_2), 31n) * PRIME64_1));
+          p += 8;
+          other = memoryToBigInt(input, p);
+          __privateSet(this, _v3, trunc(rotl(trunc(__privateGet(this, _v3) + other * PRIME64_2), 31n) * PRIME64_1));
+          p += 8;
+          other = memoryToBigInt(input, p);
+          __privateSet(this, _v4, trunc(rotl(trunc(__privateGet(this, _v4) + other * PRIME64_2), 31n) * PRIME64_1));
+          p += 8;
+        } while (p <= limit);
+      }
+      if (p < bEnd) {
+        __privateGet(this, _memory).set(input.subarray(p, bEnd), __privateGet(this, _memsize));
+        __privateSet(this, _memsize, bEnd - p);
+      }
+      return this;
+    }
+    digest() {
+      let input = __privateGet(this, _memory);
+      let bEnd = __privateGet(this, _memsize);
+      let p = 0;
+      let h64 = 0n;
+      let h = 0n;
+      let u = 0n;
+      if (__privateGet(this, _len) >= 32) {
+        h64 = rotl(__privateGet(this, _v1), 1n) + rotl(__privateGet(this, _v2), 7n) + rotl(__privateGet(this, _v3), 12n) + rotl(__privateGet(this, _v4), 18n);
+        h64 = trunc(h64 ^ rotl(trunc(__privateGet(this, _v1) * PRIME64_2), 31n) * PRIME64_1);
+        h64 = trunc(h64 * PRIME64_1 + PRIME64_4);
+        h64 = trunc(h64 ^ rotl(trunc(__privateGet(this, _v2) * PRIME64_2), 31n) * PRIME64_1);
+        h64 = trunc(h64 * PRIME64_1 + PRIME64_4);
+        h64 = trunc(h64 ^ rotl(trunc(__privateGet(this, _v3) * PRIME64_2), 31n) * PRIME64_1);
+        h64 = trunc(h64 * PRIME64_1 + PRIME64_4);
+        h64 = trunc(h64 ^ rotl(trunc(__privateGet(this, _v4) * PRIME64_2), 31n) * PRIME64_1);
+        h64 = trunc(h64 * PRIME64_1 + PRIME64_4);
+      } else {
+        h64 = trunc(__privateGet(this, _seed) + PRIME64_5);
+      }
+      h64 += BigInt(__privateGet(this, _len));
+      while (p <= bEnd - 8) {
+        u = memoryToBigInt(input, p);
+        u = trunc(rotl(trunc(u * PRIME64_2), 31n) * PRIME64_1);
+        h64 = trunc(rotl(h64 ^ u, 27n) * PRIME64_1 + PRIME64_4);
+        p += 8;
+      }
+      if (p + 4 <= bEnd) {
+        u = bitsToBigInt(input[p + 1] << 8 | input[p], input[p + 3] << 8 | input[p + 2], 0, 0);
+        h64 = trunc(rotl(h64 ^ trunc(u * PRIME64_1), 23n) * PRIME64_2 + PRIME64_3);
+        p += 4;
+      }
+      while (p < bEnd) {
+        u = bitsToBigInt(input[p++], 0, 0, 0);
+        h64 = trunc(rotl(h64 ^ trunc(u * PRIME64_5), 11n) * PRIME64_1);
+      }
+      h = trunc(h64 >> 33n);
+      h64 = trunc((h64 ^ h) * PRIME64_2);
+      h = trunc(h64 >> 29n);
+      h64 = trunc((h64 ^ h) * PRIME64_3);
+      h = trunc(h64 >> 32n);
+      h64 = trunc(h64 ^ h);
+      return h64;
+    }
+    static hash(input, seed = 0) {
+      return new _XXH64(seed).update(input).digest().toString(16);
+    }
+  };
+  var XXH64 = _XXH64;
+  _seed = new WeakMap();
+  _v1 = new WeakMap();
+  _v2 = new WeakMap();
+  _v3 = new WeakMap();
+  _v4 = new WeakMap();
+  _memory = new WeakMap();
+  _len = new WeakMap();
+  _memsize = new WeakMap();
+
+  // src/webflow-membership/user.ts
+  var Sa5User = class {
+    constructor() {
+      this.user_data_loaded = {
+        email: false,
+        account_info: false,
+        custom_fields: false,
+        access_groups: false
+      };
+      this.access_groups = [];
+      this.data = {};
+      this.meta = {};
+      this.isLoggedIn = function() {
+        return getCookie("wf_loggedin") || false;
+      };
+    }
+    get user_id_alt() {
+      if (!this.email)
+        return void 0;
+      return XXH64.hash(this.email);
+    }
+    get name_short_clean() {
+      if (!this.email)
+        return void 0;
+      return this.email.split("@")[0];
+    }
+    get name_short() {
+      if (!this.email)
+        return void 0;
+      return this.name_short_clean + "@";
+    }
+    get name_short_tcase() {
+      if (!this.email)
+        return void 0;
+      return toTitleCase(this.name_short_clean);
+    }
+    fromJSON(json) {
+      if (!json)
+        return;
+      this.user_id = json.user_id;
+      this.name = json.name;
+      this.email = json.email;
+      this.accept_communications = json.accept_communications;
+      this.access_groups = json.access_groups;
+      this.data = json.data;
+      this.user_data_loaded.email = json.user_data_loaded.email;
+      this.user_data_loaded.account_info = json.user_data_loaded.account_info;
+      this.user_data_loaded.custom_fields = json.user_data_loaded.custom_fields;
+      this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
+    }
+  };
+
+  // src/webflow-membership.ts
+  var StorageKeys = Object.freeze({
+    user: "wfuUser",
+    userKey: "wfuUserKey"
+  });
+  var Sa5Membership = class {
+    constructor(config = {}) {
+      this.userInfoUpdatedCallback = (user) => {
+        if (this.config.userInfoUpdatedCallback)
+          this.config.userInfoUpdatedCallback(
+            user
+          );
+      };
+      this.config = {
+        userInfoUpdatedCallback: config.userInfoUpdatedCallback,
+        debug: config.debug ?? false,
+        dataBind: config.dataBind ?? true,
+        advanced: {
+          accountInfoLoadDelay: config.advanced?.accountInfoLoadDelay ?? 300,
+          accountInfoSaveDelay: config.advanced?.accountInfoSaveDelay ?? 500
+        }
+      };
+      let core = Sa5Core.startup();
+      this.debug = new Sa5Debug("sa5-membership");
+      this.debug.debug("Initializing");
+      const userInfoChanged = core.getHandler("userInfoChanged");
+      if (this.isUserInfoChangedCallback(userInfoChanged)) {
+        this.config.userInfoUpdatedCallback = userInfoChanged;
+      }
+    }
+    isUserInfoChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
+    }
+    init() {
+      this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
+      let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
+      forms.forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          let emailInput = form.querySelector("#wf-log-in-email");
+          let userEmail = emailInput.value;
+          let userKey = btoa(userEmail);
+          localStorage.setItem("StorageKeys.userKey", userKey);
+        });
+      });
+      forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");
+      forms.forEach((form) => {
+        form.addEventListener("submit", (e) => {
+          setTimeout(async () => {
+            await this.loadUserInfoAsync();
+          }, this.config.advanced.accountInfoSaveDelay);
+        });
+      });
+      this.readyUserInfo();
+      this.debug.groupEnd();
+    }
+    isLoggedIn() {
+      return getCookie("wf_loggedin") || false;
+    }
+    clearUserInfo() {
+      this.debug.group("clearUserInfo");
+      this.debug.debug("logged out, cleaning info.");
+      sessionStorage.removeItem(StorageKeys.user);
+      localStorage.removeItem(StorageKeys.userKey);
+      this.debug.groupEnd();
+    }
+    async readyUserInfo() {
+      this.debug.group("readyUserInfo");
+      if (!this.isLoggedIn()) {
+        this.clearUserInfo();
+        this.debug.groupEnd();
+        return;
+      }
+      var user = this.loadUserInfoCache();
+      if (user) {
+        if (this.config.dataBind) {
+          this.debug.debug("databinding", user);
+          new WfuDataBinder({
+            user
+          }).bind();
+        }
+        if (this.config.userInfoUpdatedCallback) {
+          this.debug.debug("userCallback", user);
+          this.config.userInfoUpdatedCallback(user);
+        }
+      }
+      if (!user)
+        await this.loadUserInfoAsync();
+      this.debug.groupEnd();
+    }
+    async getUserKey() {
+      var userKey;
+      const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
+      if (userKeyEncoded) {
+        return atob(userKeyEncoded);
+      }
+    }
+    async loadUserInfoAsync() {
+      this.debug.group("loadUserInfoAsync");
+      this.debug.debug(`isLoggedIn = ${this.isLoggedIn()}`);
+      if (!this.isLoggedIn()) {
+        this.clearUserInfo();
+        this.debug.groupEnd();
+        return;
+      }
+      sessionStorage.removeItem(StorageKeys.user);
+      this.loadUserInfoAsync_loginInfo();
+      this.loadUserInfoAsync_accountInfo();
+      this.loadUserInfoAsync_accessGroups();
+      this.debug.groupEnd();
+    }
+    async loadUserInfoAsync_loginInfo() {
+      this.debug.group("loadUserInfoAsync_loginInfo");
+      var user = new Sa5User();
+      user.user_data_loaded.email = true;
+      const userKey = await this.getUserKey();
+      if (!userKey) {
+        this.debug.debug("No user key for loading.");
+        this.debug.groupEnd();
+        return;
+      }
+      user.email = userKey;
+      this.debug.debug("Caching user object [login].", user);
+      this.saveUserInfoCache(user);
+      this.debug.groupEnd();
+    }
+    async loadUserInfoAsync_accountInfo() {
+      this.debug.group("loadUserInfoAsync_accountInfo");
+      if (window.self != window.top) {
+        return;
+      }
+      let userInfoPixel = document.createElement("iframe");
+      userInfoPixel.src = "/user-account";
+      userInfoPixel.id = "userInfoPixel";
+      userInfoPixel.style.display = "none";
+      document.body.append(userInfoPixel);
+      userInfoPixel.addEventListener("load", async () => {
+        this.debug.debug("Loading user account info.");
+        this.debug.debug(`%c here`, "color: #ff0000; background-color: yellow;");
+        var user = new Sa5User();
+        user.user_data_loaded.email = true;
+        user.user_data_loaded.account_info = true;
+        user.user_data_loaded.custom_fields = true;
+        let userAccountEmailInput = null;
+        if (userInfoPixel.contentDocument) {
+          userAccountEmailInput = userInfoPixel.contentDocument.querySelector("input#wf-user-account-email");
+        } else if (userInfoPixel.contentWindow) {
+          userAccountEmailInput = userInfoPixel.contentWindow.document.querySelector("input#wf-user-account-email");
+        }
+        if (!userAccountEmailInput) {
+          return;
+        }
+        const input = userAccountEmailInput;
+        const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+        Object.defineProperty(input, "value", {
+          get: desc.get,
+          set: function(v) {
+            desc.set.call(this, v);
+            if ("createEvent" in document) {
+              var evt = document.createEvent("HTMLEvents");
+              evt.initEvent("change", false, true);
+              input.dispatchEvent(evt);
+            } else {
+              if (userAccountEmailInput) {
+                let event = new Event("change", {
+                  bubbles: true,
+                  cancelable: true
+                });
+                userAccountEmailInput.dispatchEvent(event);
+              }
+            }
+          }
+        });
+        userAccountEmailInput.addEventListener("change", async () => {
+          this.debug.debug("email field load detected.");
+          this.debug.debug(`waiting ${this.config.advanced.accountInfoLoadDelay}ms`);
+          setTimeout(
+            async () => {
+              this.debug.debug(`%c USER-ACCOUNT LOADED`, "color: #ff0000; background-color: yellow;");
+              const userKey = userAccountEmailInput.value;
+              user.email = userKey;
+              let doc = userInfoPixel.contentDocument || userInfoPixel.contentWindow?.document;
+              if (doc) {
+                let userNameElement = doc.querySelector("[data-wf-user-field='wf-user-field-name']");
+                if (userNameElement) {
+                  user.name = userNameElement.value;
+                }
+                let acceptCommunicationsCheckbox = doc.querySelector("#wf-user-account-accept-communications");
+                if (acceptCommunicationsCheckbox) {
+                  user.accept_communications = acceptCommunicationsCheckbox.checked;
+                }
+                let userDataFields = doc.querySelectorAll("[data-wf-user-field]");
+                userDataFields.forEach((element) => {
+                  const id = element.id;
+                  const fieldType = element.getAttribute("data-wf-user-field-type");
+                  let val = element.value;
+                  if (!id)
+                    return;
+                  if (id.startsWith("wf-user-account-"))
+                    return;
+                  switch (fieldType) {
+                    case "PlainText":
+                    case "Email":
+                    case "Link":
+                    case "Option":
+                      user.data[id] = val;
+                      return;
+                    case "Number":
+                      user.data[id] = val;
+                      return;
+                    case "Bool":
+                      let checkbox = element;
+                      user.data[id] = checkbox.checked;
+                      return;
+                    case "FileRef":
+                      break;
+                  }
+                });
+              }
+              this.debug.debug("Final version", user);
+              this.debug.debug("Caching user object [account_info].", user);
+              this.saveUserInfoCache(user);
+            },
+            this.config.advanced.accountInfoLoadDelay
+          );
+        });
+        this.debug.groupEnd();
+      });
+    }
+    async loadUserInfoAsync_accessGroups() {
+      this.debug.group("loadUserInfoAsync_accessGroups");
+      this.debug.debug("Not yet implemented.");
+      this.debug.groupEnd();
+    }
+    saveUserInfoCache(newUserData) {
+      this.debug.group("saveUserInfoCache");
+      if (!this.isLoggedIn) {
+        this.debug.debug("no user logged in.");
+        this.debug.groupEnd();
+        return null;
+      }
+      var userData = this.loadUserInfoCache();
+      if (!userData)
+        userData = new Sa5User();
+      if (newUserData.user_data_loaded.email) {
+        this.debug.debug("Merging user email.");
+        userData.email = newUserData.email;
+      }
+      if (newUserData.user_data_loaded.account_info) {
+        this.debug.debug("Merging user account_info.");
+        userData.email = newUserData.email;
+        userData.name = newUserData.name;
+        userData.accept_communications = newUserData.accept_communications;
+      }
+      if (newUserData.user_data_loaded.custom_fields) {
+        this.debug.debug("Merging user custom_fields.");
+        userData.data = newUserData.data;
+      }
+      if (newUserData.user_data_loaded.access_groups) {
+        this.debug.debug("Merging user access_groups.");
+      }
+      userData.user_data_loaded.email = userData.user_data_loaded.email || newUserData.user_data_loaded.email;
+      userData.user_data_loaded.account_info = userData.user_data_loaded.account_info || newUserData.user_data_loaded.account_info;
+      userData.user_data_loaded.custom_fields = userData.user_data_loaded.custom_fields || newUserData.user_data_loaded.custom_fields;
+      userData.user_data_loaded.access_groups = userData.user_data_loaded.access_groups || newUserData.user_data_loaded.access_groups;
+      this.debug.debug("new user", newUserData);
+      this.debug.debug("merged", userData);
+      sessionStorage.setItem(
+        StorageKeys.user,
+        btoa(JSON.stringify(userData))
+      );
+      if (this.config.dataBind) {
+        this.debug.debug("databinding", userData);
+        new WfuDataBinder({
+          user: userData
+        }).bind();
+      }
+      if (this.config.userInfoUpdatedCallback) {
+        this.debug.debug("Notify listeners", userData);
+        this.userInfoUpdatedCallback(userData);
+      }
+      this.debug.groupEnd();
+    }
+    loadUserInfoCache() {
+      this.debug.group("loadUserInfoCache");
+      if (!this.isLoggedIn) {
+        this.debug.debug("No user logged in.");
+        this.debug.groupEnd();
+        return null;
+      }
+      const userInfo = sessionStorage.getItem(StorageKeys.user);
+      if (!userInfo) {
+        this.debug.debug("No user info to load.");
+        this.debug.groupEnd();
+        return null;
+      }
+      this.debug.debug(userInfo);
+      this.debug.debug("getting user.");
+      const user = new Sa5User();
+      user.fromJSON(
+        JSON.parse(atob(userInfo))
+      );
+      this.debug.groupEnd();
+      return user;
+    }
+    expandLoginButton($elem) {
+      const $wfLoginButton = $elem.find("[data-wf-user-logout]");
+      $elem.click(function() {
+        $wfLoginButton.trigger("click");
+      });
+      $wfLoginButton.click(function(e) {
+        e.stopPropagation();
+      });
+    }
+  };
+
+  // src/webflow-databind/template/default-template-handler.ts
+  var DefaultTemplateHandler = class {
+    constructor(dataBinder) {
+      this._dataBinder = dataBinder;
+    }
+    processElement(elem) {
+      let html = elem.innerHTML;
+      html = html.replace(/{{(.*?)}}/g, (match, p1) => {
+        return this.processItem(p1, elem);
+      });
+      elem.innerHTML = html;
+    }
+    processItem(dsdSpecifier, elem) {
+      let dsd = new Sa5DataSourceDescriptor(dsdSpecifier);
+      return this._dataBinder.getData(dsd, elem);
+    }
+  };
+
+  // src/webflow-databind.ts
+  var DataSourceType = Object.freeze({
+    db: "db",
+    user: "user",
+    query: "query"
+  });
+  var Sa5DataSourceDescriptor = class {
+    get isValid() {
+      if (!this.name)
+        return false;
+      if (!this.type)
+        return false;
+      return true;
+    }
+    constructor(dataSourceDescriptor) {
+      this.parse(dataSourceDescriptor);
+    }
+    expandDataSourceTypeAbbr(dsd) {
+      const DSN_TYPE_ABBR = {
+        "@": "$user",
+        "+": "$db",
+        "?": "$query",
+        "!": "$unknown",
+        "#": "$unknown",
+        "%": "$unknown",
+        "^": "$unknown",
+        "&": "$unknown",
+        "*": "$unknown",
+        "=": "$unknown",
+        "-": "$unknown",
+        "~": "$unknown"
+      };
+      if (DSN_TYPE_ABBR.hasOwnProperty(dsd[0])) {
+        return DSN_TYPE_ABBR[dsd[0]] + "." + dsd.slice(1);
+      }
+      return dsd;
+    }
+    parse(dsd) {
+      this.name = void 0;
+      this.type = void 0;
+      dsd = dsd.trim();
+      dsd = this.expandDataSourceTypeAbbr(dsd);
+      let parts = dsd.split(".");
+      var dsnTypeName = parts.shift();
+      if (dsnTypeName[0] != "$") {
+        return;
+      }
+      dsnTypeName = dsnTypeName.slice(1);
+      this.identifierParts = parts;
+      this.name = this.identifierParts.join(".");
+      this.type = dsnTypeName;
+    }
+  };
+  var WfuDataBinder = class {
+    constructor(store, config = {}) {
+      this.store = store;
+      this.config = {
+        db: config.db ?? null,
+        user: config.user ?? null,
+        handlers: []
+      };
+      if (!this.config.user)
+        this.config.user = new Sa5Membership().loadUserInfoCache();
+    }
+    bindAll() {
+      let dataBind = document.querySelectorAll("[wfu-bind]");
+      dataBind.forEach((elem) => {
+        this.bind(elem);
+        elem.removeAttribute("wfu-bind");
+      });
+      let dataBindContent = document.querySelectorAll("[wfu-bind-content]");
+      dataBindContent.forEach((elem) => {
+        this.bindContent(elem);
+        elem.removeAttribute("wfu-bind-content");
+      });
+    }
+    bind(elem) {
+      let dsnDescriptor = elem.getAttribute("wfu-bind");
+      let dsn = new Sa5DataSourceDescriptor(dsnDescriptor);
+      if (!dsn.isValid) {
+        console.error("Invalid dsn.", dsn);
+        return;
+      }
+      let val = null;
+      val = this.getData(
+        dsn,
+        elem
+      );
+      if (!val)
+        return;
+      switch (identifyElement(elem)) {
+        case "HTMLLinkElement":
+          elem.href = val;
+          break;
+        case "HTMLCheckboxElement":
+          elem.checked = booleanValue(val);
+          break;
+        case "HTMLRadioElement":
+          break;
+        case "HTMLFileInputElement":
+          break;
+        case "HTMLInputElement":
+          elem.value = val;
+          break;
+        case "HTMLSelectElement":
+          selectOptionByValue(
+            elem,
+            val
+          );
+          break;
+        case "HTMLTextAreaElement":
+          elem.value = val;
+          break;
+        case "HTMLButtonElement":
+          break;
+        default:
+          elem.textContent = val;
+          break;
+      }
+    }
+    bindContent(elem) {
+      new DefaultTemplateHandler(this).processElement(elem);
+    }
+    getData(dsd, elemContext = null) {
+      switch (dsd.type) {
+        case "user" /* USER */:
+          return this.getData_user(
+            dsd
+          );
+        case "db" /* DB */:
+          let dsnContext = null;
+          let itemContext = null;
+          if (elemContext) {
+            dsnContext = elemContext.getAttribute("wfu-bind-dsn");
+            itemContext = elemContext.getAttribute("wfu-bind-item-id");
+          }
+          return this.getData_db(
+            dsd,
+            dsnContext,
+            itemContext
+          );
+        case "query" /* QUERY */:
+          return this.getData_query(
+            dsd
+          );
+        case "local" /* LOCAL_STORAGE */:
+          return this.getData_localStorage(
+            dsd
+          );
+        case "session" /* SESSION_STORAGE */:
+          return this.getData_sessionStorage(
+            dsd
+          );
+        case "cookie" /* COOKIE */:
+          return this.getData_cookieStorage(
+            dsd
+          );
+      }
+    }
+    getData_user(dsd) {
+      if (!this.config.user || !this.config.user.email)
+        return null;
+      let val = "";
+      switch (dsd.identifierParts[0]) {
+        case "data":
+          val = this.config.user.data[dsd.identifierParts[1]];
+          break;
+        default:
+          val = this.config.user[dsd.name];
+          break;
+      }
+    }
+    getData_cookieStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return getCookie(dsd.name);
+    }
+    getData_localStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return localStorage.getItem(dsd.name);
+    }
+    getData_sessionStorage(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      return sessionStorage.getItem(dsd.name);
+    }
+    getData_query(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      let urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(dsd.name);
+    }
+    getData_db(dsd, dsnContext, itemContext) {
+      console.log("getData_db", dsd, dsnContext, itemContext);
+      console.log(this.store);
+      let db = this.store.store[dsnContext];
+      console.log(db);
+      let item = db.data.get(itemContext);
+      console.log(item);
+      return item[dsd.name];
+    }
   };
 
   // src/nocode/webflow-data.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-data");
     debug.debug("Initializing");
-    var db = loadAllData();
-    dataBindAllForms(db);
+    var ds = new Datastore();
+    ds.init();
+    let binder = new WfuDataBinder(ds).bindAll();
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

@@ -10,8 +10,8 @@
 
 import { encodeHTML, expandMacrosInText } from './utils';
 // import { encodeHtml, expandMacrosInText } from './webflow-html';
-import { getDictionaryFromDataRow } from './webflow-data.js';
-
+//import { getDictionaryFromDataRow } from './webflow-data.js';
+import { Datastore } from './webflow-data';
 
 var htmlRenderOptions = {
     encodeHtml: true 
@@ -34,7 +34,10 @@ export class HtmlBuilder {
     
         for (let row = 0; row < data.length; row++) {
             // Create Dictionary
-            let dict = getDictionaryFromDataRow(data, row);
+
+            let ds: Datastore = new Datastore();
+
+            let dict = ds.getDictionaryFromDataRow(data, row);
     
             let item = expandMacrosInText(
                 template,

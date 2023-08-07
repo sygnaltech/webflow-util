@@ -12,6 +12,66 @@
 
 // https://www.w3docs.com/snippets/javascript/how-to-convert-string-to-title-case-with-javascript.html
 
+export function identifyElement(element: HTMLElement): string {
+    switch (element.tagName) {
+        case 'A': 
+            return 'HTMLLinkElement'; 
+        case 'INPUT': {
+            const inputElement = element as HTMLInputElement;
+            switch (inputElement.type) {
+
+// BUG: add date types and number types 
+
+                case 'checkbox':
+                    return 'HTMLCheckboxElement';
+                case 'radio':
+                    return 'HTMLRadioElement';
+                // case 'text':
+                //     return 'HTMLTextElement';
+                // case 'password':
+                //     return 'HTMLPasswordElement';
+                case 'file':
+                    return 'HTMLFileInputElement';
+                default:
+                    return 'HTMLInputElement';
+            }
+        }
+        case 'SELECT':
+            return 'HTMLSelectElement';
+        case 'TEXTAREA':
+            return 'HTMLTextAreaElement';
+        case 'BUTTON':
+            return 'HTMLButtonElement';
+        default:
+            return 'HTMLElement';
+    }
+}
+
+export function selectOptionByValue(selectElement: HTMLSelectElement, value: string) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].value === value) {
+            selectElement.options[i].selected = true;
+            break;
+        }
+    }
+}
+
+// Evaluates a string value as boolean 
+export function booleanValue(val: string): boolean {
+    switch (val.toLowerCase()) {
+        case "false":
+        case "f":
+        case "0":
+        case "no":
+        case "off":
+        case undefined: case "undefined":
+        case null: case "null": 
+            return false;
+        default:
+            return true;
+    }
+}
+
 export function addDays(date: Date, days: number): Date {
     let result = new Date(date);
     result.setDate(result.getDate() + days);

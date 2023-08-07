@@ -373,7 +373,7 @@
 
   // src/nocode/webflow-form.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-form");
     debug.debug("Initializing");
     document.querySelectorAll("[wfu-form-ipinfo]").forEach((element) => {

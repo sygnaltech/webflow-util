@@ -1,0 +1,31 @@
+
+/**
+ * SCSS for Sygnal Webflow Util HTML library
+ */
+
+/**
+ * @use: This is the modern replacement for @import. 
+ * Instead of dumping all the imported styles into the global scope, @use treats each imported file as a 
+ * separate module with its own private scope. This means that variables, mixins, and functions from 
+ * the imported file have to be accessed with a namespace based on the filename. 
+ * This helps to prevent naming conflicts and makes the code easier to understand.
+ */
+        
+  
+// @use '../webflow-html/nested-list.scss';
+
+// @use '../webflow-html/limit-items';
+
+ // Temporarily hide until decoded
+[wfu-bind] {
+//    display: none;
+    visibility: hidden; 
+}
+
+// Temporarily hide until decoded
+[wfu-bind-content] {
+//    display: none;
+    visibility: hidden; 
+}
+
+

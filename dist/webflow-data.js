@@ -394,7 +394,7 @@
     }
   };
 
-  // src/webflow-data.ts
+  // src/webflow-data/database.ts
   var Database = class {
     constructor() {
       this.data = /* @__PURE__ */ new Map();
@@ -441,87 +441,100 @@
       };
     }
   };
-  var loadAllData = () => {
-    let dataSources = document.querySelectorAll("[wfu-data]");
-    console.log(`sources found = ${dataSources.length}`);
-    let db = new Database();
-    dataSources.forEach((elem) => {
-      console.log(`processing source - ${elem.getAttribute("wfu-data")}`);
-      let data = loadData(
-        elem.getAttribute("wfu-data")
-      );
-      db.data.set(
-        elem.getAttribute("wfu-data"),
-        data
-      );
-    });
-    return db;
-  };
-  var loadData = (name) => {
-    let dataSource = document.querySelector(`*[wfu-data='${name}']`);
-    if (!dataSource) {
-      console.warn(`Datasource: '${name}' does not exist`);
-      return;
+
+  // src/webflow-data.ts
+  var Datastore = class {
+    constructor() {
+      this.store = {};
     }
-    let dataSourceType = dataSource.getAttribute("wfu-data-type");
-    console.log(`preparing data - ${dataSourceType}`);
-    switch (dataSourceType) {
-      case "collection-list":
-        return prepareCollectionListDataSource(dataSource);
-      case "json":
-        break;
-      case "google-sheet":
-        return loadGoogleSheetFromSpec2(
-          JSON.parse(
-            dataSource.textContent || ""
-          )
+    init() {
+      this.init_dbs();
+    }
+    loadDataItem(elem) {
+      let data = this.loadDataItem_v2(
+        elem
+      );
+    }
+    loadDataItem_v2(elem) {
+      const dsn = elem.getAttribute("wfu-data-dsn");
+      const id = elem.getAttribute("wfu-data-item-id");
+      let dataObject = JSON.parse(elem.innerText);
+      if (!this.store[dsn])
+        this.store[dsn] = new Database();
+      this.store[dsn].add(id, dataObject);
+    }
+    init_dbs() {
+      let dataSources = document.querySelectorAll("script[type=wfu-data-item]");
+      dataSources.forEach((elem) => {
+        this.loadDataItem(elem);
+      });
+    }
+    loadData(name) {
+      let dataSource = document.querySelector(`*[wfu-data='${name}']`);
+      if (!dataSource) {
+        console.warn(`Datasource: '${name}' does not exist`);
+        return;
+      }
+      let dataSourceType = dataSource.getAttribute("wfu-data-type");
+      console.log(`preparing data - ${dataSourceType}`);
+      switch (dataSourceType) {
+        case "collection-list":
+          return prepareCollectionListDataSource(dataSource);
+        case "json":
+          break;
+        case "google-sheet":
+          return loadGoogleSheetFromSpec2(
+            JSON.parse(
+              dataSource.textContent || ""
+            )
+          );
+        default:
+          console.error(`Data-source type: '${dataSourceType}' unknown`);
+          break;
+      }
+    }
+    async getCsv(url) {
+      let csv = null;
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          csv = await response.text();
+        } else {
+          console.error(`Error fetching CSV: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching CSV: ${error}`);
+      }
+      return csv;
+    }
+    csvToData(csvd) {
+      let items = null;
+      return items;
+    }
+    async getCsvAsData(url) {
+      let data = null;
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const csvd = await response.text();
+        } else {
+          console.error(`Error fetching CSV: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching CSV: ${error}`);
+      }
+      return data;
+    }
+    getDictionaryFromDataRow(data, rowIndex) {
+      var dict = /* @__PURE__ */ new Map();
+      for (const v in data[rowIndex]) {
+        dict.set(
+          v,
+          data[rowIndex][v]
         );
-      default:
-        console.error(`Data-source type: '${dataSourceType}' unknown`);
-        break;
-    }
-  };
-  var getCsv = async (url) => {
-    let csv = null;
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        csv = await response.text();
-      } else {
-        console.error(`Error fetching CSV: ${response.status}`);
       }
-    } catch (error) {
-      console.error(`Error fetching CSV: ${error}`);
+      return dict;
     }
-    return csv;
-  };
-  var csvToData = (csvd) => {
-    let items = null;
-    return items;
-  };
-  var getCsvAsData2 = async (url) => {
-    let data = null;
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        const csvd = await response.text();
-      } else {
-        console.error(`Error fetching CSV: ${response.status}`);
-      }
-    } catch (error) {
-      console.error(`Error fetching CSV: ${error}`);
-    }
-    return data;
-  };
-  var getDictionaryFromDataRow2 = function(data, rowIndex) {
-    var dict = /* @__PURE__ */ new Map();
-    for (const v in data[rowIndex]) {
-      dict.set(
-        v,
-        data[rowIndex][v]
-      );
-    }
-    return dict;
   };
 })();
 //# sourceMappingURL=webflow-data.js.map

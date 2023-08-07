@@ -98,7 +98,7 @@
 
   // src/nocode/webflow-404.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-404");
     debug.debug("Initializing");
   };

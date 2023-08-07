@@ -117,7 +117,7 @@
 
   // src/nocode/webflow-demo.ts
   var init = () => {
-    new Sa5Core().init();
+    let core = Sa5Core.startup();
     let debug = new Sa5Debug("wfu-demo");
     debug.debug("Initializing");
     const webflowInfo = new WebflowInfo();
