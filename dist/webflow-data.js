@@ -456,26 +456,30 @@
       );
     }
     loadDataItem_v2(elem) {
-      const dsn = elem.getAttribute("wfu-data-dsn");
-      const id = elem.getAttribute("wfu-data-item-id");
+      const dsn = elem.getAttribute("wfu-data-dsn" /* ATTR_DATA_DSN */);
+      const id = elem.getAttribute("wfu-data-item-id" /* ATTR_DATA_ITEM_ID */);
       let dataObject = JSON.parse(elem.innerText);
       if (!this.store[dsn])
         this.store[dsn] = new Database();
       this.store[dsn].add(id, dataObject);
     }
     init_dbs() {
-      let dataSources = document.querySelectorAll("script[type=wfu-data-item]");
+      let dataSources = document.querySelectorAll(
+        `script[type=${"wfu-data-item" /* SCRIPT_TYPE_DATA_ITEM */}]`
+      );
       dataSources.forEach((elem) => {
         this.loadDataItem(elem);
       });
     }
     loadData(name) {
-      let dataSource = document.querySelector(`*[wfu-data='${name}']`);
+      let dataSource = document.querySelector(
+        `[${"wfu-data" /* ATTR_DATA */}='${name}']`
+      );
       if (!dataSource) {
         console.warn(`Datasource: '${name}' does not exist`);
         return;
       }
-      let dataSourceType = dataSource.getAttribute("wfu-data-type");
+      let dataSourceType = dataSource.getAttribute("wfu-data-type" /* ATTR_DATA_TYPE */);
       console.log(`preparing data - ${dataSourceType}`);
       switch (dataSourceType) {
         case "collection-list":

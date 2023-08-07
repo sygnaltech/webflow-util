@@ -19,6 +19,7 @@ import { booleanValue, getCookie, identifyElement, selectOptionByValue } from '.
 import { HandlebarsTemplateHandler } from './webflow-databind/template/handlebars-template-handler';
 import { DefaultTemplateHandler } from './webflow-databind/template/default-template-handler';
 import { Datastore } from './webflow-data';
+import { Sa5Attribute } from './globals';
 
 /*
  * DATA BINDER
@@ -206,20 +207,22 @@ export class WfuDataBinder {
         // BUG?? should be in nocode? 
         // Find all elements which specify a data-source for data binding
         // Iterate and bind each individually
-        let dataBind = document.querySelectorAll('[wfu-bind]');
+        let dataBind = document.querySelectorAll(
+            `[${Sa5Attribute.ATTR_DATABIND}]`); // wfu-bind
         dataBind.forEach((elem: HTMLElement) => {
 
             this.bind(elem); 
-            elem.removeAttribute("wfu-bind");
+            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND); // "wfu-bind"
 
         }); 
 
         // Bind content 
-        let dataBindContent = document.querySelectorAll('[wfu-bind-content]');
+        let dataBindContent = document.querySelectorAll(
+            `[${Sa5Attribute.ATTR_DATABIND_CONTENT}]`); // wfu-bind-content 
         dataBindContent.forEach((elem: HTMLElement) => {
 
             this.bindContent(elem); 
-            elem.removeAttribute("wfu-bind-content");
+            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND_CONTENT); // "wfu-bind-content"
 
         }); 
 
@@ -240,7 +243,7 @@ export class WfuDataBinder {
     bind(elem: HTMLElement) {
 
         // Determine bind type 
-        let dsnDescriptor = elem.getAttribute("wfu-bind");
+        let dsnDescriptor = elem.getAttribute(Sa5Attribute.ATTR_DATABIND); // "wfu-bind" 
 
         let dsn = new Sa5DataSourceDescriptor(dsnDescriptor); 
 
@@ -329,8 +332,11 @@ export class WfuDataBinder {
                 );
             case DataSourceTypeEnum.DB:
 
-                let dsnContext = this.findContextSetting(elem, "wfu-bind-dsn");
-                let itemContext = this.findContextSetting(elem, "wfu-bind-item-id");
+                let dsnContext = this.findContextSetting(elem, 
+                    Sa5Attribute.ATTR_DATABIND_CONTEXT_DSN ); // "wfu-bind-dsn"
+                let itemContext = this.findContextSetting(elem, 
+                    Sa5Attribute.ATTR_DATABIND_CONTEXT_ITEM_ID ); // "wfu-bind-item-id" 
+
                 // if(elemContext) {
                 //     dsnContext = elemContext.getAttribute("wfu-bind-dsn");
                 //     itemContext = elemContext.getAttribute("wfu-bind-item-id");
@@ -443,7 +449,7 @@ export class WfuDataBinder {
 //console.log(this.store);
 
     let db = this.store.store[dsnContext]
- //   console.log(db);
+//    console.log(this.store);
 
     let item = db.data.get(itemContext);
 

@@ -11,6 +11,7 @@ import { prepareCollectionListDataSource } from './webflow-data/webflow-collecti
 import { loadGoogleSheetFromSpec } from './webflow-data/google-sheet-data';
 //import { HtmlBuilder } from './webflow-html-builder.js';
 import { Database } from './webflow-data/database';
+import { Sa5Attribute, Sa5ScriptType } from './globals';
 
 
 
@@ -65,14 +66,14 @@ export class Datastore {
 
     loadDataItem_v2(elem: HTMLElement): void {
 
-const dsn = elem.getAttribute("wfu-data-dsn");
-const id = elem.getAttribute("wfu-data-item-id"); 
+        const dsn = elem.getAttribute(Sa5Attribute.ATTR_DATA_DSN); //  "wfu-data-dsn");
+        const id = elem.getAttribute(Sa5Attribute.ATTR_DATA_ITEM_ID); // "wfu-data-item-id"); 
 
 // console.log("load data v2", dsn, id); 
 
  // console.log(elem.innerText); 
 
-let dataObject = JSON.parse(elem.innerText); 
+        let dataObject = JSON.parse(elem.innerText); 
 
 
 // console.log(dataObject);  
@@ -84,8 +85,6 @@ let dataObject = JSON.parse(elem.innerText);
         // Add item
         this.store[dsn].add(id, dataObject);
 
-
-
     }
 
     init_dbs() { 
@@ -93,7 +92,9 @@ let dataObject = JSON.parse(elem.innerText);
         // Init databases 
 
         // Find all elements which specify a data-source for data binding
-        let dataSources = document.querySelectorAll('script[type=wfu-data-item]');
+        let dataSources = document.querySelectorAll(
+            `script[type=${Sa5ScriptType.SCRIPT_TYPE_DATA_ITEM}]`
+        ); // wfu-data-item
 //        console.log(`data-items found = ${dataSources.length}`);
 
         // Iterate and bind each individually
@@ -125,14 +126,16 @@ let dataObject = JSON.parse(elem.innerText);
 
     loadData(name: string) {
         // Find all elements which identify themselves as a data-source
-        let dataSource = document.querySelector(`*[wfu-data='${name}']`);
+        let dataSource = document.querySelector(
+            `[${Sa5Attribute.ATTR_DATA}='${name}']`
+            );
         if (!dataSource) {
             console.warn(`Datasource: '${name}' does not exist`);
             return;
         }
 
         // Get data type
-        let dataSourceType = dataSource.getAttribute("wfu-data-type");
+        let dataSourceType = dataSource.getAttribute(Sa5Attribute.ATTR_DATA_TYPE); // "wfu-data-type");
         console.log(`preparing data - ${dataSourceType}`);
 
         switch (dataSourceType) {

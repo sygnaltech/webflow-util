@@ -477,15 +477,19 @@
         this.config.user = new Sa5Membership().loadUserInfoCache();
     }
     bindAll() {
-      let dataBind = document.querySelectorAll("[wfu-bind]");
+      let dataBind = document.querySelectorAll(
+        `[${"wfu-bind" /* ATTR_DATABIND */}]`
+      );
       dataBind.forEach((elem) => {
         this.bind(elem);
-        elem.removeAttribute("wfu-bind");
+        elem.removeAttribute("wfu-bind" /* ATTR_DATABIND */);
       });
-      let dataBindContent = document.querySelectorAll("[wfu-bind-content]");
+      let dataBindContent = document.querySelectorAll(
+        `[${"wfu-bind-content" /* ATTR_DATABIND_CONTENT */}]`
+      );
       dataBindContent.forEach((elem) => {
         this.bindContent(elem);
-        elem.removeAttribute("wfu-bind-content");
+        elem.removeAttribute("wfu-bind-content" /* ATTR_DATABIND_CONTENT */);
       });
     }
     findContextSetting(element, attr) {
@@ -498,7 +502,7 @@
       return null;
     }
     bind(elem) {
-      let dsnDescriptor = elem.getAttribute("wfu-bind");
+      let dsnDescriptor = elem.getAttribute("wfu-bind" /* ATTR_DATABIND */);
       let dsn = new Sa5DataSourceDescriptor(dsnDescriptor);
       if (!dsn.isValid) {
         console.error("Invalid dsn.", dsn);
@@ -551,8 +555,14 @@
             dsd
           );
         case "db" /* DB */:
-          let dsnContext = this.findContextSetting(elem, "wfu-bind-dsn");
-          let itemContext = this.findContextSetting(elem, "wfu-bind-item-id");
+          let dsnContext = this.findContextSetting(
+            elem,
+            "wfu-bind-dsn" /* ATTR_DATABIND_CONTEXT_DSN */
+          );
+          let itemContext = this.findContextSetting(
+            elem,
+            "wfu-bind-item-id" /* ATTR_DATABIND_CONTEXT_ITEM_ID */
+          );
           return this.getData_db(
             dsd,
             dsnContext,
