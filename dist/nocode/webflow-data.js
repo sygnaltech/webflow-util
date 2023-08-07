@@ -1466,12 +1466,8 @@
       return urlParams.get(dsd.name);
     }
     getData_db(dsd, dsnContext, itemContext) {
-      console.log("getData_db", dsd, dsnContext, itemContext);
-      console.log(this.store);
       let db = this.store.store[dsnContext];
-      console.log(db);
       let item = db.data.get(itemContext);
-      console.log(item);
       return item[dsd.name];
     }
   };

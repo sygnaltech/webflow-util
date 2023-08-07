@@ -431,7 +431,7 @@ export class WfuDataBinder {
 
         // Get data source name 
 //        let dsn = el.getAttribute("wfu-bind");
-    console.log("getData_db", dsd, dsnContext, itemContext);
+ //   console.log("getData_db", dsd, dsnContext, itemContext);
         // Find all elements which identify themselves
         // as a data-source
         //let dataSource = document.querySelector(`*[wfu-bind='${dsn}']`);
@@ -440,14 +440,14 @@ export class WfuDataBinder {
         //    return;
         //}
 
-console.log(this.store);
+//console.log(this.store);
 
     let db = this.store.store[dsnContext]
-    console.log(db);
+ //   console.log(db);
 
     let item = db.data.get(itemContext);
 
-    console.log(item); 
+ //   console.log(item); 
 
 return item[dsd.name];
 
