@@ -14,7 +14,8 @@ import { Sa5Debug } from '../webflow-core/debug';
 
 const init = () => { 
 
-    new Sa5Core().init();
+//    new Sa5Core().init();
+let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("wfu-hotkeys");

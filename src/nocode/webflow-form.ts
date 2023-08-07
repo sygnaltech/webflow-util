@@ -19,7 +19,8 @@ import { Sa5FormIPInfo } from '../webflow-form/ip-info';
 
 const init = () => { 
 
-    new Sa5Core().init();
+//    new Sa5Core().init();
+let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-form");
