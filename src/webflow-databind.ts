@@ -212,7 +212,8 @@ export class WfuDataBinder {
         dataBind.forEach((elem: HTMLElement) => {
 
             this.bind(elem); 
-            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND); // "wfu-bind"
+//            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND); // "wfu-bind"
+            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); // "wfu-bind"
 
         }); 
 
@@ -222,7 +223,8 @@ export class WfuDataBinder {
         dataBindContent.forEach((elem: HTMLElement) => {
 
             this.bindContent(elem); 
-            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND_CONTENT); // "wfu-bind-content"
+//            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND_CONTENT); // "wfu-bind-content"
+            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); // "wfu-bind"
 
         }); 
 

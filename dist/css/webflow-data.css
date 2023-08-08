@@ -8,10 +8,25 @@
  * the imported file have to be accessed with a namespace based on the filename. 
  * This helps to prevent naming conflicts and makes the code easier to understand.
  */
+/* 
+
+ // Temporarily hide until decoded
 [wfu-bind] {
-  visibility: hidden;
+//    display: none;
+    visibility: hidden; 
 }
 
+// Temporarily hide until decoded
 [wfu-bind-content] {
+//    display: none;
+    visibility: hidden; 
+}
+
+*/
+[wfu-preload=hidden] {
+  display: none;
+}
+
+[wfu-preload=invisible] {
   visibility: hidden;
 }/*# sourceMappingURL=webflow-data.css.map */

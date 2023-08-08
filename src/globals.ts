@@ -24,4 +24,7 @@ export enum Sa5Attribute {
     ATTR_DATABIND_CONTEXT_DSN = 'wfu-bind-dsn',
     ATTR_DATABIND_CONTEXT_ITEM_ID = 'wfu-bind-item-id',
 
+    // Pre-loaders
+    ATTR_PRELOAD = 'wfu-preload', 
+
 }

@@ -16,6 +16,9 @@
 
 // @use '../webflow-html/limit-items';
 
+
+/* 
+
  // Temporarily hide until decoded
 [wfu-bind] {
 //    display: none;
@@ -28,4 +31,15 @@
     visibility: hidden; 
 }
 
+*/
 
+ // Temporarily hide until data-bound 
+[wfu-preload=hidden] {
+    display: none;
+}
+
+// Temporarily make invisible until data-bound 
+// Will take the appropriate space 
+[wfu-preload=invisible] {
+    visibility: hidden; 
+}
