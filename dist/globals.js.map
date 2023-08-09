@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/globals.ts"],
-  "sourcesContent": ["\n/**\n * SA5 Globals\n * \n */\n\nexport enum Sa5ScriptType {\n\n    SCRIPT_TYPE_DATA_ITEM = 'wfu-data-item', \n\n}\n\nexport enum Sa5Attribute {\n\n    // Data\n    ATTR_DATA = 'wfu-data',\n    ATTR_DATA_TYPE = 'wfu-data-type',\n    ATTR_DATA_DSN = 'wfu-data-dsn',\n    ATTR_DATA_ITEM_ID = 'wfu-data-item-id',\n    \n    // Data-binding\n    ATTR_DATABIND = 'wfu-bind',\n    ATTR_DATABIND_CONTENT = 'wfu-bind-content',\n    ATTR_DATABIND_CONTEXT_DSN = 'wfu-bind-dsn',\n    ATTR_DATABIND_CONTEXT_ITEM_ID = 'wfu-bind-item-id',\n\n}"],
-  "mappings": ";;AAMO,MAAK,gBAAL,kBAAKA,mBAAL;AAEH,IAAAA,eAAA,2BAAwB;AAFhB,WAAAA;AAAA,KAAA;AAML,MAAK,eAAL,kBAAKC,kBAAL;AAGH,IAAAA,cAAA,eAAY;AACZ,IAAAA,cAAA,oBAAiB;AACjB,IAAAA,cAAA,mBAAgB;AAChB,IAAAA,cAAA,uBAAoB;AAGpB,IAAAA,cAAA,mBAAgB;AAChB,IAAAA,cAAA,2BAAwB;AACxB,IAAAA,cAAA,+BAA4B;AAC5B,IAAAA,cAAA,mCAAgC;AAZxB,WAAAA;AAAA,KAAA;",
+  "sourcesContent": ["\n/**\n * SA5 Globals\n * \n */\n\nexport enum Sa5ScriptType {\n\n    SCRIPT_TYPE_DATA_ITEM = 'wfu-data-item', \n\n}\n\nexport enum Sa5Attribute {\n\n    // Data\n    ATTR_DATA = 'wfu-data',\n    ATTR_DATA_TYPE = 'wfu-data-type',\n    ATTR_DATA_DSN = 'wfu-data-dsn',\n    ATTR_DATA_ITEM_ID = 'wfu-data-item-id',\n    \n    // Data-binding\n    ATTR_DATABIND = 'wfu-bind',\n    ATTR_DATABIND_CONTENT = 'wfu-bind-content',\n    ATTR_DATABIND_CONTEXT_DSN = 'wfu-bind-dsn',\n    ATTR_DATABIND_CONTEXT_ITEM_ID = 'wfu-bind-item-id',\n\n    // Pre-loaders\n    ATTR_PRELOAD = 'wfu-preload', \n\n}"],
+  "mappings": ";;AAMO,MAAK,gBAAL,kBAAKA,mBAAL;AAEH,IAAAA,eAAA,2BAAwB;AAFhB,WAAAA;AAAA,KAAA;AAML,MAAK,eAAL,kBAAKC,kBAAL;AAGH,IAAAA,cAAA,eAAY;AACZ,IAAAA,cAAA,oBAAiB;AACjB,IAAAA,cAAA,mBAAgB;AAChB,IAAAA,cAAA,uBAAoB;AAGpB,IAAAA,cAAA,mBAAgB;AAChB,IAAAA,cAAA,2BAAwB;AACxB,IAAAA,cAAA,+BAA4B;AAC5B,IAAAA,cAAA,mCAAgC;AAGhC,IAAAA,cAAA,kBAAe;AAfP,WAAAA;AAAA,KAAA;",
   "names": ["Sa5ScriptType", "Sa5Attribute"]
 }

@@ -413,11 +413,6 @@
   };
 
   // src/webflow-databind.ts
-  var DataSourceType = Object.freeze({
-    db: "db",
-    user: "user",
-    query: "query"
-  });
   var Sa5DataSourceDescriptor = class {
     get isValid() {
       if (!this.name)
@@ -482,14 +477,14 @@
       );
       dataBind.forEach((elem) => {
         this.bind(elem);
-        elem.removeAttribute("wfu-bind" /* ATTR_DATABIND */);
+        elem.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
       });
       let dataBindContent = document.querySelectorAll(
         `[${"wfu-bind-content" /* ATTR_DATABIND_CONTENT */}]`
       );
       dataBindContent.forEach((elem) => {
         this.bindContent(elem);
-        elem.removeAttribute("wfu-bind-content" /* ATTR_DATABIND_CONTENT */);
+        elem.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
       });
     }
     findContextSetting(element, attr) {
@@ -572,6 +567,10 @@
           return this.getData_query(
             dsd
           );
+        case "url" /* URL */:
+          return this.getData_url(
+            dsd
+          );
         case "local" /* LOCAL_STORAGE */:
           return this.getData_localStorage(
             dsd
@@ -619,6 +618,14 @@
         return null;
       let urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(dsd.name);
+    }
+    getData_url(dsd) {
+      if (typeof window == "undefined")
+        return null;
+      const url = new URL(window.location.href);
+      const fieldValue = url[dsd.name];
+      console.log(fieldValue);
+      return fieldValue;
     }
     getData_db(dsd, dsnContext, itemContext) {
       let db = this.store.store[dsnContext];

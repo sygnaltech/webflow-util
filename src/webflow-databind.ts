@@ -25,18 +25,19 @@ import { Sa5Attribute } from './globals';
  * DATA BINDER
  */
 
-const DataSourceType = Object.freeze({
-    db: 'db', // + // $db
-    user: 'user', // @ // $user
-    query: 'query', // ? // $query
-    // cookie
-    // local/session 
+// const DataSourceType = Object.freeze({
+//     db: 'db', // + // $db
+//     user: 'user', // @ // $user
+//     query: 'query', // ? // $query
+//     // cookie
+//     // local/session 
 
-});
+// });
 
 enum DataSourceTypeEnum {
     DB = 'db', // + // $db
     USER = 'user', // @ // $user
+    URL = 'url', // $url
     QUERY = 'query', // ? // $query
     LOCAL_STORAGE = 'local', // $local
     SESSION_STORAGE = 'session', // $session
@@ -357,6 +358,10 @@ export class WfuDataBinder {
                 return this.getData_query(
                     dsd
                 );
+            case DataSourceTypeEnum.URL:
+                return this.getData_url(
+                    dsd
+                );
             case DataSourceTypeEnum.LOCAL_STORAGE:
                 return this.getData_localStorage(
                     dsd
@@ -433,6 +438,28 @@ export class WfuDataBinder {
 
         // Should return null if there is none
         return urlParams.get(dsd.name);
+    }
+    
+    private getData_url(dsd: Sa5DataSourceDescriptor): string {
+
+        // Abort if not in a browser context 
+        if (typeof window == 'undefined')
+            return null;
+        
+        // Get Params 
+//        let urlParams = new URLSearchParams(window.location.search);
+
+        const url = new URL(window.location.href);
+
+//        const fieldName = 'pathname';  // This is the string representing the field name
+        
+        const fieldValue = url[dsd.name];
+        
+        console.log(fieldValue);  // Outputs: "/path/to/resource"
+        
+
+        // Should return null if there is none
+        return fieldValue; // urlParams.get(dsd.name);
     }
 
     private getData_db(dsd: Sa5DataSourceDescriptor, dsnContext: string, itemContext: string): string {
