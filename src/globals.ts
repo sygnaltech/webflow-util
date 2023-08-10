@@ -27,4 +27,8 @@ export enum Sa5Attribute {
     // Pre-loaders
     ATTR_PRELOAD = 'wfu-preload', 
 
+    // Interactions
+    ATTR_IX_TRIGGER = 'wfu-ix-trigger',
+    ATTR_IX_ID = 'wfu-ix-id'
+
 }
