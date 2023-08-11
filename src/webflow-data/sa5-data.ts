@@ -52,6 +52,107 @@ export class Sa5Data {
         const lines = content.split('\n');
         let currentKey: string | null = null;
         let currentValue: string | null = null;
+        let currentType: 'string' | 'number' | 'boolean' = 'string';
+        let isMultiLineValue = false;
+    
+        for (let line of lines) {
+            line = line.trim();
+            
+            // Skip empty lines
+            if (!line) continue;
+    
+            // Handle multi-line values
+            if (isMultiLineValue) {
+                if (line.endsWith('>')) {
+                    currentValue += '\n' + line.slice(0, -1); // Exclude the closing '>'
+                    if (currentKey !== null && currentValue !== null) {
+                        switch (currentType) {
+                            case 'number':
+                                obj[currentKey] = parseFloat(currentValue);
+                                break;
+                            case 'boolean':
+                                obj[currentKey] = currentValue.toLowerCase() === 'true';
+                                break;
+                            default:
+                                obj[currentKey] = currentValue;
+                                break;
+                        }
+                    }
+                    isMultiLineValue = false;
+                    currentValue = null;
+                    currentKey = null;
+                    currentType = 'string';
+                } else {
+                    currentValue += '\n' + line;
+                }
+                continue;
+            }
+    
+            const delimiterMatch = line.match(/:(\$|#|\?|)/);
+            if (!delimiterMatch) continue;
+    
+            const delimiter = delimiterMatch[1];
+            const parts = line.split(delimiterMatch[0]);
+            const key = parts[0].trim();
+            let value = parts.slice(1).join(':').trim();
+    
+            // Determine the type based on the delimiter
+            switch (delimiter) {
+                case '':
+                case '$':
+                    currentType = 'string';
+                    break;
+                case '#':
+                    currentType = 'number';
+                    break;
+                case '?':
+                    currentType = 'boolean';
+                    break;
+            }
+    
+            // Handle starting of multi-line value
+            if (value.startsWith('<')) {
+                if (value.endsWith('>')) {
+                    value = value.slice(1, -1); // Exclude both the starting '<' and closing '>'
+                    switch (currentType) {
+                        case 'number':
+                            obj[key] = parseFloat(value);
+                            break;
+                        case 'boolean':
+                            obj[key] = value.toLowerCase() === 'true';
+                            break;
+                        default:
+                            obj[key] = value;
+                            break;
+                    }
+                } else {
+                    isMultiLineValue = true;
+                    currentKey = key;
+                    currentValue = value.slice(1); // Exclude the starting '<'
+                }
+            } else {
+                switch (currentType) {
+                    case 'number':
+                        obj[key] = parseFloat(value);
+                        break;
+                    case 'boolean':
+                        obj[key] = value.toLowerCase() === 'true';
+                        break;
+                    default:
+                        obj[key] = value;
+                        break;
+                }
+            }
+        }
+    
+        return obj;
+    }
+
+    parse2(content: string): SA5Object | null {
+        const obj: SA5Object = {};
+        const lines = content.split('\n');
+        let currentKey: string | null = null;
+        let currentValue: string | null = null;
         let isMultiLineValue = false;
 
         for (let line of lines) {
