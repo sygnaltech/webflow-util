@@ -16,6 +16,7 @@ import { Sa5Debug } from './webflow-core/debug';
 import { Sa5User } from './webflow-membership/user'; 
 
 import { WfuDataBinder } from './webflow-databind';
+import { Sa5GlobalEvent } from './globals';
 
 const StorageKeys = Object.freeze({
     user: 'wfuUser',
@@ -86,7 +87,7 @@ export class Sa5Membership {
         // Load config
 
         // Get any global handler
-        const userInfoChanged = core.getHandler('userInfoChanged'); 
+        const userInfoChanged = core.getHandler(Sa5GlobalEvent.EVENT_USER_CHANGED); 
         if (this.isUserInfoChangedCallback(userInfoChanged)) {
 
             this.config.userInfoUpdatedCallback = userInfoChanged;
@@ -211,9 +212,9 @@ export class Sa5Membership {
             // Databinding
             if(this.config.dataBind) {
                 this.debug.debug("databinding", user);
-                new WfuDataBinder({
+                new WfuDataBinder(null, {
                     user: user
-                }).bind(); 
+                }).bindAll(); 
             }
 
             // User Callback 
@@ -571,9 +572,11 @@ export class Sa5Membership {
         // Databinding
         if(this.config.dataBind) {
             this.debug.debug("databinding", userData);
-            new WfuDataBinder({
-                user: userData
-            }).bind(); 
+            new WfuDataBinder(
+                null, // datastore 
+                {
+                    user: userData
+                }).bindAll(); 
         }
 
         // Notify listeners 
