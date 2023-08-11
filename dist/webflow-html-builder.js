@@ -563,7 +563,7 @@
         return;
       }
       this.type = this.elem.getAttribute("type");
-      if (this.type != "sygnal/sa5-data") {
+      if (this.type != "sygnal/sa5-data-proto" /* SCRIPT_TYPE_SA5_DATA_ITEM */) {
         console.error("Invalid element type for Sa5Data.", this.elem);
         return;
       }
@@ -663,7 +663,7 @@
     }
     init_dbs() {
       let sa5DataSources = document.querySelectorAll(
-        `script[type='${"sygnal/sa5-data" /* SCRIPT_TYPE_SA5_DATA_ITEM */}']`
+        `script[type='${"sygnal/sa5-data-proto" /* SCRIPT_TYPE_SA5_DATA_ITEM */}']`
       );
       sa5DataSources.forEach((elem) => {
         this.loadDataItem_sa5Data(elem);

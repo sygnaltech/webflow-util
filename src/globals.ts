@@ -14,7 +14,7 @@ export enum Sa5GlobalEvent {
 export enum Sa5ScriptType {
 
     SCRIPT_TYPE_DATA_ITEM = 'wfu-data-item', 
-    SCRIPT_TYPE_SA5_DATA_ITEM = 'sygnal/sa5-data', 
+    SCRIPT_TYPE_SA5_DATA_ITEM = 'sygnal/sa5-data-proto', // 'sygnal/sa5-data', 
 
 }
 

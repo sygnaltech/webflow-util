@@ -9,6 +9,8 @@
 
 // import { Database } from '../modules/webflow-data.js';
 
+import { Sa5ScriptType } from '../globals'
+
 type SA5Object = { [key: string]: any };
 
 export class Sa5Data {
@@ -31,10 +33,10 @@ export class Sa5Data {
             console.error("Invalid element for Sa5Data. Must be a SCRIPT element.", this.elem);
             return;
         }
-
+        
         // Verify type
         this.type = this.elem.getAttribute("type");
-        if (this.type != "sygnal/sa5-data") {
+        if (this.type != Sa5ScriptType.SCRIPT_TYPE_SA5_DATA_ITEM) {
             console.error("Invalid element type for Sa5Data.", this.elem);
             return; 
         }

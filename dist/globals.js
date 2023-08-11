@@ -7,7 +7,7 @@
   })(Sa5GlobalEvent || {});
   var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {
     Sa5ScriptType2["SCRIPT_TYPE_DATA_ITEM"] = "wfu-data-item";
-    Sa5ScriptType2["SCRIPT_TYPE_SA5_DATA_ITEM"] = "sygnal/sa5-data";
+    Sa5ScriptType2["SCRIPT_TYPE_SA5_DATA_ITEM"] = "sygnal/sa5-data-proto";
     return Sa5ScriptType2;
   })(Sa5ScriptType || {});
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {

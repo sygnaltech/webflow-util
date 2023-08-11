@@ -11,7 +11,7 @@
         return;
       }
       this.type = this.elem.getAttribute("type");
-      if (this.type != "sygnal/sa5-data") {
+      if (this.type != "sygnal/sa5-data-proto" /* SCRIPT_TYPE_SA5_DATA_ITEM */) {
         console.error("Invalid element type for Sa5Data.", this.elem);
         return;
       }
