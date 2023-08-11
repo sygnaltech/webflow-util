@@ -18,7 +18,7 @@ import { booleanValue, getCookie, identifyElement, selectOptionByValue } from '.
 //import Handlebars from "handlebars";
 import { HandlebarsTemplateHandler } from './webflow-databind/template/handlebars-template-handler';
 import { DefaultTemplateHandler } from './webflow-databind/template/default-template-handler';
-import { Datastore } from './webflow-data';
+import { Sa5Datastore } from './webflow-data';
 import { Sa5Attribute } from './globals';
 
 /*
@@ -168,11 +168,11 @@ export class Sa5DataSourceDescriptor {
 
 export class WfuDataBinder {
 
-    store: Datastore;
+    store: Sa5Datastore;
 
     config: Sa5DataBinderConfig; // config
 
-    constructor(store: Datastore, config: Partial<Sa5DataBinderConfig> = {}) {
+    constructor(store: Sa5Datastore, config: Partial<Sa5DataBinderConfig> = {}) {
 
         this.store = store;
 

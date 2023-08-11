@@ -14,7 +14,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 
 //import { loadAllData } from '../modules/webflow-data.js';
 
-import { Datastore } from '../webflow-data';
+import { Sa5Datastore } from '../webflow-data';
 import { WfuDataBinder} from '../webflow-databind';
 
 //import { dataBindAllForms } from '../modules/webflow-form.js';
@@ -33,7 +33,7 @@ const init = () => {
     debug.debug ("Initializing");
 
     // Create datastore
-    var ds: Datastore = new Datastore();
+    var ds: Sa5Datastore = new Sa5Datastore();
     ds.init();
 
     // BUG: DEPRECATED 

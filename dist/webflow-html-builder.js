@@ -11,6 +11,103 @@
     return text;
   };
 
+  // src/webflow-core/debug.ts
+  var Sa5Debug = class {
+    constructor(label) {
+      this.localStorageDebugFlag = "sa5-debug";
+      this._enabled = false;
+      this._label = label;
+    }
+    get persistentDebug() {
+      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+    }
+    set persistentDebug(active) {
+      if (active) {
+        localStorage.setItem(this.localStorageDebugFlag, "true");
+        console.debug("sa5-core debug enabled (persistent).");
+      } else {
+        localStorage.removeItem(this.localStorageDebugFlag);
+        console.debug("sa5-core debug disabled (persistent).");
+      }
+    }
+    get enabled() {
+      var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
+      wfuDebugValue = wfuDebugValue || this._enabled;
+      return wfuDebugValue;
+    }
+    set enabled(active) {
+      this._enabled = active;
+    }
+    group(name) {
+      if (this.enabled)
+        console.group(name);
+    }
+    groupEnd() {
+      if (this.enabled)
+        console.groupEnd();
+    }
+    debug(...args) {
+      if (this.enabled)
+        console.debug(this._label, ...args);
+    }
+  };
+
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+    }
+    getHandlers(name) {
+      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
+    }
+    getHandler(name) {
+      const item = this.handlers.find((item2) => item2[0] === name);
+      return item ? item[1] : void 0;
+    }
+    init() {
+      this.initDebugMode();
+    }
+    initDebugMode() {
+      const debugParamKey = "debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      let sa5instance = window["sa5"];
+      var core;
+      if (sa5instance?.constructor?.name == "Sa5Core") {
+        core = sa5instance;
+      } else {
+        core = new Sa5Core();
+        if (Array.isArray(sa5instance))
+          core.handlers = sa5instance;
+        window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
+      }
+      if (module) {
+        window["sa5"][module.name] = module;
+      }
+      return core;
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
+
   // src/webflow-data/webflow-collectionlist-data.ts
   var prepareCollectionListDataSource = (dataSource) => {
     let data = dataSource.querySelectorAll("script");
@@ -454,13 +551,92 @@
     }
   };
 
+  // src/webflow-data/sa5-data.ts
+  var Sa5Data = class {
+    constructor(elem) {
+      this.elem = elem;
+      this.init();
+    }
+    init() {
+      if (this.elem.nodeName != "SCRIPT") {
+        console.error("Invalid element for Sa5Data. Must be a SCRIPT element.", this.elem);
+        return;
+      }
+      this.type = this.elem.getAttribute("type");
+      if (this.type != "sygnal/sa5-data") {
+        console.error("Invalid element type for Sa5Data.", this.elem);
+        return;
+      }
+      let data = this.elem.innerText;
+      this.value = this.parse(data);
+    }
+    parse(content) {
+      const obj = {};
+      const lines = content.split("\n");
+      let currentKey = null;
+      let currentValue = null;
+      let isMultiLineValue = false;
+      for (let line of lines) {
+        line = line.trim();
+        if (!line)
+          continue;
+        if (isMultiLineValue) {
+          if (line.endsWith(">")) {
+            currentValue += "\n" + line.slice(0, -1);
+            if (currentKey !== null && currentValue !== null) {
+              obj[currentKey] = currentValue;
+            }
+            isMultiLineValue = false;
+            currentValue = null;
+            currentKey = null;
+          } else {
+            currentValue += "\n" + line;
+          }
+          continue;
+        }
+        const parts = line.split(":");
+        const key = parts.shift()?.trim() || "";
+        const value = parts.join(":").trim();
+        if (value.startsWith("<")) {
+          if (value.endsWith(">")) {
+            obj[key] = value.slice(1, -1);
+          } else {
+            isMultiLineValue = true;
+            currentKey = key;
+            currentValue = value.slice(1);
+          }
+        } else {
+          obj[key] = value;
+        }
+      }
+      return obj;
+    }
+  };
+
   // src/webflow-data.ts
-  var Datastore = class {
-    constructor() {
+  var Sa5Datastore = class {
+    constructor(config = {}) {
       this.store = {};
+      this.config = {
+        datastoreLoadedCallback: config.datastoreLoadedCallback,
+        debug: config.debug ?? false
+      };
+    }
+    isDatastoreLoadedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
     }
     init() {
       this.init_dbs();
+      let core = Sa5Core.startup();
+      const datastoreLoaded = core.getHandler("datastoreLoaded" /* EVENT_DATASTORE_LOADED */);
+      if (this.isDatastoreLoadedCallback(datastoreLoaded)) {
+        this.config.datastoreLoadedCallback = datastoreLoaded;
+      }
+      if (this.config.datastoreLoadedCallback) {
+        this.config.datastoreLoadedCallback(this);
+      }
     }
     loadDataItem(elem) {
       let data = this.loadDataItem_v2(
@@ -475,9 +651,25 @@
         this.store[dsn] = new Database();
       this.store[dsn].add(id, dataObject);
     }
+    loadDataItem_sa5Data(elem) {
+      const dsn = elem.getAttribute("wfu-data-dsn" /* ATTR_DATA_DSN */);
+      const id = elem.getAttribute("wfu-data-item-id" /* ATTR_DATA_ITEM_ID */);
+      let i = new Sa5Data(elem);
+      let dataObject = i.value;
+      console.log("dataObject", dataObject);
+      if (!this.store[dsn])
+        this.store[dsn] = new Database();
+      this.store[dsn].add(id, dataObject);
+    }
     init_dbs() {
+      let sa5DataSources = document.querySelectorAll(
+        `script[type='${"sygnal/sa5-data" /* SCRIPT_TYPE_SA5_DATA_ITEM */}']`
+      );
+      sa5DataSources.forEach((elem) => {
+        this.loadDataItem_sa5Data(elem);
+      });
       let dataSources = document.querySelectorAll(
-        `script[type=${"wfu-data-item" /* SCRIPT_TYPE_DATA_ITEM */}]`
+        `script[type='${"wfu-data-item" /* SCRIPT_TYPE_DATA_ITEM */}']`
       );
       dataSources.forEach((elem) => {
         this.loadDataItem(elem);
@@ -570,7 +762,7 @@
       console.log(template);
       console.log(data);
       for (let row = 0; row < data.length; row++) {
-        let ds = new Datastore();
+        let ds = new Sa5Datastore();
         let dict = ds.getDictionaryFromDataRow(data, row);
         let item = expandMacrosInText(
           template,

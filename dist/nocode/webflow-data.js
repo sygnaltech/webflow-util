@@ -558,13 +558,92 @@
     }
   };
 
+  // src/webflow-data/sa5-data.ts
+  var Sa5Data = class {
+    constructor(elem) {
+      this.elem = elem;
+      this.init();
+    }
+    init() {
+      if (this.elem.nodeName != "SCRIPT") {
+        console.error("Invalid element for Sa5Data. Must be a SCRIPT element.", this.elem);
+        return;
+      }
+      this.type = this.elem.getAttribute("type");
+      if (this.type != "sygnal/sa5-data") {
+        console.error("Invalid element type for Sa5Data.", this.elem);
+        return;
+      }
+      let data = this.elem.innerText;
+      this.value = this.parse(data);
+    }
+    parse(content) {
+      const obj = {};
+      const lines = content.split("\n");
+      let currentKey = null;
+      let currentValue = null;
+      let isMultiLineValue = false;
+      for (let line of lines) {
+        line = line.trim();
+        if (!line)
+          continue;
+        if (isMultiLineValue) {
+          if (line.endsWith(">")) {
+            currentValue += "\n" + line.slice(0, -1);
+            if (currentKey !== null && currentValue !== null) {
+              obj[currentKey] = currentValue;
+            }
+            isMultiLineValue = false;
+            currentValue = null;
+            currentKey = null;
+          } else {
+            currentValue += "\n" + line;
+          }
+          continue;
+        }
+        const parts = line.split(":");
+        const key = parts.shift()?.trim() || "";
+        const value = parts.join(":").trim();
+        if (value.startsWith("<")) {
+          if (value.endsWith(">")) {
+            obj[key] = value.slice(1, -1);
+          } else {
+            isMultiLineValue = true;
+            currentKey = key;
+            currentValue = value.slice(1);
+          }
+        } else {
+          obj[key] = value;
+        }
+      }
+      return obj;
+    }
+  };
+
   // src/webflow-data.ts
-  var Datastore = class {
-    constructor() {
+  var Sa5Datastore = class {
+    constructor(config = {}) {
       this.store = {};
+      this.config = {
+        datastoreLoadedCallback: config.datastoreLoadedCallback,
+        debug: config.debug ?? false
+      };
+    }
+    isDatastoreLoadedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
     }
     init() {
       this.init_dbs();
+      let core = Sa5Core.startup();
+      const datastoreLoaded = core.getHandler("datastoreLoaded" /* EVENT_DATASTORE_LOADED */);
+      if (this.isDatastoreLoadedCallback(datastoreLoaded)) {
+        this.config.datastoreLoadedCallback = datastoreLoaded;
+      }
+      if (this.config.datastoreLoadedCallback) {
+        this.config.datastoreLoadedCallback(this);
+      }
     }
     loadDataItem(elem) {
       let data = this.loadDataItem_v2(
@@ -579,9 +658,25 @@
         this.store[dsn] = new Database();
       this.store[dsn].add(id, dataObject);
     }
+    loadDataItem_sa5Data(elem) {
+      const dsn = elem.getAttribute("wfu-data-dsn" /* ATTR_DATA_DSN */);
+      const id = elem.getAttribute("wfu-data-item-id" /* ATTR_DATA_ITEM_ID */);
+      let i = new Sa5Data(elem);
+      let dataObject = i.value;
+      console.log("dataObject", dataObject);
+      if (!this.store[dsn])
+        this.store[dsn] = new Database();
+      this.store[dsn].add(id, dataObject);
+    }
     init_dbs() {
+      let sa5DataSources = document.querySelectorAll(
+        `script[type='${"sygnal/sa5-data" /* SCRIPT_TYPE_SA5_DATA_ITEM */}']`
+      );
+      sa5DataSources.forEach((elem) => {
+        this.loadDataItem_sa5Data(elem);
+      });
       let dataSources = document.querySelectorAll(
-        `script[type=${"wfu-data-item" /* SCRIPT_TYPE_DATA_ITEM */}]`
+        `script[type='${"wfu-data-item" /* SCRIPT_TYPE_DATA_ITEM */}']`
       );
       dataSources.forEach((elem) => {
         this.loadDataItem(elem);
@@ -961,7 +1056,7 @@
       let core = Sa5Core.startup();
       this.debug = new Sa5Debug("sa5-membership");
       this.debug.debug("Initializing");
-      const userInfoChanged = core.getHandler("userInfoChanged");
+      const userInfoChanged = core.getHandler("userInfoChanged" /* EVENT_USER_CHANGED */);
       if (this.isUserInfoChangedCallback(userInfoChanged)) {
         this.config.userInfoUpdatedCallback = userInfoChanged;
       }
@@ -1014,9 +1109,9 @@
       if (user) {
         if (this.config.dataBind) {
           this.debug.debug("databinding", user);
-          new WfuDataBinder({
+          new WfuDataBinder(null, {
             user
-          }).bind();
+          }).bindAll();
         }
         if (this.config.userInfoUpdatedCallback) {
           this.debug.debug("userCallback", user);
@@ -1210,9 +1305,12 @@
       );
       if (this.config.dataBind) {
         this.debug.debug("databinding", userData);
-        new WfuDataBinder({
-          user: userData
-        }).bind();
+        new WfuDataBinder(
+          null,
+          {
+            user: userData
+          }
+        ).bindAll();
       }
       if (this.config.userInfoUpdatedCallback) {
         this.debug.debug("Notify listeners", userData);
@@ -1498,7 +1596,7 @@
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-data");
     debug.debug("Initializing");
-    var ds = new Datastore();
+    var ds = new Sa5Datastore();
     ds.init();
     let binder = new WfuDataBinder(ds).bindAll();
   };

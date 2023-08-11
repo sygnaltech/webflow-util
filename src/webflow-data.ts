@@ -4,15 +4,19 @@
  * http://sygnal.com
  *
  * Data-processing functions.
- */
+ */ 
+
+import { Sa5Core } from './webflow-core';
+import { Sa5Debug } from './webflow-core/debug';
 
 //import { csvToObjects } from './webflow-data/webflow-data-csv';
 import { prepareCollectionListDataSource } from './webflow-data/webflow-collectionlist-data';
 import { loadGoogleSheetFromSpec } from './webflow-data/google-sheet-data';
 //import { HtmlBuilder } from './webflow-html-builder.js';
 import { Database } from './webflow-data/database';
-import { Sa5Attribute, Sa5ScriptType } from './globals';
+import { Sa5Attribute, Sa5GlobalEvent, Sa5ScriptType } from './globals';
 
+import { Sa5Data } from './webflow-data/sa5-data';
 
 
 type DatabaseStore = {
@@ -26,26 +30,86 @@ type DataItem = {
     item: any,
 }
 
-export class Datastore {
+
+type DatastoreLoadedCallback = (dataStore: Sa5Datastore) => void;
+
+
+
+
+interface Sa5DatastoreConfig {
+//    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
+    datastoreLoadedCallback?: DatastoreLoadedCallback; 
+//    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
+
+    debug?: boolean;
+
+//    dataBind?: boolean; // Databind after user object load 
+
+    // Advanced settings
+    // advanced: {
+
+    //     accountInfoLoadDelay: number; // ms 
+    //     accountInfoSaveDelay: number; // ms 
+
+    // }
+}
+
+
+
+
+export class Sa5Datastore {
 
     store: DatabaseStore = {};
 
-    /* Loads all data sources
-    * tagged with [wfu-data]
-    */
+    config: Sa5DatastoreConfig; // Optional config
+
+    // Type guard to check if a function is a UserInfoChangedCallback
+    private isDatastoreLoadedCallback(func: Function): func is DatastoreLoadedCallback {
+
+        if(!func) return false;
+
+        // Adjust this check as needed
+        return func.length === 1;
+    }
+
+    constructor(config: Partial<Sa5DatastoreConfig> = {}) {
+
+        // Merge configs, with defaults
+        this.config = {
+            datastoreLoadedCallback: config.datastoreLoadedCallback,
+            debug: config.debug ?? false,
+        }
+
+    }
+
     init() {
 
-//        this.databaseStore = new database
-
-    // Callback for other registered data sources 
-    // Spreadsheet csv's 
-    // etc. 
+        // Load internal dbs
         this.init_dbs(); 
-//        console.log(this.store); 
+
+        // Callback for other registered data sources 
+        // Spreadsheet csv's 
+        // etc. 
+
+        let core: Sa5Core = Sa5Core.startup();
+
+        // Get any global handler
+        const datastoreLoaded = core.getHandler(Sa5GlobalEvent.EVENT_DATASTORE_LOADED); 
+        if (this.isDatastoreLoadedCallback(datastoreLoaded)) {
+
+            this.config.datastoreLoadedCallback = datastoreLoaded;
+
+        }
+
+        // User Callback 
+        if (this.config.datastoreLoadedCallback) {
+//            this.debug.debug("userCallback", user);
+            this.config.datastoreLoadedCallback(this); // async
+        }
+
     }
 
     loadDataItem(elem: HTMLElement) {
-
        
         let data = this.loadDataItem_v2(
             elem
@@ -87,13 +151,44 @@ export class Datastore {
 
     }
 
+    loadDataItem_sa5Data(elem: HTMLElement): void {
+
+        const dsn = elem.getAttribute(Sa5Attribute.ATTR_DATA_DSN); //  "wfu-data-dsn");
+        const id = elem.getAttribute(Sa5Attribute.ATTR_DATA_ITEM_ID); // "wfu-data-item-id"); 
+
+        let i = new Sa5Data(elem)
+        let dataObject = i.value; 
+
+        console.log("dataObject", dataObject);
+
+        // Ensure db is created
+        if (!this.store[dsn])
+            this.store[dsn] = new Database();
+
+        // Add item
+        this.store[dsn].add(id, dataObject);
+
+    }
+
     init_dbs() { 
 
         // Init databases 
 
         // Find all elements which specify a data-source for data binding
+        let sa5DataSources = document.querySelectorAll(
+            `script[type='${Sa5ScriptType.SCRIPT_TYPE_SA5_DATA_ITEM}']`
+        ); // wfu-data-item
+
+        // Iterate and bind each individually
+        sa5DataSources.forEach((elem: HTMLElement) => {
+
+            this.loadDataItem_sa5Data(elem);
+
+        });
+
+        // Find all elements which specify a data-source for data binding
         let dataSources = document.querySelectorAll(
-            `script[type=${Sa5ScriptType.SCRIPT_TYPE_DATA_ITEM}]`
+            `script[type='${Sa5ScriptType.SCRIPT_TYPE_DATA_ITEM}']`
         ); // wfu-data-item
 //        console.log(`data-items found = ${dataSources.length}`);
 
@@ -184,7 +279,6 @@ export class Datastore {
         return items;
     }
 
-
     /* Return Csv as JSON objects
     * 
     */
@@ -205,7 +299,6 @@ export class Datastore {
 
         return data;
     }
-
 
     getDictionaryFromDataRow(data, rowIndex) {
         var dict = new Map();

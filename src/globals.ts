@@ -4,9 +4,17 @@
  * 
  */
 
+export enum Sa5GlobalEvent {
+
+    EVENT_USER_CHANGED = 'userInfoChanged',
+    EVENT_DATASTORE_LOADED = 'datastoreLoaded',
+
+}
+
 export enum Sa5ScriptType {
 
     SCRIPT_TYPE_DATA_ITEM = 'wfu-data-item', 
+    SCRIPT_TYPE_SA5_DATA_ITEM = 'sygnal/sa5-data', 
 
 }
 

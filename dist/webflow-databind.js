@@ -419,7 +419,7 @@
       let core = Sa5Core.startup();
       this.debug = new Sa5Debug("sa5-membership");
       this.debug.debug("Initializing");
-      const userInfoChanged = core.getHandler("userInfoChanged");
+      const userInfoChanged = core.getHandler("userInfoChanged" /* EVENT_USER_CHANGED */);
       if (this.isUserInfoChangedCallback(userInfoChanged)) {
         this.config.userInfoUpdatedCallback = userInfoChanged;
       }
@@ -472,9 +472,9 @@
       if (user) {
         if (this.config.dataBind) {
           this.debug.debug("databinding", user);
-          new WfuDataBinder({
+          new WfuDataBinder(null, {
             user
-          }).bind();
+          }).bindAll();
         }
         if (this.config.userInfoUpdatedCallback) {
           this.debug.debug("userCallback", user);
@@ -668,9 +668,12 @@
       );
       if (this.config.dataBind) {
         this.debug.debug("databinding", userData);
-        new WfuDataBinder({
-          user: userData
-        }).bind();
+        new WfuDataBinder(
+          null,
+          {
+            user: userData
+          }
+        ).bindAll();
       }
       if (this.config.userInfoUpdatedCallback) {
         this.debug.debug("Notify listeners", userData);
