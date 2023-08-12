@@ -19,42 +19,38 @@
       this.value = this.parse(data);
     }
     parse(content) {
-      const obj = {};
+      const root = {};
+      const stack = [root];
       const lines = content.split("\n");
       let currentKey = null;
-      let currentValue = null;
       let currentType = "string";
+      let currentValue = null;
       let isMultiLineValue = false;
       for (let line of lines) {
+        const indentation = line.search(/\S/);
         line = line.trim();
         if (!line)
           continue;
+        while (stack.length - 1 > indentation) {
+          stack.pop();
+        }
         if (isMultiLineValue) {
           if (line.endsWith(">")) {
             currentValue += "\n" + line.slice(0, -1);
             if (currentKey !== null && currentValue !== null) {
-              switch (currentType) {
-                case "number":
-                  obj[currentKey] = parseFloat(currentValue);
-                  break;
-                case "boolean":
-                  obj[currentKey] = currentValue.toLowerCase() === "true";
-                  break;
-                default:
-                  obj[currentKey] = currentValue;
-                  break;
-              }
+              stack[stack.length - 1][currentKey] = currentValue || null;
             }
             isMultiLineValue = false;
             currentValue = null;
             currentKey = null;
             currentType = "string";
+            continue;
           } else {
             currentValue += "\n" + line;
+            continue;
           }
-          continue;
         }
-        const delimiterMatch = line.match(/:(\$|#|\?|)/);
+        const delimiterMatch = line.match(/:(\$|#|\?|:|)/);
         if (!delimiterMatch)
           continue;
         const delimiter = delimiterMatch[1];
@@ -64,90 +60,31 @@
         switch (delimiter) {
           case "":
           case "$":
-            currentType = "string";
+            if (value.startsWith("<") && !value.endsWith(">")) {
+              isMultiLineValue = true;
+              currentKey = key;
+              currentValue = value.slice(1);
+              continue;
+            } else if (value.startsWith("<") && value.endsWith(">")) {
+              value = value.slice(1, -1);
+            }
+            value = value || null;
             break;
           case "#":
-            currentType = "number";
+            value = value ? parseFloat(value) : null;
             break;
           case "?":
-            currentType = "boolean";
+            value = value ? value.toLowerCase() === "true" : null;
             break;
+          case ":":
+            const newObj = {};
+            stack[stack.length - 1][key] = newObj;
+            stack.push(newObj);
+            continue;
         }
-        if (value.startsWith("<")) {
-          if (value.endsWith(">")) {
-            value = value.slice(1, -1);
-            switch (currentType) {
-              case "number":
-                obj[key] = parseFloat(value);
-                break;
-              case "boolean":
-                obj[key] = value.toLowerCase() === "true";
-                break;
-              default:
-                obj[key] = value;
-                break;
-            }
-          } else {
-            isMultiLineValue = true;
-            currentKey = key;
-            currentValue = value.slice(1);
-          }
-        } else {
-          switch (currentType) {
-            case "number":
-              obj[key] = parseFloat(value);
-              break;
-            case "boolean":
-              obj[key] = value.toLowerCase() === "true";
-              break;
-            default:
-              obj[key] = value;
-              break;
-          }
-        }
+        stack[stack.length - 1][key] = value;
       }
-      return obj;
-    }
-    parse2(content) {
-      const obj = {};
-      const lines = content.split("\n");
-      let currentKey = null;
-      let currentValue = null;
-      let isMultiLineValue = false;
-      for (let line of lines) {
-        line = line.trim();
-        if (!line)
-          continue;
-        if (isMultiLineValue) {
-          if (line.endsWith(">")) {
-            currentValue += "\n" + line.slice(0, -1);
-            if (currentKey !== null && currentValue !== null) {
-              obj[currentKey] = currentValue;
-            }
-            isMultiLineValue = false;
-            currentValue = null;
-            currentKey = null;
-          } else {
-            currentValue += "\n" + line;
-          }
-          continue;
-        }
-        const parts = line.split(":");
-        const key = parts.shift()?.trim() || "";
-        const value = parts.join(":").trim();
-        if (value.startsWith("<")) {
-          if (value.endsWith(">")) {
-            obj[key] = value.slice(1, -1);
-          } else {
-            isMultiLineValue = true;
-            currentKey = key;
-            currentValue = value.slice(1);
-          }
-        } else {
-          obj[key] = value;
-        }
-      }
-      return obj;
+      return root;
     }
   };
 })();
