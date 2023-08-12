@@ -205,6 +205,8 @@ export class WfuDataBinder {
 // do binding 
 //      passing elements and datasources db 
 
+// console.log("DATABINDING"); 
+
         // BUG?? should be in nocode? 
         // Find all elements which specify a data-source for data binding
         // Iterate and bind each individually
@@ -212,9 +214,11 @@ export class WfuDataBinder {
             `[${Sa5Attribute.ATTR_DATABIND}]`); // wfu-bind
         dataBind.forEach((elem: HTMLElement) => {
 
+            // Data-bind element
             this.bind(elem); 
-//            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND); // "wfu-bind"
-            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); // "wfu-bind"
+
+            // Remove preloader attr, if existing
+            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); 
 
         }); 
 
@@ -223,9 +227,11 @@ export class WfuDataBinder {
             `[${Sa5Attribute.ATTR_DATABIND_CONTENT}]`); // wfu-bind-content 
         dataBindContent.forEach((elem: HTMLElement) => {
 
+            // Data-bind content in element
             this.bindContent(elem); 
-//            elem.removeAttribute(Sa5Attribute.ATTR_DATABIND_CONTENT); // "wfu-bind-content"
-            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); // "wfu-bind"
+
+            // Remove preloader attr, if existing
+            elem.removeAttribute(Sa5Attribute.ATTR_PRELOAD); 
 
         }); 
 
@@ -243,6 +249,7 @@ export class WfuDataBinder {
         return null; // no context found
     }
 
+    // Data-bind element
     bind(elem: HTMLElement) {
 
         // Determine bind type 
@@ -325,7 +332,7 @@ export class WfuDataBinder {
     // or null if none found  
     getData(dsd: Sa5DataSourceDescriptor, elem: HTMLElement = null): string {
 
-// console.log("getdata dsd", dsd);
+// console.log("getdata dsd", dsd); 
 // console.log("getdata dsd.type", dsd.type, DataSourceTypeEnum.QUERY); 
 
         switch(dsd.type) {
@@ -395,6 +402,7 @@ export class WfuDataBinder {
                 break;
         }
 
+        return val;
     }
 
     private getData_cookieStorage(dsd: Sa5DataSourceDescriptor): string {

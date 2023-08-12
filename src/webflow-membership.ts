@@ -112,12 +112,10 @@ export class Sa5Membership {
         // https://stackoverflow.com/questions/9347282/using-jquery-preventing-form-from-submitting 
         // https://stackoverflow.com/questions/11469616/jquery-form-validation-before-ajax-submit
 
-        // Select the form
-        let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
+        // LOGIN FORMS
 
-        // For each form
+        let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
         forms.forEach((form) => {
-            // Add a submit event listener
             form.addEventListener('submit', (e) => {
                 // e.preventDefault();
                 // e.stopPropagation();
@@ -131,9 +129,9 @@ export class Sa5Membership {
             });
         });
 
-        forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");     
+        // USER-ACCOUNT FORMS
 
-        // For each form
+        forms = document.querySelectorAll("form[data-wf-user-form-type='userAccount']");     
         forms.forEach((form) => {
             // Add a submit event listener
             form.addEventListener('submit', (e) => {
@@ -142,12 +140,8 @@ export class Sa5Membership {
 
                 setTimeout(async () => {
 
-//                    console.log("New User info saved");
-
                     // Refresh user info
                     await this.loadUserInfoAsync();
-
-//                    console.log("User info refreshed");
 
                 }, this.config.advanced.accountInfoSaveDelay);
 
@@ -161,6 +155,8 @@ export class Sa5Membership {
     
     }
 
+    // Determine whether Webflow has a 
+    // currently logged-in user, by cookie detection 
     isLoggedIn() {
 
         return getCookie("wf_loggedin") || false;

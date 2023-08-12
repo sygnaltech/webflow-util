@@ -917,6 +917,7 @@
           val = this.config.user[dsd.name];
           break;
       }
+      return val;
     }
     getData_cookieStorage(dsd) {
       if (typeof window == "undefined")

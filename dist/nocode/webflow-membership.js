@@ -597,6 +597,7 @@
           val = this.config.user[dsd.name];
           break;
       }
+      return val;
     }
     getData_cookieStorage(dsd) {
       if (typeof window == "undefined")
@@ -1076,9 +1077,7 @@
       membership.expandLoginButton(element);
     });
     membership.init();
-    console.log("pre routing");
     new Sa5MembershipRouting().init();
-    console.log("post routing");
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

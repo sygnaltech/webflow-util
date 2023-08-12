@@ -99,9 +99,9 @@ const init = () => {
      * Perform routing, if configured
      */
 
-console.log("pre routing");
+// console.log("pre routing");
     (new Sa5MembershipRouting()).init();
-    console.log("post routing");
+//    console.log("post routing");
 
 }
 
