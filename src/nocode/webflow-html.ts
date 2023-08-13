@@ -12,6 +12,7 @@ import { Sa5Html } from '../webflow-html'
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { WebflowTabs } from '../webflow-core/tabs';
+import { WebflowSlider } from '../webflow-core/slider';
 import { Sa5Editor } from '../webflow-core/webflow-editor'; 
 import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
@@ -43,11 +44,17 @@ const init = () => {
     tabElements.forEach(element => {
 
         var tabObj = new WebflowTabs(element as HTMLElement);
-//        tabObj.init();
-//        element["sa5"] = tabObj;
 
+    });
 
-        // Do something with each element
+    // Tabs
+    // Auto-register class on named items? 
+    // [wfu-tabs=NAME]
+    let sliderElements: NodeListOf<Element> = document.querySelectorAll('[wfu-slider]');
+    sliderElements.forEach(element => {
+
+        var sliderObj = new WebflowSlider(element as HTMLElement);
+
     });
     
     // elements is a NodeList of all elements with the "wfu-tabs" attribute

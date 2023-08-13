@@ -76,10 +76,17 @@ export class WebflowTabs {
     constructor(element: HTMLElement) {
 
         this.debug = new Sa5Debug("sa5-webflow-tabs");
-this.debug.enabled = true;
+        this.debug.enabled = true;
 
-        // Initialize
-        this.init(element);
+        // Verify element type
+        if(!element.classList.contains("w-tabs")) {
+            console.error ("[wfu-tabs] is not on a tabs element");
+            return;
+        }
+
+        // Init
+        this._element = element;
+        this.init();
 
     }
 
@@ -227,20 +234,20 @@ this.debug.enabled = true;
     }
 
     // Initialize the class to the element
-    init(element: HTMLElement) {
+    init() {
 
         // Verify it's a tabs element .w-tabs
-        if(!element.classList.contains("w-tabs")) {
-            console.error ("[wfu-tabs] is not on a tabs element");
-            return;
-        }
+        // if(!this._element.classList.contains("w-tabs")) {
+        //     console.error ("[wfu-tabs] is not on a tabs element");
+        //     return;
+        // }
 
 //        console.log("init."); 
 
         // Inventory parts
-        this._element = element; 
-        this._elementTabMenu = element.querySelector('.w-tab-menu');
-        this._elementTabContent = element.querySelector('.w-tab-content');
+//        this._element = this._element; 
+        this._elementTabMenu = this._element.querySelector('.w-tab-menu');
+        this._elementTabContent = this._element.querySelector('.w-tab-content');
         //.w-tab-menu
 
 //        console.log("count", this.tabCount);

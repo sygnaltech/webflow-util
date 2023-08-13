@@ -101,7 +101,12 @@
     constructor(element) {
       this.debug = new Sa5Debug("sa5-webflow-tabs");
       this.debug.enabled = true;
-      this.init(element);
+      if (!element.classList.contains("w-tabs")) {
+        console.error("[wfu-tabs] is not on a tabs element");
+        return;
+      }
+      this._element = element;
+      this.init();
     }
     get element() {
       return this._element;
@@ -186,14 +191,9 @@
         return null;
       return index;
     }
-    init(element) {
-      if (!element.classList.contains("w-tabs")) {
-        console.error("[wfu-tabs] is not on a tabs element");
-        return;
-      }
-      this._element = element;
-      this._elementTabMenu = element.querySelector(".w-tab-menu");
-      this._elementTabContent = element.querySelector(".w-tab-content");
+    init() {
+      this._elementTabMenu = this._element.querySelector(".w-tab-menu");
+      this._elementTabContent = this._element.querySelector(".w-tab-content");
       for (let elem of this._elementTabMenu.children) {
         if (elem.hasAttribute("wfu-tab-default")) {
           this.debug.debug("default");

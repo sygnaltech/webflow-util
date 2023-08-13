@@ -253,7 +253,12 @@
         constructor(element2) {
           this.debug = new Sa5Debug("sa5-webflow-tabs");
           this.debug.enabled = true;
-          this.init(element2);
+          if (!element2.classList.contains("w-tabs")) {
+            console.error("[wfu-tabs] is not on a tabs element");
+            return;
+          }
+          this._element = element2;
+          this.init();
         }
         get element() {
           return this._element;
@@ -338,14 +343,9 @@
             return null;
           return index;
         }
-        init(element2) {
-          if (!element2.classList.contains("w-tabs")) {
-            console.error("[wfu-tabs] is not on a tabs element");
-            return;
-          }
-          this._element = element2;
-          this._elementTabMenu = element2.querySelector(".w-tab-menu");
-          this._elementTabContent = element2.querySelector(".w-tab-content");
+        init() {
+          this._elementTabMenu = this._element.querySelector(".w-tab-menu");
+          this._elementTabContent = this._element.querySelector(".w-tab-content");
           for (let elem of this._elementTabMenu.children) {
             if (elem.hasAttribute("wfu-tab-default")) {
               this.debug.debug("default");
@@ -399,6 +399,127 @@
         }
       };
       Sa5Core.startup(WebflowTabs);
+    }
+  });
+
+  // src/webflow-core/slider.ts
+  var WebflowSlider;
+  var init_slider = __esm({
+    "src/webflow-core/slider.ts"() {
+      init_webflow_core();
+      init_debug();
+      WebflowSlider = class {
+        constructor(element2) {
+          this.debug = new Sa5Debug("sa5-webflow-slider");
+          this.debug.enabled = true;
+          if (!element2.classList.contains("w-slider")) {
+            console.error("[wfu-slider] is not on a slider element");
+            return;
+          }
+          this._element = element2;
+          this.init();
+        }
+        get element() {
+          return this._element;
+        }
+        get elementSliderMask() {
+          return this._elementSliderMask;
+        }
+        get elementSliderNav() {
+          return this._elementSliderNav;
+        }
+        get slideNum() {
+          return this.slideIndex + 1;
+        }
+        set slideNum(num) {
+          this.slideIndex = num - 1;
+        }
+        get slideIndex() {
+          let currentIndex = null;
+          currentIndex = Array.from(this._elementSliderNav.children).findIndex(
+            (child) => child.classList.contains("w-active")
+          );
+          return currentIndex;
+        }
+        set slideIndex(index) {
+          if (index < 0)
+            return;
+          if (index >= this.slideCount)
+            return;
+          let clickEvent = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          });
+          this.debug.debug("setting slide", index);
+          let button = this.elementSliderNav.children[index];
+          setTimeout(() => {
+            console.log(index, button);
+            button.dispatchEvent(clickEvent);
+          }, 0);
+        }
+        get slideCount() {
+          return this._elementSliderNav.children.length;
+        }
+        getSlideIndex(slide) {
+          let index = Array.from(this._elementSliderMask.children).indexOf(slide);
+          if (index == -1) {
+            index = Array.from(this._elementSliderNav.children).indexOf(slide);
+          }
+          if (index == -1)
+            return null;
+          return index;
+        }
+        init() {
+          this._elementSliderMask = this._element.querySelector(".w-slider-mask");
+          this._elementSliderNav = this._element.querySelector(".w-slider-nav");
+        }
+        elementSlide(index) {
+          if (index < 0)
+            return;
+          if (index >= this.slideCount)
+            return;
+          let filteredChildren = Array.from(this._elementSliderMask.children).filter(
+            (child) => child.classList.contains("w-slide")
+          );
+          let targetChild = filteredChildren[index];
+          return targetChild;
+        }
+        goToSlideIndex(index) {
+          this.debug.debug(index);
+          this.slideIndex = index;
+        }
+        goToNextSlide() {
+          if (this.slideIndex == null) {
+            this.slideIndex = 0;
+            return;
+          }
+          var newSlideIndex = this.slideIndex + 1;
+          if (newSlideIndex >= this.slideCount)
+            newSlideIndex = 0;
+          this.goToSlideIndex(newSlideIndex);
+        }
+        goToPrevSlide() {
+          if (this.slideIndex == null) {
+            this.slideIndex = 0;
+            return;
+          }
+          var newSlideIndex = this.slideIndex - 1;
+          if (newSlideIndex < 0)
+            newSlideIndex = this.slideCount - 1;
+          this.goToSlideIndex(newSlideIndex);
+        }
+        goToFirstSlide() {
+          this.goToSlideIndex(0);
+        }
+        goToLastSlide() {
+          var newSlideIndex = this.slideCount - 1;
+          this.goToSlideIndex(newSlideIndex);
+        }
+        onSlideChanged() {
+        }
+      };
+      Sa5Core.startup(WebflowSlider);
     }
   });
 
@@ -640,6 +761,7 @@
       init_webflow_html();
       init_debug();
       init_tabs();
+      init_slider();
       init_webflow_editor();
       init_utils();
       init_collection_list();
@@ -654,6 +776,10 @@
         let tabElements = document.querySelectorAll("[wfu-tabs]");
         tabElements.forEach((element2) => {
           var tabObj = new WebflowTabs(element2);
+        });
+        let sliderElements = document.querySelectorAll("[wfu-slider]");
+        sliderElements.forEach((element2) => {
+          var sliderObj = new WebflowSlider(element2);
         });
         const editor = new Sa5Editor();
         let sequenceGroupElements = Array.from(
