@@ -1,6 +1,8 @@
 
 /*
+ * SA5
  * webflow-core
+ * Slider
  * 
  * Sygnal Technology Group
  * http://sygnal.com
@@ -74,7 +76,7 @@ Querystring
 import { Sa5Core } from '../webflow-core'
 import { Sa5Debug } from './debug'
 
-export class WebflowSlider {
+export class WebflowSlider implements IDeckNavigation {
     
     private _element: HTMLElement;
     private _elementSliderMask: HTMLElement;
@@ -126,15 +128,14 @@ export class WebflowSlider {
     }
  
     // 1-based convenience functions
-    get slideNum(): number | null {
-        return this.slideIndex + 1;
+    get currentNum(): number | null {
+        return this.currentIndex + 1;
     }
-    set slideNum(num: number) {
-        this.slideIndex = num - 1;
+    set currentNum(num: number) {
+        this.currentIndex = num - 1;
     }
 
-    get slideIndex(): number | null {
-        //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
+    get currentIndex(): number | null {
 
         let currentIndex: number | null = null;
 
@@ -143,30 +144,14 @@ export class WebflowSlider {
                 (child as HTMLElement).classList.contains('w-active')
             );
         
-        // // Find current tab
-        // for (let i = 0; i < this._elementSliderMask.children.length; i++) {
-        //     if (this._elementSliderMask.children[i].classList.contains('w--current')) {
-        //         currentIndex = i;
-        //         break;
-        //     }
-        // }
-
-        // if (currentIndex !== null) {
-        //   console.log(`The child with class 'w--current' is at index ${currentIndex}`);
-        // } else {
-        //   console.log("No child with class 'w--current' was found");
-        // }
-
         return currentIndex; 
     }
-    set slideIndex(index: number) {
-
-// TODO: support null sets 
+    set currentIndex(index: number) {
 
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.slideCount)
+        if (index >= this.count)
             return;
 
         let clickEvent = new MouseEvent('click', {
@@ -179,7 +164,7 @@ export class WebflowSlider {
 
         let button = this.elementSliderNav.children[index] as HTMLElement; 
 
-        // Select the tab
+        // Select the slide 
         // HACK: dealing with the fact that Webflow events may not have run yet 
         setTimeout(() => {
 
@@ -190,7 +175,7 @@ export class WebflowSlider {
         
     }
 
-    get slideCount(): number {
+    get count(): number {
         return this._elementSliderNav.children.length;
     }
 
@@ -198,7 +183,7 @@ export class WebflowSlider {
 
     //#region METHODS
 
-    // Given an element, identifies which tab it represents
+    // Given an element, identifies which slide it represents
     getSlideIndex(slide: HTMLElement): number | null {
 
         // Check tab menu
@@ -219,35 +204,9 @@ export class WebflowSlider {
     // Initialize the class to the element
     init() {
 
-//        console.log("init."); 
-
         // Inventory parts
         this._elementSliderMask = this._element.querySelector('.w-slider-mask');
         this._elementSliderNav = this._element.querySelector('.w-slider-nav');
-        //.w-tab-menu
-
-//        console.log("count", this.tabCount);
-//        console.log("index", this.tabIndex); 
-        //.w-tab-content
-        
-
-//         // Initial setup
-//         for (let elem of this._elementSliderMask.children) { 
-
-// //            console.log(elem);
-
-//             if(elem.hasAttribute('wfu-tab-default')) {
-//                 this.debug.debug("default");
-//                 let defaultTabIndex = this.getTabIndex(elem as HTMLElement); 
-
-//                 this.debug.debug(defaultTabIndex); 
-
-//                 // If a default tab was specified, select it 
-//                 if (defaultTabIndex != null)
-//                     this.slideIndex = defaultTabIndex; 
-//             }
-
-//         };
 
     }
 
@@ -258,7 +217,7 @@ export class WebflowSlider {
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.slideCount)
+        if (index >= this.count)
             return;
 
         // Get .w-slide children
@@ -268,77 +227,71 @@ export class WebflowSlider {
             ) as HTMLElement[];
         
         let targetChild: HTMLElement | undefined = filteredChildren[index];
-        
-        // if (targetChild) {
-        //     console.log(targetChild); // This is the child with the class 'w-slide' at the specified index
-        // } else {
-        //     console.log('No child found at the specified index.');
-        // }
 
         // constrain to w-slide items 
-        return targetChild; // this._elementSliderMask.children[index] as HTMLElement;
+        return targetChild; 
     }
 
-    // Goes to the identified tab 
+    // Goes to the identified slide 
     // raises navigation events
-    goToSlideIndex(index: number) {
+    goToIndex(index: number) {
 
         // Eventing tab change (pre)
         // from & to tabs
 
         this.debug.debug(index);
         
-        this.slideIndex = index;
+        this.currentIndex = index;
 
         // Eventing tab change (post)
-        // from & to tabs
+        // from & to slide
     }
 
-    goToNextSlide() {
+    goToNext() {
 
-        // If no tab selected, select first
-        if(this.slideIndex == null) {
-            this.slideIndex = 0;
+        // If no slide selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
         }
 
-        // Determine new tab
-        var newSlideIndex: number = this.slideIndex + 1;
-        if (newSlideIndex >= this.slideCount)
+        // Determine new slide
+        var newSlideIndex: number = this.currentIndex + 1;
+        if (newSlideIndex >= this.count)
             newSlideIndex = 0;
 
-        this.goToSlideIndex(newSlideIndex);
+        this.goToIndex(newSlideIndex);
 
     }
 
-    goToPrevSlide() {
+    goToPrev() {
 
-        // If no tab selected, select first
-        if(this.slideIndex == null) {
-            this.slideIndex = 0;
+        // If no slide selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
         }
 
-        // Determine new tab
-        var newSlideIndex: number = this.slideIndex - 1;
+        // Determine new slide
+        var newSlideIndex: number = this.currentIndex - 1;
         if (newSlideIndex < 0)
-            newSlideIndex = this.slideCount - 1;
+            newSlideIndex = this.count - 1;
         
-        this.goToSlideIndex(newSlideIndex);
+        this.goToIndex(newSlideIndex);
 
     }
 
-    goToFirstSlide() {
+    goToFirst() {
                 
-        this.goToSlideIndex(0);
+        this.goToIndex(0);
 
     }
 
-    goToLastSlide() {
+    goToLast() {
 
-        var newSlideIndex: number = this.slideCount - 1;
+        var newSlideIndex: number = this.count - 1;
 
-        this.goToSlideIndex(newSlideIndex);
+        this.goToIndex(newSlideIndex);
 
     }
 
@@ -354,11 +307,8 @@ export class WebflowSlider {
 
 }
 
-// window["WebflowTabs"] = WebflowTabs;
 
-// console.log("TABS LOADED.");
 
-// (window as any).WebflowDropdown = WebflowDropdown;
 Sa5Core.startup(WebflowSlider);
 
 

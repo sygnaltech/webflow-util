@@ -117,23 +117,23 @@
     get elementSliderNav() {
       return this._elementSliderNav;
     }
-    get slideNum() {
-      return this.slideIndex + 1;
+    get currentNum() {
+      return this.currentIndex + 1;
     }
-    set slideNum(num) {
-      this.slideIndex = num - 1;
+    set currentNum(num) {
+      this.currentIndex = num - 1;
     }
-    get slideIndex() {
+    get currentIndex() {
       let currentIndex = null;
       currentIndex = Array.from(this._elementSliderNav.children).findIndex(
         (child) => child.classList.contains("w-active")
       );
       return currentIndex;
     }
-    set slideIndex(index) {
+    set currentIndex(index) {
       if (index < 0)
         return;
-      if (index >= this.slideCount)
+      if (index >= this.count)
         return;
       let clickEvent = new MouseEvent("click", {
         bubbles: true,
@@ -147,7 +147,7 @@
         button.dispatchEvent(clickEvent);
       }, 0);
     }
-    get slideCount() {
+    get count() {
       return this._elementSliderNav.children.length;
     }
     getSlideIndex(slide) {
@@ -166,7 +166,7 @@
     elementSlide(index) {
       if (index < 0)
         return;
-      if (index >= this.slideCount)
+      if (index >= this.count)
         return;
       let filteredChildren = Array.from(this._elementSliderMask.children).filter(
         (child) => child.classList.contains("w-slide")
@@ -174,36 +174,36 @@
       let targetChild = filteredChildren[index];
       return targetChild;
     }
-    goToSlideIndex(index) {
+    goToIndex(index) {
       this.debug.debug(index);
-      this.slideIndex = index;
+      this.currentIndex = index;
     }
-    goToNextSlide() {
-      if (this.slideIndex == null) {
-        this.slideIndex = 0;
+    goToNext() {
+      if (this.currentIndex == null) {
+        this.currentIndex = 0;
         return;
       }
-      var newSlideIndex = this.slideIndex + 1;
-      if (newSlideIndex >= this.slideCount)
+      var newSlideIndex = this.currentIndex + 1;
+      if (newSlideIndex >= this.count)
         newSlideIndex = 0;
-      this.goToSlideIndex(newSlideIndex);
+      this.goToIndex(newSlideIndex);
     }
-    goToPrevSlide() {
-      if (this.slideIndex == null) {
-        this.slideIndex = 0;
+    goToPrev() {
+      if (this.currentIndex == null) {
+        this.currentIndex = 0;
         return;
       }
-      var newSlideIndex = this.slideIndex - 1;
+      var newSlideIndex = this.currentIndex - 1;
       if (newSlideIndex < 0)
-        newSlideIndex = this.slideCount - 1;
-      this.goToSlideIndex(newSlideIndex);
+        newSlideIndex = this.count - 1;
+      this.goToIndex(newSlideIndex);
     }
-    goToFirstSlide() {
-      this.goToSlideIndex(0);
+    goToFirst() {
+      this.goToIndex(0);
     }
-    goToLastSlide() {
-      var newSlideIndex = this.slideCount - 1;
-      this.goToSlideIndex(newSlideIndex);
+    goToLast() {
+      var newSlideIndex = this.count - 1;
+      this.goToIndex(newSlideIndex);
     }
     onSlideChanged() {
     }
