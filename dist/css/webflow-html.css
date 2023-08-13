@@ -549,13 +549,21 @@ html:not([data-wf-mode="editor"]) .wfu-con {
 */
 /*
  * Filtered elements
- * hide by default, until filter statis is determined
+ * hide by default, until filter status is determined
  */
-*[wfu-filter] {
+[wfu-filter] {
   display: none;
 }
 
-*[wfu-filter-func] {
+[wfu-filter-eval] {
+  display: none;
+}
+
+[wfu-filter-match] {
+  display: none;
+}
+
+[wfu-filter-func] {
   display: none;
 }
 

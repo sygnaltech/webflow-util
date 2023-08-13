@@ -16,7 +16,8 @@ import { Sa5Editor } from '../webflow-core/webflow-editor';
 import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
 import { HtmlBuilder } from '../modules/webflow-html-builder';
-import { Sa5NestedList } from '../webflow-html/nested-list'
+import { Sa5NestedList } from '../webflow-html/nested-list'; 
+import { Sa5Attribute } from '../globals';
 
 const init = () => { 
 
@@ -112,17 +113,17 @@ const init = () => {
      * Innermost first, to support nested sorts
      */
 
-    document.querySelectorAll('[wfu-sort] [wfu-sort] [wfu-sort]')
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_SORT}] [${Sa5Attribute.ATTR_SORT}] [${Sa5Attribute.ATTR_SORT}]`)
         .forEach((element: HTMLElement) => {
             new Sa5CollectionList(element)
                 .sort();
         });
-    document.querySelectorAll('[wfu-sort] [wfu-sort]')
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_SORT}] [${Sa5Attribute.ATTR_SORT}]`)
         .forEach((element: HTMLElement) => {
             new Sa5CollectionList(element)
                 .sort();
         });
-    document.querySelectorAll('[wfu-sort]')
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_SORT}]`)
         .forEach((element: HTMLElement) => {
             new Sa5CollectionList(element)
                 .sort();
@@ -131,24 +132,68 @@ const init = () => {
     /**
      * Filter items
      * Place on item you want to conditionally hide 
-     * TODO: add remove mode? 
+     * TODO: add remove mode for non-matches? 
      */
 
-    document.querySelectorAll('[wfu-filter]')
+//     document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER_MATCH}]`)
+//       .forEach((element: HTMLElement) => {
+
+//         let filterEval = element.getAttribute('wfu-filter') as string;
+
+// //        console.log(filterEval);
+
+//         let visible = eval(filterEval);
+//         if (visible) {
+//             element.removeAttribute("wfu-filter");
+//         }
+
+//     });
+
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER}],[${Sa5Attribute.ATTR_FILTER_EVAL}]`)
       .forEach((element: HTMLElement) => {
 
-        let visible = eval(element.getAttribute('wfu-filter') as string);
+        let filterEval = null;
+        if (element.hasAttribute(Sa5Attribute.ATTR_FILTER_EVAL)) 
+            filterEval = element.getAttribute(Sa5Attribute.ATTR_FILTER_EVAL) as string;
+        else {
+            filterEval = element.getAttribute(Sa5Attribute.ATTR_FILTER) as string; 
+            console.warn("[wfu-filter] is deprecated, use [wfu-filter-eval] instead.");
+        }
+
+//        console.log(filterEval);
+
+        let visible = eval(filterEval);
         if (visible) {
-            element.removeAttribute("wfu-filter");
+            element.removeAttribute(Sa5Attribute.ATTR_FILTER);
+            element.removeAttribute(Sa5Attribute.ATTR_FILTER_EVAL);
+        }
+
+    });
+
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER_MATCH}]`)
+      .forEach((element: HTMLElement) => {
+
+        let filterEval = element.getAttribute(Sa5Attribute.ATTR_FILTER_MATCH) as string;
+
+//        console.log("filter eval", filterEval);
+
+        // [weekday='${new Date().getDay()}']
+        let filterMatches = eval(`\`${filterEval}\``);
+
+//        console.log("filter matches", filterMatches);
+
+        let visible = element.matches(filterMatches);
+        if (visible) {
+            element.removeAttribute(Sa5Attribute.ATTR_FILTER_MATCH);
         }
 
     });
 
     // Process filtered items
-    document.querySelectorAll('[wfu-filter-func]')
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER_FUNC}]`)
       .forEach((element: HTMLElement) => { 
 
-        let funcName = element.getAttribute('wfu-filter-func');
+        let funcName = element.getAttribute(Sa5Attribute.ATTR_FILTER_FUNC);
         let fqFuncName = `window.${funcName}`;
     
         let f = new Function(fqFuncName);
@@ -159,7 +204,7 @@ const init = () => {
         if (typeof func === 'function') {
             let visible = func(element);
             if (visible) {
-                element.removeAttribute("wfu-filter-func"); 
+                element.removeAttribute(Sa5Attribute.ATTR_FILTER_FUNC); 
             }
         }
 

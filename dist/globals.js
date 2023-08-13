@@ -22,6 +22,11 @@
     Sa5Attribute2["ATTR_PRELOAD"] = "wfu-preload";
     Sa5Attribute2["ATTR_IX_TRIGGER"] = "wfu-ix-trigger";
     Sa5Attribute2["ATTR_IX_ID"] = "wfu-ix-id";
+    Sa5Attribute2["ATTR_SORT"] = "wfu-sort";
+    Sa5Attribute2["ATTR_FILTER"] = "wfu-filter";
+    Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
+    Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
+    Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 })();

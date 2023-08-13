@@ -37,6 +37,15 @@ export enum Sa5Attribute {
 
     // Interactions
     ATTR_IX_TRIGGER = 'wfu-ix-trigger',
-    ATTR_IX_ID = 'wfu-ix-id'
+    ATTR_IX_ID = 'wfu-ix-id',
+
+    // Sort
+    ATTR_SORT = 'wfu-sort',
+
+    // Filter
+    ATTR_FILTER = 'wfu-filter',
+    ATTR_FILTER_MATCH = 'wfu-filter-match',
+    ATTR_FILTER_EVAL = 'wfu-filter-eval',
+    ATTR_FILTER_FUNC = 'wfu-filter-func',
 
 }

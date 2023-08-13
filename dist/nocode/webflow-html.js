@@ -628,6 +628,12 @@
     }
   });
 
+  // src/globals.ts
+  var init_globals = __esm({
+    "src/globals.ts"() {
+    }
+  });
+
   // src/nocode/webflow-html.ts
   var require_webflow_html = __commonJS({
     "src/nocode/webflow-html.ts"(exports, module) {
@@ -638,6 +644,7 @@
       init_utils();
       init_collection_list();
       init_nested_list();
+      init_globals();
       var init = () => {
         let debug = new Sa5Debug("sa5-html");
         debug.debug("Initializing");
@@ -659,30 +666,46 @@
           element2.innerHTML = decodeHTML(element2.innerHTML);
           element2.removeAttribute("wfu-decode");
         });
-        document.querySelectorAll("[wfu-sort] [wfu-sort] [wfu-sort]").forEach((element2) => {
+        document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
           new Sa5CollectionList(element2).sort();
         });
-        document.querySelectorAll("[wfu-sort] [wfu-sort]").forEach((element2) => {
+        document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
           new Sa5CollectionList(element2).sort();
         });
-        document.querySelectorAll("[wfu-sort]").forEach((element2) => {
+        document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
           new Sa5CollectionList(element2).sort();
         });
-        document.querySelectorAll("[wfu-filter]").forEach((element) => {
-          let visible = eval(element.getAttribute("wfu-filter"));
+        document.querySelectorAll(`[${"wfu-filter" /* ATTR_FILTER */}],[${"wfu-filter-eval" /* ATTR_FILTER_EVAL */}]`).forEach((element) => {
+          let filterEval = null;
+          if (element.hasAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */))
+            filterEval = element.getAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */);
+          else {
+            filterEval = element.getAttribute("wfu-filter" /* ATTR_FILTER */);
+            console.warn("[wfu-filter] is deprecated, use [wfu-filter-eval] instead.");
+          }
+          let visible = eval(filterEval);
           if (visible) {
-            element.removeAttribute("wfu-filter");
+            element.removeAttribute("wfu-filter" /* ATTR_FILTER */);
+            element.removeAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */);
           }
         });
-        document.querySelectorAll("[wfu-filter-func]").forEach((element2) => {
-          let funcName = element2.getAttribute("wfu-filter-func");
+        document.querySelectorAll(`[${"wfu-filter-match" /* ATTR_FILTER_MATCH */}]`).forEach((element) => {
+          let filterEval = element.getAttribute("wfu-filter-match" /* ATTR_FILTER_MATCH */);
+          let filterMatches = eval(`\`${filterEval}\``);
+          let visible = element.matches(filterMatches);
+          if (visible) {
+            element.removeAttribute("wfu-filter-match" /* ATTR_FILTER_MATCH */);
+          }
+        });
+        document.querySelectorAll(`[${"wfu-filter-func" /* ATTR_FILTER_FUNC */}]`).forEach((element2) => {
+          let funcName = element2.getAttribute("wfu-filter-func" /* ATTR_FILTER_FUNC */);
           let fqFuncName = `window.${funcName}`;
           let f = new Function(fqFuncName);
           let func = window[funcName];
           if (typeof func === "function") {
             let visible2 = func(element2);
             if (visible2) {
-              element2.removeAttribute("wfu-filter-func");
+              element2.removeAttribute("wfu-filter-func" /* ATTR_FILTER_FUNC */);
             }
           }
         });
