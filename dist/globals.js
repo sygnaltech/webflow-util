@@ -3,6 +3,7 @@
   var Sa5GlobalEvent = /* @__PURE__ */ ((Sa5GlobalEvent2) => {
     Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
     Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";
+    Sa5GlobalEvent2["EVENT_SLIDE_CHANGED"] = "slideChanged";
     return Sa5GlobalEvent2;
   })(Sa5GlobalEvent || {});
   var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {
@@ -11,6 +12,8 @@
     return Sa5ScriptType2;
   })(Sa5ScriptType || {});
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
+    Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+    Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";

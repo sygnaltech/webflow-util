@@ -102,7 +102,7 @@
       this.debug = new Sa5Debug("sa5-webflow-slider");
       this.debug.enabled = true;
       if (!element.classList.contains("w-slider")) {
-        console.error("[wfu-slider] is not on a slider element");
+        console.error(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}] is not on a slider element`);
         return;
       }
       this._element = element;
@@ -116,6 +116,9 @@
     }
     get elementSliderNav() {
       return this._elementSliderNav;
+    }
+    get name() {
+      return this._element.getAttribute("wfu-slider" /* ATTR_ELEMENT_SLIDER */);
     }
     get currentNum() {
       return this.currentIndex + 1;
@@ -143,7 +146,6 @@
       this.debug.debug("setting slide", index);
       let button = this.elementSliderNav.children[index];
       setTimeout(() => {
-        console.log(index, button);
         button.dispatchEvent(clickEvent);
       }, 0);
     }
@@ -162,6 +164,22 @@
     init() {
       this._elementSliderMask = this._element.querySelector(".w-slider-mask");
       this._elementSliderNav = this._element.querySelector(".w-slider-nav");
+      this._observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === "attributes" && mutation.attributeName === "class") {
+            const target = mutation.target;
+            if (target.classList.contains("w-active")) {
+              this.onSlideChanged(this.currentIndex);
+            }
+          }
+        }
+      });
+      const config = {
+        attributes: true,
+        childList: true,
+        subtree: true
+      };
+      this._observer.observe(this._elementSliderNav, config);
     }
     elementSlide(index) {
       if (index < 0)
@@ -205,7 +223,16 @@
       var newSlideIndex = this.count - 1;
       this.goToIndex(newSlideIndex);
     }
-    onSlideChanged() {
+    isSlideChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
+    }
+    onSlideChanged(index) {
+      let core = Sa5Core.startup();
+      core.getHandlers("slideChanged" /* EVENT_SLIDE_CHANGED */).forEach((func) => {
+        func(this, index);
+      });
     }
   };
   Sa5Core.startup(WebflowSlider);

@@ -40,7 +40,7 @@ const init = () => {
     // Tabs
     // Auto-register class on named items? 
     // [wfu-tabs=NAME]
-    let tabElements: NodeListOf<Element> = document.querySelectorAll('[wfu-tabs]');
+    let tabElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_TABS}]`);
     tabElements.forEach(element => {
 
         var tabObj = new WebflowTabs(element as HTMLElement);
@@ -50,7 +50,7 @@ const init = () => {
     // Tabs
     // Auto-register class on named items? 
     // [wfu-tabs=NAME]
-    let sliderElements: NodeListOf<Element> = document.querySelectorAll('[wfu-slider]');
+    let sliderElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_SLIDER}]`);
     sliderElements.forEach(element => {
 
         var sliderObj = new WebflowSlider(element as HTMLElement);

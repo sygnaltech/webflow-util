@@ -73,22 +73,41 @@ Querystring
 //      anything? 
 // Have the internal handlers perform actions
 // wfu-tab-action=first|last|next|prev|clear ? 
+import { Sa5Attribute, Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core'
 import { Sa5Debug } from './debug'
 
+
+
+type SlideChangedCallback = (slider: any, index: any) => void;
+
+// interface SliderConfig {
+// //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
+//     slideChangedCallback?: SlideChangedCallback; 
+// //    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
+
+//     debug?: boolean;
+
+// }
+
+
 export class WebflowSlider implements IDeckNavigation {
-    
+
     private _element: HTMLElement;
     private _elementSliderMask: HTMLElement;
     private _elementSliderNav: HTMLElement;
+
+    private _observer: MutationObserver; 
+
 // .w-slider-aria-label
 // .w-slider-arrow-left
 // .w-icon-slider-left
 // .w-slider-arrow-right 
 // .w-icon-slider-right
 
-
-    private debug: Sa5Debug; 
+    debug: Sa5Debug; 
+    
+//    config: SliderConfig; // Optional config
 
     //#region CONSTRUCTORS
 
@@ -97,9 +116,9 @@ export class WebflowSlider implements IDeckNavigation {
         this.debug = new Sa5Debug("sa5-webflow-slider");
         this.debug.enabled = true;
 
-        // Verify element thep
+        // Verify element then
         if(!element.classList.contains("w-slider")) {
-            console.error ("[wfu-slider] is not on a slider element");
+            console.error (`[${Sa5Attribute.ATTR_ELEMENT_SLIDER}] is not on a slider element`);
             return;
         }
 
@@ -127,6 +146,10 @@ export class WebflowSlider implements IDeckNavigation {
         return this._elementSliderNav;
     }
  
+    get name(): string {
+        return this._element.getAttribute(Sa5Attribute.ATTR_ELEMENT_SLIDER)
+    }
+
     // 1-based convenience functions
     get currentNum(): number | null {
         return this.currentIndex + 1;
@@ -168,7 +191,7 @@ export class WebflowSlider implements IDeckNavigation {
         // HACK: dealing with the fact that Webflow events may not have run yet 
         setTimeout(() => {
 
-            console.log(index, button);
+//            console.log(index, button);
 
             button.dispatchEvent(clickEvent);
         }, 0);
@@ -207,6 +230,30 @@ export class WebflowSlider implements IDeckNavigation {
         // Inventory parts
         this._elementSliderMask = this._element.querySelector('.w-slider-mask');
         this._elementSliderNav = this._element.querySelector('.w-slider-nav');
+
+        // Setup mutation observer to detect slide changes
+        this._observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const target = mutation.target as HTMLElement;
+                    if (target.classList.contains('w-active')) {
+
+                        this.onSlideChanged(this.currentIndex);
+
+                    }
+                }
+            }
+        });
+        
+        // Configuration for the observer:
+        const config = {
+            attributes: true, // Observe attribute changes
+            childList: true,  // Observe addition/removal of child elements
+            subtree: true     // Observe changes in descendants
+        };
+        
+        // Start observing the target element
+        this._observer.observe(this._elementSliderNav, config);
 
     }
 
@@ -299,8 +346,36 @@ export class WebflowSlider implements IDeckNavigation {
 
     //#region EVENTS
 
-    onSlideChanged() {
-        // Raise event
+    // Type guard to check callback function 
+    private isSlideChangedCallback(func: Function): func is SlideChangedCallback { 
+
+        if(!func) return false;
+
+        // Adjust this check as needed
+        return func.length === 1;
+    }
+
+    // Raise event
+    onSlideChanged(index: number) {
+
+        let core: Sa5Core = Sa5Core.startup();
+
+// console.log('onSlideChanged', index)
+
+        // Get any global handlers
+        core.getHandlers(Sa5GlobalEvent.EVENT_SLIDE_CHANGED)
+          .forEach(func => {
+
+//            console.log('onSlideChanged func', index)
+
+//            if (this.isSlideChangedCallback(func)) {
+//                console.log('onSlideChanged func OK', index)
+
+                func(this, index);
+    
+ //            }
+          }); 
+
     }
 
     //#endregion

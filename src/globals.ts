@@ -8,6 +8,7 @@ export enum Sa5GlobalEvent {
 
     EVENT_USER_CHANGED = 'userInfoChanged',
     EVENT_DATASTORE_LOADED = 'datastoreLoaded',
+    EVENT_SLIDE_CHANGED = 'slideChanged', 
 
 }
 
@@ -19,6 +20,10 @@ export enum Sa5ScriptType {
 }
 
 export enum Sa5Attribute {
+
+    // Elements 
+    ATTR_ELEMENT_SLIDER = 'wfu-slider',
+    ATTR_ELEMENT_TABS = 'wfu-tabs',
 
     // Data
     ATTR_DATA = 'wfu-data',
