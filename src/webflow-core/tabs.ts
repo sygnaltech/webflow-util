@@ -63,7 +63,7 @@ Querystring
 import { Sa5Core } from '../webflow-core'
 import { Sa5Debug } from '../webflow-core/debug'
 
-export class WebflowTabs {
+export class WebflowTabs implements IDeckNavigation {
     
     private _element: HTMLElement;
     private _elementTabMenu: HTMLElement;
@@ -109,14 +109,14 @@ export class WebflowTabs {
     }
  
     // 1-based convenience functions
-    get tabNum(): number | null {
-        return this.tabIndex + 1;
+    get currentNum(): number | null {
+        return this.currentIndex + 1;
     }
-    set tabNum(num: number) {
-        this.tabIndex = num - 1;
+    set currentNum(num: number) {
+        this.currentIndex = num - 1;
     }
 
-    get tabIndex(): number | null {
+    get currentIndex(): number | null {
         //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
 
         let currentIndex: number | null = null;
@@ -137,14 +137,14 @@ export class WebflowTabs {
 
         return currentIndex; 
     }
-    set tabIndex(index: number) {
+    set currentIndex(index: number) {
 
 // TODO: support null sets 
 
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.tabCount)
+        if (index >= this.count)
             return;
 
         let clickEvent = new MouseEvent('click', {
@@ -163,7 +163,7 @@ export class WebflowTabs {
         
     }
 
-    get tabCount(): number {
+    get count(): number {
         return this._elementTabMenu.children.length;
     }
 
@@ -267,7 +267,7 @@ export class WebflowTabs {
 
                 // If a default tab was specified, select it 
                 if (defaultTabIndex != null)
-                    this.tabIndex = defaultTabIndex; 
+                    this.currentIndex = defaultTabIndex; 
             }
 
         };
@@ -280,7 +280,7 @@ export class WebflowTabs {
         // verify number in range
         if (index < 0) 
             return; 
-        if (index >= this.tabCount)
+        if (index >= this.count)
             return;
 
         return this._elementTabMenu.children[index] as HTMLElement;
@@ -288,64 +288,64 @@ export class WebflowTabs {
 
     // Goes to the identified tab 
     // raises navigation events
-    goToTabIndex(index: number) {
+    goToIndex(index: number) {
 
         // Eventing tab change (pre)
         // from & to tabs
 
         this.debug.debug(index);
         
-        this.tabIndex = index;
+        this.currentIndex = index;
 
         // Eventing tab change (post)
         // from & to tabs
     }
 
-    goToNextTab() {
+    goToNext() {
 
         // If no tab selected, select first
-        if(this.tabIndex == null) {
-            this.tabIndex = 0;
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
         }
 
         // Determine new tab
-        var newTabIndex: number = this.tabIndex + 1;
-        if (newTabIndex >= this.tabCount)
+        var newTabIndex: number = this.currentIndex + 1;
+        if (newTabIndex >= this.count)
             newTabIndex = 0;
 
-        this.goToTabIndex(newTabIndex);
+        this.goToIndex(newTabIndex);
 
     }
 
-    goToPrevTab() {
+    goToPrev() {
 
         // If no tab selected, select first
-        if(this.tabIndex == null) {
-            this.tabIndex = 0;
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
         }
 
         // Determine new tab
-        var newTabIndex: number = this.tabIndex - 1;
+        var newTabIndex: number = this.currentIndex - 1;
         if (newTabIndex < 0)
-            newTabIndex = this.tabCount - 1;
+            newTabIndex = this.count - 1;
         
-        this.goToTabIndex(newTabIndex);
+        this.goToIndex(newTabIndex);
 
     }
 
-    goToFirstTab() {
+    goToFirst() {
                 
-        this.goToTabIndex(0);
+        this.goToIndex(0);
 
     }
 
-    goToLastTab() {
+    goToLast() {
 
-        var newTabIndex: number = this.tabCount - 1;
+        var newTabIndex: number = this.count - 1;
 
-        this.goToTabIndex(newTabIndex);
+        this.goToIndex(newTabIndex);
 
     }
 

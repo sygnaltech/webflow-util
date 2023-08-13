@@ -269,13 +269,13 @@
         get elementTabContent() {
           return this._elementTabContent;
         }
-        get tabNum() {
-          return this.tabIndex + 1;
+        get currentNum() {
+          return this.currentIndex + 1;
         }
-        set tabNum(num) {
-          this.tabIndex = num - 1;
+        set currentNum(num) {
+          this.currentIndex = num - 1;
         }
-        get tabIndex() {
+        get currentIndex() {
           let currentIndex = null;
           for (let i = 0; i < this._elementTabMenu.children.length; i++) {
             if (this._elementTabMenu.children[i].classList.contains("w--current")) {
@@ -285,10 +285,10 @@
           }
           return currentIndex;
         }
-        set tabIndex(index) {
+        set currentIndex(index) {
           if (index < 0)
             return;
-          if (index >= this.tabCount)
+          if (index >= this.count)
             return;
           let clickEvent = new MouseEvent("click", {
             bubbles: true,
@@ -300,7 +300,7 @@
             this.elementTab(index).dispatchEvent(clickEvent);
           }, 0);
         }
-        get tabCount() {
+        get count() {
           return this._elementTabMenu.children.length;
         }
         goToTabNone() {
@@ -352,7 +352,7 @@
               let defaultTabIndex = this.getTabIndex(elem);
               this.debug.debug(defaultTabIndex);
               if (defaultTabIndex != null)
-                this.tabIndex = defaultTabIndex;
+                this.currentIndex = defaultTabIndex;
             }
           }
           ;
@@ -360,40 +360,40 @@
         elementTab(index) {
           if (index < 0)
             return;
-          if (index >= this.tabCount)
+          if (index >= this.count)
             return;
           return this._elementTabMenu.children[index];
         }
-        goToTabIndex(index) {
+        goToIndex(index) {
           this.debug.debug(index);
-          this.tabIndex = index;
+          this.currentIndex = index;
         }
-        goToNextTab() {
-          if (this.tabIndex == null) {
-            this.tabIndex = 0;
+        goToNext() {
+          if (this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
           }
-          var newTabIndex = this.tabIndex + 1;
-          if (newTabIndex >= this.tabCount)
+          var newTabIndex = this.currentIndex + 1;
+          if (newTabIndex >= this.count)
             newTabIndex = 0;
-          this.goToTabIndex(newTabIndex);
+          this.goToIndex(newTabIndex);
         }
-        goToPrevTab() {
-          if (this.tabIndex == null) {
-            this.tabIndex = 0;
+        goToPrev() {
+          if (this.currentIndex == null) {
+            this.currentIndex = 0;
             return;
           }
-          var newTabIndex = this.tabIndex - 1;
+          var newTabIndex = this.currentIndex - 1;
           if (newTabIndex < 0)
-            newTabIndex = this.tabCount - 1;
-          this.goToTabIndex(newTabIndex);
+            newTabIndex = this.count - 1;
+          this.goToIndex(newTabIndex);
         }
-        goToFirstTab() {
-          this.goToTabIndex(0);
+        goToFirst() {
+          this.goToIndex(0);
         }
-        goToLastTab() {
-          var newTabIndex = this.tabCount - 1;
-          this.goToTabIndex(newTabIndex);
+        goToLast() {
+          var newTabIndex = this.count - 1;
+          this.goToIndex(newTabIndex);
         }
         onTabChanged() {
         }
