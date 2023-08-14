@@ -18,6 +18,7 @@
 
 // import { HtmlBuilder } from './modules/webflow-html-builder';
 import { Sa5Debug } from './webflow-core/debug'
+import { Sa5Designer } from './webflow-core/designer';
 
 /*
  * Debugging class.
@@ -50,7 +51,10 @@ export class Sa5Core {
 // let retrievedObject = map.get(elem);
 
     constructor() {
-//        this.elements = new WeakMap<HTMLElement, object>();
+
+        // Remove any designer-only elements
+        (new Sa5Designer).init();    
+
     }
 
     init() {

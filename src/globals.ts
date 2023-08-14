@@ -19,7 +19,16 @@ export enum Sa5ScriptType {
 
 }
 
+export namespace Sa5Attribute {
+    export function getBracketed(attr: Sa5Attribute): string {
+        return `[${attr}]`;
+    }
+}
+
 export enum Sa5Attribute {
+
+    // Designer
+    ATTR_DESIGN = 'wfu-design',
 
     // Elements 
     ATTR_ELEMENT_SLIDER = 'wfu-slider',

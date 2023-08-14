@@ -19,10 +19,13 @@ import { Sa5CollectionList } from '../webflow-html/collection-list';
 import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5NestedList } from '../webflow-html/nested-list'; 
 import { Sa5Attribute } from '../globals';
+import { Sa5Designer } from '../webflow-core/designer';
 
 const init = () => { 
 
 //    new Sa5Core().init();
+
+    let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-html");
@@ -273,6 +276,9 @@ const init = () => {
         }
 
     });
+
+    // // Remove any designer-only element
+    // (new Sa5Designer).init();    
 
 }
 

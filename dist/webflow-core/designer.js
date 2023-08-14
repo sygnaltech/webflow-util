@@ -1,16 +1,5 @@
 (() => {
   // src/globals.ts
-  var Sa5GlobalEvent = /* @__PURE__ */ ((Sa5GlobalEvent2) => {
-    Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
-    Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";
-    Sa5GlobalEvent2["EVENT_SLIDE_CHANGED"] = "slideChanged";
-    return Sa5GlobalEvent2;
-  })(Sa5GlobalEvent || {});
-  var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {
-    Sa5ScriptType2["SCRIPT_TYPE_DATA_ITEM"] = "wfu-data-item";
-    Sa5ScriptType2["SCRIPT_TYPE_SA5_DATA_ITEM"] = "sygnal/sa5-data-proto";
-    return Sa5ScriptType2;
-  })(Sa5ScriptType || {});
   var Sa5Attribute;
   ((Sa5Attribute2) => {
     function getBracketed(attr) {
@@ -40,5 +29,23 @@
     Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
+
+  // src/webflow-core/designer.ts
+  var Sa5Designer = class {
+    constructor() {
+    }
+    init() {
+      this.removeDesignTimeElements();
+    }
+    removeDesignTimeElements() {
+      console.log("designer clean");
+      const elements = document.querySelectorAll(
+        Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
+      );
+      elements.forEach((element) => {
+        element.remove();
+      });
+    }
+  };
 })();
-//# sourceMappingURL=globals.js.map
+//# sourceMappingURL=designer.js.map
