@@ -4,6 +4,7 @@
     Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
     Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";
     Sa5GlobalEvent2["EVENT_SLIDE_CHANGED"] = "slideChanged";
+    Sa5GlobalEvent2["EVENT_VIDEO_TIME_UPDATE"] = "videoTimeUpdate";
     return Sa5GlobalEvent2;
   })(Sa5GlobalEvent || {});
   var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {
@@ -20,6 +21,7 @@
   })(Sa5Attribute || (Sa5Attribute = {}));
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
     Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
+    Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";

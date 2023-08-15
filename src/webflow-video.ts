@@ -8,6 +8,7 @@
  * Webflow Video
  */
 
+import { Sa5Attribute } from './globals';
 import { Sa5Core } from './webflow-core'
 
 export class WebflowVideo {
@@ -20,12 +21,12 @@ export class WebflowVideo {
     processAllDataPosterUrls (): void {
 
         // Find poster video overrides and apply them
-        const elements = document.querySelectorAll(`div[wfu-data-poster-url]`);
+        const elements = document.querySelectorAll(`div[${Sa5Attribute.ATTR_VIDEO_DATA_POSTER_URL}]`);
         elements.forEach((element) => {
 
             element.setAttribute(
                 "data-poster-url",
-                element.getAttribute("wfu-data-poster-url")
+                element.getAttribute(Sa5Attribute.ATTR_VIDEO_DATA_POSTER_URL) 
             );
 
         });

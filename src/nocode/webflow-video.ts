@@ -11,8 +11,11 @@
 import { WebflowVideo } from '../webflow-video';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
-import { WfuVideoPlayer } from '../webflow-video/player';
 import { WfuVideoPlayerFactory } from '../webflow-video/player-factory';
+import { Sa5Attribute } from '../globals';
+
+type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
+
 
 const init = () => { 
 
@@ -26,21 +29,12 @@ let core: Sa5Core = Sa5Core.startup();
 
 
 
-    let videos = document.querySelectorAll('[wfu-video]');
-    WfuVideoPlayer
+    let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
 
     videos.forEach((element: HTMLElement) => {
 
         WfuVideoPlayerFactory.create(element).init();
 
-//        (new WfuVideoPlayer(element)).init(); 
-
-        // let videoValue = element.getAttribute('wfu-video');
-        // if (videoValue) {
-        //     console.log(videoValue);
-        // } else {
-        //     console.log('Attribute not found or has no value');
-        // }
     });
     
 

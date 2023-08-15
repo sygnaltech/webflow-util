@@ -9,7 +9,8 @@ export enum Sa5GlobalEvent {
     EVENT_USER_CHANGED = 'userInfoChanged',
     EVENT_DATASTORE_LOADED = 'datastoreLoaded',
     EVENT_SLIDE_CHANGED = 'slideChanged', 
-
+    EVENT_VIDEO_TIME_UPDATE = 'videoTimeUpdate', 
+    
 }
 
 export enum Sa5ScriptType {
@@ -29,6 +30,7 @@ export enum Sa5Attribute {
 
     // Video
     ATTR_VIDEO = 'wfu-video',
+    ATTR_VIDEO_DATA_POSTER_URL = 'wfu-data-poster-url', 
 
     // Designer
     ATTR_DESIGN = 'wfu-design',

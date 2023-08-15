@@ -10,6 +10,7 @@
  * Video Utilities
  */
 
+import { Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core'
 import { WfuVideoPlayerVimeo } from './players/vimeo';
 
@@ -74,6 +75,32 @@ console.log('player constructor', element);
     //     */
     
     // }
+
+    onTimeUpdate(time: number, duration: number) {
+
+//console.log('onTimeUpdate'); 
+
+        let core: Sa5Core = Sa5Core.startup();
+
+        let percent = time * 100 / duration;
+
+//        console.log('onTimeUpdate', time, duration, percent);
+
+        // Get any global handlers
+        core.getHandlers(Sa5GlobalEvent.EVENT_VIDEO_TIME_UPDATE)
+          .forEach(func => {
+
+//            console.log('onSlideChanged func', index)
+
+//            if (this.isSlideChangedCallback(func)) {
+//                console.log('onSlideChanged func OK', index)
+
+                func(this.name, time, duration, percent);
+    
+ //            }
+          });         
+        
+    }
 
 }
 
