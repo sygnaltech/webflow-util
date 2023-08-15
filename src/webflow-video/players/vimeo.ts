@@ -25,43 +25,22 @@ export class WfuVideoPlayerVimeo extends WfuVideoPlayer {
         super(element); 
 //        this.config = config;
 
-console.log('vimeo const', element); 
+// console.log('vimeo const', element); 
 
     }
 
     // Process elements with the custom attr wfu-query-param
     init() {
 
-console.log('init vimeo player'); 
+// console.log('init vimeo player'); 
 
         this.player = new VimeoPlayer(this.element);
-        this.player.on('timeupdate', this.timeUpdate);
+
+        this.player.on('timeupdate', (data) => {
+            super.onTimeUpdate(data.seconds, data.duration);
+        });
 
     }
-
-    timeUpdate(data) {
-
-        var duration = data.duration;
-        var seconds = data.seconds;
-    
-//        console.log(seconds, duration);
-
-
-//        console.log('onTimeUpdate', time, duration, percent);
-
-
-super.onTimeUpdate(seconds, duration);
-
-      
-        // Check if the video is within 5 seconds of ending.
-    //    if (seconds >= 10) {
-//        if (duration - seconds <= 3) 
-  //          console.log("Video is within 3 seconds of ending.");
-//          enableButton();
-
-
-    }
-
 
 }
 

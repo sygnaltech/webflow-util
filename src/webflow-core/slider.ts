@@ -360,8 +360,6 @@ export class WebflowSlider implements IDeckNavigation {
 
         let core: Sa5Core = Sa5Core.startup();
 
-// console.log('onSlideChanged', index)
-
         // Get any global handlers
         core.getHandlers(Sa5GlobalEvent.EVENT_SLIDE_CHANGED)
           .forEach(func => {
@@ -371,7 +369,7 @@ export class WebflowSlider implements IDeckNavigation {
 //            if (this.isSlideChangedCallback(func)) {
 //                console.log('onSlideChanged func OK', index)
 
-                func(this, index);
+            func(this, index); 
     
  //            }
           }); 

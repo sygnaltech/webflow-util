@@ -81,7 +81,6 @@
       this.removeDesignTimeElements();
     }
     removeDesignTimeElements() {
-      console.log("designer clean");
       const elements = document.querySelectorAll(
         Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
       );
@@ -149,14 +148,17 @@
   Sa5Core.startup();
 
   // src/webflow-video/player.ts
+  var WfuVideoPlayerState = class {
+    get percentagePlayed() {
+      return this.currentTime / this.totalVideoTime * 100;
+    }
+  };
   var WfuVideoPlayer = class {
     constructor(element) {
-      console.log("player constructor", element);
       if (element) {
         let videoName = element.getAttribute("wfu-video");
         this.name = videoName;
         this.element = element;
-        console.log("video name is", this.name);
       }
     }
     init() {
@@ -165,7 +167,10 @@
       let core = Sa5Core.startup();
       let percent = time * 100 / duration;
       core.getHandlers("videoTimeUpdate" /* EVENT_VIDEO_TIME_UPDATE */).forEach((func) => {
-        func(this.name, time, duration, percent);
+        let state = new WfuVideoPlayerState();
+        state.currentTime = time;
+        state.totalVideoTime = duration;
+        func(this.name, state);
       });
     }
   };
@@ -2464,17 +2469,12 @@
   var WfuVideoPlayerVimeo = class extends WfuVideoPlayer {
     constructor(element) {
       super(element);
-      console.log("vimeo const", element);
     }
     init() {
-      console.log("init vimeo player");
       this.player = new player_es_default(this.element);
-      this.player.on("timeupdate", this.timeUpdate);
-    }
-    timeUpdate(data) {
-      var duration = data.duration;
-      var seconds = data.seconds;
-      super.onTimeUpdate(seconds, duration);
+      this.player.on("timeupdate", (data) => {
+        super.onTimeUpdate(data.seconds, data.duration);
+      });
     }
   };
 

@@ -27,7 +27,7 @@ export class Sa5Designer {
     // in HTML Embeds. 
     removeDesignTimeElements() {
 
-console.log("designer clean"); 
+// console.log("designer clean"); 
 
         const elements: NodeListOf<HTMLElement> = document.querySelectorAll(
             Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DESIGN)

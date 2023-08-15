@@ -15,6 +15,24 @@ import { Sa5Core } from '../webflow-core'
 import { WfuVideoPlayerVimeo } from './players/vimeo';
 
 
+export enum PlayerStatus {
+    Playing = 'playing',
+    Paused = 'paused',
+    Stopped = 'stopped',
+    Buffering = 'buffering'
+}
+
+
+export class WfuVideoPlayerState {
+    status: PlayerStatus;
+    currentTime: number;  // in seconds
+    totalVideoTime: number;  // in seconds
+
+    get percentagePlayed(): number {
+        return (this.currentTime / this.totalVideoTime) * 100.0;
+    };  // as a percentage from 0 to 100
+    // ... any other properties you want
+}
 
 export class WfuVideoPlayer {
 
@@ -23,81 +41,39 @@ export class WfuVideoPlayer {
     name: string;
     element: HTMLElement;
 
-
-
     constructor(element: HTMLElement) {
-
-console.log('player constructor', element); 
-
-        // Player factory 
 
         if (element) {
             let videoName = element.getAttribute('wfu-video'); 
             this.name = videoName;
             this.element = element;
-
-            console.log("video name is", this.name);
-            // if (videoValue) {
-            //     console.log(videoValue);
-            // } else {
-            //     console.log('Attribute not found or has no value');
-            // }
         }
-
-//var videoElement = document.querySelector('iframe[wfu-video="video1"]');
-
-//        this.config = config;
 
     }
 
     // Process elements with the custom attr wfu-query-param
     init() {
 
-
     }
-
-    // static create(element: HTMLElement): WfuVideoPlayer {
-
-    //     // It's Vimeo!
-    //         // Verify it's a recognized player
-    //         // Vimeo ( on iframe? )
-    //         return new WfuVideoPlayerVimeo(element);
-    
-    //         /*
-    //     if (element) {
-    //         let videoValue = element.getAttribute('wfu-video');
-    //         if (videoValue) {
-    //             console.log(videoValue);
-    //         } else {
-    //             console.log('Attribute not found or has no value');
-    //         }
-    //     }
-    //     */
-    
-    // }
 
     onTimeUpdate(time: number, duration: number) {
 
-//console.log('onTimeUpdate'); 
-
         let core: Sa5Core = Sa5Core.startup();
 
+// console.log('name', this.name);
         let percent = time * 100 / duration;
-
-//        console.log('onTimeUpdate', time, duration, percent);
 
         // Get any global handlers
         core.getHandlers(Sa5GlobalEvent.EVENT_VIDEO_TIME_UPDATE)
           .forEach(func => {
 
-//            console.log('onSlideChanged func', index)
+            // Initialize player state info 
+            let state: WfuVideoPlayerState = new WfuVideoPlayerState();
+            state.currentTime = time;
+            state.totalVideoTime = duration;
 
-//            if (this.isSlideChangedCallback(func)) {
-//                console.log('onSlideChanged func OK', index)
-
-                func(this.name, time, duration, percent);
+            func(this.name, state);
     
- //            }
           });         
         
     }

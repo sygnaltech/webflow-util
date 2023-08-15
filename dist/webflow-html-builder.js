@@ -93,7 +93,6 @@
       this.removeDesignTimeElements();
     }
     removeDesignTimeElements() {
-      console.log("designer clean");
       const elements = document.querySelectorAll(
         Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
       );
