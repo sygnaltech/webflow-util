@@ -27,6 +27,9 @@ export namespace Sa5Attribute {
 
 export enum Sa5Attribute {
 
+    // Video
+    ATTR_VIDEO = 'wfu-video',
+
     // Designer
     ATTR_DESIGN = 'wfu-design',
 

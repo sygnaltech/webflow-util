@@ -19,6 +19,7 @@
     Sa5Attribute2.getBracketed = getBracketed;
   })(Sa5Attribute || (Sa5Attribute = {}));
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
+    Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
