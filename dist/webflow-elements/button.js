@@ -35,6 +35,24 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
+  // src/utils.ts
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -150,145 +168,52 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-core/slider.ts
-  var WebflowSlider = class {
-    constructor(element) {
-      this.debug = new Sa5Debug("sa5-webflow-slider");
-      this.debug.enabled = true;
-      if (!element.classList.contains("w-slider")) {
-        console.error(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}] is not on a slider element`);
-        return;
-      }
-      this._element = element;
-      this.init();
-    }
-    get element() {
-      return this._element;
-    }
-    get elementSliderMask() {
-      return this._elementSliderMask;
-    }
-    get elementSliderNav() {
-      return this._elementSliderNav;
-    }
-    get name() {
-      return this._element.getAttribute("wfu-slider" /* ATTR_ELEMENT_SLIDER */);
-    }
-    get currentNum() {
-      return this.currentIndex + 1;
-    }
-    set currentNum(num) {
-      this.currentIndex = num - 1;
-    }
-    get currentIndex() {
-      let currentIndex = null;
-      currentIndex = Array.from(this._elementSliderNav.children).findIndex(
-        (child) => child.classList.contains("w-active")
+  // src/webflow-elements/button.ts
+  var Sa5Button = class {
+    get enabled() {
+      return booleanValue(
+        this.element.getAttribute("wfu-button-enabled" /* ATTR_BUTTON_ENABLED */)
       );
-      return currentIndex;
     }
-    set currentIndex(index) {
-      if (index < 0)
-        return;
-      if (index >= this.count)
-        return;
-      let clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      this.debug.debug("setting slide", index);
-      let button = this.elementSliderNav.children[index];
-      setTimeout(() => {
-        button.dispatchEvent(clickEvent);
-      }, 0);
+    set enabled(enabled) {
+      this.element.setAttribute(
+        "wfu-button-enabled" /* ATTR_BUTTON_ENABLED */,
+        enabled ? "true" : "false"
+      );
+      this.applyEnabledState();
     }
-    get count() {
-      return this._elementSliderNav.children.length;
-    }
-    getSlideIndex(slide) {
-      let index = Array.from(this._elementSliderMask.children).indexOf(slide);
-      if (index == -1) {
-        index = Array.from(this._elementSliderNav.children).indexOf(slide);
+    applyEnabledState() {
+      if (this.element.hasAttribute("wfu-button-disabled-class" /* ATTR_BUTTON_DISABLED_CLASS */)) {
+        let disabledClass = this.element.getAttribute("wfu-button-disabled-class" /* ATTR_BUTTON_DISABLED_CLASS */);
+        if (this.enabled) {
+          this.element.classList.remove(disabledClass);
+        } else {
+          this.element.classList.add(disabledClass);
+        }
       }
-      if (index == -1)
-        return null;
-      return index;
+    }
+    constructor(element) {
+      this.element = element;
+      this.name = element.getAttribute("wfu-button" /* ATTR_ELEMENT_BUTTON */);
+    }
+    static create(name) {
+      const elem = document.querySelector(`[${"wfu-button" /* ATTR_ELEMENT_BUTTON */}='${name}']`);
+      if (elem) {
+        const button = new Sa5Button(elem);
+        return button;
+      }
+      return null;
     }
     init() {
-      this._elementSliderMask = this._element.querySelector(".w-slider-mask");
-      this._elementSliderNav = this._element.querySelector(".w-slider-nav");
-      this._observer = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === "attributes" && mutation.attributeName === "class") {
-            const target = mutation.target;
-            if (target.classList.contains("w-active")) {
-              this.onSlideChanged(this.currentIndex);
-            }
-          }
-        }
+      this.applyEnabledState();
+      this.element.addEventListener("click", (event) => {
+        if (!this.enabled)
+          event.preventDefault();
+        console.log("button clicked.");
       });
-      const config = {
-        attributes: true,
-        childList: true,
-        subtree: true
-      };
-      this._observer.observe(this._elementSliderNav, config);
-    }
-    elementSlide(index) {
-      if (index < 0)
-        return;
-      if (index >= this.count)
-        return;
-      let filteredChildren = Array.from(this._elementSliderMask.children).filter(
-        (child) => child.classList.contains("w-slide")
-      );
-      let targetChild = filteredChildren[index];
-      return targetChild;
-    }
-    goToIndex(index) {
-      this.debug.debug(index);
-      this.currentIndex = index;
-    }
-    goToNext() {
-      if (this.currentIndex == null) {
-        this.currentIndex = 0;
-        return;
-      }
-      var newSlideIndex = this.currentIndex + 1;
-      if (newSlideIndex >= this.count)
-        newSlideIndex = 0;
-      this.goToIndex(newSlideIndex);
-    }
-    goToPrev() {
-      if (this.currentIndex == null) {
-        this.currentIndex = 0;
-        return;
-      }
-      var newSlideIndex = this.currentIndex - 1;
-      if (newSlideIndex < 0)
-        newSlideIndex = this.count - 1;
-      this.goToIndex(newSlideIndex);
-    }
-    goToFirst() {
-      this.goToIndex(0);
-    }
-    goToLast() {
-      var newSlideIndex = this.count - 1;
-      this.goToIndex(newSlideIndex);
-    }
-    isSlideChangedCallback(func) {
-      if (!func)
-        return false;
-      return func.length === 1;
-    }
-    onSlideChanged(index) {
-      let core = Sa5Core.startup();
-      core.getHandlers("slideChanged" /* EVENT_SLIDE_CHANGED */).forEach((func) => {
-        func(this, index);
-      });
+      this.element.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
     }
   };
-  Sa5Core.startup(WebflowSlider);
+  Sa5Core.startup(Sa5Button);
 })();
-//# sourceMappingURL=slider.js.map
+//# sourceMappingURL=button.js.map

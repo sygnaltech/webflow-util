@@ -10,11 +10,26 @@
  */
 
 
+import { Sa5Attribute } from '../globals';
 import { Sa5Lightbox } from '../webflow-core/lightbox';
+import { Sa5Button } from '../webflow-elements/button';
 import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
 
 
 const init = () => { 
+
+
+    /**
+     * Buttons
+     */
+
+    const buttons = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_BUTTON}]`) as NodeListOf<HTMLElement>; 
+    buttons.forEach((element) => { 
+
+        // Do something with each element
+        new Sa5Button(element).init();
+
+    });
 
     /**
      * Init lightbox captions 

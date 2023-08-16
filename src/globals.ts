@@ -38,6 +38,9 @@ export enum Sa5Attribute {
     // Elements 
     ATTR_ELEMENT_SLIDER = 'wfu-slider',
     ATTR_ELEMENT_TABS = 'wfu-tabs',
+    ATTR_ELEMENT_BUTTON = 'wfu-button', 
+        ATTR_BUTTON_ENABLED = 'wfu-button-enabled', 
+        ATTR_BUTTON_DISABLED_CLASS = 'wfu-button-disabled-class',
 
     // Data
     ATTR_DATA = 'wfu-data',
