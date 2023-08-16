@@ -151,12 +151,12 @@
   Sa5Core.startup();
 
   // src/webflow-video/player.ts
-  var WfuVideoPlayerState = class {
-    get percentagePlayed() {
-      return this.currentTime / this.totalVideoTime * 100;
+  var Sa5VideoPlayerState = class {
+    get progress() {
+      return this.at / this.duration * 100;
     }
   };
-  var WfuVideoPlayer = class {
+  var Sa5VideoPlayer = class {
     constructor(element) {
       if (element) {
         let videoName = element.getAttribute("wfu-video");
@@ -166,13 +166,14 @@
     }
     init() {
     }
-    onTimeUpdate(time, duration) {
+    onPlayerStateChange(stateChange, time, duration) {
       let core = Sa5Core.startup();
       let percent = time * 100 / duration;
-      core.getHandlers("videoTimeUpdate" /* EVENT_VIDEO_TIME_UPDATE */).forEach((func) => {
-        let state = new WfuVideoPlayerState();
-        state.currentTime = time;
-        state.totalVideoTime = duration;
+      core.getHandlers("playerStateChange" /* EVENT_VIDEO_PLAYER_STATE_CHANGE */).forEach((func) => {
+        let state = new Sa5VideoPlayerState();
+        state.stateChange = stateChange;
+        state.at = time;
+        state.duration = duration;
         func(this.name, state);
       });
     }
@@ -2469,20 +2470,24 @@
   var player_es_default = Player;
 
   // src/webflow-video/players/vimeo.ts
-  var WfuVideoPlayerVimeo = class extends WfuVideoPlayer {
+  var Sa5VideoPlayerVimeo = class extends Sa5VideoPlayer {
     constructor(element) {
       super(element);
     }
     init() {
       this.player = new player_es_default(this.element);
       this.player.on("timeupdate", (data) => {
-        super.onTimeUpdate(data.seconds, data.duration);
+        super.onPlayerStateChange(
+          "timeupdate" /* TimeUpdate */,
+          data.seconds,
+          data.duration
+        );
       });
     }
   };
 
   // src/webflow-video/player-factory.ts
-  var WfuVideoPlayerFactory = class {
+  var Sa5VideoPlayerFactory = class {
     constructor() {
     }
     static create(element) {
@@ -2496,7 +2501,7 @@
         console.error("SA5", "Does not appear to be a valid Vimeo video element");
         return null;
       }
-      return new WfuVideoPlayerVimeo(element);
+      return new Sa5VideoPlayerVimeo(element);
     }
   };
 })();

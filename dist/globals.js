@@ -4,7 +4,7 @@
     Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
     Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";
     Sa5GlobalEvent2["EVENT_SLIDE_CHANGED"] = "slideChanged";
-    Sa5GlobalEvent2["EVENT_VIDEO_TIME_UPDATE"] = "videoTimeUpdate";
+    Sa5GlobalEvent2["EVENT_VIDEO_PLAYER_STATE_CHANGE"] = "playerStateChange";
     return Sa5GlobalEvent2;
   })(Sa5GlobalEvent || {});
   var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {

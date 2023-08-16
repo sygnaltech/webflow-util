@@ -158,12 +158,16 @@
     PlayerStatus2["Buffering"] = "buffering";
     return PlayerStatus2;
   })(PlayerStatus || {});
-  var WfuVideoPlayerState = class {
-    get percentagePlayed() {
-      return this.currentTime / this.totalVideoTime * 100;
+  var PlayerStateChange = /* @__PURE__ */ ((PlayerStateChange2) => {
+    PlayerStateChange2["TimeUpdate"] = "timeupdate";
+    return PlayerStateChange2;
+  })(PlayerStateChange || {});
+  var Sa5VideoPlayerState = class {
+    get progress() {
+      return this.at / this.duration * 100;
     }
   };
-  var WfuVideoPlayer = class {
+  var Sa5VideoPlayer = class {
     constructor(element) {
       if (element) {
         let videoName = element.getAttribute("wfu-video");
@@ -173,13 +177,14 @@
     }
     init() {
     }
-    onTimeUpdate(time, duration) {
+    onPlayerStateChange(stateChange, time, duration) {
       let core = Sa5Core.startup();
       let percent = time * 100 / duration;
-      core.getHandlers("videoTimeUpdate" /* EVENT_VIDEO_TIME_UPDATE */).forEach((func) => {
-        let state = new WfuVideoPlayerState();
-        state.currentTime = time;
-        state.totalVideoTime = duration;
+      core.getHandlers("playerStateChange" /* EVENT_VIDEO_PLAYER_STATE_CHANGE */).forEach((func) => {
+        let state = new Sa5VideoPlayerState();
+        state.stateChange = stateChange;
+        state.at = time;
+        state.duration = duration;
         func(this.name, state);
       });
     }

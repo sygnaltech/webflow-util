@@ -11,7 +11,7 @@
 import { WebflowVideo } from '../webflow-video';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
-import { WfuVideoPlayerFactory } from '../webflow-video/player-factory';
+import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
 import { Sa5Attribute } from '../globals';
 
 // type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
@@ -35,7 +35,7 @@ const init = () => {
 
     videos.forEach((element: HTMLElement) => {
 
-        WfuVideoPlayerFactory.create(element).init();
+        Sa5VideoPlayerFactory.create(element).init();
 
     });
     

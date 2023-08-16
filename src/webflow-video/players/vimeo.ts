@@ -11,11 +11,11 @@
  */
 
 import { Sa5Core } from '../../webflow-core'
-import { WfuVideoPlayer } from '../player';
+import { PlayerStateChange, Sa5VideoPlayer } from '../player';
 import VimeoPlayer from '@vimeo/player';
 
 
-export class WfuVideoPlayerVimeo extends WfuVideoPlayer {
+export class Sa5VideoPlayerVimeo extends Sa5VideoPlayer {
 
 //    config; // Optional config
 
@@ -37,7 +37,11 @@ export class WfuVideoPlayerVimeo extends WfuVideoPlayer {
         this.player = new VimeoPlayer(this.element);
 
         this.player.on('timeupdate', (data) => {
-            super.onTimeUpdate(data.seconds, data.duration);
+            super.onPlayerStateChange(
+                PlayerStateChange.TimeUpdate,
+                data.seconds, 
+                data.duration
+                );
         });
 
     }

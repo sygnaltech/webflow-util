@@ -12,29 +12,37 @@
 
 import { Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core'
-import { WfuVideoPlayerVimeo } from './players/vimeo';
+import { Sa5VideoPlayerVimeo } from './players/vimeo';
 
 
 export enum PlayerStatus {
     Playing = 'playing',
     Paused = 'paused',
     Stopped = 'stopped',
-    Buffering = 'buffering'
+    Buffering = 'buffering',
+}
+
+export enum PlayerStateChange {
+    TimeUpdate = 'timeupdate',
 }
 
 
-export class WfuVideoPlayerState {
+export class Sa5VideoPlayerState { 
+
+    stateChange: PlayerStateChange; 
+
     status: PlayerStatus;
-    currentTime: number;  // in seconds
-    totalVideoTime: number;  // in seconds
+    at: number;  // position, in seconds
+    duration: number;  // video total duration, in seconds
 
-    get percentagePlayed(): number {
-        return (this.currentTime / this.totalVideoTime) * 100.0;
+    // video playback progress, as percent
+    get progress(): number {
+        return (this.at / this.duration) * 100.0;
     };  // as a percentage from 0 to 100
-    // ... any other properties you want
+    
 }
 
-export class WfuVideoPlayer {
+export class Sa5VideoPlayer {
 
 //    config; // Optional config
 
@@ -56,7 +64,7 @@ export class WfuVideoPlayer {
 
     }
 
-    onTimeUpdate(time: number, duration: number) {
+    onPlayerStateChange(stateChange: PlayerStateChange, time: number, duration: number) {
 
         let core: Sa5Core = Sa5Core.startup();
 
@@ -64,13 +72,14 @@ export class WfuVideoPlayer {
         let percent = time * 100 / duration;
 
         // Get any global handlers
-        core.getHandlers(Sa5GlobalEvent.EVENT_VIDEO_TIME_UPDATE)
+        core.getHandlers(Sa5GlobalEvent.EVENT_VIDEO_PLAYER_STATE_CHANGE)
           .forEach(func => {
 
             // Initialize player state info 
-            let state: WfuVideoPlayerState = new WfuVideoPlayerState();
-            state.currentTime = time;
-            state.totalVideoTime = duration;
+            let state: Sa5VideoPlayerState = new Sa5VideoPlayerState();
+            state.stateChange = stateChange; 
+            state.at = time;
+            state.duration = duration;
 
             func(this.name, state);
     

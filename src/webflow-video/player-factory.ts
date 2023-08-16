@@ -10,20 +10,20 @@
  */
 
 import { Sa5Core } from '../webflow-core'
-import { WfuVideoPlayer } from './player';
-import { WfuVideoPlayerVimeo } from './players/vimeo';
+import { Sa5VideoPlayer } from './player';
+import { Sa5VideoPlayerVimeo } from './players/vimeo';
 
 
 
 
 
 
-export class WfuVideoPlayerFactory {
+export class Sa5VideoPlayerFactory {
 
     constructor() {
     }
 
-    static create(element: HTMLElement): WfuVideoPlayer {
+    static create(element: HTMLElement): Sa5VideoPlayer {
 
         // Verify not null
         if (!element)
@@ -44,7 +44,7 @@ export class WfuVideoPlayerFactory {
         }
 
         // It's Vimeo!
-        return new WfuVideoPlayerVimeo(element);
+        return new Sa5VideoPlayerVimeo(element);
     
     }
     
