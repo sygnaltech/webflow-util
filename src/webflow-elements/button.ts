@@ -39,7 +39,7 @@ export class Sa5Button {
 
     }
 
-    applyEnabledState() {
+    private applyEnabledState() {
 
         // Disabled styling
         if (this.element.hasAttribute(Sa5Attribute.ATTR_BUTTON_DISABLED_CLASS)) {
@@ -66,18 +66,6 @@ export class Sa5Button {
 
     }
 
-    static create(name: string): Sa5Button {
-
-        const elem = document.querySelector(`[${Sa5Attribute.ATTR_ELEMENT_BUTTON}='${name}']`) as HTMLElement; 
-        if (elem) {
-            const button = new Sa5Button(elem);
-
-            return button; 
-        } 
-
-        return null;
-    }
-
     init() {
 
 // console.log("init button");
@@ -90,13 +78,25 @@ export class Sa5Button {
             if (!this.enabled) 
                 event.preventDefault();
             
-            console.log("button clicked."); 
+//            console.log("button clicked."); 
             
         });
 
 
         this.element.removeAttribute(Sa5Attribute.ATTR_PRELOAD);
 
+    }
+
+    static create(name: string): Sa5Button {
+
+        const elem = document.querySelector(`[${Sa5Attribute.ATTR_ELEMENT_BUTTON}='${name}']`) as HTMLElement; 
+        if (elem) {
+            const button = new Sa5Button(elem);
+
+            return button; 
+        } 
+
+        return null;
     }
 
 }
