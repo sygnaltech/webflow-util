@@ -2486,6 +2486,16 @@
     constructor() {
     }
     static create(element) {
+      if (!element)
+        return null;
+      if (element.nodeName != "IFRAME") {
+        console.error("SA5", "Invalid video element- must be an IFRAME");
+        return null;
+      }
+      if (!element.matches("[src^='https://player.vimeo.com/']")) {
+        console.error("SA5", "Does not appear to be a valid Vimeo video element");
+        return null;
+      }
       return new WfuVideoPlayerVimeo(element);
     }
   };

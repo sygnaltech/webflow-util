@@ -25,21 +25,26 @@ export class WfuVideoPlayerFactory {
 
     static create(element: HTMLElement): WfuVideoPlayer {
 
-        // It's Vimeo!
-            // Verify it's a recognized player
-            // Vimeo ( on iframe? )
-            return new WfuVideoPlayerVimeo(element);
-    
-            /*
-        if (element) {
-            let videoValue = element.getAttribute('wfu-video');
-            if (videoValue) {
-                console.log(videoValue);
-            } else {
-                console.log('Attribute not found or has no value');
-            }
+        // Verify not null
+        if (!element)
+            return null; 
+
+        // Verify it's an IFRAME
+        if (element.nodeName != "IFRAME") {
+            console.error ("SA5", "Invalid video element- must be an IFRAME"); 
+            return null;
         }
-        */
+
+        // VIMEO 
+
+        // Verify src looks legit as VIMEO
+        if (!element.matches("[src^='https://player.vimeo.com/']")) {
+            console.error ("SA5", "Does not appear to be a valid Vimeo video element"); 
+            return null;
+        }
+
+        // It's Vimeo!
+        return new WfuVideoPlayerVimeo(element);
     
     }
     

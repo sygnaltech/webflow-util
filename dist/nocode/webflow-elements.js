@@ -217,6 +217,14 @@
       this.element = element;
       this.name = element.getAttribute("wfu-button" /* ATTR_ELEMENT_BUTTON */);
     }
+    init() {
+      this.applyEnabledState();
+      this.element.addEventListener("click", (event) => {
+        if (!this.enabled)
+          event.preventDefault();
+      });
+      this.element.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
+    }
     static create(name) {
       const elem = document.querySelector(`[${"wfu-button" /* ATTR_ELEMENT_BUTTON */}='${name}']`);
       if (elem) {
@@ -224,15 +232,6 @@
         return button;
       }
       return null;
-    }
-    init() {
-      this.applyEnabledState();
-      this.element.addEventListener("click", (event) => {
-        if (!this.enabled)
-          event.preventDefault();
-        console.log("button clicked.");
-      });
-      this.element.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
     }
   };
   Sa5Core.startup(Sa5Button);
