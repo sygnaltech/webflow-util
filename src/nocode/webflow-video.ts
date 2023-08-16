@@ -14,20 +14,22 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { WfuVideoPlayerFactory } from '../webflow-video/player-factory';
 import { Sa5Attribute } from '../globals';
 
-type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
+// type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
 
 
 const init = () => { 
 
-//    new Sa5Core().init();
-let core: Sa5Core = Sa5Core.startup();
+
+    let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-video");
     debug.debug ("Initializing");
 
 
-
+    /**
+     * Initialize all [wfu-video] elements
+     */
 
     let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
 
@@ -37,6 +39,10 @@ let core: Sa5Core = Sa5Core.startup();
 
     });
     
+
+    /**
+     * Handle background videos. 
+     */
 
     const webflowVideo = new WebflowVideo();
 
