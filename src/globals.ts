@@ -28,6 +28,9 @@ export namespace Sa5Attribute {
 
 export enum Sa5Attribute {
 
+    // Core
+    ATTR_CORE_SCRIPT_INJECT = 'wfu-script-load', 
+
     // Video
     ATTR_VIDEO = 'wfu-video',
     ATTR_VIDEO_DATA_POSTER_URL = 'wfu-data-poster-url', 

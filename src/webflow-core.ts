@@ -17,6 +17,7 @@
 
 
 // import { HtmlBuilder } from './modules/webflow-html-builder';
+import { Sa5Attribute } from './globals';
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Designer } from './webflow-core/designer';
 
@@ -60,7 +61,46 @@ export class Sa5Core {
     init() {
 
         this.initDebugMode();
+        this.initAsync();
+    }
 
+    async initAsync() {
+
+        this.initScriptInjectionsAsync(); 
+
+    }
+
+    async initScriptInjectionsAsync() {
+
+console.log("Sa5", "Script injections"); 
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const loadSrcScripts = document.querySelectorAll<HTMLScriptElement>(
+                `script[${Sa5Attribute.ATTR_CORE_SCRIPT_INJECT}]`
+                );
+        
+            loadSrcScripts.forEach(script => {
+                const loadSrcUrl = script.getAttribute(Sa5Attribute.ATTR_CORE_SCRIPT_INJECT);
+                
+                if (loadSrcUrl) {
+                    fetch(loadSrcUrl)
+                        .then(response => response.text())
+                        .then(jsContent => {
+                            // Create a new script element and set its content
+                            const newScript = document.createElement('script');
+                            newScript.textContent = jsContent;
+        
+                            // Replace the current script tag with the new one
+                            script.replaceWith(newScript);
+                        })
+                        .catch(error => {
+                            console.error('Error loading script:', error);
+                        });
+                }
+            });
+        });
+        
     }
 
     // Auto-enable debug
@@ -119,6 +159,7 @@ export class Sa5Core {
     // console.log("name", window["sa5"].name);
 
             core = new Sa5Core();
+            core.init(); 
 
             // Absorb handlers
             if(Array.isArray(sa5instance))

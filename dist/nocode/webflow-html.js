@@ -7,6 +7,47 @@
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
 
+  // src/globals.ts
+  var Sa5Attribute, Sa5Attribute;
+  var init_globals = __esm({
+    "src/globals.ts"() {
+      ((Sa5Attribute2) => {
+        function getBracketed(attr) {
+          return `[${attr}]`;
+        }
+        Sa5Attribute2.getBracketed = getBracketed;
+      })(Sa5Attribute || (Sa5Attribute = {}));
+      Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
+        Sa5Attribute2["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
+        Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
+        Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
+        Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
+        Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+        Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
+        Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
+        Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
+        Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
+        Sa5Attribute2["ATTR_DATA"] = "wfu-data";
+        Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
+        Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
+        Sa5Attribute2["ATTR_DATA_ITEM_ID"] = "wfu-data-item-id";
+        Sa5Attribute2["ATTR_DATABIND"] = "wfu-bind";
+        Sa5Attribute2["ATTR_DATABIND_CONTENT"] = "wfu-bind-content";
+        Sa5Attribute2["ATTR_DATABIND_CONTEXT_DSN"] = "wfu-bind-dsn";
+        Sa5Attribute2["ATTR_DATABIND_CONTEXT_ITEM_ID"] = "wfu-bind-item-id";
+        Sa5Attribute2["ATTR_PRELOAD"] = "wfu-preload";
+        Sa5Attribute2["ATTR_IX_TRIGGER"] = "wfu-ix-trigger";
+        Sa5Attribute2["ATTR_IX_ID"] = "wfu-ix-id";
+        Sa5Attribute2["ATTR_SORT"] = "wfu-sort";
+        Sa5Attribute2["ATTR_FILTER"] = "wfu-filter";
+        Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
+        Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
+        Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+        return Sa5Attribute2;
+      })(Sa5Attribute || {});
+    }
+  });
+
   // src/webflow-core/debug.ts
   var Sa5Debug;
   var init_debug = __esm({
@@ -53,46 +94,6 @@
     }
   });
 
-  // src/globals.ts
-  var Sa5Attribute, Sa5Attribute;
-  var init_globals = __esm({
-    "src/globals.ts"() {
-      ((Sa5Attribute2) => {
-        function getBracketed(attr) {
-          return `[${attr}]`;
-        }
-        Sa5Attribute2.getBracketed = getBracketed;
-      })(Sa5Attribute || (Sa5Attribute = {}));
-      Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
-        Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
-        Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
-        Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
-        Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
-        Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
-        Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
-        Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
-        Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
-        Sa5Attribute2["ATTR_DATA"] = "wfu-data";
-        Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
-        Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
-        Sa5Attribute2["ATTR_DATA_ITEM_ID"] = "wfu-data-item-id";
-        Sa5Attribute2["ATTR_DATABIND"] = "wfu-bind";
-        Sa5Attribute2["ATTR_DATABIND_CONTENT"] = "wfu-bind-content";
-        Sa5Attribute2["ATTR_DATABIND_CONTEXT_DSN"] = "wfu-bind-dsn";
-        Sa5Attribute2["ATTR_DATABIND_CONTEXT_ITEM_ID"] = "wfu-bind-item-id";
-        Sa5Attribute2["ATTR_PRELOAD"] = "wfu-preload";
-        Sa5Attribute2["ATTR_IX_TRIGGER"] = "wfu-ix-trigger";
-        Sa5Attribute2["ATTR_IX_ID"] = "wfu-ix-id";
-        Sa5Attribute2["ATTR_SORT"] = "wfu-sort";
-        Sa5Attribute2["ATTR_FILTER"] = "wfu-filter";
-        Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
-        Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
-        Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
-        return Sa5Attribute2;
-      })(Sa5Attribute || {});
-    }
-  });
-
   // src/webflow-core/designer.ts
   var Sa5Designer;
   var init_designer = __esm({
@@ -120,6 +121,7 @@
   var Sa5Core;
   var init_webflow_core = __esm({
     "src/webflow-core.ts"() {
+      init_globals();
       init_debug();
       init_designer();
       Sa5Core = class {
@@ -136,6 +138,30 @@
         }
         init() {
           this.initDebugMode();
+          this.initAsync();
+        }
+        async initAsync() {
+          this.initScriptInjectionsAsync();
+        }
+        async initScriptInjectionsAsync() {
+          console.log("Sa5", "Script injections");
+          document.addEventListener("DOMContentLoaded", () => {
+            const loadSrcScripts = document.querySelectorAll(
+              `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
+            );
+            loadSrcScripts.forEach((script) => {
+              const loadSrcUrl = script.getAttribute("wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */);
+              if (loadSrcUrl) {
+                fetch(loadSrcUrl).then((response) => response.text()).then((jsContent) => {
+                  const newScript = document.createElement("script");
+                  newScript.textContent = jsContent;
+                  script.replaceWith(newScript);
+                }).catch((error) => {
+                  console.error("Error loading script:", error);
+                });
+              }
+            });
+          });
         }
         initDebugMode() {
           const debugParamKey = "debug";
@@ -162,6 +188,7 @@
             core2 = sa5instance;
           } else {
             core2 = new Sa5Core();
+            core2.init();
             if (Array.isArray(sa5instance))
               core2.handlers = sa5instance;
             window["sa5"] = core2;

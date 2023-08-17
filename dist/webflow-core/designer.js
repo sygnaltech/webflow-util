@@ -8,6 +8,7 @@
     Sa5Attribute2.getBracketed = getBracketed;
   })(Sa5Attribute || (Sa5Attribute = {}));
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
+    Sa5Attribute2["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
     Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";

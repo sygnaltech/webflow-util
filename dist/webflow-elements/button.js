@@ -8,6 +8,7 @@
     Sa5Attribute2.getBracketed = getBracketed;
   })(Sa5Attribute || (Sa5Attribute = {}));
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
+    Sa5Attribute2["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
     Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
@@ -126,6 +127,30 @@
     }
     init() {
       this.initDebugMode();
+      this.initAsync();
+    }
+    async initAsync() {
+      this.initScriptInjectionsAsync();
+    }
+    async initScriptInjectionsAsync() {
+      console.log("Sa5", "Script injections");
+      document.addEventListener("DOMContentLoaded", () => {
+        const loadSrcScripts = document.querySelectorAll(
+          `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
+        );
+        loadSrcScripts.forEach((script) => {
+          const loadSrcUrl = script.getAttribute("wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */);
+          if (loadSrcUrl) {
+            fetch(loadSrcUrl).then((response) => response.text()).then((jsContent) => {
+              const newScript = document.createElement("script");
+              newScript.textContent = jsContent;
+              script.replaceWith(newScript);
+            }).catch((error) => {
+              console.error("Error loading script:", error);
+            });
+          }
+        });
+      });
     }
     initDebugMode() {
       const debugParamKey = "debug";
@@ -152,6 +177,7 @@
         core = sa5instance;
       } else {
         core = new Sa5Core();
+        core.init();
         if (Array.isArray(sa5instance))
           core.handlers = sa5instance;
         window["sa5"] = core;
