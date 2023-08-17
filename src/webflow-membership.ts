@@ -687,4 +687,77 @@ export class Sa5Membership {
 
     //#endregion
 
+/*
+// https://jwt.io/ 
+// How to decode jwt token in javascript without using a library?
+// https://stackoverflow.com/a/38552302 
+// https://www.npmjs.com/package/jwt-decode
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+*/
+
+
+    /*
+
+getAccessGroups() {
+  
+    var accessGroups = []; // Object.create(null);
+    accessGroups.push({ key: "webflow", access: false });
+    accessGroups.push({ key: "webflow-2", access: false });
+    accessGroups.push({ key: "client", access: false });
+  //  accessGroups.webflow = false;
+  //  accessGroups["webflow-2"] = false;
+  //  accessGroups.push({"client": false});
+  //  accessGroups = {...accessGroups, ["client"]: false}; 
+  
+    accessGroups.forEach((element, index) => {
+      accessGroups[index].access = true;
+    });
+    
+    
+  //  const ag = accessGroups.map(
+  //x => Object.assign({}, accessGroups, {"hasAccess": "true"})
+  //  ); 
+    
+    return accessGroups; // 
+  }
+  
+  async hasAccessGroup(accessGroup) {
+    
+    const response = await fetch(`/ag/${accessGroup}`);
+    console.log(`redirected: ${response.redirected}`);
+  
+    
+      // https://www.sygnal.com/access-group/webflow
+    // 302
+    // 200 
+    
+      if(!response.redirected)
+      {
+        //no redirection
+        console.log(`Has access group ${accessGroup}`);
+      }
+      else
+      {
+        //redirection
+        console.log(`Not logged in, or no access to ${accessGroup}`);
+      }
+  
+    // /log-in?
+      // https://www.sygnal.com/access-group/client
+    // access denied
+    // 302 
+    // /access-denied? 
+    
+  }
+
+*/
+
 }

@@ -1110,6 +1110,33 @@
         form.setAttribute("data-wf-user-form-redirect", url);
       });
     }
+    logout() {
+      fetch("/.wf_graphql/csrf", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      }).then((response) => response.json()).then((data) => {
+        console.log("CSRF Response:", data);
+        let csrfToken = document.cookie.split("; ").find((row) => row.startsWith("wf-csrf=")).split("=")[1];
+        return fetch("/.wf_graphql/usys/apollo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Wf-Csrf": csrfToken
+          },
+          body: JSON.stringify([{
+            "operationName": "UserLogoutRequest",
+            "variables": {},
+            "query": "mutation UserLogoutRequest {\n  usysDestroySession {\n    ok\n    __typename\n  }\n}\n"
+          }])
+        });
+      }).then((response) => response.json()).then((data) => {
+        console.log("Apollo Response:", data);
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+    }
   };
 
   // src/nocode/webflow-membership.ts
