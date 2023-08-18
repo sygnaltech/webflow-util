@@ -38,7 +38,7 @@ type GetConfigCallback = (Sa5MembershipRoutingConfig)
 
 interface Sa5MembershipRoutingConfig {
 
-    getConfigCallback?: GetConfigCallback; 
+//    getConfigCallback?: GetConfigCallback; 
 
     routeAfterFirstLogin: string; // url
     routeAfterLogin: string; // url
@@ -54,7 +54,7 @@ export class Sa5MembershipRouting {
     constructor(config: Partial<Sa5MembershipRoutingConfig> = {}) {
 
         this.config = {
-            getConfigCallback: config.getConfigCallback,
+//            getConfigCallback: config.getConfigCallback,
             routeAfterFirstLogin: config.routeAfterFirstLogin ?? '/',
             routeAfterLogin: config.routeAfterLogin ?? '/',
         }
@@ -70,14 +70,18 @@ export class Sa5MembershipRouting {
 
         let core: Sa5Core = Sa5Core.startup();
 
-        if(!core.getHandler("getMembershipRoutingConfig")) 
+console.log(core);
+
+        let configHandler: GetConfigCallback = core.getHandler("getMembershipRoutingConfig") as GetConfigCallback;
+
+        if(!configHandler) 
             return; // do nothing
     
-        this.config.getConfigCallback 
-            = core.getHandler('getMembershipRoutingConfig') as GetConfigCallback; 
+        // this.config.getConfigCallback 
+        //     = core.getHandler('getMembershipRoutingConfig') as GetConfigCallback; 
 
-        if(this.config.getConfigCallback) {
-            this.config = this.config.getConfigCallback(
+        if(configHandler) {
+            this.config = configHandler(
                 this.config
             ); 
 

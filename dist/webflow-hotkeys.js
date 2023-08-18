@@ -104,6 +104,7 @@
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
+      console.log("in getHandler");
       const item = this.handlers.find((item2) => item2[0] === name);
       return item ? item[1] : void 0;
     }
@@ -656,9 +657,8 @@
   // src/webflow-hotkeys.ts
   var Sa5Hotkeys = class {
     init() {
-      window["sa5"] = window["sa5"] || [];
-      const sa5 = window["sa5"];
-      let hotkeysItems = sa5.handlers.filter(([str, fn]) => str === "hotkeys");
+      let core = Sa5Core.startup();
+      let hotkeysItems = core.handlers.filter(([str, fn]) => str === "hotkeys");
       hotkeysItems.forEach(([str, fn]) => {
         if (typeof fn === "function") {
           fn(this);

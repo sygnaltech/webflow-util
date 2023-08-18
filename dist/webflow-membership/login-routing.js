@@ -104,6 +104,7 @@
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
+      console.log("in getHandler");
       const item = this.handlers.find((item2) => item2[0] === name);
       return item ? item[1] : void 0;
     }
@@ -180,7 +181,6 @@
   var Sa5MembershipRouting = class {
     constructor(config = {}) {
       this.config = {
-        getConfigCallback: config.getConfigCallback,
         routeAfterFirstLogin: config.routeAfterFirstLogin ?? "/",
         routeAfterLogin: config.routeAfterLogin ?? "/"
       };
@@ -189,11 +189,12 @@
     }
     init() {
       let core = Sa5Core.startup();
-      if (!core.getHandler("getMembershipRoutingConfig"))
+      console.log(core);
+      let configHandler = core.getHandler("getMembershipRoutingConfig");
+      if (!configHandler)
         return;
-      this.config.getConfigCallback = core.getHandler("getMembershipRoutingConfig");
-      if (this.config.getConfigCallback) {
-        this.config = this.config.getConfigCallback(
+      if (configHandler) {
+        this.config = configHandler(
           this.config
         );
         console.log("config handler", this.config);

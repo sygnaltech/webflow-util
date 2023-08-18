@@ -79,7 +79,7 @@ export class Sa5Membership {
         }
 
         let core: Sa5Core = Sa5Core.startup();
-
+console.log(core);
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership");
         this.debug.debug ("Initializing");
@@ -87,12 +87,44 @@ export class Sa5Membership {
         // Load config
 
         // Get any global handler
-        const userInfoChanged = core.getHandler(Sa5GlobalEvent.EVENT_USER_CHANGED); 
-        if (this.isUserInfoChangedCallback(userInfoChanged)) {
+//         const userInfoChanged = core.getHandlers(Sa5GlobalEvent.EVENT_USER_CHANGED); 
+//         userInfoChanged.forEach((f) => {
 
-            this.config.userInfoUpdatedCallback = userInfoChanged;
+// if(this.isUserInfoChangedCallback(f)) {
 
-        }
+// }
+
+//         }); 
+        // if (this.isUserInfoChangedCallback(userInfoChanged)) {
+
+        //     this.config.userInfoUpdatedCallback = userInfoChanged;
+
+        // }
+
+        // const userInfoChanged = core.getHandler(Sa5GlobalEvent.EVENT_USER_CHANGED); 
+        // if (this.isUserInfoChangedCallback(userInfoChanged)) {
+
+        //     this.config.userInfoUpdatedCallback = userInfoChanged;
+
+        // }
+
+
+
+    }
+
+    onUserInfoChanged(user: Sa5User) {
+
+        let core: Sa5Core = Sa5Core.startup();
+        console.log(core);
+        
+        const userInfoChanged = core.getHandlers(Sa5GlobalEvent.EVENT_USER_CHANGED); 
+        userInfoChanged.forEach((f) => {
+
+            if(this.isUserInfoChangedCallback(f)) {
+                f(user); 
+            }
+
+        });         
 
     }
 
@@ -214,10 +246,11 @@ export class Sa5Membership {
             }
 
             // User Callback 
-            if (this.config.userInfoUpdatedCallback) {
-                this.debug.debug("userCallback", user);
-                this.config.userInfoUpdatedCallback(user); // async
-            }
+            this.onUserInfoChanged(user);
+            // if (this.config.userInfoUpdatedCallback) {
+            //     this.debug.debug("userCallback", user);
+            //     this.config.userInfoUpdatedCallback(user); // async
+            // }
 
         }
 
@@ -578,13 +611,16 @@ export class Sa5Membership {
         // Notify listeners 
 //        console.log("%cchecking for handler", "background-color: yellow;");
 
-        if (this.config.userInfoUpdatedCallback) {
-//            console.log("%ccalling handler", "background-color: yellow;");
-            this.debug.debug("Notify listeners", userData); // Merged 
+this.onUserInfoChanged(userData);
 
-            this.userInfoUpdatedCallback(userData); 
-//            this.config.userInfoUpdatedCallback(userData); // async
-        }
+
+//         if (this.config.userInfoUpdatedCallback) {
+// //            console.log("%ccalling handler", "background-color: yellow;");
+//             this.debug.debug("Notify listeners", userData); // Merged 
+
+//             this.userInfoUpdatedCallback(userData); 
+// //            this.config.userInfoUpdatedCallback(userData); // async
+//         }
 //this.userInfoUpdatedCallback
         this.debug.groupEnd();
     }
@@ -628,23 +664,46 @@ export class Sa5Membership {
     // Expanded login button
     // Used on a containing DIV to expand the trigger area of 
     // Webflow's Log-In / Log-Out button  
-    expandLoginButton($elem) {
+
+    expandLoginButton(elem: HTMLElement) {
 
         // Get Webflow Login/Logout button
-        const $wfLoginButton = $elem.find("[data-wf-user-logout]");
-
+        const wfLoginButton: HTMLElement = elem.querySelector("[data-wf-user-logout]");
+    
         // Setup click event handler on outer DIV
-        $elem.click(function() {
+        elem.addEventListener('click', () => {
             // Click inner element
-            $wfLoginButton.trigger('click');
+            if (wfLoginButton) {
+                wfLoginButton.click();
+            }
         });
-
-        // Also interecept and stop propogation so event is not doubled
-        $wfLoginButton.click(function(e) {
-            e.stopPropagation();
-        });
-
+    
+        // Also intercept and stop propagation so event is not doubled
+        if (wfLoginButton) {
+            wfLoginButton.addEventListener('click', (e: Event) => {
+                e.stopPropagation();
+            });
+        }
     }
+    
+
+    // expandLoginButton(elem) {
+
+    //     // Get Webflow Login/Logout button
+    //     const $wfLoginButton = elem.find("[data-wf-user-logout]");
+
+    //     // Setup click event handler on outer DIV
+    //     elem.click(function() {
+    //         // Click inner element
+    //         $wfLoginButton.trigger('click');
+    //     });
+
+    //     // Also interecept and stop propogation so event is not doubled
+    //     $wfLoginButton.click(function(e) {
+    //         e.stopPropagation();
+    //     });
+
+    // }
 
     //#endregion
 

@@ -39,13 +39,18 @@ export class Sa5Hotkeys {
         // );
 
         // verify
-        window['sa5'] = window['sa5'] || [];
-        const sa5: Sa5Core = window['sa5'] as Sa5Core;
+        // window['sa5'] = window['sa5'] || [];
+        // const sa5: Sa5Core = window['sa5'] as Sa5Core;
+
+        let core: Sa5Core = Sa5Core.startup();
 
 //console.log("sa5 handlers", sa5.handlers);
 
         // Get hotkeys handlers
-        let hotkeysItems = sa5.handlers.filter(([str, fn]) => str === 'hotkeys');
+
+        //BUG:  
+//        core.getHandlers()
+        let hotkeysItems = core.handlers.filter(([str, fn]) => str === 'hotkeys');
 
 //console.log("hotk handlers", hotkeysItems);
 

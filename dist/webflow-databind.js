@@ -186,6 +186,7 @@
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
+      console.log("in getHandler");
       const item = this.handlers.find((item2) => item2[0] === name);
       return item ? item[1] : void 0;
     }
@@ -497,17 +498,24 @@
         }
       };
       let core = Sa5Core.startup();
+      console.log(core);
       this.debug = new Sa5Debug("sa5-membership");
       this.debug.debug("Initializing");
-      const userInfoChanged = core.getHandler("userInfoChanged" /* EVENT_USER_CHANGED */);
-      if (this.isUserInfoChangedCallback(userInfoChanged)) {
-        this.config.userInfoUpdatedCallback = userInfoChanged;
-      }
     }
     isUserInfoChangedCallback(func) {
       if (!func)
         return false;
       return func.length === 1;
+    }
+    onUserInfoChanged(user) {
+      let core = Sa5Core.startup();
+      console.log(core);
+      const userInfoChanged = core.getHandlers("userInfoChanged" /* EVENT_USER_CHANGED */);
+      userInfoChanged.forEach((f) => {
+        if (this.isUserInfoChangedCallback(f)) {
+          f(user);
+        }
+      });
     }
     init() {
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
@@ -556,10 +564,7 @@
             user
           }).bindAll();
         }
-        if (this.config.userInfoUpdatedCallback) {
-          this.debug.debug("userCallback", user);
-          this.config.userInfoUpdatedCallback(user);
-        }
+        this.onUserInfoChanged(user);
       }
       if (!user)
         await this.loadUserInfoAsync();
@@ -755,10 +760,7 @@
           }
         ).bindAll();
       }
-      if (this.config.userInfoUpdatedCallback) {
-        this.debug.debug("Notify listeners", userData);
-        this.userInfoUpdatedCallback(userData);
-      }
+      this.onUserInfoChanged(userData);
       this.debug.groupEnd();
     }
     loadUserInfoCache() {
@@ -783,14 +785,18 @@
       this.debug.groupEnd();
       return user;
     }
-    expandLoginButton($elem) {
-      const $wfLoginButton = $elem.find("[data-wf-user-logout]");
-      $elem.click(function() {
-        $wfLoginButton.trigger("click");
+    expandLoginButton(elem) {
+      const wfLoginButton = elem.querySelector("[data-wf-user-logout]");
+      elem.addEventListener("click", () => {
+        if (wfLoginButton) {
+          wfLoginButton.click();
+        }
       });
-      $wfLoginButton.click(function(e) {
-        e.stopPropagation();
-      });
+      if (wfLoginButton) {
+        wfLoginButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      }
     }
   };
 

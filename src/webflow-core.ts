@@ -38,7 +38,8 @@ export class Sa5Core {
 //        return null;
     }
 
-    getHandler(name: string): Function | undefined {
+    getHandler(name: string): Function { // | undefined {
+        console.log("in getHandler")
         const item = this.handlers
             .find(item => item[0] === name);
         return item ? item[1] : undefined;
