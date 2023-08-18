@@ -9,6 +9,7 @@ export enum Sa5GlobalEvent {
     EVENT_USER_CHANGED = 'userInfoChanged',
     EVENT_DATASTORE_LOADED = 'datastoreLoaded',
     EVENT_SLIDE_CHANGED = 'slideChanged', 
+    EVENT_TAB_CHANGED = 'tabChanged', 
     EVENT_VIDEO_PLAYER_STATE_CHANGE = 'playerStateChange', 
     
 }
