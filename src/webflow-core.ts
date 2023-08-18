@@ -16,30 +16,28 @@
 // }
 
 
-// import { HtmlBuilder } from './modules/webflow-html-builder';
 import { Sa5Attribute } from './globals';
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Designer } from './webflow-core/designer';
 
 /*
- * Debugging class.
+ * SA5 Core
  */
 
 export class Sa5Core {
 
-    // let sa5: [string, Function][] = window.sa5 || [];
     public handlers = [];
 
+    // Returns all handlers found by the specified name
     getHandlers(name: string): Function[] {
 
         return this.handlers.filter(item => item[0] === name)
             .map(item => item[1]);
-
-//        return null;
     }
 
-    getHandler(name: string): Function { // | undefined {
-        console.log("in getHandler")
+    // Returns the first handler found by the specified name
+    getHandler(name: string): Function { 
+
         const item = this.handlers
             .find(item => item[0] === name);
         return item ? item[1] : undefined;
@@ -73,7 +71,7 @@ export class Sa5Core {
 
     async initScriptInjectionsAsync() {
 
-console.log("Sa5", "Script injections"); 
+// console.log("Sa5", "Script injections"); 
 
         document.addEventListener('DOMContentLoaded', () => {
 

@@ -133,7 +133,6 @@
           return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
         }
         getHandler(name) {
-          console.log("in getHandler");
           const item = this.handlers.find((item2) => item2[0] === name);
           return item ? item[1] : void 0;
         }
@@ -145,7 +144,6 @@
           this.initScriptInjectionsAsync();
         }
         async initScriptInjectionsAsync() {
-          console.log("Sa5", "Script injections");
           document.addEventListener("DOMContentLoaded", () => {
             const loadSrcScripts = document.querySelectorAll(
               `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
