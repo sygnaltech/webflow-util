@@ -1,22 +1,56 @@
 
 /*
  * webflow-elements
- * Lightbox
+ * Slider, Lightbox, Tabs, and more. 
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
- * NO-CODE version.
+ * NO-CODE version, keys off of [wfu] attributes.
  */
 
 
 import { Sa5Attribute } from '../globals';
-import { Sa5Lightbox } from '../webflow-core/lightbox';
+import { Sa5Lightbox } from '../webflow-elements/lightbox';
 import { Sa5Button } from '../webflow-elements/button';
 import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
+import { WebflowTabs } from '../webflow-elements/tabs';
+import { WebflowSlider } from '../webflow-elements/slider';
 
 
 const init = () => { 
+
+    // elements is a NodeList of all elements with the "wfu-tabs" attribute
+    
+    // [wfu-tab-default]
+
+    /**
+     * Tabs
+     */
+
+    // Tabs
+    // Auto-register class on named items? 
+    // [wfu-tabs=NAME]
+    let tabElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_TABS}]`);
+    tabElements.forEach(element => {
+
+        var tabObj = new WebflowTabs(element as HTMLElement);
+
+    });
+
+    /**
+     * Slider
+     */
+
+    // Slider
+    // Auto-register class on named items? 
+    // [wfu-slider=NAME]
+    let sliderElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_SLIDER}]`);
+    sliderElements.forEach(element => {
+
+        var sliderObj = new WebflowSlider(element as HTMLElement);
+
+    });
 
 
     /**

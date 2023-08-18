@@ -3,7 +3,7 @@
  * webflow-html
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * NO-CODE version, keys off of [wfu] attributes.
  */
@@ -11,8 +11,6 @@
 import { Sa5Html } from '../webflow-html'
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
-import { WebflowTabs } from '../webflow-core/tabs';
-import { WebflowSlider } from '../webflow-core/slider';
 import { Sa5Editor } from '../webflow-core/webflow-editor'; 
 import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
@@ -39,30 +37,7 @@ const init = () => {
     let obj = new Sa5Html({
         dynamicAttributes: true
     }).init();
-
-    // Tabs
-    // Auto-register class on named items? 
-    // [wfu-tabs=NAME]
-    let tabElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_TABS}]`);
-    tabElements.forEach(element => {
-
-        var tabObj = new WebflowTabs(element as HTMLElement);
-
-    });
-
-    // Tabs
-    // Auto-register class on named items? 
-    // [wfu-tabs=NAME]
-    let sliderElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_SLIDER}]`);
-    sliderElements.forEach(element => {
-
-        var sliderObj = new WebflowSlider(element as HTMLElement);
-
-    });
     
-    // elements is a NodeList of all elements with the "wfu-tabs" attribute
-    
-    // [wfu-tab-default]
 
 
 //    const wfuEditor = new WfuEditor();
