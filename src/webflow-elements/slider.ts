@@ -7,7 +7,7 @@
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Tabs Utilities
+ * Slider Utilities
  */
 
 
@@ -75,7 +75,7 @@ Querystring
 // wfu-tab-action=first|last|next|prev|clear ? 
 import { Sa5Attribute, Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core'
-import { Sa5Debug } from './debug'
+import { Sa5Debug } from '../webflow-core/debug'
 
 
 
