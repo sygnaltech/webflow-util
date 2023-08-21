@@ -44,7 +44,7 @@ export class Sa5Html {
 
         // Init breakpoints
         let breakpoints = new Sa5Breakpoints({
-            handleBreakpointChange: (breakpointName: string, e: MediaQueryListEvent) => {
+            breakpointChangedCallback: (breakpointName: string, e: MediaQueryListEvent) => {
 
                 window['sa5'] = window['sa5'] || {};
                 const sa5: any = window['sa5'];

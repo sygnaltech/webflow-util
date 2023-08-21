@@ -264,7 +264,7 @@
     init() {
       this.debug.debug("sa5-html init.");
       let breakpoints = new Sa5Breakpoints({
-        handleBreakpointChange: (breakpointName, e) => {
+        breakpointChangedCallback: (breakpointName, e) => {
           window["sa5"] = window["sa5"] || {};
           const sa5 = window["sa5"];
           const breakpointChangeHandler = sa5["breakpointChanged"];
