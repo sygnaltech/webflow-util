@@ -12,7 +12,7 @@ export class WfuFormHandlerZapier extends WfuFormHandler {
         super(form, config); // call the super class constructor and pass in the name parameter
     }
 
-    handleResponse(data, status, xhr) {
+    handleResponseJSON(data, status, response) {
 
         // How to access the correct `this` inside a callback 
         // https://stackoverflow.com/a/20279485

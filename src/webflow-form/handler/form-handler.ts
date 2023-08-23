@@ -71,9 +71,23 @@ export class WfuFormHandler {
     }
 
 
-    handleResponse(data, status, xhr) {
+    handleResponseJSON(data, status, response) {
 
-console.log("response", data); 
+//console.log("response", data); 
+
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
+
+        this.debug.debug(`Webhook response status: ${status}`);
+
+        // Assume success
+        this.form.setMode(WebflowFormMode.Success);
+
+    }
+
+    handleResponseText(data, status, response) {
+
+//console.log("response", data); 
 
         // How to access the correct `this` inside a callback 
         // https://stackoverflow.com/a/20279485
@@ -121,7 +135,7 @@ console.log("response", data);
         // Catch any submits on forms
         // Which post to Zapier-webhooks 
 
-console.log ("init form handler.");
+//console.log ("init form handler.");
 
         this.form.formElement.addEventListener('submit', async (e) => {
 
@@ -177,20 +191,32 @@ console.log ("init form handler.");
             }
 */
 
-console.log("sending data");
+//console.log("sending data");
 
             fetch(this.form.formElement.action, {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => this.handleResponse(data, "success", null)) // response
+            .then(response => {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response
+                        .json()
+                        .then(data => this.handleResponseJSON(data, "success", response));
+                } else {
+                    return response
+                        .text()
+                        .then(data => this.handleResponseText(data, "success", response));
+                }
+            })
+//            .then(response => response.json())
+//            .then(data => this.handleResponse(data, "success", null)) // response
             .catch((error) => this.handleFailResponse(error, "error", error));
             // .finally(() => {
             //     // Any cleanup code goes here
             // });
 
-
+// text/plain; charset=utf-8
 
             // $.post(
             //     form.attr("action"),

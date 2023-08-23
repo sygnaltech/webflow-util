@@ -41,7 +41,7 @@ export class Sa5Form {
             this.formBlockElement = element.parentElement;
         else
             this.formBlockElement = element;
-        console.debug(this.formBlockElement);
+//        console.debug(this.formBlockElement);
 
         // Resolve Form pointer
         this.formElement = this.formBlockElement.querySelector("form");
@@ -49,7 +49,7 @@ export class Sa5Form {
         // TODO: everywhere 
         this.isValid = true; 
 
-        console.debug(this.formElement);
+//        console.debug(this.formElement);
 
     }
 

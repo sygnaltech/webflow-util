@@ -12,20 +12,20 @@ export class WfuFormHandlerN8N extends WfuFormHandler {
         super(form, config); // call the super class constructor and pass in the name parameter
     }
 
-    handleResponse(data, status, xhr) {
+    handleResponseJSON(data, status, response) {
 
         // How to access the correct `this` inside a callback 
         // https://stackoverflow.com/a/20279485
         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
         this.debug.debug(`Webhook response status: ${status}`);
-        this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
+        this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
-        if (xhr.status >= 200 && xhr.status < 300) { 
+        if (response.status >= 200 && response.status < 300) { 
             this.form.setMode(WebflowFormMode.Success, 
-                xhr.responseJSON?.message);
+                response.responseJSON?.message);
         } else {
             this.form.setMode(WebflowFormMode.Error, 
-                xhr.responseJSON?.message);
+                response.responseJSON?.message);
         }
 
     }

@@ -55,10 +55,8 @@
         this.formBlockElement = element.parentElement;
       else
         this.formBlockElement = element;
-      console.debug(this.formBlockElement);
       this.formElement = this.formBlockElement.querySelector("form");
       this.isValid = true;
-      console.debug(this.formElement);
     }
     init() {
     }

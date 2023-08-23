@@ -184,10 +184,8 @@
         this.formBlockElement = element.parentElement;
       else
         this.formBlockElement = element;
-      console.debug(this.formBlockElement);
       this.formElement = this.formBlockElement.querySelector("form");
       this.isValid = true;
-      console.debug(this.formElement);
     }
     init() {
     }
@@ -232,8 +230,11 @@
       let waitMessage = this.form.formElement.querySelector("input[type=submit]").getAttribute("data-wait");
       this.debug.debug(`waitMessage: ${waitMessage}`);
     }
-    handleResponse(data, status, xhr) {
-      console.log("response", data);
+    handleResponseJSON(data, status, response) {
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.form.setMode(1 /* Success */);
+    }
+    handleResponseText(data, status, response) {
       this.debug.debug(`Webhook response status: ${status}`);
       this.form.setMode(1 /* Success */);
     }
@@ -253,17 +254,22 @@
     init() {
       const form = this.form;
       this.debug.debug("WFU Handle Form submit to webhook (success response).");
-      console.log("init form handler.");
       this.form.formElement.addEventListener("submit", async (e) => {
         e.preventDefault();
         this.debug.debug("Posting data.");
         this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
         let formData = new FormData(this.form.formElement);
-        console.log("sending data");
         fetch(this.form.formElement.action, {
           method: "POST",
           body: formData
-        }).then((response) => response.json()).then((data) => this.handleResponse(data, "success", null)).catch((error) => this.handleFailResponse(error, "error", error));
+        }).then((response) => {
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            return response.json().then((data) => this.handleResponseJSON(data, "success", response));
+          } else {
+            return response.text().then((data) => this.handleResponseText(data, "success", response));
+          }
+        }).catch((error) => this.handleFailResponse(error, "error", error));
         return false;
       });
     }
@@ -282,19 +288,35 @@
     constructor(form, config) {
       super(form, config);
     }
-    handleResponse(data, status, xhr) {
+    handleResponseText(data, status, response) {
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
-      this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-      if (xhr.status >= 200 && xhr.status < 300) {
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      if (response.status >= 200 && response.status < 300) {
         this.form.setMode(
           1 /* Success */,
-          xhr.responseJSON?.message
+          response.responseText?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          xhr.responseJSON?.message
+          response.responseText?.message
+        );
+      }
+    }
+    handleResponseJSON(data, status, response) {
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      if (response.status >= 200 && response.status < 300) {
+        this.form.setMode(
+          1 /* Success */,
+          response.responseJSON?.message
+        );
+      } else {
+        this.form.setMode(
+          2 /* Error */,
+          response.responseJSON?.message
         );
       }
     }
@@ -322,19 +344,19 @@
     constructor(form, config) {
       super(form, config);
     }
-    handleResponse(data, status, xhr) {
+    handleResponseJSON(data, status, response) {
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
-      this.debug.debug(`Webhook response xhr: ${JSON.stringify(xhr)}`);
-      if (xhr.status >= 200 && xhr.status < 300) {
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      if (response.status >= 200 && response.status < 300) {
         this.form.setMode(
           1 /* Success */,
-          xhr.responseJSON?.message
+          response.responseJSON?.message
         );
       } else {
         this.form.setMode(
           2 /* Error */,
-          xhr.responseJSON?.message
+          response.responseJSON?.message
         );
       }
     }
@@ -362,7 +384,7 @@
     constructor(form, config) {
       super(form, config);
     }
-    handleResponse(data, status, xhr) {
+    handleResponseJSON(data, status, response) {
       this.debug.debug(`Webhook response status: ${status}`);
       this.debug.debug(`Zapier result: ${data.status}`);
       if (data.status == "success") {
@@ -459,7 +481,6 @@
       Sa5FormIPInfo.createFromElement(element).init();
     });
     document.querySelectorAll("[wfu-form-handler]").forEach((element) => {
-      console.log("installing form handler.");
       WfuFormHandlerFactory.createFromElement(element).init();
     });
   };

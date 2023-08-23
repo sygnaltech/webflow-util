@@ -45,7 +45,7 @@ let core: Sa5Core = Sa5Core.startup();
     document.querySelectorAll('[wfu-form-handler]')
       .forEach((element: HTMLElement) => {
 
- console.log("installing form handler."); 
+// console.log("installing form handler."); 
 
         WfuFormHandlerFactory.createFromElement(element)
             .init();
