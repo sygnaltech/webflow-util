@@ -1,6 +1,10 @@
 
 //import IPinfoWrapper, { IPinfo, AsnResponse } from "node-ipinfo";
 
+import { Sa5CacheStorageType, Sa5Cache } from "./webflow-cache";
+import { Sa5CacheItem } from "./webflow-cache/webflow-cache-item";
+import { GeoHandlerInfo } from "./webflow-detect/geo-handlers/geo-handler-base";
+import { IPInfo } from "./webflow-detect/geo-handlers/ip-info";
 
 type Zone = "Asia" | "Europe" | "North America" | "South America" | "Africa" | "Oceania" | "Antarctica";
 
@@ -42,85 +46,72 @@ const COOKIE_NAME = 'userInfo';
 
 export class Sa5Detect {
 
-//    countries = new Set(["NZ", "AU", "US", "GB"]);
+    // Internal cache handler
+    private cache: Sa5Cache;
 
-    userInfo: any;
+    async userInfo(): Promise<GeoHandlerInfo> {
 
+        const info = await this.cache.getAsync("userInfo");
+
+        if(!info)
+            return null;
+
+        let userInfo: GeoHandlerInfo = JSON.parse(info);
+
+        return userInfo;
+    }
+
+    // Map for redirection
     countries: CountryPathMap = new Map([
     ]);
 
     constructor() {
-        // const countries: CountryPathMap = new Map([
-        //     ["NZ", "/nz"],
-        //     ["AU", "/au"],
-        //     ["US", "/us"],
-        //     ["GB", "/gb"]
-        // ]);
+
+        // Setup cached values
+        this.cache = new Sa5Cache({
+            id: 'sa5-detect',
+            cacheKey: 'af92b71b-d0cf-4ad5-a06c-97327215af8a',
+            store: Sa5CacheStorageType.cookies,
+            prefix: 'sa5',
+            val: {
+            userInfo: new Sa5CacheItem({
+                name: "userInfo", 
+                store: "cookie", 
+                updateFnAsync: this.getUserInfoAsync   
+              })
+            }
+          });
+
     }
 
-    async getUserInfo() {
-
-        // https://ipinfo.io/developers
+    private async getUserInfoAsync(): Promise<string> {
 
         // 37cce46c605631
         const IP_INFO_TOKEN = '37cce46c605631';
+        const ipInfo = new IPInfo(IP_INFO_TOKEN); 
 
-//        const ipinfoWrapper = new IPinfoWrapper(IP_INFO_TOKEN);
+        let rawInfo: any = await ipInfo.getInfoAsync();
 
-        // ipinfoWrapper.lookupIp(null).then((response: IPinfo) => {
-        //     console.log(response);
-        // });
+        const info: GeoHandlerInfo = {
+            ip: rawInfo.ip,
+            country: rawInfo.country,
+            city: rawInfo.city,
+            region: rawInfo.region,
+            postal: rawInfo.postal,
+            timezone: rawInfo.timezone,        
+        }
 
-        // ipinfoWrapper.lookupIp("1.1.1.1").then((response: IPinfo) => {
-        //     console.log(response);
-        // });
-        
-        // ipinfoWrapper.lookupASN("AS7922").then((response: AsnResponse) => {
-        //     console.log(response);
-        // });
-
-
-        const request = await fetch(`https://ipinfo.io/json?token=${IP_INFO_TOKEN}`); 
-        this.userInfo = await request.json()
+        // const request = await fetch(`https://ipinfo.io/json?token=${IP_INFO_TOKEN}`); 
+        // this.userInfo = await request.json()
         
         console.log(
-            this.userInfo.ip, 
-            this.userInfo.country
+            info.ip, 
+            info.country
             ); 
 
-
+        return JSON.stringify(info);
     }
     
-    loadOrGetUserInfo() {
-        this.loadUserInfo();
-
-        if(!this.userInfo) {
-            this.getUserInfo();
-            this.saveUserInfo(); 
-        }
-
-    }
-
-    saveUserInfo() {
-        const expiryDate = new Date();
-        expiryDate.setMonth(expiryDate.getMonth() + 1); // Set the expiry date to 1 month from now
-
-        const serializedUserInfo = JSON.stringify(this.userInfo);
-        document.cookie = `userInfo=${encodeURIComponent(serializedUserInfo)};expires=${expiryDate.toUTCString()};path=/`;
-    }
-
-    loadUserInfo() {
-        const allCookies = document.cookie.split('; ');
-        for (const cookie of allCookies) {
-            const [name, value] = cookie.split('=');
-            if (name === 'userInfo') {
-                this.userInfo = JSON.parse(decodeURIComponent(value));
-                return this.userInfo;
-            }
-        }
-        return null;
-    }
-
     detectGeographicZone() {
 
         /*
@@ -140,30 +131,40 @@ export class Sa5Detect {
 
     
     // Function to check if a country is in the list
-    isCountryInList(countryCode: string): boolean {
+    private isCountryInList(countryCode: string): boolean {
         return this.countries.has(countryCode);
     } 
 
-    getPathForCountry(countryCode: string): string | undefined {
+    private getPathForCountry(countryCode: string): string | undefined {
 
         return this.countries.get(countryCode);
     }
 
-
-    handleRedirect() {
-
-    }
-
     // Home should be 
 
-    applyDetectContext() {
+    async applyDetectContextAsync() {
+        console.log(this.countries);
 
-        let path = this.getPathForCountry(this.userInfo.country);
 
-        // Redirect  
+        const userInfoString: string = await this.cache.getAsync("userInfo");
+        let userInfo: GeoHandlerInfo = null;
+        if (userInfoString)
+            userInfo = JSON.parse(userInfoString);
+
+//        const userInfo: GeoHandlerInfo = await this.getUserInfoAsync();
+
+        console.log("APPLYING CONTEXT.");
+
+        console.log(userInfo);
+
+        let path = this.getPathForCountry(userInfo.country);
+
+        console.log("path", path); 
+
+        // Redirect, if appropriate
         if(path) {
             if (window.location.pathname != path)
-                window.location.pathname = path;
+                window.location.href = path;
         }
 
         // Apply hide/show filter on elements 

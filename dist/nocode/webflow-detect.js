@@ -176,43 +176,159 @@
   };
   Sa5Core.startup();
 
+  // src/webflow-cache.ts
+  var defaultConfig = {
+    id: "cache",
+    cacheKey: null,
+    store: 0 /* sessionStorage */,
+    prefix: "cache",
+    val: {},
+    debug: false
+  };
+  var Sa5Cache = class {
+    constructor(customConfig = {}) {
+      this.cacheKey = function(key) {
+        return `${this.config.prefix}_${key}`;
+      };
+      this.config = { ...defaultConfig, ...customConfig };
+      this.debug = new Sa5Debug("sa5-cache");
+      this.debug.enabled = this.config.debug;
+      if (this.config.cacheKey) {
+      }
+    }
+    async getAsync(valueName) {
+      this.debug.group(`getAsync - "${valueName}"`);
+      var valueHandler = this.config.val[valueName];
+      this.debug.debug("valueHandler", valueHandler);
+      if (!valueHandler) {
+        console.error("Sa5", `No cache value handler '${valueName}'`);
+      }
+      var returnValue = sessionStorage.getItem(
+        this.cacheKey(valueName)
+      );
+      this.debug.debug("cached? sessionStorage.getItem", returnValue);
+      const that = this;
+      if (returnValue == null || returnValue == void 0) {
+        returnValue = await valueHandler.config.updateFnAsync().then((r) => {
+          sessionStorage.setItem(
+            this.cacheKey(valueName),
+            r
+          );
+          that.debug.debug("sessionStorage.setItem", valueName, r);
+          that.debug.debug("calculated", r);
+          return r;
+        });
+      }
+      this.debug.debug("returning", returnValue);
+      this.debug.groupEnd();
+      return returnValue;
+    }
+    clearCache() {
+    }
+  };
+  Sa5Core.startup(Sa5Cache);
+
+  // src/webflow-cache/webflow-cache-item.ts
+  var defaultConfig2 = {
+    store: "sessionStorage",
+    name: void 0,
+    updateFnAsync: void 0,
+    debug: false
+  };
+  var Sa5CacheItem = class {
+    constructor(customConfig = {}) {
+      this.debug = new Sa5Debug("sa5-cache-item");
+      this.config = { ...defaultConfig2, ...customConfig };
+      this.debug.enabled = this.config.debug;
+    }
+  };
+
+  // src/webflow-detect/geo-handlers/geo-handler-base.ts
+  var GeoHandlerBase = class {
+    constructor(token = null) {
+      this.token = token;
+    }
+    get info() {
+      return {
+        ip: this.userInfoRaw.ip,
+        country: this.userInfoRaw.countryCode,
+        city: null,
+        region: null,
+        postal: null,
+        timezone: null
+      };
+    }
+    async getInfoAsync() {
+    }
+  };
+
+  // src/webflow-detect/geo-handlers/ip-info.ts
+  var IPInfo = class extends GeoHandlerBase {
+    get info() {
+      return {
+        ip: this.userInfoRaw.ip,
+        country: this.userInfoRaw.countryCode,
+        city: null,
+        region: null,
+        postal: null,
+        timezone: null
+      };
+    }
+    constructor(token = null) {
+      super(token);
+    }
+    async getInfoAsync() {
+      const request = await fetch(`https://ipinfo.io/json?token=${this.token}`);
+      this.userInfoRaw = await request.json();
+      console.log(
+        this.userInfoRaw
+      );
+      return this.userInfoRaw;
+    }
+  };
+
   // src/webflow-detect.ts
   var Sa5Detect = class {
     constructor() {
       this.countries = /* @__PURE__ */ new Map([]);
-    }
-    async getUserInfo() {
-      const IP_INFO_TOKEN = "37cce46c605631";
-      const request = await fetch(`https://ipinfo.io/json?token=${IP_INFO_TOKEN}`);
-      this.userInfo = await request.json();
-      console.log(
-        this.userInfo.ip,
-        this.userInfo.country
-      );
-    }
-    loadOrGetUserInfo() {
-      this.loadUserInfo();
-      if (!this.userInfo) {
-        this.getUserInfo();
-        this.saveUserInfo();
-      }
-    }
-    saveUserInfo() {
-      const expiryDate = new Date();
-      expiryDate.setMonth(expiryDate.getMonth() + 1);
-      const serializedUserInfo = JSON.stringify(this.userInfo);
-      document.cookie = `userInfo=${encodeURIComponent(serializedUserInfo)};expires=${expiryDate.toUTCString()};path=/`;
-    }
-    loadUserInfo() {
-      const allCookies = document.cookie.split("; ");
-      for (const cookie of allCookies) {
-        const [name, value] = cookie.split("=");
-        if (name === "userInfo") {
-          this.userInfo = JSON.parse(decodeURIComponent(value));
-          return this.userInfo;
+      this.cache = new Sa5Cache({
+        id: "sa5-detect",
+        cacheKey: "af92b71b-d0cf-4ad5-a06c-97327215af8a",
+        store: 2 /* cookies */,
+        prefix: "sa5",
+        val: {
+          userInfo: new Sa5CacheItem({
+            name: "userInfo",
+            store: "cookie",
+            updateFnAsync: this.getUserInfoAsync
+          })
         }
-      }
-      return null;
+      });
+    }
+    async userInfo() {
+      const info = await this.cache.getAsync("userInfo");
+      if (!info)
+        return null;
+      let userInfo = JSON.parse(info);
+      return userInfo;
+    }
+    async getUserInfoAsync() {
+      const IP_INFO_TOKEN = "37cce46c605631";
+      const ipInfo = new IPInfo(IP_INFO_TOKEN);
+      let rawInfo = await ipInfo.getInfoAsync();
+      const info = {
+        ip: rawInfo.ip,
+        country: rawInfo.country,
+        city: rawInfo.city,
+        region: rawInfo.region,
+        postal: rawInfo.postal,
+        timezone: rawInfo.timezone
+      };
+      console.log(
+        info.ip,
+        info.country
+      );
+      return JSON.stringify(info);
     }
     detectGeographicZone() {
     }
@@ -222,29 +338,35 @@
     getPathForCountry(countryCode) {
       return this.countries.get(countryCode);
     }
-    handleRedirect() {
-    }
-    applyDetectContext() {
-      let path = this.getPathForCountry(this.userInfo.country);
+    async applyDetectContextAsync() {
+      console.log(this.countries);
+      const userInfoString = await this.cache.getAsync("userInfo");
+      let userInfo = null;
+      if (userInfoString)
+        userInfo = JSON.parse(userInfoString);
+      console.log("APPLYING CONTEXT.");
+      console.log(userInfo);
+      let path = this.getPathForCountry(userInfo.country);
+      console.log("path", path);
       if (path) {
         if (window.location.pathname != path)
-          window.location.pathname = path;
+          window.location.href = path;
       }
     }
   };
 
   // src/nocode/webflow-detect.ts
   var init = async () => {
+    console.log("DETECT");
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-detect");
     debug.debug("Initializing");
     let detect = new Sa5Detect();
-    detect.countries["NZ"] = "/nz";
-    detect.countries["AU"] = "/au";
-    detect.countries["US"] = "/us";
-    detect.countries["GB"] = "/gb";
-    detect.loadOrGetUserInfo();
-    detect.applyDetectContext();
+    detect.countries.set("NZ", "/nz");
+    detect.countries.set("AU", "/au");
+    detect.countries.set("US", "/us");
+    detect.countries.set("GB", "/gb");
+    await detect.applyDetectContextAsync();
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

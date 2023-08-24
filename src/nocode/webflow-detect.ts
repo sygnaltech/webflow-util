@@ -37,7 +37,7 @@ import { Sa5Detect } from '../webflow-detect';
 
 const init = async() => { 
 
-
+console.log("DETECT");  
 
     let core: Sa5Core = Sa5Core.startup();
 
@@ -52,10 +52,10 @@ const init = async() => {
 
     // Usage
     let detect = new Sa5Detect(); 
-    detect.countries["NZ"] = "/nz";
-    detect.countries["AU"] = "/au";
-    detect.countries["US"] = "/us";
-    detect.countries["GB"] = "/gb";
+    detect.countries.set("NZ", "/nz");
+    detect.countries.set("AU", "/au");
+    detect.countries.set("US", "/us");
+    detect.countries.set("GB", "/gb");
 
     // const countries: CountryPathMap = new Map([
     //     ["NZ", "/nz"],
@@ -64,8 +64,10 @@ const init = async() => {
     //     ["GB", "/gb"]
     // ]);
 
-    detect.loadOrGetUserInfo(); 
-    detect.applyDetectContext();
+    await detect.applyDetectContextAsync(); 
+
+//    detect.loadOrGetUserInfo(); 
+//    detect.applyDetectContext();
 
 }
   
