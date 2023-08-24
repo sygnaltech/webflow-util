@@ -74,4 +74,7 @@ export enum Sa5Attribute {
     ATTR_FILTER_EVAL = 'wfu-filter-eval',
     ATTR_FILTER_FUNC = 'wfu-filter-func',
 
+    // 404
+    ATTR_404_SEARCH = 'wfu-404-search',
+
 }

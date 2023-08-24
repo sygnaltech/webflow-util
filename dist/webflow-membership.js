@@ -115,6 +115,7 @@
     Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
     Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
     Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+    Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 

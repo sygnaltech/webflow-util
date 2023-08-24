@@ -33,6 +33,7 @@
     Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
     Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
     Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+    Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
@@ -180,7 +181,17 @@
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-404");
     debug.debug("Initializing");
+    set404SearchInputValue();
   };
+  function set404SearchInputValue() {
+    const url = new URL(window.location.href);
+    const path = url.pathname;
+    const searchQuery = path.slice(1).split("/").map((segment) => segment.replace(/-/g, " ")).reverse().join(" ");
+    const inputElement = document.querySelector(`[${"wfu-404-search" /* ATTR_404_SEARCH */}]`);
+    if (inputElement) {
+      inputElement.value = searchQuery;
+    }
+  }
   document.addEventListener("DOMContentLoaded", init);
 })();
 //# sourceMappingURL=webflow-404.js.map
