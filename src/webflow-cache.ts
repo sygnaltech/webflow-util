@@ -17,7 +17,7 @@ import { Sa5Debug } from './webflow-core/debug';
 
 //#region WfuCacheItem
 
-enum CacheStorage {
+export enum Sa5CacheStorageType {
 
     sessionStorage,
     localStorage,
@@ -28,7 +28,10 @@ enum CacheStorage {
 
 interface Sa5CacheConfig {
 
-    store: CacheStorage;
+    id: string, // Cache instance identifier
+    cacheKey: string, // Cache validation key 
+
+    store: Sa5CacheStorageType;
     prefix: string;
     val: {};
 
@@ -39,8 +42,11 @@ interface Sa5CacheConfig {
 
 var defaultConfig: Sa5CacheConfig = {
 
+    id: 'cache',
+    cacheKey: null, 
+
     // sessionStorage | localStorage | cookies
-    store: CacheStorage.sessionStorage, // 'sessionStorage', // ONLY supported 
+    store: Sa5CacheStorageType.sessionStorage, // 'sessionStorage', // ONLY supported 
     prefix: 'cache', 
     val: {}, // Cached values 
 
@@ -65,19 +71,29 @@ export class Sa5Cache {
         this.debug = new Sa5Debug("sa5-cache");
         this.debug.enabled = this.config.debug; 
 
+        // Verify cache is valid, if existing
+        // clear if not 
+        if(this.config.cacheKey) {
+
+        }
+
     }
 
     cacheKey = function(key) {
         return `${this.config.prefix}_${key}`;
     }
 
-    async getAsync(valueName) {
+    async getAsync(valueName): Promise<string> {
 
         this.debug.group(`getAsync - "${valueName}"`);
         
         var valueHandler = this.config.val[valueName];
         this.debug.debug("valueHandler", valueHandler);
         
+        if(!valueHandler) {
+            console.error("Sa5", `No cache value handler '${valueName}'`); 
+        }
+
         var returnValue = sessionStorage.getItem(
             this.cacheKey(valueName));
         this.debug.debug("cached? sessionStorage.getItem", returnValue); 
@@ -103,6 +119,10 @@ export class Sa5Cache {
 
         this.debug.groupEnd();
         return returnValue; 
+    }
+
+    clearCache() {
+        // Iterate through items and clear() 
     }
 
 }

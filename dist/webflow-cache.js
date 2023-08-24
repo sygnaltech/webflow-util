@@ -177,7 +177,15 @@
   Sa5Core.startup();
 
   // src/webflow-cache.ts
+  var Sa5CacheStorageType = /* @__PURE__ */ ((Sa5CacheStorageType2) => {
+    Sa5CacheStorageType2[Sa5CacheStorageType2["sessionStorage"] = 0] = "sessionStorage";
+    Sa5CacheStorageType2[Sa5CacheStorageType2["localStorage"] = 1] = "localStorage";
+    Sa5CacheStorageType2[Sa5CacheStorageType2["cookies"] = 2] = "cookies";
+    return Sa5CacheStorageType2;
+  })(Sa5CacheStorageType || {});
   var defaultConfig = {
+    id: "cache",
+    cacheKey: null,
     store: 0 /* sessionStorage */,
     prefix: "cache",
     val: {},
@@ -191,11 +199,16 @@
       this.config = { ...defaultConfig, ...customConfig };
       this.debug = new Sa5Debug("sa5-cache");
       this.debug.enabled = this.config.debug;
+      if (this.config.cacheKey) {
+      }
     }
     async getAsync(valueName) {
       this.debug.group(`getAsync - "${valueName}"`);
       var valueHandler = this.config.val[valueName];
       this.debug.debug("valueHandler", valueHandler);
+      if (!valueHandler) {
+        console.error("Sa5", `No cache value handler '${valueName}'`);
+      }
       var returnValue = sessionStorage.getItem(
         this.cacheKey(valueName)
       );
@@ -215,6 +228,8 @@
       this.debug.debug("returning", returnValue);
       this.debug.groupEnd();
       return returnValue;
+    }
+    clearCache() {
     }
   };
   Sa5Core.startup(Sa5Cache);
