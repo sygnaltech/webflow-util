@@ -1,4 +1,14 @@
 
+/**
+ * SA5
+ * webflow-detect
+ * 
+ * Prototype project
+ * https://detect-location.webflow.io/ 
+ * https://webflow.com/design/detect-location?pageId=64e82fd6ad1f15554ee84f49 
+ */
+
+
 //import IPinfoWrapper, { IPinfo, AsnResponse } from "node-ipinfo";
 
 import { Sa5CacheStorageType, Sa5CacheController } from "./webflow-cache";
