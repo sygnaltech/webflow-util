@@ -1,40 +1,40 @@
 (() => {
   // src/globals.ts
   var Sa5Attribute;
-  ((Sa5Attribute2) => {
+  ((Sa5Attribute3) => {
     function getBracketed(attr) {
       return `[${attr}]`;
     }
-    Sa5Attribute2.getBracketed = getBracketed;
+    Sa5Attribute3.getBracketed = getBracketed;
   })(Sa5Attribute || (Sa5Attribute = {}));
-  var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute2) => {
-    Sa5Attribute2["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
-    Sa5Attribute2["ATTR_VIDEO"] = "wfu-video";
-    Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
-    Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
-    Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
-    Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
-    Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
-    Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
-    Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
-    Sa5Attribute2["ATTR_DATA"] = "wfu-data";
-    Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
-    Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
-    Sa5Attribute2["ATTR_DATA_ITEM_ID"] = "wfu-data-item-id";
-    Sa5Attribute2["ATTR_DATABIND"] = "wfu-bind";
-    Sa5Attribute2["ATTR_DATABIND_CONTENT"] = "wfu-bind-content";
-    Sa5Attribute2["ATTR_DATABIND_CONTEXT_DSN"] = "wfu-bind-dsn";
-    Sa5Attribute2["ATTR_DATABIND_CONTEXT_ITEM_ID"] = "wfu-bind-item-id";
-    Sa5Attribute2["ATTR_PRELOAD"] = "wfu-preload";
-    Sa5Attribute2["ATTR_IX_TRIGGER"] = "wfu-ix-trigger";
-    Sa5Attribute2["ATTR_IX_ID"] = "wfu-ix-id";
-    Sa5Attribute2["ATTR_SORT"] = "wfu-sort";
-    Sa5Attribute2["ATTR_FILTER"] = "wfu-filter";
-    Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
-    Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
-    Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
-    Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
-    return Sa5Attribute2;
+  var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute3) => {
+    Sa5Attribute3["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
+    Sa5Attribute3["ATTR_VIDEO"] = "wfu-video";
+    Sa5Attribute3["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
+    Sa5Attribute3["ATTR_DESIGN"] = "wfu-design";
+    Sa5Attribute3["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+    Sa5Attribute3["ATTR_ELEMENT_TABS"] = "wfu-tabs";
+    Sa5Attribute3["ATTR_ELEMENT_BUTTON"] = "wfu-button";
+    Sa5Attribute3["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
+    Sa5Attribute3["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
+    Sa5Attribute3["ATTR_DATA"] = "wfu-data";
+    Sa5Attribute3["ATTR_DATA_TYPE"] = "wfu-data-type";
+    Sa5Attribute3["ATTR_DATA_DSN"] = "wfu-data-dsn";
+    Sa5Attribute3["ATTR_DATA_ITEM_ID"] = "wfu-data-item-id";
+    Sa5Attribute3["ATTR_DATABIND"] = "wfu-bind";
+    Sa5Attribute3["ATTR_DATABIND_CONTENT"] = "wfu-bind-content";
+    Sa5Attribute3["ATTR_DATABIND_CONTEXT_DSN"] = "wfu-bind-dsn";
+    Sa5Attribute3["ATTR_DATABIND_CONTEXT_ITEM_ID"] = "wfu-bind-item-id";
+    Sa5Attribute3["ATTR_PRELOAD"] = "wfu-preload";
+    Sa5Attribute3["ATTR_IX_TRIGGER"] = "wfu-ix-trigger";
+    Sa5Attribute3["ATTR_IX_ID"] = "wfu-ix-id";
+    Sa5Attribute3["ATTR_SORT"] = "wfu-sort";
+    Sa5Attribute3["ATTR_FILTER"] = "wfu-filter";
+    Sa5Attribute3["ATTR_FILTER_MATCH"] = "wfu-filter-match";
+    Sa5Attribute3["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
+    Sa5Attribute3["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+    Sa5Attribute3["ATTR_404_SEARCH"] = "wfu-404-search";
+    return Sa5Attribute3;
   })(Sa5Attribute || {});
 
   // src/webflow-core/debug.ts
@@ -350,10 +350,31 @@
     }
   };
 
+  // src/webflow-detect/routing-rules.ts
+  var Sa5RoutingRules = class {
+    constructor(detectController) {
+      this.detectController = detectController;
+    }
+    load(rules) {
+      this.rules = rules;
+      for (const rule of rules) {
+        switch (rule.type) {
+          case "geo-country": {
+            this.detectController.countries = new Map(
+              rule.route
+            );
+            break;
+          }
+        }
+      }
+    }
+  };
+
   // src/webflow-detect.ts
   var Sa5Detect = class {
     constructor() {
       this.countries = /* @__PURE__ */ new Map([]);
+      this.routingRules = new Sa5RoutingRules(this);
       const expiry = new Date();
       expiry.setDate(expiry.getDate() + 3);
       this.cache = new Sa5CacheController({
@@ -404,31 +425,36 @@
       return this.countries.get(countryCode);
     }
     async applyDetectContextAsync() {
-      console.log(this.countries);
       let userInfo = await this.cache.getItem("userInfo").getAsync();
-      console.log("APPLYING CONTEXT.");
-      console.log(userInfo);
       let path = this.getPathForCountry(userInfo.country);
-      console.log("path", path);
-      if (path) {
-        if (window.location.pathname != path)
-          window.location.href = path;
+      for (const item of this.routingRules.rules) {
+        if (item.path === window.location.pathname) {
+          if (item.type === "geo-country") {
+            for (const [country, path2] of item.route) {
+              if (userInfo.country == country) {
+                if (window.location.pathname != path2)
+                  window.location.href = path2;
+              }
+            }
+          }
+        }
       }
     }
   };
 
   // src/nocode/webflow-detect.ts
-  var init = async () => {
+  (async () => {
     console.log("DETECT");
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-detect");
     debug.debug("Initializing");
     let detect = new Sa5Detect();
-    detect.countries.set("NZ", "/nz");
-    detect.countries.set("AU", "/au");
-    detect.countries.set("US", "/us");
-    detect.countries.set("GB", "/gb");
+    let routingRules = window["sa5-route" /* GLOBAL_ROUTE */];
+    if (routingRules)
+      detect.routingRules.load(routingRules);
     await detect.applyDetectContextAsync();
+  })();
+  var init = async () => {
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

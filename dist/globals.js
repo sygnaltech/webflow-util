@@ -1,5 +1,9 @@
 (() => {
   // src/globals.ts
+  var Sa5GlobalVar = /* @__PURE__ */ ((Sa5GlobalVar2) => {
+    Sa5GlobalVar2["GLOBAL_ROUTE"] = "sa5-route";
+    return Sa5GlobalVar2;
+  })(Sa5GlobalVar || {});
   var Sa5GlobalEvent = /* @__PURE__ */ ((Sa5GlobalEvent2) => {
     Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
     Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";

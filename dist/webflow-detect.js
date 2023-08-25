@@ -350,10 +350,31 @@
     }
   };
 
+  // src/webflow-detect/routing-rules.ts
+  var Sa5RoutingRules = class {
+    constructor(detectController) {
+      this.detectController = detectController;
+    }
+    load(rules) {
+      this.rules = rules;
+      for (const rule of rules) {
+        switch (rule.type) {
+          case "geo-country": {
+            this.detectController.countries = new Map(
+              rule.route
+            );
+            break;
+          }
+        }
+      }
+    }
+  };
+
   // src/webflow-detect.ts
   var Sa5Detect = class {
     constructor() {
       this.countries = /* @__PURE__ */ new Map([]);
+      this.routingRules = new Sa5RoutingRules(this);
       const expiry = new Date();
       expiry.setDate(expiry.getDate() + 3);
       this.cache = new Sa5CacheController({
@@ -404,15 +425,19 @@
       return this.countries.get(countryCode);
     }
     async applyDetectContextAsync() {
-      console.log(this.countries);
       let userInfo = await this.cache.getItem("userInfo").getAsync();
-      console.log("APPLYING CONTEXT.");
-      console.log(userInfo);
       let path = this.getPathForCountry(userInfo.country);
-      console.log("path", path);
-      if (path) {
-        if (window.location.pathname != path)
-          window.location.href = path;
+      for (const item of this.routingRules.rules) {
+        if (item.path === window.location.pathname) {
+          if (item.type === "geo-country") {
+            for (const [country, path2] of item.route) {
+              if (userInfo.country == country) {
+                if (window.location.pathname != path2)
+                  window.location.href = path2;
+              }
+            }
+          }
+        }
       }
     }
   };

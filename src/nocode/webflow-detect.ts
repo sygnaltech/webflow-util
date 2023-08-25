@@ -6,13 +6,14 @@
  * http://sygnal.com
  * 
  * NO-CODE version, keys off of [wfu] attributes.
+ * Place in HEAD, do not defer 
  */
 
 import { WebflowVideo } from '../webflow-video';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
-import { Sa5Attribute } from '../globals';
+import { Sa5Attribute, Sa5GlobalVar } from '../globals';
 import { Sa5Detect } from '../webflow-detect';
 
 // type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
@@ -33,11 +34,10 @@ import { Sa5Detect } from '../webflow-detect';
 // Sector (Abbreviation: Sec.)
 
 
+// Run IIFE immediately 
+(async() => {
 
-
-const init = async() => { 
-
-console.log("DETECT");  
+    console.log("DETECT");  
 
     let core: Sa5Core = Sa5Core.startup();
 
@@ -45,30 +45,25 @@ console.log("DETECT");
     let debug = new Sa5Debug("sa5-detect");
     debug.debug ("Initializing");
 
-
     /**
      * Get IP Info, GeoLocation 
      */
 
     // Usage
     let detect = new Sa5Detect(); 
-    detect.countries.set("NZ", "/nz");
-    detect.countries.set("AU", "/au");
-    detect.countries.set("US", "/us");
-    detect.countries.set("GB", "/gb");
 
-    // const countries: CountryPathMap = new Map([
-    //     ["NZ", "/nz"],
-    //     ["AU", "/au"],
-    //     ["US", "/us"],
-    //     ["GB", "/gb"]
-    // ]);
+    // Process Rules 
+    let routingRules = window[Sa5GlobalVar.GLOBAL_ROUTE]; 
+
+    if (routingRules)
+        detect.routingRules.load(routingRules);
+
 
     await detect.applyDetectContextAsync(); 
 
-//    detect.loadOrGetUserInfo(); 
-//    detect.applyDetectContext();
+})();
 
+const init = async() => { 
 }
-  
-document.addEventListener("DOMContentLoaded", init)
+
+document.addEventListener("DOMContentLoaded", init); 

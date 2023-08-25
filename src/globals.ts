@@ -4,6 +4,12 @@
  * 
  */
 
+export enum Sa5GlobalVar {
+
+    GLOBAL_ROUTE = 'sa5-route' 
+
+}
+
 export enum Sa5GlobalEvent {
 
     EVENT_USER_CHANGED = 'userInfoChanged',

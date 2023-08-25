@@ -6,6 +6,7 @@ import { Sa5CacheItem } from "./webflow-cache/cache-item";
 import { Sa5CacheItemTyped } from "./webflow-cache/cache-item-typed";
 import { GeoHandlerInfo } from "./webflow-detect/geo-handlers/geo-handler-base";
 import { IPInfo } from "./webflow-detect/geo-handlers/ip-info";
+import { Sa5RoutingRules } from "./webflow-detect/routing-rules";
 
 type Zone = "Asia" | "Europe" | "North America" | "South America" | "Africa" | "Oceania" | "Antarctica";
 
@@ -50,6 +51,8 @@ export class Sa5Detect {
     // Internal cache handler
     private cache: Sa5CacheController;
 
+    routingRules: Sa5RoutingRules;
+
     async userInfo(): Promise<GeoHandlerInfo> {
 
         const info: GeoHandlerInfo = await this.cache.getItem("userInfo").getAsync() as GeoHandlerInfo;
@@ -68,7 +71,10 @@ export class Sa5Detect {
 
     constructor() {
 
-        // Expiry: 3 days
+        this.routingRules = new Sa5RoutingRules(this); 
+
+        // Expiry: 3 days 
+        // BUG: ?? 
         const expiry = new Date();
         expiry.setDate(expiry.getDate() + 3);
 
@@ -153,24 +159,56 @@ console.log(this.countries);
 
     async applyDetectContextAsync() {
 
-        console.log(this.countries);
-
+//        console.log(this.countries);
 
         let userInfo: GeoHandlerInfo = await this.cache.getItem<GeoHandlerInfo>("userInfo").getAsync();
 
-        console.log("APPLYING CONTEXT.");
+//        console.log("APPLYING CONTEXT.");
 
-        console.log(userInfo);
+  //      console.log(userInfo);
 
         let path = this.getPathForCountry(userInfo.country);
 
-        console.log("path", path); 
+    //    console.log("path", path); 
 
-        // Redirect, if appropriate
-        if(path) {
-            if (window.location.pathname != path)
-                window.location.href = path;
+        /**
+         * Route via redirect, if appropriate 
+         */
+
+        // Look for a matching rule, by path 
+        for (const item of this.routingRules.rules) {
+
+    //        console.log(item.path, window.location.pathname)
+
+            // If path matches current location
+            // TODO: expand on this, make it optional
+            if (item.path === window.location.pathname) {
+
+                // Check if the type is 'geo-country'
+                if (item.type === 'geo-country') {
+                    // Iterate through each route in the 'route' array
+                    for (const [country, path] of item.route) {
+
+                        if (userInfo.country == country) 
+
+                            // Redirect 
+                            if (window.location.pathname != path)
+                                window.location.href = path;
+
+                        // Process each country and path 
+//                        console.log(`Country: ${country}, Path: ${path}`);
+                        
+                        // Add your conditional processing logic here
+                    }
+                }
+
+            }
         }
+
+        // if(path) {
+        //     if (window.location.pathname != path)
+        //         window.location.href = path;
+        // }
 
         // Apply hide/show filter on elements 
 
