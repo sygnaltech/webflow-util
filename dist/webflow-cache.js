@@ -192,8 +192,8 @@
   var Sa5CacheController = class {
     constructor(customConfig = {}) {
       this.items = /* @__PURE__ */ new Map();
-      this.cacheKey = function(key) {
-        return `${this.config.prefix}_${key}`;
+      this.cacheItemKey = function(itemName) {
+        return `${this.config.prefix}_${itemName}`;
       };
       this.config = { ...defaultConfig, ...customConfig };
       this.debug = new Sa5Debug("sa5-cache");

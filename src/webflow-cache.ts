@@ -88,8 +88,11 @@ export class Sa5CacheController {
 
     }
 
-    cacheKey = function(key) {
-        return `${this.config.prefix}_${key}`;
+    cacheItemKey = function(itemName) {
+
+//        const CACHE_PREFIX = 'sa5-cache';
+
+        return `${this.config.prefix}_${itemName}`;
     }
 
 

@@ -186,8 +186,8 @@
   var Sa5CacheController = class {
     constructor(customConfig = {}) {
       this.items = /* @__PURE__ */ new Map();
-      this.cacheKey = function(key) {
-        return `${this.config.prefix}_${key}`;
+      this.cacheItemKey = function(itemName) {
+        return `${this.config.prefix}_${itemName}`;
       };
       this.config = { ...defaultConfig, ...customConfig };
       this.debug = new Sa5Debug("sa5-cache");
@@ -253,18 +253,21 @@
       switch (this.config.storageType) {
         case 1 /* localStorage */:
           localStorage.setItem(
-            this.controller.cacheKey(this.config.name),
+            this.controller.cacheItemKey(this.config.name),
             JSON.stringify(val)
           );
           break;
         case 0 /* sessionStorage */:
           sessionStorage.setItem(
-            this.controller.cacheKey(this.config.name),
+            this.controller.cacheItemKey(this.config.name),
             JSON.stringify(val)
           );
           break;
         case 2 /* cookies */:
-          this.setCookie(this.config.name, JSON.stringify(val));
+          this.setCookie(
+            this.controller.cacheItemKey(this.config.name),
+            JSON.stringify(val)
+          );
           this.config.storageExpiry;
           break;
       }
@@ -274,17 +277,21 @@
       switch (this.config.storageType) {
         case 1 /* localStorage */:
           itemData = localStorage.getItem(
-            this.controller.cacheKey(this.config.name)
+            this.controller.cacheItemKey(this.config.name)
           );
           break;
         case 0 /* sessionStorage */:
           itemData = sessionStorage.getItem(
-            this.controller.cacheKey(this.config.name)
+            this.controller.cacheItemKey(this.config.name)
           );
           this.debug.debug("cached? sessionStorage.getItem", itemData);
           break;
         case 2 /* cookies */:
-          itemData = this.getCookie(this.config.name);
+          itemData = this.getCookie(
+            this.controller.cacheItemKey(
+              this.config.name
+            )
+          );
           break;
       }
       return JSON.parse(itemData);

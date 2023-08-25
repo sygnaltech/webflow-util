@@ -120,18 +120,21 @@ export class Sa5CacheItemTyped<T> {
 
             case Sa5CacheStorageType.localStorage:
                 localStorage.setItem(
-                    this.controller.cacheKey(this.config.name),
+                    this.controller.cacheItemKey(this.config.name),
                     JSON.stringify(val)
                     );
                 break;
             case Sa5CacheStorageType.sessionStorage:
                 sessionStorage.setItem(
-                    this.controller.cacheKey(this.config.name),
+                    this.controller.cacheItemKey(this.config.name),
                     JSON.stringify(val) 
                     );
                 break;
             case Sa5CacheStorageType.cookies:
-                this.setCookie(this.config.name, JSON.stringify(val)); 
+                this.setCookie(
+                    this.controller.cacheItemKey(this.config.name), 
+                    JSON.stringify(val)
+                    ); 
                 this.config.storageExpiry
                 break;
             
@@ -146,34 +149,28 @@ export class Sa5CacheItemTyped<T> {
 
             case Sa5CacheStorageType.localStorage:
                 itemData = localStorage.getItem(
-                    this.controller.cacheKey(this.config.name));
+                    this.controller.cacheItemKey(this.config.name));
                 break;
             case Sa5CacheStorageType.sessionStorage:
                 itemData = sessionStorage.getItem(
-                    this.controller.cacheKey(this.config.name));
+                    this.controller.cacheItemKey(this.config.name));
                 this.debug.debug("cached? sessionStorage.getItem", itemData); 
                 break;
             case Sa5CacheStorageType.cookies:
-                itemData = this.getCookie(this.config.name); 
+                itemData = this.getCookie(
+                    this.controller.cacheItemKey(
+                        this.config.name)); 
                 break;
             
         }
 
-    //    // Try to parse the itemData as JSON
-//        try {
-            return JSON.parse(itemData) as T;
-        // } catch {
-        //     // If parsing fails, return the itemData as a string
-        //     return itemData as any as T;
-        // }
-
+        return JSON.parse(itemData) as T;
     }
 
     protected async getAsyncFromSource(): Promise<T> {
 
         // Not cached
         // go get this value 
-        
             
         // Call valueHandler function to calculate 
         return await this.config.updateFnAsync().then(r => {
@@ -182,6 +179,7 @@ export class Sa5CacheItemTyped<T> {
 
             this.debug.debug("sessionStorage.setItem", this.config.name, r); 
             this.debug.debug("calculated", r); 
+
             return r;
         }); 
 
@@ -190,67 +188,6 @@ export class Sa5CacheItemTyped<T> {
 }
 
 
-/*
-
-    async getAsync(itemName): Promise<string> {
-
-        this.debug.group(`getAsync - "${itemName}"`);
-        
-        var itemHandler: Sa5CacheItem = this.config.val[itemName];
-        this.debug.debug("valueHandler", itemHandler);
-        
-        if(!itemHandler) {
-            console.error("Sa5", `No cache item handler '${itemName}'`); 
-        }
-
-        let returnValue = null;
-        switch(itemHandler.config.storageType) {
-
-            case Sa5CacheStorageType.localStorage:
-                returnValue = localStorage.getItem(
-                    this.cacheKey(itemName));
-                break;
-            case Sa5CacheStorageType.sessionStorage:
-                returnValue = sessionStorage.getItem(
-                    this.cacheKey(itemName));
-                this.debug.debug("cached? sessionStorage.getItem", returnValue); 
-                break;
-            case Sa5CacheStorageType.cookies:
-                break;
-            
-        }
-
-
-        // var returnValue = sessionStorage.getItem(
-        //     this.cacheKey(itemName));
-//        this.debug.debug("cached? sessionStorage.getItem", returnValue); 
-      
-        const that = this;
-
-        // Not cached
-        // go get this value 
-        if (returnValue == null || returnValue == undefined) { 
-            
-            // Call valueHandler function to calculate 
-            returnValue = await itemHandler.config.updateFnAsync().then(r => {
-                sessionStorage.setItem(
-                    this.cacheKey(itemName), r);
-                that.debug.debug("sessionStorage.setItem", itemName, r); 
-                that.debug.debug("calculated", r); 
-                return r;
-                }); 
-
-        }
-
-        this.debug.debug("returning", returnValue); 
-
-        this.debug.groupEnd();
-        return returnValue; 
-    }
-
-*/
-
-// window["WfuCacheItem"] = WfuCacheItem;
 
 
 
