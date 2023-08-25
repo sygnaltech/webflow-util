@@ -186,13 +186,12 @@
   var defaultConfig = {
     id: "cache",
     cacheKey: null,
-    store: 0 /* sessionStorage */,
     prefix: "cache",
-    val: {},
     debug: false
   };
-  var Sa5Cache = class {
+  var Sa5CacheController = class {
     constructor(customConfig = {}) {
+      this.items = /* @__PURE__ */ new Map();
       this.cacheKey = function(key) {
         return `${this.config.prefix}_${key}`;
       };
@@ -202,36 +201,16 @@
       if (this.config.cacheKey) {
       }
     }
-    async getAsync(valueName) {
-      this.debug.group(`getAsync - "${valueName}"`);
-      var valueHandler = this.config.val[valueName];
-      this.debug.debug("valueHandler", valueHandler);
-      if (!valueHandler) {
-        console.error("Sa5", `No cache value handler '${valueName}'`);
-      }
-      var returnValue = sessionStorage.getItem(
-        this.cacheKey(valueName)
-      );
-      this.debug.debug("cached? sessionStorage.getItem", returnValue);
-      const that = this;
-      if (returnValue == null || returnValue == void 0) {
-        returnValue = await valueHandler.config.updateFnAsync().then((r) => {
-          sessionStorage.setItem(
-            this.cacheKey(valueName),
-            r
-          );
-          that.debug.debug("sessionStorage.setItem", valueName, r);
-          that.debug.debug("calculated", r);
-          return r;
-        });
-      }
-      this.debug.debug("returning", returnValue);
-      this.debug.groupEnd();
-      return returnValue;
+    addItem(name, item) {
+      item.controller = this;
+      this.items.set(name, item);
+    }
+    getItem(name) {
+      return this.items.get(name);
     }
     clearCache() {
     }
   };
-  Sa5Core.startup(Sa5Cache);
+  Sa5Core.startup(Sa5CacheController);
 })();
 //# sourceMappingURL=webflow-cache.js.map

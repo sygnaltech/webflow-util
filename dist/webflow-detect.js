@@ -180,13 +180,12 @@
   var defaultConfig = {
     id: "cache",
     cacheKey: null,
-    store: 0 /* sessionStorage */,
     prefix: "cache",
-    val: {},
     debug: false
   };
-  var Sa5Cache = class {
+  var Sa5CacheController = class {
     constructor(customConfig = {}) {
+      this.items = /* @__PURE__ */ new Map();
       this.cacheKey = function(key) {
         return `${this.config.prefix}_${key}`;
       };
@@ -196,50 +195,107 @@
       if (this.config.cacheKey) {
       }
     }
-    async getAsync(valueName) {
-      this.debug.group(`getAsync - "${valueName}"`);
-      var valueHandler = this.config.val[valueName];
-      this.debug.debug("valueHandler", valueHandler);
-      if (!valueHandler) {
-        console.error("Sa5", `No cache value handler '${valueName}'`);
-      }
-      var returnValue = sessionStorage.getItem(
-        this.cacheKey(valueName)
-      );
-      this.debug.debug("cached? sessionStorage.getItem", returnValue);
-      const that = this;
-      if (returnValue == null || returnValue == void 0) {
-        returnValue = await valueHandler.config.updateFnAsync().then((r) => {
-          sessionStorage.setItem(
-            this.cacheKey(valueName),
-            r
-          );
-          that.debug.debug("sessionStorage.setItem", valueName, r);
-          that.debug.debug("calculated", r);
-          return r;
-        });
-      }
-      this.debug.debug("returning", returnValue);
-      this.debug.groupEnd();
-      return returnValue;
+    addItem(name, item) {
+      item.controller = this;
+      this.items.set(name, item);
+    }
+    getItem(name) {
+      return this.items.get(name);
     }
     clearCache() {
     }
   };
-  Sa5Core.startup(Sa5Cache);
+  Sa5Core.startup(Sa5CacheController);
 
-  // src/webflow-cache/webflow-cache-item.ts
+  // src/webflow-cache/cache-item-typed.ts
   var defaultConfig2 = {
-    store: "sessionStorage",
     name: void 0,
+    storageType: 0 /* sessionStorage */,
+    storageExpiry: null,
     updateFnAsync: void 0,
     debug: false
   };
-  var Sa5CacheItem = class {
+  var Sa5CacheItemTyped = class {
     constructor(customConfig = {}) {
       this.debug = new Sa5Debug("sa5-cache-item");
       this.config = { ...defaultConfig2, ...customConfig };
       this.debug.enabled = this.config.debug;
+    }
+    getCookie(name) {
+      const encodedName = encodeURIComponent(name);
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${encodedName}=`);
+      if (parts.length === 2) {
+        const cookieValue = parts.pop().split(";").shift();
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+      }
+      return null;
+    }
+    setCookie(name, val) {
+      let cookieValue = `${encodeURIComponent(name)}=${encodeURIComponent(val)}`;
+      if (this.config.storageExpiry) {
+        cookieValue += `;expires=${this.config.storageExpiry.toUTCString()}`;
+      }
+      cookieValue += `;path=/`;
+      document.cookie = cookieValue;
+    }
+    async getAsync() {
+      let val = await this.getAsyncFromCache();
+      if (!val) {
+        val = await this.getAsyncFromSource();
+      }
+      return val;
+    }
+    async setAsync(val) {
+      this.setAsyncToCache(val);
+    }
+    async setAsyncToCache(val) {
+      switch (this.config.storageType) {
+        case 1 /* localStorage */:
+          localStorage.setItem(
+            this.controller.cacheKey(this.config.name),
+            JSON.stringify(val)
+          );
+          break;
+        case 0 /* sessionStorage */:
+          sessionStorage.setItem(
+            this.controller.cacheKey(this.config.name),
+            JSON.stringify(val)
+          );
+          break;
+        case 2 /* cookies */:
+          this.setCookie(this.config.name, JSON.stringify(val));
+          this.config.storageExpiry;
+          break;
+      }
+    }
+    async getAsyncFromCache() {
+      let itemData = null;
+      switch (this.config.storageType) {
+        case 1 /* localStorage */:
+          itemData = localStorage.getItem(
+            this.controller.cacheKey(this.config.name)
+          );
+          break;
+        case 0 /* sessionStorage */:
+          itemData = sessionStorage.getItem(
+            this.controller.cacheKey(this.config.name)
+          );
+          this.debug.debug("cached? sessionStorage.getItem", itemData);
+          break;
+        case 2 /* cookies */:
+          itemData = this.getCookie(this.config.name);
+          break;
+      }
+      return JSON.parse(itemData);
+    }
+    async getAsyncFromSource() {
+      return await this.config.updateFnAsync().then((r) => {
+        this.setAsync(r);
+        this.debug.debug("sessionStorage.setItem", this.config.name, r);
+        this.debug.debug("calculated", r);
+        return r;
+      });
     }
   };
 
@@ -291,26 +347,26 @@
   var Sa5Detect = class {
     constructor() {
       this.countries = /* @__PURE__ */ new Map([]);
-      this.cache = new Sa5Cache({
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + 3);
+      this.cache = new Sa5CacheController({
         id: "sa5-detect",
         cacheKey: "af92b71b-d0cf-4ad5-a06c-97327215af8a",
-        store: 2 /* cookies */,
-        prefix: "sa5",
-        val: {
-          userInfo: new Sa5CacheItem({
-            name: "userInfo",
-            store: "cookie",
-            updateFnAsync: this.getUserInfoAsync
-          })
-        }
+        prefix: "sa5"
       });
+      this.cache.addItem(
+        "userInfo",
+        new Sa5CacheItemTyped({
+          name: "userInfo",
+          storageType: 2 /* cookies */,
+          storageExpiry: expiry,
+          updateFnAsync: this.getUserInfoAsync
+        })
+      );
     }
     async userInfo() {
-      const info = await this.cache.getAsync("userInfo");
-      if (!info)
-        return null;
-      let userInfo = JSON.parse(info);
-      return userInfo;
+      const info = await this.cache.getItem("userInfo").getAsync();
+      return info;
     }
     async getUserInfoAsync() {
       const IP_INFO_TOKEN = "37cce46c605631";
@@ -340,10 +396,7 @@
     }
     async applyDetectContextAsync() {
       console.log(this.countries);
-      const userInfoString = await this.cache.getAsync("userInfo");
-      let userInfo = null;
-      if (userInfoString)
-        userInfo = JSON.parse(userInfoString);
+      let userInfo = await this.cache.getItem("userInfo").getAsync();
       console.log("APPLYING CONTEXT.");
       console.log(userInfo);
       let path = this.getPathForCountry(userInfo.country);

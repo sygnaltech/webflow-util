@@ -1,8 +1,9 @@
 
 //import IPinfoWrapper, { IPinfo, AsnResponse } from "node-ipinfo";
 
-import { Sa5CacheStorageType, Sa5Cache } from "./webflow-cache";
-import { Sa5CacheItem } from "./webflow-cache/webflow-cache-item";
+import { Sa5CacheStorageType, Sa5CacheController } from "./webflow-cache";
+import { Sa5CacheItem } from "./webflow-cache/cache-item";
+import { Sa5CacheItemTyped } from "./webflow-cache/cache-item-typed";
 import { GeoHandlerInfo } from "./webflow-detect/geo-handlers/geo-handler-base";
 import { IPInfo } from "./webflow-detect/geo-handlers/ip-info";
 
@@ -47,18 +48,18 @@ const COOKIE_NAME = 'userInfo';
 export class Sa5Detect {
 
     // Internal cache handler
-    private cache: Sa5Cache;
+    private cache: Sa5CacheController;
 
     async userInfo(): Promise<GeoHandlerInfo> {
 
-        const info = await this.cache.getAsync("userInfo");
+        const info: GeoHandlerInfo = await this.cache.getItem("userInfo").getAsync() as GeoHandlerInfo;
 
-        if(!info)
-            return null;
+        // if(!info)
+        //     return null;
 
-        let userInfo: GeoHandlerInfo = JSON.parse(info);
+        // let userInfo: GeoHandlerInfo = JSON.parse(info);
 
-        return userInfo;
+        return info;
     }
 
     // Map for redirection
@@ -67,20 +68,35 @@ export class Sa5Detect {
 
     constructor() {
 
+        // Expiry: 3 days
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 3);
+
         // Setup cached values
-        this.cache = new Sa5Cache({
+        this.cache = new Sa5CacheController({
             id: 'sa5-detect',
             cacheKey: 'af92b71b-d0cf-4ad5-a06c-97327215af8a',
-            store: Sa5CacheStorageType.cookies,
-            prefix: 'sa5',
-            val: {
-            userInfo: new Sa5CacheItem({
-                name: "userInfo", 
-                store: "cookie", 
-                updateFnAsync: this.getUserInfoAsync   
-              })
-            }
+//            store: Sa5CacheStorageType.cookies,
+            prefix: 'sa5'
+    //         val: {
+    //             userInfo: new Sa5CacheItem({
+    //                 name: "userInfo", 
+    // //                store: "cookie", 
+    //                 storageType: Sa5CacheStorageType.cookies,
+    //                 storageExpiry: expiry,
+    //                 updateFnAsync: this.getUserInfoAsync   
+    //             })
+    //         }
           });
+
+          this.cache.addItem(
+            "userInfo", // ref name 
+            new Sa5CacheItemTyped<GeoHandlerInfo>({
+                name: "userInfo", // internal cookie name - can autogen  
+                storageType: Sa5CacheStorageType.cookies,
+                storageExpiry: expiry,
+                updateFnAsync: this.getUserInfoAsync   
+            }));
 
     }
 
@@ -143,13 +159,14 @@ export class Sa5Detect {
     // Home should be 
 
     async applyDetectContextAsync() {
+
         console.log(this.countries);
 
 
-        const userInfoString: string = await this.cache.getAsync("userInfo");
-        let userInfo: GeoHandlerInfo = null;
-        if (userInfoString)
-            userInfo = JSON.parse(userInfoString);
+//        const userInfoString: string = await this.cache.getItem("userInfo").getAsync();
+        let userInfo: GeoHandlerInfo = await this.cache.getItem("userInfo").getAsync() as GeoHandlerInfo;
+        // if (userInfoString)
+        //     userInfo = JSON.parse(userInfoString);
 
 //        const userInfo: GeoHandlerInfo = await this.getUserInfoAsync();
 

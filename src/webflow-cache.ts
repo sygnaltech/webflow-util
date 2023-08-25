@@ -10,6 +10,8 @@
  * An advanced utility for retriving and caching values online, for maximum performance.
  */
 
+import { Sa5CacheItemTyped } from './webflow-cache/cache-item-typed';
+import { Sa5CacheItem } from './webflow-cache/cache-item';
 import { Sa5Core } from './webflow-core'
 
 import { Sa5Debug } from './webflow-core/debug';
@@ -30,10 +32,12 @@ interface Sa5CacheConfig {
 
     id: string, // Cache instance identifier
     cacheKey: string, // Cache validation key 
+// Future: expand into cacheUserKey (app) and a remote key indicating remote source changes
+// problem is that might need to be by item 
 
-    store: Sa5CacheStorageType;
-    prefix: string;
-    val: {};
+//    store: Sa5CacheStorageType;
+    prefix: string; 
+//    val: {}; // as any { [key: string]: Sa5CacheItemBase };
 
     debug: boolean;
 
@@ -46,16 +50,21 @@ var defaultConfig: Sa5CacheConfig = {
     cacheKey: null, 
 
     // sessionStorage | localStorage | cookies
-    store: Sa5CacheStorageType.sessionStorage, // 'sessionStorage', // ONLY supported 
+//    store: Sa5CacheStorageType.sessionStorage, // 'sessionStorage', // ONLY supported 
     prefix: 'cache', 
-    val: {}, // Cached values 
-
+//    val: {}, // Cached values  
+//    val: {}, // as { [key: string]: Sa5CacheItemBase },
+    
     debug: false, // Debugging mode
   
 }
 
 
-export class Sa5Cache {
+// Controller
+export class Sa5CacheController {
+
+    private items = new Map<string, Sa5CacheItemTyped<any>>();
+
 
 //    console = new WfuDebug("wfu-cache");
 
@@ -83,20 +92,53 @@ export class Sa5Cache {
         return `${this.config.prefix}_${key}`;
     }
 
-    async getAsync(valueName): Promise<string> {
 
-        this.debug.group(`getAsync - "${valueName}"`);
+    addItem(name: string, item: Sa5CacheItemTyped<any>) {
+
+        // Reference to controller
+        // supports cacheKey 
+        item.controller = this;
+
+        this.items.set(name, item);
+    }
+
+    getItem<T>(name: string): Sa5CacheItemTyped<T> | undefined {
+
+        return this.items.get(name) as Sa5CacheItemTyped<T> | undefined;
+    }
+/*
+    async getAsync(itemName): Promise<string> {
+
+        this.debug.group(`getAsync - "${itemName}"`);
         
-        var valueHandler = this.config.val[valueName];
-        this.debug.debug("valueHandler", valueHandler);
+        var itemHandler: Sa5CacheItem = this.config.val[itemName];
+        this.debug.debug("valueHandler", itemHandler);
         
-        if(!valueHandler) {
-            console.error("Sa5", `No cache value handler '${valueName}'`); 
+        if(!itemHandler) {
+            console.error("Sa5", `No cache item handler '${itemName}'`); 
         }
 
-        var returnValue = sessionStorage.getItem(
-            this.cacheKey(valueName));
-        this.debug.debug("cached? sessionStorage.getItem", returnValue); 
+        let returnValue = null;
+        switch(itemHandler.config.storageType) {
+
+            case Sa5CacheStorageType.localStorage:
+                returnValue = localStorage.getItem(
+                    this.cacheKey(itemName));
+                break;
+            case Sa5CacheStorageType.sessionStorage:
+                returnValue = sessionStorage.getItem(
+                    this.cacheKey(itemName));
+                this.debug.debug("cached? sessionStorage.getItem", returnValue); 
+                break;
+            case Sa5CacheStorageType.cookies:
+                break;
+            
+        }
+
+
+        // var returnValue = sessionStorage.getItem(
+        //     this.cacheKey(itemName));
+//        this.debug.debug("cached? sessionStorage.getItem", returnValue); 
       
         const that = this;
 
@@ -105,10 +147,10 @@ export class Sa5Cache {
         if (returnValue == null || returnValue == undefined) { 
             
             // Call valueHandler function to calculate 
-            returnValue = await valueHandler.config.updateFnAsync().then(r => {
+            returnValue = await itemHandler.config.updateFnAsync().then(r => {
                 sessionStorage.setItem(
-                    this.cacheKey(valueName), r);
-                that.debug.debug("sessionStorage.setItem", valueName, r); 
+                    this.cacheKey(itemName), r);
+                that.debug.debug("sessionStorage.setItem", itemName, r); 
                 that.debug.debug("calculated", r); 
                 return r;
                 }); 
@@ -120,7 +162,7 @@ export class Sa5Cache {
         this.debug.groupEnd();
         return returnValue; 
     }
-
+*/
     clearCache() {
         // Iterate through items and clear() 
     }
@@ -131,7 +173,7 @@ export class Sa5Cache {
 
 
 // Register
-Sa5Core.startup(Sa5Cache);
+Sa5Core.startup(Sa5CacheController);
 
 // window["sa5"] = window["sa5"] || []; // {};
 // window["sa5"]["Sa5Cache"] = Sa5Cache;
