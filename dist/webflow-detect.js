@@ -186,8 +186,8 @@
   var Sa5CacheController = class {
     constructor(customConfig = {}) {
       this.items = /* @__PURE__ */ new Map();
-      this.cacheKey = function(key) {
-        return `${this.config.prefix}_${key}`;
+      this.cacheItemKey = function(itemName) {
+        return `${this.config.prefix}_${itemName}`;
       };
       this.config = { ...defaultConfig, ...customConfig };
       this.debug = new Sa5Debug("sa5-cache");
@@ -253,18 +253,21 @@
       switch (this.config.storageType) {
         case 1 /* localStorage */:
           localStorage.setItem(
-            this.controller.cacheKey(this.config.name),
+            this.controller.cacheItemKey(this.config.name),
             JSON.stringify(val)
           );
           break;
         case 0 /* sessionStorage */:
           sessionStorage.setItem(
-            this.controller.cacheKey(this.config.name),
+            this.controller.cacheItemKey(this.config.name),
             JSON.stringify(val)
           );
           break;
         case 2 /* cookies */:
-          this.setCookie(this.config.name, JSON.stringify(val));
+          this.setCookie(
+            this.controller.cacheItemKey(this.config.name),
+            JSON.stringify(val)
+          );
           this.config.storageExpiry;
           break;
       }
@@ -274,17 +277,21 @@
       switch (this.config.storageType) {
         case 1 /* localStorage */:
           itemData = localStorage.getItem(
-            this.controller.cacheKey(this.config.name)
+            this.controller.cacheItemKey(this.config.name)
           );
           break;
         case 0 /* sessionStorage */:
           itemData = sessionStorage.getItem(
-            this.controller.cacheKey(this.config.name)
+            this.controller.cacheItemKey(this.config.name)
           );
           this.debug.debug("cached? sessionStorage.getItem", itemData);
           break;
         case 2 /* cookies */:
-          itemData = this.getCookie(this.config.name);
+          itemData = this.getCookie(
+            this.controller.cacheItemKey(
+              this.config.name
+            )
+          );
           break;
       }
       return JSON.parse(itemData);
@@ -352,7 +359,7 @@
       this.cache = new Sa5CacheController({
         id: "sa5-detect",
         cacheKey: "af92b71b-d0cf-4ad5-a06c-97327215af8a",
-        prefix: "sa5"
+        prefix: "_sa5"
       });
       this.cache.addItem(
         "userInfo",
@@ -384,7 +391,7 @@
         info.ip,
         info.country
       );
-      return JSON.stringify(info);
+      return info;
     }
     detectGeographicZone() {
     }
@@ -392,6 +399,8 @@
       return this.countries.has(countryCode);
     }
     getPathForCountry(countryCode) {
+      console.log("getPathForCountry", countryCode);
+      console.log(this.countries);
       return this.countries.get(countryCode);
     }
     async applyDetectContextAsync() {

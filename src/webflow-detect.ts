@@ -76,17 +76,7 @@ export class Sa5Detect {
         this.cache = new Sa5CacheController({
             id: 'sa5-detect',
             cacheKey: 'af92b71b-d0cf-4ad5-a06c-97327215af8a',
-//            store: Sa5CacheStorageType.cookies,
-            prefix: 'sa5'
-    //         val: {
-    //             userInfo: new Sa5CacheItem({
-    //                 name: "userInfo", 
-    // //                store: "cookie", 
-    //                 storageType: Sa5CacheStorageType.cookies,
-    //                 storageExpiry: expiry,
-    //                 updateFnAsync: this.getUserInfoAsync   
-    //             })
-    //         }
+            prefix: '_sa5'
           });
 
           this.cache.addItem(
@@ -100,7 +90,7 @@ export class Sa5Detect {
 
     }
 
-    private async getUserInfoAsync(): Promise<string> {
+    private async getUserInfoAsync(): Promise<GeoHandlerInfo> {
 
         // 37cce46c605631
         const IP_INFO_TOKEN = '37cce46c605631';
@@ -125,7 +115,7 @@ export class Sa5Detect {
             info.country
             ); 
 
-        return JSON.stringify(info);
+        return info;
     }
     
     detectGeographicZone() {
@@ -153,6 +143,9 @@ export class Sa5Detect {
 
     private getPathForCountry(countryCode: string): string | undefined {
 
+console.log("getPathForCountry", countryCode);
+console.log(this.countries); 
+
         return this.countries.get(countryCode);
     }
 
@@ -163,12 +156,7 @@ export class Sa5Detect {
         console.log(this.countries);
 
 
-//        const userInfoString: string = await this.cache.getItem("userInfo").getAsync();
-        let userInfo: GeoHandlerInfo = await this.cache.getItem("userInfo").getAsync() as GeoHandlerInfo;
-        // if (userInfoString)
-        //     userInfo = JSON.parse(userInfoString);
-
-//        const userInfo: GeoHandlerInfo = await this.getUserInfoAsync();
+        let userInfo: GeoHandlerInfo = await this.cache.getItem<GeoHandlerInfo>("userInfo").getAsync();
 
         console.log("APPLYING CONTEXT.");
 
