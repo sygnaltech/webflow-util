@@ -43,6 +43,8 @@
         Sa5Attribute2["ATTR_FILTER_MATCH"] = "wfu-filter-match";
         Sa5Attribute2["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
         Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+        Sa5Attribute2["ATTR_HIDE"] = "wfu-hide";
+        Sa5Attribute2["ATTR_SUPPRESS"] = "wfu-suppress";
         Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
         return Sa5Attribute2;
       })(Sa5Attribute || {});
@@ -638,6 +640,11 @@
             new Sa5NestedList(list).processNestedList();
           });
           rtfElem.removeAttribute("wfu-lists");
+        });
+        document.querySelectorAll(`[${"wfu-suppress" /* ATTR_SUPPRESS */}=empty-lists]`).forEach((element2) => {
+          if (element2.querySelector(".w-dyn-items")) {
+            element2.removeAttribute("wfu-suppress" /* ATTR_SUPPRESS */);
+          }
         });
         document.querySelectorAll("[wfu-limit-multiple]").forEach((element2) => {
           var listElement = element2;

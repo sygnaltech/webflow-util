@@ -132,9 +132,42 @@
  * Hide elements on spec 
  */
 
+/* Webflow list notes
+   populated list 
+
+<div class="w-dyn-list">
+<div role="list" class="w-dyn-items">
+<div role="listitem" class="w-dyn-item">
+<div><h4>10 Quick Tips About Blogging</h4></div>
+</div>
+</div></div></div>
+
+   no elements
+
+<div class="w-dyn-list">
+<div class="w-dyn-empty">
+<div>No items found.</div>
+</div>
+</div>   
+
+- zero w-dyn-items
+- maybe a w-dyn-empty, if it was not suppressed
+
+FS empty list
+- zero w-dyn-items 
+
+*/
+
 // Hide elements which contain no collection list items
+[wfu-hide="empty-lists"]:not(:has(.w-dyn-item)) {  
+    display: none; 
+}
 [wfu-hide="empty-collection-list"]:not(:has(.w-dyn-item)) {  
     display: none; 
+}
+
+[wfu-suppress="empty-lists"] {
+    display: none;
 }
 
 /* test */ 

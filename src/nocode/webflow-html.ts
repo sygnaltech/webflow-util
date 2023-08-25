@@ -218,6 +218,21 @@ const init = () => {
     });
 
     /**
+     * Suppress sections with no list items.
+     */
+
+    document.querySelectorAll(`[${Sa5Attribute.ATTR_SUPPRESS}=empty-lists]`)
+      .forEach((element: HTMLElement) => { 
+
+        // Check if the element containssany descendants with a class of .w-dyn-items
+        if (element.querySelector('.w-dyn-items')) {
+            // Un-suppress the element
+            element.removeAttribute(Sa5Attribute.ATTR_SUPPRESS);
+        }
+
+      }); 
+
+    /**
      * Limit to a multiple of X items 
      */
 

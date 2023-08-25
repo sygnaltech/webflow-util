@@ -80,6 +80,10 @@ export enum Sa5Attribute {
     ATTR_FILTER_EVAL = 'wfu-filter-eval',
     ATTR_FILTER_FUNC = 'wfu-filter-func',
 
+    // Hiding & Suppression
+    ATTR_HIDE = 'wfu-hide',
+    ATTR_SUPPRESS = 'wfu-suppress',
+
     // 404
     ATTR_404_SEARCH = 'wfu-404-search',
 

@@ -33,6 +33,8 @@
     Sa5Attribute3["ATTR_FILTER_MATCH"] = "wfu-filter-match";
     Sa5Attribute3["ATTR_FILTER_EVAL"] = "wfu-filter-eval";
     Sa5Attribute3["ATTR_FILTER_FUNC"] = "wfu-filter-func";
+    Sa5Attribute3["ATTR_HIDE"] = "wfu-hide";
+    Sa5Attribute3["ATTR_SUPPRESS"] = "wfu-suppress";
     Sa5Attribute3["ATTR_404_SEARCH"] = "wfu-404-search";
     return Sa5Attribute3;
   })(Sa5Attribute || {});
