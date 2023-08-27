@@ -1,0 +1,381 @@
+
+/**
+ * GitHub Gists
+ * 
+ * Test examples 
+ * https://www.sygnal.com/lessons/breakpoints 
+ */
+
+/*
+.gist {
+// :root {
+    --gist-border-width: 1px;
+    --gist-border-style: solid;
+    --gist-border-color: #ddd; 
+    
+    --gist-font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace; 
+    
+    --gist-font-size: 12px;
+    --gist-line-height: 20px;
+    --gist-tab-size: inherit; 
+  
+    --gist-bg-color: #141414;
+    --gist-color1: #aab1bf; // css base text color & { } syntax 
+    --gist-color2: #5b6270; // css comments
+    --gist-color3: #56b5c2;
+    --gist-color4: #61afef; // css calc
+    --gist-color5: #be5046;
+    --gist-color6: #97c279; // css strings 
+    --gist-color7: #c578dd; // css special @keyframes, to 
+    --gist-color8: #818896;
+    --gist-color9: #020;
+    --gist-color10: #200;
+    --gist-color11: #df6b75; // css measures e.g. rem % ::before 
+    --gist-color12: #e0c184;
+    --gist-color13: #e05151;
+    --gist-color14: #373b41;
+    --gist-color15: #d19965; // css class-ident
+    --gist-color16: #e4bf7a;
+    
+    --gist-padding: inherit; // ?  
+  
+    --gist-scrollbar-thumb-background: inherit; 
+    
+    --gist-scrollbar-thumb-background-width: inherit;
+    --gist-scrollbar-thumb-background-height: inherit;
+    --gist-scrollbar-thumb-background-radius: inherit;
+  }
+*/ 
+
+[wfu-gist-theme=darkmode] {
+
+    // DarkMode Gist styling
+    .gist {
+//    :root {
+    --gist-border-width: 1px;
+    --gist-border-style: solid;
+    --gist-border-color: #ddd; 
+    
+    --gist-bg-color: #141414;
+
+    --gist-font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace; 
+    --gist-font-size: 12px;
+    --gist-line-height: 20px;
+
+    --gist-tab-size: inherit; // 2
+  
+    --gist-color1: #aab1bf; // css base text color & { } syntax 
+    --gist-color2: #5b6270; // css comments
+    --gist-color3: #56b5c2;
+    --gist-color4: #61afef; // css calc
+    --gist-color5: #be5046;
+    --gist-color6: #97c279; // css strings 
+    --gist-color7: #c578dd; // css special @keyframes, to 
+    --gist-color8: #818896;
+    --gist-color9: #020;
+    --gist-color10: #200;
+    --gist-color11: #df6b75; // css measures e.g. rem % ::before 
+    --gist-color12: #e0c184;
+    --gist-color13: #e05151;
+    --gist-color14: #373b41;
+    --gist-color15: #d19965; // css class-ident
+    --gist-color16: #e4bf7a;
+    
+      --gist-padding: 1rem; // inherit; // ?  
+  
+    --gist-scrollbar-thumb-background: inherit; 
+    --gist-scrollbar-thumb-background-width: inherit;
+    --gist-scrollbar-thumb-background-height: inherit;
+    --gist-scrollbar-thumb-background-radius: inherit;
+  }
+  
+ }  
+  
+   /**
+ * Theme - Midnight
+ */
+
+ [wfu-gist-theme=midnight] {
+
+
+
+
+  
+  // Codepen color overrides 
+  .gist {
+//  :root {
+    
+    --gist-border-width: 0px;
+    --gist-border-style: solid;
+    --gist-border-color: #ddd; 
+    
+    // #9a8297 purple unused 
+    --gist-bg-color: #1d1e22;
+    
+    --gist-font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    --gist-font-size: 13px;
+    --gist-line-height: 1.35;
+  
+    /*
+      white-space: pre-wrap;
+    */ 
+    --gist-tab-size: 2; 
+    
+    // selectively overridden colors
+    --gist-color1: #fff; // css base text color & { } syntax 
+    --gist-color2: #717790; // css comments
+    --gist-color4: #96b38a; // css calc
+    --gist-color7: #809bbd; // css special @keyframes, to 
+    --gist-color11: #d0782a; // css measures e.g. rem % ::before 
+    --gist-color15: #ddca7e; // css class-ident
+  
+    // Darkmode
+    --gist-color3: #56b5c2;
+    --gist-color5: #be5046;
+    --gist-color6: #97c279; // css strings 
+    --gist-color8: #818896;
+    --gist-color9: #020;
+    --gist-color10: #200;
+    --gist-color12: #e0c184;
+    --gist-color13: #e05151;
+    --gist-color14: #373b41;
+    --gist-color16: #e4bf7a;
+
+
+    --gist-padding: 1rem; 
+    
+    --gist-scrollbar-thumb-background: #666b7a; 
+    --gist-scrollbar-thumb-background-width: 10px;
+    --gist-scrollbar-thumb-background-height: 10px;
+    --gist-scrollbar-thumb-background-radius: 2px;  
+ }
+
+} 
+
+body [wfu-gist-theme] {
+
+    // .blob-code-container
+    .gist .gist-data .blob-code-content {
+        padding: var(--gist-padding);
+        background: var(--gist-bg-color);
+    }
+    .gist-meta {
+        display: none;
+    }
+  
+    .gist .highlight {
+        background: var(--gist-bg-color);
+    }
+    
+    .gist .gist-file {
+        border: var(--gist-border-width) var(--gist-border-style) var(--gist-border-color);
+//        border-radius: 0;
+    }
+    
+    .gist .blob-code-inner {
+        font-family: var(--gist-font-family); 
+        
+        -moz-tab-size: var(--gist-tab-size);
+        -o-tab-size: var(--gist-tab-size);
+        tab-size: var(--gist-tab-size);
+        
+        font-size: var(--gist-font-size);
+        
+    }
+    
+    // Scrollbars
+    .gist  {
+        .blob-wrapper::-webkit-scrollbar {
+        width: var(--gist-scrollbar-thumb-background-width);
+        height: var(--gist-scrollbar-thumb-background-height);
+        
+        }
+        .blob-wrapper::-webkit-scrollbar-thumb {
+        background: var(--gist-scrollbar-thumb-background);
+        border-radius: var(--gist-scrollbar-thumb-background-radius);
+        }
+    }
+    
+    .gist .gist-data {
+//        border-radius: 0; // 6px 6px 0 0; 
+        background: var(--gist-bg-color);
+        
+        // Bottom border extra
+        border-bottom: var(--gist-border-width) var(--gist-border-style) var(--gist-border-color);
+    }
+  
+    .gist .blob-num,
+    .gist .blob-code-inner,
+    .gist .highlight,
+    .gist .pl-enm,
+    .gist .pl-ko,
+    .gist .pl-mo,
+    .gist .pl-mp1 .pl-sf,
+    .gist .pl-ms,
+    .gist .pl-pdc1,
+    .gist .pl-scp,
+    .gist .pl-smc,
+    .gist .pl-som,
+    .gist .pl-va,
+    .gist .pl-vpf,
+    .gist .pl-vpu,
+    .gist .pl-mdr {
+        color: var(--gist-color1);
+    }
+    
+    .gist .pl-mb,
+    .gist .pl-pdb {
+//        font-weight: 700;
+    }
+  
+    .gist .pl-c,
+    .gist .pl-c span,
+    .gist .pl-pdc {
+        color: var(--gist-color2);
+//        font-style: italic;
+    }
+    
+    .gist .pl-sr .pl-cce {
+        color: var(--gist-color3);
+//        font-weight: 400;
+    }
+    
+    .gist .pl-ef,
+    .gist .pl-en,
+    .gist .pl-enf,
+    .gist .pl-eoai,
+    .gist .pl-kos,
+    .gist .pl-mh .pl-pdh,
+    .gist .pl-mr {
+        color: var(--gist-color4);
+    }
+  
+    .gist .pl-ens,
+    .gist .pl-vi {
+        color: var(--gist-color5);
+    }
+    
+    .gist .pl-enti,
+    .gist .pl-mai .pl-sf,
+    .gist .pl-ml,
+    .gist .pl-sf,
+    .gist .pl-sr,
+    .gist .pl-sr .pl-sra,
+    .gist .pl-src,
+    .gist .pl-st,
+    .gist .pl-vo {
+        color: var(--gist-color3);
+    }
+  
+    .gist .pl-eoi,
+    .gist .pl-mri,
+    .gist .pl-pds,
+    .gist .pl-pse .pl-s1,
+    .gist .pl-s,
+    .gist .pl-s1 {
+        color: var(--gist-color6);
+    }
+    
+    .gist .pl-k,
+    .gist .pl-kolp,
+    .gist .pl-mc,
+    .gist .pl-pde {
+        color: var(--gist-color7);
+    }
+  
+    .gist .pl-mi,
+    .gist .pl-pdi {
+        color: var(--gist-color7);
+//        font-style: italic;
+    }
+    
+    .gist .pl-mp,
+    .gist .pl-stp {
+        color: var(--gist-color8);
+    }
+    
+    .gist .pl-mdh,
+    .gist .pl-mdi,
+    .gist .pl-mdr {
+//        font-weight: 400;
+    }
+  
+    .gist .pl-mdht,
+    .gist .pl-mi1 {
+        color: var(--gist-color6);
+        background: var(--gist-color9);
+    }
+    
+    .gist .pl-md,
+    .gist .pl-mdhf {
+        color: var(--gist-color11);
+        background: var(--gist-color10);
+    }
+    
+    .gist .pl-corl {
+        color: var(--gist-color11);
+//        text-decoration: underline;
+    }
+  
+    .gist .pl-ib {
+        background: var(--gist-color11);
+    }
+    
+    .gist .pl-ii {
+        background: var(--gist-color12);
+ //       color: #fff;
+    }
+    
+    .gist .pl-iu {
+        background: var(--gist-color13);
+    }
+    
+    .gist .pl-ms1 {
+        color: var(--gist-color1);
+        background: var(--gist-color14);
+    }
+  
+    .gist .pl-c1,
+    .gist .pl-cn,
+    .gist .pl-e,
+    .gist .pl-eoa,
+    .gist .pl-eoac,
+    .gist .pl-eoac .pl-pde,
+    .gist .pl-kou,
+    .gist .pl-mm,
+    .gist .pl-mp .pl-s3,
+    .gist .pl-mq,
+    .gist .pl-s3,
+    .gist .pl-sok,
+    .gist .pl-sv,
+    .gist .pl-mb {
+        color: var(--gist-color15);
+    }
+  
+    .gist .pl-enc,
+    .gist .pl-entc,
+    .gist .pl-pse .pl-s2,
+    .gist .pl-s2,
+    .gist .pl-sc,
+    .gist .pl-smp,
+    .gist .pl-sr .pl-sre,
+    .gist .pl-stj,
+    .gist .pl-v,
+    .gist .pl-pdb {
+        color: var(--gist-color16);
+    }
+  
+    .gist .pl-ent,
+    .gist .pl-entl,
+    .gist .pl-entm,
+    .gist .pl-mh,
+    .gist .pl-pdv,
+    .gist .pl-smi,
+    .gist .pl-sol,
+    .gist .pl-mdh,
+    .gist .pl-mdi {
+        color: var(--gist-color11);
+    }
+  
+}
+
