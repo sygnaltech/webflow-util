@@ -15,7 +15,6 @@ import { Sa5Editor } from '../webflow-core/webflow-editor';
 import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
 import { HtmlBuilder } from '../modules/webflow-html-builder';
-import { Sa5NestedList } from '../webflow-html/nested-list'; 
 import { Sa5Attribute } from '../globals';
 import { Sa5Designer } from '../webflow-core/designer';
 
@@ -192,28 +191,6 @@ const init = () => {
                 element.removeAttribute(Sa5Attribute.ATTR_FILTER_FUNC); 
             }
         }
-
-    });
-
-    /** 
-     * Process nested lists
-     */
-
-    document.querySelectorAll('.w-richtext[wfu-lists]')
-      .forEach((rtfElem: HTMLElement) => {
-
-        rtfElem.querySelectorAll(':scope > ul, :scope > ol')
-          .forEach((list: HTMLElement) => {
-
-            new Sa5NestedList(list)
-                .processNestedList();
-
-        });
-    
-        // Remove the attribute
-        // So that the skeleton CSS will reveal the underlying
-        // processed content.
-        rtfElem.removeAttribute('wfu-lists');
 
     });
 
