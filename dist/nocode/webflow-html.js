@@ -460,109 +460,6 @@
     }
   });
 
-  // src/webflow-html/nested-list.ts
-  var Sa5NestedList;
-  var init_nested_list = __esm({
-    "src/webflow-html/nested-list.ts"() {
-      Sa5NestedList = class {
-        constructor(listElement, config = null) {
-          this._element = listElement;
-          this.config = config;
-        }
-        processNestedList() {
-          const content = this._element.innerHTML;
-          const data = new DOMParser().parseFromString(content, "text/html").body.childNodes;
-          let items = [];
-          data.forEach((el, i) => {
-            if (el.nodeName !== "LI")
-              return;
-            let item = {
-              indent: 1,
-              mode: "",
-              text: el.textContent?.trim() || ""
-            };
-            const LIST_DEPTH_LIMIT = 10;
-            for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
-              if (item.text.startsWith(">")) {
-                item.text = item.text.substring(1).trim();
-                item.indent++;
-              } else if (item.text.startsWith("+")) {
-                item.text = item.text.substring(1).trim();
-                item.mode = "pro";
-              } else if (item.text.startsWith("-")) {
-                item.text = item.text.substring(1).trim();
-                item.mode = "con";
-              } else {
-                break;
-              }
-            }
-            items.push(item);
-          });
-          let listWrapper = document.createElement("div");
-          listWrapper.setAttribute(
-            "wfu-list-theme",
-            this._element.getAttribute("wfu-list-theme") || "default"
-          );
-          listWrapper.appendChild(
-            this.createNestedListFromArray(this._element.nodeName, items)
-          );
-          this._element.replaceWith(
-            listWrapper
-          );
-        }
-        createNestedListFromArray(listElementType = "UL", items) {
-          let root = document.createElement(listElementType);
-          root.setAttribute("role", "list");
-          root.classList.add(`wfu-list-level-1`);
-          let currentParent = root;
-          let parents = [root];
-          for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            const li = document.createElement("li");
-            switch (item.mode) {
-              case "pro":
-                li.classList.add("wfu-pro");
-                break;
-              case "con":
-                li.classList.add("wfu-con");
-                break;
-            }
-            if (item.text) {
-              let span = document.createElement("span");
-              span.textContent = item.text;
-              switch (item.mode) {
-                case "pro":
-                  span.classList.add("wfu-pro");
-                  break;
-                case "con":
-                  span.classList.add("wfu-con");
-                  break;
-              }
-              li.appendChild(span);
-            }
-            if (item.indent > parents.length) {
-              for (let j = parents.length; j < item.indent; j++) {
-                if (!parents[j - 1].lastChild) {
-                  const newLI = document.createElement("li");
-                  parents[j - 1].appendChild(newLI);
-                }
-                const newUL = document.createElement(listElementType);
-                let newULparent = parents[j - 1].lastChild || parents[j - 1];
-                newUL.classList.add(`wfu-list-level-${j + 1}`);
-                newULparent.appendChild(newUL);
-                parents.push(newUL);
-              }
-            } else if (item.indent < parents.length) {
-              parents = parents.slice(0, item.indent);
-            }
-            parents[parents.length - 1].appendChild(li);
-          }
-          return root;
-        }
-      };
-    }
-  });
-
   // src/nocode/webflow-html.ts
   var require_webflow_html = __commonJS({
     "src/nocode/webflow-html.ts"(exports, module) {
@@ -572,7 +469,6 @@
       init_webflow_editor();
       init_utils();
       init_collection_list();
-      init_nested_list();
       init_globals();
       var init = () => {
         let core = Sa5Core.startup();
@@ -634,12 +530,6 @@
               element2.removeAttribute("wfu-filter-func" /* ATTR_FILTER_FUNC */);
             }
           }
-        });
-        document.querySelectorAll(".w-richtext[wfu-lists]").forEach((rtfElem) => {
-          rtfElem.querySelectorAll(":scope > ul, :scope > ol").forEach((list) => {
-            new Sa5NestedList(list).processNestedList();
-          });
-          rtfElem.removeAttribute("wfu-lists");
         });
         document.querySelectorAll(`[${"wfu-suppress" /* ATTR_SUPPRESS */}=empty-lists]`).forEach((element2) => {
           if (element2.querySelector(".w-dyn-items")) {
