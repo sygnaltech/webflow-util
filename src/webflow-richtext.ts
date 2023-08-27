@@ -1,6 +1,6 @@
 
 /*
- * webflow-blog
+ * webflow-richtext
  * 
  * Sygnal Technology Group
  * http://sygnal.com
@@ -12,13 +12,13 @@ import { Sa5Core } from './webflow-core'
 
 import { Sa5Debug } from './webflow-core/debug';
 
-import { GitHubGist } from './webflow-blog/github-gist'
+import { GitHubGist } from './webflow-richtext/github-gist'
 
 /*
  * GitHub Gist.
  */
 
-export class Sa5Blog {
+export class Sa5RichText {
     
     urlTemplate;
     debug: Sa5Debug; 
@@ -27,14 +27,14 @@ export class Sa5Blog {
     constructor() {
 
         // Enable debugging, if specified
-        this.debug = new Sa5Debug("sa5-blog");
+        this.debug = new Sa5Debug("sa5-richtext");
 //        this.debug.enabled = this.config.debug; 
 
     }
 
     init() {
 
-this.debug.debug("Initializing SA5 Blog")
+this.debug.debug("Initializing SA5 RichText")
 
         var gitHubGist: GitHubGist = new GitHubGist();
         gitHubGist.initCopyGist();
@@ -110,7 +110,7 @@ this.debug.debug("Initializing SA5 Blog")
 
 
 // Register
-Sa5Core.startup(Sa5Blog);
+Sa5Core.startup(Sa5RichText);
 
 
 // window["sa5"] = window["sa5"] || []; // {};
