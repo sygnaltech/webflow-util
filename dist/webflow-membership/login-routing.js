@@ -190,7 +190,6 @@
     }
     init() {
       let core = Sa5Core.startup();
-      console.log(core);
       let configHandler = core.getHandler("getMembershipRoutingConfig");
       if (!configHandler)
         return;

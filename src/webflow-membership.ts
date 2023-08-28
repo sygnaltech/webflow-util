@@ -17,13 +17,19 @@ import { Sa5User } from './webflow-membership/user';
 
 import { WfuDataBinder } from './webflow-databind';
 import { Sa5GlobalEvent } from './globals';
+import { Sa5UserAccessGroups } from './webflow-membership/access-groups';
 
 const StorageKeys = Object.freeze({
     user: 'wfuUser',
     userKey: 'wfuUserKey',
 });
 
+type GetConfigCallback = (Sa5MembershipConfig) 
+    => Sa5MembershipConfig;
+
 type UserInfoChangedCallback = (user: Sa5User) => void;
+
+
 
 interface Sa5MembershipConfig {
 //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
@@ -33,6 +39,13 @@ interface Sa5MembershipConfig {
     debug?: boolean;
 
     dataBind?: boolean; // Databind after user object load 
+
+    // The name of the folder used to determine access groups 
+    // e.g. /_ag/... the default is _ag. 
+    accessGroupsFolder?: string;
+
+    // The set of access group slugs that the system has defined 
+    accessGroups?: string[];
 
     // Advanced settings
     advanced: {
@@ -69,7 +82,9 @@ export class Sa5Membership {
         this.config = {
             userInfoUpdatedCallback: config.userInfoUpdatedCallback,
             debug: config.debug ?? false,
-            dataBind: config.dataBind ?? true,
+            dataBind: config.dataBind ?? true, 
+            accessGroupsFolder: config.accessGroupsFolder ?? '/sa5-ag', // TODO: globals  
+            accessGroups: config.accessGroups ?? null, // null means none defined, don't check 
             advanced: {
                 accountInfoLoadDelay: 
                     config.advanced?.accountInfoLoadDelay ?? 300,
@@ -108,7 +123,7 @@ console.log(core);
 
         // }
 
-
+        // TODO: Make this a singleton Sa5Core 
 
     }
 
@@ -138,6 +153,26 @@ console.log(core);
         //     return;
 
         this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
+
+
+
+        let core: Sa5Core = Sa5Core.startup();
+
+        // TODO: move label to globals
+        let configHandler: GetConfigCallback = core.getHandler("getMembershipConfig") as GetConfigCallback;
+
+        if(!configHandler) 
+            return; // do nothing
+    
+        // this.config.getConfigCallback 
+        //     = core.getHandler('getMembershipRoutingConfig') as GetConfigCallback; 
+
+        if(configHandler) {
+            this.config = configHandler(
+                this.config
+            ); 
+        }
+
 
         // Install listeners 
         // to listen for login events 
@@ -538,8 +573,34 @@ console.log(core);
 
     async loadUserInfoAsync_accessGroups() {
 
+console.log("loadUserInfoAsync_accessGroups")
+
         this.debug.group("loadUserInfoAsync_accessGroups");
-        this.debug.debug("Not yet implemented.");
+
+        // Create blank
+        var user = new Sa5User();
+        user.user_data_loaded.access_groups = true;
+
+
+        console.log("loadUserInfoAsync_accessGroups")
+
+        // If null or [], exit 
+        if(this.config.accessGroups) { 
+
+            let accessGroupHandler: Sa5UserAccessGroups = new Sa5UserAccessGroups(this);
+            await accessGroupHandler.initAsync(); 
+
+            user.access_groups = accessGroupHandler.accessGroups;
+
+        } else {
+            this.debug.debug("Access groups not configured.");
+        }
+
+        // Cache locally (email only)
+        this.debug.debug("Caching user object [login].", user);
+        this.saveUserInfoCache(user); 
+
+//        this.debug.debug("Not yet implemented.");
         this.debug.groupEnd();
 
     }
@@ -581,7 +642,7 @@ console.log(core);
         }
         if (newUserData.user_data_loaded.access_groups) {
             this.debug.debug("Merging user access_groups.");
-            // Not yet implemented.
+            userData.access_groups = newUserData.access_groups; 
         }
 
         // Coalesge loaded info 

@@ -1140,6 +1140,43 @@
     }
   };
 
+  // src/webflow-membership/access-groups.ts
+  var Sa5UserAccessGroups = class {
+    constructor(membership) {
+      this.accessGroups = [];
+      this.membership = membership;
+    }
+    async initAsync() {
+      console.log("initAsync");
+      console.log(await this.getAccessGroupsAsync());
+    }
+    async getAccessGroupsAsync() {
+      this.accessGroups = [];
+      for (let group of this.membership.config.accessGroups) {
+        let hasAccess = await this.checkAccessGroupAsync(group);
+        if (hasAccess)
+          this.accessGroups.push(group);
+      }
+      return this.accessGroups;
+    }
+    async checkAccessGroupAsync(accessGroupCode) {
+      const response = await fetch(
+        `${this.membership.config.accessGroupsFolder}/${accessGroupCode}`
+      );
+      console.log(`redirected: ${response.redirected}`);
+      console.log("STATUS:", response.status);
+      if (!response.redirected) {
+        console.log(`Has access group ${accessGroupCode}`);
+        return true;
+      }
+      if (response.status != 200) {
+        console.warn("SA5", `Memberships configuration error- access group ${accessGroupCode} is not queryable.`);
+      }
+      console.log(`Not logged in, or no access to ${accessGroupCode}`);
+      return false;
+    }
+  };
+
   // src/webflow-membership.ts
   var StorageKeys = Object.freeze({
     user: "wfuUser",
@@ -1157,6 +1194,8 @@
         userInfoUpdatedCallback: config.userInfoUpdatedCallback,
         debug: config.debug ?? false,
         dataBind: config.dataBind ?? true,
+        accessGroupsFolder: config.accessGroupsFolder ?? "/sa5-ag",
+        accessGroups: config.accessGroups ?? null,
         advanced: {
           accountInfoLoadDelay: config.advanced?.accountInfoLoadDelay ?? 300,
           accountInfoSaveDelay: config.advanced?.accountInfoSaveDelay ?? 500
@@ -1184,6 +1223,15 @@
     }
     init() {
       this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
+      let core = Sa5Core.startup();
+      let configHandler = core.getHandler("getMembershipConfig");
+      if (!configHandler)
+        return;
+      if (configHandler) {
+        this.config = configHandler(
+          this.config
+        );
+      }
       let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
       forms.forEach((form) => {
         form.addEventListener("submit", (e) => {
@@ -1375,8 +1423,20 @@
       });
     }
     async loadUserInfoAsync_accessGroups() {
+      console.log("loadUserInfoAsync_accessGroups");
       this.debug.group("loadUserInfoAsync_accessGroups");
-      this.debug.debug("Not yet implemented.");
+      var user = new Sa5User();
+      user.user_data_loaded.access_groups = true;
+      console.log("loadUserInfoAsync_accessGroups");
+      if (this.config.accessGroups) {
+        let accessGroupHandler = new Sa5UserAccessGroups(this);
+        await accessGroupHandler.initAsync();
+        user.access_groups = accessGroupHandler.accessGroups;
+      } else {
+        this.debug.debug("Access groups not configured.");
+      }
+      this.debug.debug("Caching user object [login].", user);
+      this.saveUserInfoCache(user);
       this.debug.groupEnd();
     }
     saveUserInfoCache(newUserData) {
@@ -1405,6 +1465,7 @@
       }
       if (newUserData.user_data_loaded.access_groups) {
         this.debug.debug("Merging user access_groups.");
+        userData.access_groups = newUserData.access_groups;
       }
       userData.user_data_loaded.email = userData.user_data_loaded.email || newUserData.user_data_loaded.email;
       userData.user_data_loaded.account_info = userData.user_data_loaded.account_info || newUserData.user_data_loaded.account_info;

@@ -70,8 +70,7 @@ export class Sa5MembershipRouting {
 
         let core: Sa5Core = Sa5Core.startup();
 
-console.log(core);
-
+        // TODO: move label to globals
         let configHandler: GetConfigCallback = core.getHandler("getMembershipRoutingConfig") as GetConfigCallback;
 
         if(!configHandler) 
