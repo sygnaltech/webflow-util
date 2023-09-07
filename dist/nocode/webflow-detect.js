@@ -10,6 +10,7 @@
   var Sa5Attribute = /* @__PURE__ */ ((Sa5Attribute3) => {
     Sa5Attribute3["ATTR_CORE_SCRIPT_INJECT"] = "wfu-script-load";
     Sa5Attribute3["ATTR_VIDEO"] = "wfu-video";
+    Sa5Attribute3["ATTR_VIDEO_YOUTUBE_NOREL"] = "wfu-youtube-norel";
     Sa5Attribute3["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute3["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute3["ATTR_ELEMENT_SLIDER"] = "wfu-slider";

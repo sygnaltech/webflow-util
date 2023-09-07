@@ -40,6 +40,7 @@ export enum Sa5Attribute {
 
     // Video
     ATTR_VIDEO = 'wfu-video',
+    ATTR_VIDEO_YOUTUBE_NOREL = 'wfu-youtube-norel', 
     ATTR_VIDEO_DATA_POSTER_URL = 'wfu-data-poster-url', 
 
     // Designer

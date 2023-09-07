@@ -40,11 +40,28 @@ const init = () => {
     });
     
 
+
+    const webflowVideo = new WebflowVideo();
+
+
+    /**
+     * Initialize all [wfu-youtube-norel] elements
+     */    
+
+    let youtube = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO_YOUTUBE_NOREL}]`);
+
+    youtube.forEach((element: HTMLElement) => {
+
+        webflowVideo.processAllYouTubeNorel();
+
+//        Sa5VideoPlayerFactory.create(element).init();
+
+    });
+
     /**
      * Handle background videos. 
      */
 
-    const webflowVideo = new WebflowVideo();
 
     webflowVideo.processAllDataPosterUrls();
 

@@ -21,6 +21,7 @@
     "format": "prettier src/*.ts -w"
   },
   "devDependencies": {
+    "@types/youtube": "^0.0.47",
     "esbuild": "^0.15.14",
     "prettier": "^2.7.1",
     "serve": "^14.1.1",
