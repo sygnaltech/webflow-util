@@ -9,7 +9,7 @@
     position: relative;
 }
 
-[wfu-youtube-norel].paused::after {
+[wfu-youtube-norel].sa5-video-paused::after {
     content: "";
     position: absolute;
     top: 0; // 70px;
@@ -23,8 +23,8 @@
     background-size: 40px 40px;
     background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNzA2LjY2NyIgaGVpZ2h0PSIxNzA2LjY2NyIgdmlld0JveD0iMCAwIDEyODAgMTI4MCI+PHBhdGggZD0iTTE1Ny42MzUgMi45ODRMMTI2MC45NzkgNjQwIDE1Ny42MzUgMTI3Ny4wMTZ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+); 
 }
-
-[wfu-youtube-norel].ended::after {
+ 
+[wfu-youtube-norel].sa5-video-ended::after {
     content: "";
     position: absolute;
     top: 0;

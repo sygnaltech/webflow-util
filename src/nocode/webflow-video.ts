@@ -32,7 +32,6 @@ const init = () => {
      */
 
     let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
-
     videos.forEach((element: HTMLElement) => {
 
         Sa5VideoPlayerFactory.create(element).init();
@@ -48,15 +47,17 @@ const init = () => {
      * Initialize all [wfu-youtube-norel] elements
      */    
 
-    let youtube = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO_YOUTUBE_NOREL}]`);
+    // let youtube = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO_YOUTUBE_NOREL}]`);
 
-    youtube.forEach((element: HTMLElement) => {
+    // youtube.forEach((element: HTMLElement) => {
 
-        webflowVideo.processAllYouTubeNorel();
+//    console.log("Processing NOREL")
+
+    webflowVideo.processAllYouTubeNorel();
 
 //        Sa5VideoPlayerFactory.create(element).init();
 
-    });
+//    });
 
     /**
      * Handle background videos. 

@@ -193,7 +193,6 @@
       });
     }
     processAllYouTubeNorel() {
-      console.log("setup lib");
       if (typeof YT === "undefined") {
         const tag = document.createElement("script");
         tag.src = "https://www.youtube.com/iframe_api";
@@ -201,10 +200,17 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
       let onYouTubeIframeAPIReadyCallbacks = [];
-      for (let playerWrap of document.querySelectorAll("[wfu-youtube-norel]")) {
-        let playerFrame = playerWrap.querySelector("iframe");
-        if (!playerFrame)
+      for (let playerWrap of document.querySelectorAll(`[${"wfu-youtube-norel" /* ATTR_VIDEO_YOUTUBE_NOREL */}]`)) {
+        console.log("loading video", playerWrap);
+        if (!playerWrap.classList.contains("w-embed-youtubevideo")) {
+          console.warn("SA5", "The SA5 YouTube Norel attribute can only be applied to Webflow's YouTube elements.");
           continue;
+        }
+        let playerFrame = playerWrap.querySelector("iframe");
+        if (!playerFrame) {
+          console.warn("SA5", "YouTube player element malformed, missing iframe.");
+          continue;
+        }
         const iframeURL = new URL(playerFrame.src);
         iframeURL.searchParams.append("enablejsapi", "1");
         playerFrame.src = iframeURL.toString();
@@ -213,15 +219,17 @@
         if (pathSegments.length > 2 && pathSegments[1] === "embed") {
           videoID = pathSegments[2];
         }
-        console.log(videoID);
         let onPlayerStateChange = function(event) {
           if (event.data == YT.PlayerState.ENDED) {
-            playerWrap.classList.add("ended");
+            console.log("Ended");
+            playerWrap.classList.add("sa5-video-ended");
           } else if (event.data == YT.PlayerState.PAUSED) {
-            playerWrap.classList.add("paused");
+            console.log("Paused");
+            playerWrap.classList.add("sa5-video-paused");
           } else if (event.data == YT.PlayerState.PLAYING) {
-            playerWrap.classList.remove("ended");
-            playerWrap.classList.remove("paused");
+            console.log("Playing");
+            playerWrap.classList.remove("sa5-video-ended");
+            playerWrap.classList.remove("sa5-video-paused");
           }
         };
         let player;
