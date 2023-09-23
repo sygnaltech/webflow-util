@@ -12,27 +12,29 @@
       data.forEach((el, i) => {
         if (el.nodeName !== "LI")
           return;
-        let item = {
-          indent: 1,
-          mode: "",
-          text: el.textContent?.trim() || ""
-        };
-        const LIST_DEPTH_LIMIT = 10;
-        for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
-          if (item.text.startsWith(">")) {
-            item.text = item.text.substring(1).trim();
-            item.indent++;
-          } else if (item.text.startsWith("+")) {
-            item.text = item.text.substring(1).trim();
-            item.mode = "pro";
-          } else if (item.text.startsWith("-")) {
-            item.text = item.text.substring(1).trim();
-            item.mode = "con";
-          } else {
-            break;
+        if (el instanceof HTMLElement) {
+          let item = {
+            indent: 1,
+            mode: "",
+            text: el.innerHTML?.trim() || ""
+          };
+          const LIST_DEPTH_LIMIT = 10;
+          for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
+            if (item.text.startsWith("&gt;")) {
+              item.text = item.text.substring(4).trim();
+              item.indent++;
+            } else if (item.text.startsWith("+")) {
+              item.text = item.text.substring(1).trim();
+              item.mode = "pro";
+            } else if (item.text.startsWith("-")) {
+              item.text = item.text.substring(1).trim();
+              item.mode = "con";
+            } else {
+              break;
+            }
           }
+          items.push(item);
         }
-        items.push(item);
       });
       let listWrapper = document.createElement("div");
       listWrapper.setAttribute(
@@ -65,7 +67,7 @@
         }
         if (item.text) {
           let span = document.createElement("span");
-          span.textContent = item.text;
+          span.innerHTML = item.text;
           switch (item.mode) {
             case "pro":
               span.classList.add("wfu-pro");

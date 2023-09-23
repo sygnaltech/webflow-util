@@ -16,8 +16,8 @@ import { Sa5Editor } from '../webflow-core/webflow-editor';
 
 const init = () => { 
 
-//    new Sa5Core().init();
-let core: Sa5Core = Sa5Core.startup(); 
+    //    new Sa5Core().init();
+    let core: Sa5Core = Sa5Core.startup(); 
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-richtext");
@@ -30,9 +30,12 @@ let core: Sa5Core = Sa5Core.startup();
     /** 
      * Process nested lists
      */
+//    console.log("richtext pre-processing lists");
 
     document.querySelectorAll('.w-richtext[wfu-lists]')
       .forEach((rtfElem: HTMLElement) => {
+
+//        console.log("richtext processing lists");
 
         rtfElem.querySelectorAll(':scope > ul, :scope > ol')
           .forEach((list: HTMLElement) => {

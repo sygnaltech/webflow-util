@@ -56,31 +56,38 @@ export class Sa5NestedList {
 
             if (el.nodeName !== "LI") return; // skip
 
-            // Set defaults
-            let item = {
-                indent: 1,
-                mode: '',
-                text: el.textContent?.trim() || ''
-            };
+            if (el instanceof HTMLElement) {
 
-            // Parse / resolve item detail
-            const LIST_DEPTH_LIMIT = 10;
-            for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
-                if (item.text.startsWith(">")) {
-                    item.text = item.text.substring(1).trim(); // remove directive 
-                    item.indent++;
-                } else if (item.text.startsWith("+")) {
-                    item.text = item.text.substring(1).trim(); // remove directive 
-                    item.mode = "pro";
-                } else if (item.text.startsWith("-")) {
-                    item.text = item.text.substring(1).trim(); // remove directive 
-                    item.mode = "con";
-                } else {
-                    break; // done
+                // Set defaults
+                let item = {
+                    indent: 1,
+                    mode: '',
+                    text: el.innerHTML?.trim() || ''
+                };
+
+//console.log(item);
+
+                // Parse / resolve item detail
+                const LIST_DEPTH_LIMIT = 10;
+                for (let j = 1; j < LIST_DEPTH_LIMIT; j++) {
+                    if (item.text.startsWith("&gt;")) {
+                        item.text = item.text.substring(4).trim(); // remove directive 
+                        item.indent++;
+                    } else if (item.text.startsWith("+")) {
+                        item.text = item.text.substring(1).trim(); // remove directive 
+                        item.mode = "pro";
+                    } else if (item.text.startsWith("-")) {
+                        item.text = item.text.substring(1).trim(); // remove directive 
+                        item.mode = "con";
+                    } else {
+                        break; // done
+                    }
                 }
+
+                items.push(item);
+
             }
 
-            items.push(item);
         }); 
 
         // Render HTML
@@ -141,7 +148,7 @@ export class Sa5NestedList {
             // as SPAN 
             if(item.text) {
                 let span = document.createElement("span"); 
-                span.textContent = item.text; 
+                span.innerHTML = item.text;
                 switch(item.mode) {
                     case 'pro':
                         span.classList.add("wfu-pro");
