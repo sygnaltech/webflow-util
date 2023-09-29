@@ -11,7 +11,7 @@ import { Sa5Debug } from './webflow-core/debug';
 
 //import { csvToObjects } from './webflow-data/webflow-data-csv';
 import { prepareCollectionListDataSource } from './webflow-data/webflow-collectionlist-data';
-import { loadGoogleSheetFromSpec } from './webflow-data/google-sheet-data';
+// import { loadGoogleSheetFromSpec } from './webflow-data/google-sheet-data';
 //import { HtmlBuilder } from './webflow-html-builder.js';
 import { Database } from './webflow-data/database';
 import { Sa5Attribute, Sa5GlobalEvent, Sa5ScriptType } from './globals';
@@ -238,12 +238,12 @@ export class Sa5Datastore {
                 return prepareCollectionListDataSource(dataSource as HTMLElement);
             case 'json': // static json chunk
                 break;
-            case 'google-sheet': // Google sheet link
-                return loadGoogleSheetFromSpec(
-                    JSON.parse(
-                        dataSource.textContent || ""
-                    )
-                );
+            // case 'google-sheet': // Google sheet link
+            //     return loadGoogleSheetFromSpec(
+            //         JSON.parse(
+            //             dataSource.textContent || ""
+            //         )
+            //     );
             default:
                 console.error(`Data-source type: '${dataSourceType}' unknown`);
                 break;

@@ -10,8 +10,8 @@
 
 //import { csvToData } from '../modules/webflow-data.js';
 //import { csvToObjects } from '../modules/webflow-data-csv.js';
-import { getCsvAsData } from '../modules/webflow-data.js';
-
+// import { getCsvAsData } from '../modules/webflow-data.js';
+/*
 export var loadGoogleSheetFromSpec = function (spec) {
 
     switch (spec.version) {
@@ -30,7 +30,7 @@ export var loadGoogleSheetFromSpec = function (spec) {
 
 //    spec.url
 }
-
+*/
 // Returns a Url to retrieve the CSV version of a Google Sheet
 // The sheet must be publicly accessible.
 export var getGoogleSheetCsvUrl = function (id) {

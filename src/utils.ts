@@ -658,7 +658,7 @@ export var sequence = function (l) {
  * @returns 
  */
 
-function shuffleArray(array: any[]) {
+export function shuffleArray(array: any[]) {
 
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
