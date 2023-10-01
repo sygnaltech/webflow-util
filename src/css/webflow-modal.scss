@@ -1,0 +1,13 @@
+
+/*
+ * Webflow modal
+ */
+
+// override editor warning on small screen 
+// also Search engine results warning
+// "Unsupported Page"
+[wfu-modal-trigger] {
+//    visibility: hidden;
+    display: none !important;
+}
+

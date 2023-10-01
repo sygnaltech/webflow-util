@@ -14,7 +14,7 @@
     "url": "https://www.sygnal.com"
   },
   "scripts": {
-    "clean": "rimraf dist", 
+    "clean": "rimraf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "serve -p 4000",
     "tsbuild": "tsc --watch",
@@ -34,6 +34,7 @@
     "@vimeo/player": "^2.20.1",
     "countup.js": "github:inorganik/countUp.js",
     "handlebars": "^4.7.8",
-    "hotkeys-js": "^3.11.2"
+    "hotkeys-js": "^3.11.2",
+    "typescript-cookie": "^1.0.6"
   }
 }

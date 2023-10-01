@@ -84,6 +84,8 @@ export function getCookie(name) {
     if (match) return match[2];
 }
 
+
+
 export function toTitleCase(str) {
 
     return str.toLowerCase().split(' ').map(function (word) {
