@@ -181,6 +181,9 @@
 
   // src/webflow-form.ts
   var Sa5Form = class {
+    get redirect() {
+      return this.formElement.getAttribute("redirect");
+    }
     constructor(element) {
       this.debug = new Sa5Debug("sa5-form");
       this.debug.debug("Initializing");
@@ -193,8 +196,23 @@
     }
     init() {
     }
+    submitButtonWaitMessage() {
+      const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
+      submitButtons.forEach((button) => {
+        const waitMessage = button.getAttribute("data-wait");
+        if (waitMessage) {
+          button.value = waitMessage;
+        }
+      });
+    }
     setMode(mode, message = "") {
       this.debug.debug("setting mode.", mode, message);
+      if (this.redirect) {
+        console.log("redirecting");
+        this.submitButtonWaitMessage();
+        window.location.href = this.redirect;
+        return;
+      }
       let success = this.formBlockElement.querySelector("div.w-form-done");
       let error = this.formBlockElement.querySelector("div.w-form-fail");
       switch (mode) {
@@ -235,17 +253,30 @@
       this.debug.debug(`waitMessage: ${waitMessage}`);
     }
     handleResponseJSON(data, status, response) {
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
-      this.form.setMode(1 /* Success */);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      if (response.status >= 200 && response.status < 300) {
+        this.form.setMode(1 /* Success */);
+      } else {
+        this.form.setMode(2 /* Error */);
+      }
     }
     handleResponseText(data, status, response) {
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
       this.debug.debug(`Webhook response status: ${status}`);
-      this.form.setMode(1 /* Success */);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      if (response.status >= 200 && response.status < 300) {
+        this.form.setMode(1 /* Success */);
+      } else {
+        this.form.setMode(2 /* Error */);
+      }
     }
     handleFailResponse(jqxhr, settings, ex) {
       this.debug.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
       this.debug.debug(`Webhook response FAILED settings: ${settings}`);
       this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+      this.form.setMode(2 /* Error */);
     }
     formDataToJson(formElement) {
       let formData = new FormData(formElement);
@@ -404,6 +435,31 @@
     }
   };
 
+  // src/webflow-form/handler/success-handler.ts
+  var WfuFormHandlerSuccess = class extends WfuFormHandler {
+    constructor(form, config) {
+      super(form, config);
+    }
+    handleResponseJSON(data, status, response) {
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      this.form.setMode(1 /* Success */);
+    }
+    handleResponseText(data, status, response) {
+      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+      this.form.setMode(1 /* Success */);
+    }
+    handleFailResponse(jqxhr, settings, ex) {
+      this.debug.debug(`Webhook response FAILED jqxhr: ${jqxhr}`);
+      this.debug.debug(`Webhook response FAILED settings: ${settings}`);
+      this.debug.debug(`Webhook response FAILED ex: ${ex}`);
+      this.form.setMode(2 /* Error */);
+    }
+  };
+
   // src/webflow-form/handler/form-handler-factory.ts
   var WfuFormHandlerFactory = class {
     constructor(form, config = {}) {
@@ -423,6 +479,9 @@
           break;
         case "basin":
           handler = new WfuFormHandlerBasin(form, config);
+          break;
+        case "success":
+          handler = new WfuFormHandlerSuccess(form, config);
           break;
         case "other":
         case "":

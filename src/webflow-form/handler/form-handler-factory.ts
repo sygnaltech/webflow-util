@@ -9,6 +9,7 @@ import { WfuFormHandlerBasin } from './basin-handler';
 import { WfuFormHandlerMake } from './make-handler';
 import { WfuFormHandlerN8N } from './n8n-handler';
 import { WfuFormHandlerZapier } from './zapier-handler';
+import { WfuFormHandlerSuccess } from './success-handler';
 
 
 
@@ -21,7 +22,6 @@ export class WfuFormHandlerFactory {
     }
 
     static create(form: Sa5Form, config = {}): WfuFormHandler {
-        //type, elem, config) {
         var handler: WfuFormHandler;
 
         let type = form.formBlockElement.getAttribute("wfu-form-handler"); 
@@ -30,32 +30,32 @@ export class WfuFormHandlerFactory {
             case "zapier":
 
                 handler = new WfuFormHandlerZapier(form, config);
-//                handler.init();
 
                 break;
             case "n8n":
 
                 handler = new WfuFormHandlerN8N(form, config);
-    //            handler.init();
 
                 break;
             case "make":
 
                 handler = new WfuFormHandlerMake(form, config);
-   //             handler.init();
 
                 break;
             case "basin":
 
                 handler = new WfuFormHandlerBasin(form, config);
-      //          handler.init();
+
+                break;
+            case "success":
+
+                handler = new WfuFormHandlerSuccess(form, config);
 
                 break;
             case "other":
             case "": // unspecified 
 
                 handler = new WfuFormHandler(form, config);
-      //          handler.init();
 
                 break;
             default:

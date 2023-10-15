@@ -30,6 +30,11 @@ export class Sa5Form {
 
     isValid: boolean;
 
+    // Get the form's redirect attribute, if exists
+    get redirect(): string | null {
+        return this.formElement.getAttribute('redirect');
+    }
+
     constructor(element: HTMLElement) {
 //        this._element = element;
 
@@ -54,16 +59,37 @@ export class Sa5Form {
     }
 
     init() {
-
-
     }
 
-    // es6 call class methods from within same class
-    // https://stackoverflow.com/a/36248405
+    submitButtonWaitMessage(): void {
+
+        // Find all submit buttons in the form
+        const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
+        
+        // Loop through each submit button
+        submitButtons.forEach((button: HTMLInputElement) => {
+            // Get the value of the data-wait attribute
+            const waitMessage = button.getAttribute('data-wait');
+            
+            // If data-wait attribute exists, set the button's value to the attribute value
+            if (waitMessage) {
+                button.value = waitMessage;
+            }
+        });      
+
+    }
 
     setMode(mode: WebflowFormMode, message = "") {
 
         this.debug.debug("setting mode.", mode, message); 
+
+        // Redirect, if appropriate 
+        if (this.redirect) {
+            console.log("redirecting")
+            this.submitButtonWaitMessage(); 
+            window.location.href = this.redirect; 
+            return;
+        }
 
         let success: HTMLElement = this.formBlockElement.querySelector("div.w-form-done");
         let error: HTMLElement = this.formBlockElement.querySelector("div.w-form-fail");

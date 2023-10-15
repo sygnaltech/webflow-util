@@ -12,27 +12,13 @@ export class WfuFormHandlerMake extends WfuFormHandler {
         super(form, config); // call the super class constructor and pass in the name parameter
     }
 
-
-    
     handleResponseText(data, status, response) {
-
-
-//        console.log("TEXT response ")
-        // How to access the correct `this` inside a callback 
-        // https://stackoverflow.com/a/20279485
 
         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
         this.debug.debug(`Webhook response status: ${status}`);
         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
-// in debug mode prefix title with icon? 
-// need a logo for sygnal attributes? 
-
-
-// 200 Accepted
-
         if (response.status >= 200 && response.status < 300) { 
-//            console.log("setting success mode"); 
             this.form.setMode(WebflowFormMode.Success, 
                 response.responseText?.message);
         } else {
@@ -44,20 +30,9 @@ export class WfuFormHandlerMake extends WfuFormHandler {
 
     handleResponseJSON(data, status, response) {
 
-        // How to access the correct `this` inside a callback 
-        // https://stackoverflow.com/a/20279485
-
         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
         this.debug.debug(`Webhook response status: ${status}`);
         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
-
-// in debug mode prefix title with icon? 
-// need a logo for sygnal attributes? 
-
-
-
-//        console.log("xhr.status", response.status);
-// 200 Accepted
 
         if (response.status >= 200 && response.status < 300) { 
             this.form.setMode(WebflowFormMode.Success, 

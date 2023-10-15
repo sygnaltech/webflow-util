@@ -42,6 +42,9 @@
 
   // src/webflow-form.ts
   var Sa5Form = class {
+    get redirect() {
+      return this.formElement.getAttribute("redirect");
+    }
     constructor(element) {
       this.debug = new Sa5Debug("sa5-form");
       this.debug.debug("Initializing");
@@ -54,8 +57,23 @@
     }
     init() {
     }
+    submitButtonWaitMessage() {
+      const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
+      submitButtons.forEach((button) => {
+        const waitMessage = button.getAttribute("data-wait");
+        if (waitMessage) {
+          button.value = waitMessage;
+        }
+      });
+    }
     setMode(mode, message = "") {
       this.debug.debug("setting mode.", mode, message);
+      if (this.redirect) {
+        console.log("redirecting");
+        this.submitButtonWaitMessage();
+        window.location.href = this.redirect;
+        return;
+      }
       let success = this.formBlockElement.querySelector("div.w-form-done");
       let error = this.formBlockElement.querySelector("div.w-form-fail");
       switch (mode) {
