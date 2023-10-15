@@ -83,14 +83,6 @@ export class Sa5Form {
 
         this.debug.debug("setting mode.", mode, message); 
 
-        // Redirect, if appropriate 
-        if (this.redirect) {
-            console.log("redirecting")
-            this.submitButtonWaitMessage(); 
-            window.location.href = this.redirect; 
-            return;
-        }
-
         let success: HTMLElement = this.formBlockElement.querySelector("div.w-form-done");
         let error: HTMLElement = this.formBlockElement.querySelector("div.w-form-fail");
 
@@ -103,6 +95,14 @@ export class Sa5Form {
                 
                 break;
             case WebflowFormMode.Success:
+console.log("SUCCESS"); 
+                // Redirect, if appropriate 
+                if (this.redirect) {
+                    console.log("redirecting")
+                    this.submitButtonWaitMessage(); 
+                    window.location.href = this.redirect; 
+                    return;
+                }
 
                 // Display message
                 let successMessage = error.querySelector("[wfu-form-message]");

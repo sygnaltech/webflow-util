@@ -115,7 +115,7 @@ export class WfuFormHandler {
 //console.log("sending data");
 
             fetch(this.form.formElement.action, {
-                method: 'POST',
+                method: 'POST', // TODO: change to form's? 
                 body: formData
             })
             .then(response => {

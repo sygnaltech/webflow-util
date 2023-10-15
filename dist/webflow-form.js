@@ -74,12 +74,6 @@
     }
     setMode(mode, message = "") {
       this.debug.debug("setting mode.", mode, message);
-      if (this.redirect) {
-        console.log("redirecting");
-        this.submitButtonWaitMessage();
-        window.location.href = this.redirect;
-        return;
-      }
       let success = this.formBlockElement.querySelector("div.w-form-done");
       let error = this.formBlockElement.querySelector("div.w-form-fail");
       switch (mode) {
@@ -89,6 +83,13 @@
           error.style.display = "none";
           break;
         case 1 /* Success */:
+          console.log("SUCCESS");
+          if (this.redirect) {
+            console.log("redirecting");
+            this.submitButtonWaitMessage();
+            window.location.href = this.redirect;
+            return;
+          }
           let successMessage = error.querySelector("[wfu-form-message]");
           if (successMessage)
             successMessage.innerHTML = message;
