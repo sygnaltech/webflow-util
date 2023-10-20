@@ -10,12 +10,19 @@
 
 
 import { Sa5Core } from './webflow-core'
+import moment = require('moment');
+import { Sa5Debug } from './webflow-core/debug';
 
 
 export class WebflowFormat {
 
+    debug: Sa5Debug;
+
     // Initialize
     constructor() { 
+
+        this.debug = new Sa5Debug("sa5-format");
+
     }
 
     // Simplest-case encoding for HTML5
@@ -65,7 +72,7 @@ export class WebflowFormat {
         // but does not handle quotes or special accented characters.
         // See https://www.php.net/htmlspecialchars
 
-        elem.innerText
+//         elem.innerText
 //        const $item = $(elem);
         const txt = elem.innerText; //$item.text();
         const val: number = parseFloat(txt);
@@ -97,6 +104,70 @@ export class WebflowFormat {
 
         // Apply the formatting
         elem.innerHTML = formatter.format(val);
+
+    }
+
+    formatDate(element: HTMLElement) {
+
+
+        // Get the format string from the 'wfu-format-date' attribute
+        const formatString = element.getAttribute("wfu-format-date");
+        
+        // Check handler
+        // Require moment 
+        const formatHandler = element.getAttribute("wfu-format-handler");
+        if (!formatHandler) {
+          console.error("SA5 format date is used, but no handler is specified.");
+        }
+
+        if (formatHandler == "moment") {
+
+            // Get the original content (assumed to be a valid date)
+            const originalContent = element.textContent;
+            
+            // Use Moment.js to format the date
+            const formattedDate = moment(originalContent).format(formatString);
+
+            this.debug.debug (`formatting date ${originalContent} -> ${formattedDate}`);
+            
+            // Update the element's content
+            element.textContent = formattedDate;
+
+        } else {
+            if (formatHandler)
+                console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
+        }
+        
+        // Remove the 'wfu-format-date' attribute
+        element.removeAttribute("wfu-format-date");
+
+// Luxon & ordinals
+
+/*
+        const { DateTime } = require('luxon');
+
+        function getDayWithOrdinal(dateTime) {
+          const day = dateTime.toFormat('d');
+          const lastDigit = day.slice(-1);
+          let suffix = 'th';
+        
+          if (day !== '11' && day !== '12' && day !== '13') {
+            if (lastDigit === '1') {
+              suffix = 'st';
+            } else if (lastDigit === '2') {
+              suffix = 'nd';
+            } else if (lastDigit === '3') {
+              suffix = 'rd';
+            }
+          }
+        
+          return day + suffix;
+        }
+        
+        const dt = DateTime.fromISO('2023-10-18');
+        const dayWithOrdinal = getDayWithOrdinal(dt);
+        console.log(dayWithOrdinal); // Outputs "18th"
+      */  
 
     }
 

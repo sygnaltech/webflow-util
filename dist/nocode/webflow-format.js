@@ -4100,8 +4100,10 @@
   Sa5Core.startup();
 
   // src/webflow-format.ts
+  var moment = require_moment();
   var WebflowFormat = class {
     constructor() {
+      this.debug = new Sa5Debug("sa5-format");
     }
     formatField(elem) {
       const fs = /* @__PURE__ */ new Map([
@@ -4140,7 +4142,6 @@
           "locale": "en-US"
         }]
       ]);
-      elem.innerText;
       const txt = elem.innerText;
       const val = parseFloat(txt);
       var fn = elem.getAttribute("wfu-format");
@@ -4156,27 +4157,37 @@
       const formatter = new Intl.NumberFormat(f.locale, settings);
       elem.innerHTML = formatter.format(val);
     }
+    formatDate(element) {
+      const formatString = element.getAttribute("wfu-format-date");
+      const formatHandler = element.getAttribute("wfu-format-handler");
+      if (!formatHandler) {
+        console.error("SA5 format date is used, but no handler is specified.");
+      }
+      if (formatHandler == "moment") {
+        const originalContent = element.textContent;
+        const formattedDate = moment(originalContent).format(formatString);
+        this.debug.debug(`formatting date ${originalContent} -> ${formattedDate}`);
+        element.textContent = formattedDate;
+      } else {
+        if (formatHandler)
+          console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
+      }
+      element.removeAttribute("wfu-format-date");
+    }
   };
   Sa5Core.startup(WebflowFormat);
 
   // src/nocode/webflow-format.ts
-  var moment = require_moment();
   var init = () => {
     let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-demo");
-    debug.debug("Initializing");
+    let debug = new Sa5Debug("sa5-format");
     const webflowFormat = new WebflowFormat();
     const elements = document.querySelectorAll("[wfu-format]");
     elements.forEach((element) => {
       webflowFormat.formatField(element);
     });
     document.querySelectorAll(`[wfu-format-date]`).forEach((element) => {
-      const formatString = element.getAttribute("wfu-format-date");
-      const originalContent = element.textContent;
-      const formattedDate = moment(originalContent).format(formatString);
-      debug.debug(`formatting date ${originalContent} -> ${formattedDate}`);
-      element.textContent = formattedDate;
-      element.removeAttribute("wfu-format-date");
+      webflowFormat.formatDate(element);
     });
   };
   document.addEventListener("DOMContentLoaded", init);

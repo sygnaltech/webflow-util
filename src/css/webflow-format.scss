@@ -19,3 +19,7 @@
     content: ", ";
 }
 
+// Initially hide dates 
+[wfu-format-date] {
+    visibility: hidden; 
+}
