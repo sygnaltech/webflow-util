@@ -193,9 +193,11 @@
       link.setAttribute("href", "#");
     });
     const triggerElements = document.querySelectorAll(`[${"wfu-ix-trigger" /* ATTR_IX_TRIGGER */}]`);
+    debug.debug(`setting up ${triggerElements.length} triggers.`);
     triggerElements.forEach((elem) => {
       elem.addEventListener("click", (event) => {
         event.preventDefault();
+        debug.debug("trigger clicked", elem.getAttribute("wfu-ix-trigger" /* ATTR_IX_TRIGGER */));
         const triggerId = elem.getAttribute("wfu-ix-trigger" /* ATTR_IX_TRIGGER */);
         if (triggerId) {
           const targetElem = document.querySelector(`[${"wfu-ix-id" /* ATTR_IX_ID */}="${triggerId}"]`);

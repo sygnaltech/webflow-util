@@ -43,12 +43,14 @@ const init = () => {
     // Wire up triggers
     // Select all elements with the custom attribute [wfu-ix-trigger]
     const triggerElements = document.querySelectorAll(`[${Sa5Attribute.ATTR_IX_TRIGGER}]`);
+    debug.debug(`setting up ${triggerElements.length} triggers.`); 
     triggerElements.forEach((elem: HTMLElement) => {
         elem.addEventListener('click', (event) => {
             // Prevent default action (if it's a link or another clickable element)
             event.preventDefault();
 
-// console.log("trigger clicked", elem.getAttribute(Sa5Attribute.ATTR_IX_TRIGGER));
+            debug.debug("trigger clicked", elem.getAttribute(Sa5Attribute.ATTR_IX_TRIGGER));
+
             // Get the wfu-ix-trigger attribute value
             const triggerId = elem.getAttribute(Sa5Attribute.ATTR_IX_TRIGGER);
 
