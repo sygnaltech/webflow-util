@@ -14,7 +14,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Editor } from '../webflow-core/webflow-editor'; 
 import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
-import { HtmlBuilder } from '../modules/webflow-html-builder';
+// import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5Attribute } from '../globals';
 import { Sa5Designer } from '../webflow-core/designer';
 
@@ -193,7 +193,7 @@ const init = () => {
         }
 
     });
-
+  
     /**
      * Suppress sections with no list items.
      */

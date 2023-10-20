@@ -35,6 +35,7 @@
     "countup.js": "github:inorganik/countUp.js",
     "handlebars": "^4.7.8",
     "hotkeys-js": "^3.11.2",
+    "moment": "^2.29.4",
     "typescript-cookie": "^1.0.6"
   }
 }
