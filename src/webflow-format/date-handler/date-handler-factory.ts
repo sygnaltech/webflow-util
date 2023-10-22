@@ -7,6 +7,7 @@ import { WfuDateHandler } from './date-handler';
 
 import { WfuDateHandlerMoment } from './moment-handler';
 import { WfuDateHandlerDay } from './day-handler';
+import { booleanValue } from '../../utils';
 
 
 
@@ -24,13 +25,13 @@ export class WfuDateHandlerFactory {
 //        let type = form.formBlockElement.getAttribute("wfu-form-handler"); 
 
         switch (type) {
-            case "moment":
+            // case "moment": case "momentjs":
 
-                handler = new WfuDateHandlerMoment(config);
+            //     handler = new WfuDateHandlerMoment(config);
 
-                break;
+            //     break;
             case "": // unspecified 
-            case "day":
+            case "day": case "dayjs":
 
                 handler = new WfuDateHandlerDay(config);
 
@@ -49,22 +50,15 @@ export class WfuDateHandlerFactory {
 
         let type = elem.getAttribute("wfu-format-handler"); 
         let format = elem.getAttribute("wfu-format-date"); 
-
-console.log(type);
-console.log(format);
+//console.log(type);
+//console.log(format);
 
         const handler = WfuDateHandlerFactory.create(type); 
+        handler.mode = elem.getAttribute("wfu-format-mode") || "date"; 
         handler.formatString = format;
+        handler.suffix = booleanValue(elem.getAttribute("wfu-format-suffix") || "yes"); 
 
         return handler; 
     }
 
 }
-
-/* 
-// https://dev.to/sanderdebr/js-es6-design-patterns-factory-3a3g 
-export const WfuFormHandlerFactory = {
-    create: function (type, elem, config) {
-    }
-}
-*/

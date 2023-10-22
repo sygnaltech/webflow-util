@@ -14,8 +14,6 @@ export class WfuDateHandlerMoment extends WfuDateHandler {
 
     formatDate(date: Date): string {
 
-console.log(this.formatString); 
-
         // Get the original content (assumed to be a valid date)
 //        const originalContent = element.textContent;
 
