@@ -738,9 +738,6 @@
       let abs;
       var formatted;
       switch (this.mode) {
-        case "to":
-          formatted = h.toNow(!this.suffix);
-          break;
         case "age":
           relative = this.calculateAge(date);
           abs = Math.abs(relative);
@@ -754,6 +751,9 @@
           break;
         case "from":
           formatted = h.fromNow(!this.suffix);
+          break;
+        case "to":
+          formatted = h.toNow(!this.suffix);
           break;
         case "relative":
           formatted = "rel";
