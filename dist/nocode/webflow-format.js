@@ -4099,8 +4099,73 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-format.ts
+  // src/webflow-format/date-handler/date-handler.ts
+  var WfuDateHandler = class {
+    constructor(config = {}) {
+      this.debug = new Sa5Debug("sa5-date-handler");
+      this.debug.debug("Initializing");
+    }
+    formatDate(date) {
+      return null;
+    }
+  };
+
+  // src/webflow-format/date-handler/moment-handler.ts
   var moment = require_moment();
+  var WfuDateHandlerMoment = class extends WfuDateHandler {
+    constructor(config) {
+      super(config);
+    }
+    formatDate(date) {
+      console.log(this.formatString);
+      const formattedDate = moment(date).format(this.formatString);
+      this.debug.debug(`formatting date ${date} -> ${formattedDate}`);
+      return formattedDate;
+    }
+  };
+
+  // src/webflow-format/date-handler/day-handler.ts
+  var WfuDateHandlerDay = class extends WfuDateHandler {
+    constructor(config) {
+      super(config);
+    }
+    formatDate(date) {
+      return null;
+    }
+  };
+
+  // src/webflow-format/date-handler/date-handler-factory.ts
+  var WfuDateHandlerFactory = class {
+    constructor(config = {}) {
+    }
+    static create(type, config = {}) {
+      var handler;
+      switch (type) {
+        case "moment":
+          handler = new WfuDateHandlerMoment(config);
+          break;
+        case "":
+        case "day":
+          handler = new WfuDateHandlerDay(config);
+          break;
+        default:
+          console.error(`Unknown wfu-format-handler ${type}`);
+          break;
+      }
+      return handler;
+    }
+    static createFromElement(elem) {
+      let type = elem.getAttribute("wfu-format-handler");
+      let format = elem.getAttribute("wfu-format-date");
+      console.log(type);
+      console.log(format);
+      const handler = WfuDateHandlerFactory.create(type);
+      handler.formatString = format;
+      return handler;
+    }
+  };
+
+  // src/webflow-format.ts
   var WebflowFormat = class {
     constructor() {
       this.debug = new Sa5Debug("sa5-format");
@@ -4163,15 +4228,10 @@
       if (!formatHandler) {
         console.error("SA5 format date is used, but no handler is specified.");
       }
-      if (formatHandler == "moment") {
-        const originalContent = element.textContent;
-        const formattedDate = moment(originalContent).format(formatString);
-        this.debug.debug(`formatting date ${originalContent} -> ${formattedDate}`);
-        element.textContent = formattedDate;
-      } else {
-        if (formatHandler)
-          console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
-      }
+      const handler = WfuDateHandlerFactory.createFromElement(element);
+      const date = new Date(element.textContent);
+      const result = handler.formatDate(date);
+      element.textContent = result;
       element.removeAttribute("wfu-format-date");
     }
   };

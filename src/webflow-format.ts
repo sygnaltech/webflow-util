@@ -10,9 +10,9 @@
 
 
 import { Sa5Core } from './webflow-core'
-import moment = require('moment');
 import { Sa5Debug } from './webflow-core/debug';
-
+import { WfuDateHandler } from './webflow-format/date-handler/date-handler';
+import { WfuDateHandlerFactory } from './webflow-format/date-handler/date-handler-factory';
 
 export class WebflowFormat {
 
@@ -120,23 +120,31 @@ export class WebflowFormat {
           console.error("SA5 format date is used, but no handler is specified.");
         }
 
-        if (formatHandler == "moment") {
+//        handler: WfuDateHandler;
+        const handler = WfuDateHandlerFactory.createFromElement(element);
 
-            // Get the original content (assumed to be a valid date)
-            const originalContent = element.textContent;
+        const date: Date = new Date(element.textContent); 
+        const result: string = handler.formatDate(date);
+
+        element.textContent = result; 
+
+        // if (formatHandler == "moment") {
+
+        //     // Get the original content (assumed to be a valid date)
+        //     const originalContent = element.textContent;
             
-            // Use Moment.js to format the date
-            const formattedDate = moment(originalContent).format(formatString);
+        //     // Use Moment.js to format the date
+        //     const formattedDate = moment(originalContent).format(formatString);
 
-            this.debug.debug (`formatting date ${originalContent} -> ${formattedDate}`);
+        //     this.debug.debug (`formatting date ${originalContent} -> ${formattedDate}`);
             
-            // Update the element's content
-            element.textContent = formattedDate;
+        //     // Update the element's content
+        //     element.textContent = formattedDate;
 
-        } else {
-            if (formatHandler)
-                console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
-        }
+        // } else {
+        //     if (formatHandler)
+        //         console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
+        // }
         
         // Remove the 'wfu-format-date' attribute
         element.removeAttribute("wfu-format-date");
