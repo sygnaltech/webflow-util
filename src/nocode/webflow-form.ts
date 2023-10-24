@@ -9,6 +9,7 @@
  */
 
 // import {  } from '../modules/webflow-form';
+import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -31,7 +32,9 @@ let core: Sa5Core = Sa5Core.startup();
 
 
     // Prepare any tagged forms by appending IP Info
-    document.querySelectorAll('[wfu-form-ipinfo]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_IPINFO) // '[wfu-form-ipinfo]'
+        )
       .forEach((element: HTMLElement) => {
 //        console.log("test ip-info"); 
 
@@ -42,7 +45,9 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Catch any submits on forms
     // Which post to Zapier-webhooks 
-    document.querySelectorAll('[wfu-form-handler]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // '[wfu-form-handler]'
+        )
       .forEach((element: HTMLElement) => {
 
 // console.log("installing form handler."); 

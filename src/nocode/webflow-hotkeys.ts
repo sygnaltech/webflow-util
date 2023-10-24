@@ -18,7 +18,7 @@ const init = () => {
 let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
-    let debug = new Sa5Debug("wfu-hotkeys");
+    let debug = new Sa5Debug("sa5-hotkeys");
     debug.debug ("Initializing");
 
     const sa5Hotkeys = new Sa5Hotkeys();

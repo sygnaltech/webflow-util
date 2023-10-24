@@ -71,7 +71,9 @@ const init = () => {
 
     let useLightboxCaptionHandler = false;
 
-    const elements = document.querySelectorAll('[wfu-lightbox-captions]') as NodeListOf<HTMLElement>; 
+    const elements = document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LIGHTBOX_CAPTIONS) // '[wfu-lightbox-captions]'
+        ) as NodeListOf<HTMLElement>; 
     useLightboxCaptionHandler = elements.length > 0;
     elements.forEach((element) => { 
 
@@ -90,12 +92,16 @@ const init = () => {
 
     let lightBoxCmsGroups = false;
 
-    const groups = document.querySelectorAll('[wfu-lightbox-group]') as NodeListOf<HTMLElement>; 
+    const groups = document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LIGHTBOX_GROUP) // '[wfu-lightbox-group]'
+        ) as NodeListOf<HTMLElement>; 
     lightBoxCmsGroups = groups.length > 0;
     groups.forEach((element) => { 
 
         // Get the value of the wfu-lightbox-group attribute
-        let groupValue = element.getAttribute("wfu-lightbox-group");
+        let groupValue = element.getAttribute(
+            Sa5Attribute.ATTR_LIGHTBOX_GROUP // "wfu-lightbox-group"
+            );
 
         // Find all descendant script elements with the class .w-json
         let scripts = element.querySelectorAll("script.w-json");

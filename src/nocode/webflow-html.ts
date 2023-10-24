@@ -86,10 +86,14 @@ const init = () => {
      * Decode html chunk
      */
 
-    document.querySelectorAll('[wfu-decode]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DECODE) // '[wfu-decode]'
+        )
       .forEach((element) => {
         element.innerHTML = decodeHTML(element.innerHTML);
-        element.removeAttribute('wfu-decode');
+        element.removeAttribute(
+            Sa5Attribute.ATTR_DECODE // 'wfu-decode'
+            );
     });
 
     /** 
@@ -141,7 +145,7 @@ const init = () => {
             filterEval = element.getAttribute(Sa5Attribute.ATTR_FILTER_EVAL) as string;
         else {
             filterEval = element.getAttribute(Sa5Attribute.ATTR_FILTER) as string; 
-            console.warn("[wfu-filter] is deprecated, use [wfu-filter-eval] instead.");
+            console.warn(`[${Sa5Attribute.ATTR_FILTER}] is deprecated, use [${Sa5Attribute.ATTR_FILTER_EVAL}] instead.`);
         }
 
 //        console.log(filterEval);
@@ -215,7 +219,9 @@ const init = () => {
 
     // Process limit multiple items
     // e.g. limit a list to a multiple of N items
-    document.querySelectorAll('[wfu-limit-multiple]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LIMIT_MULTIPLE) // '[wfu-limit-multiple]'
+        )
       .forEach((element: HTMLElement) => { 
 
 // .w-dyn-list
@@ -229,8 +235,12 @@ const init = () => {
 
         // Determine multiple limit
         const itemCount = listElement.children.length;
-        const itemMultipleCount = Number(element.getAttribute('wfu-limit-multiple'));
-        const itemMinimumCount = Number(element.getAttribute('wfu-limit-multiple-min')); // Minimum
+        const itemMultipleCount = Number(element.getAttribute(
+            Sa5Attribute.ATTR_LIMIT_MULTIPLE // 'wfu-limit-multiple'
+            ));
+        const itemMinimumCount = Number(element.getAttribute(
+            Sa5Attribute.ATTR_LIMIT_MULTIPLE_MIN // 'wfu-limit-multiple-min'
+            )); // Minimum
         let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
         if (lastItem < itemMinimumCount) lastItem = itemMinimumCount; // Apply minimum
 

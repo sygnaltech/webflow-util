@@ -11,6 +11,7 @@
 // import { renderRatingComponent } from "./modules/webflow-ui";
 // import * as Cookies from 'js-cookie';
 import { getCookie, removeCookie, setCookie } from 'typescript-cookie'
+import { Sa5Attribute } from './globals';
 //import { Cookies } from 'js-cookie';
 
 export class Sa5Modal {
@@ -82,7 +83,9 @@ export class Sa5Modal {
     // Initialize all "modals" on the page
     init() {
 
-        this._name = this._element.getAttribute("wfu-modal") || "default";
+        this._name = this._element.getAttribute(
+            Sa5Attribute.ATTR_MODAL // "wfu-modal"
+            ) || "default";
 
         if(this.isSuppressed()) {
             this._element.remove(); 
@@ -90,11 +93,15 @@ export class Sa5Modal {
         }
 
         // Un-hide the item, if not suppressed
-        this._element.removeAttribute("wfu-modal-trigger");
+        this._element.removeAttribute(
+            Sa5Attribute.ATTR_MODAL_TRIGGER // "wfu-modal-trigger"
+            );
 
         // Detect close button clicks,
         // and then suppress the targeted element 
-        document.querySelectorAll("[wfu-modal-close]").forEach((element) => {
+        document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL_CLOSE) // "[wfu-modal-close]"
+            ).forEach((element) => {
             
           // Detect close button clicks,
           // and then suppress the targeted element 
@@ -102,10 +109,18 @@ export class Sa5Modal {
 
               // Get modal
               const modalClose = element; 
-              const modal = modalClose.closest("[wfu-modal]") as HTMLElement; 
-              const modalCloseVal = modalClose.getAttribute("wfu-modal-close") || "true";
-              const modalCloseType = modal.getAttribute("wfu-modal-close-type") || "auto";
-              const modalSuppressDuration = parseFloat(modal.getAttribute("wfu-modal-suppress-days")) || 9999;
+              const modal = modalClose.closest(
+                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL)// "[wfu-modal]"
+                ) as HTMLElement; 
+              const modalCloseVal = modalClose.getAttribute(
+                Sa5Attribute.ATTR_MODAL_CLOSE // "wfu-modal-close"
+                ) || "true";
+              const modalCloseType = modal.getAttribute(
+                Sa5Attribute.ATTR_MODAL_CLOSE_TYPE // "wfu-modal-close-type"
+                ) || "auto";
+              const modalSuppressDuration = parseFloat(modal.getAttribute(
+                Sa5Attribute.ATTR_MODAL_SUPPRESS_DAYS // "wfu-modal-suppress-days"
+                )) || 9999;
               
               // Set cookie suppression 
               this.suppress(

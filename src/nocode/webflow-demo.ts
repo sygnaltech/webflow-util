@@ -11,6 +11,7 @@
 import { WebflowInfo } from '../webflow-demo';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5Attribute } from '../globals';
 
 const init = () => { 
 
@@ -23,7 +24,9 @@ let core: Sa5Core = Sa5Core.startup();
 
     const webflowInfo = new WebflowInfo();
 
-    const elements = document.querySelectorAll('a[wfu-demo-link]') as NodeListOf<HTMLLinkElement>; 
+    const elements = document.querySelectorAll(
+      `a[${Sa5Attribute.ATTR_DEMO_LINK}]` // wfu-demo-link 
+      ) as NodeListOf<HTMLLinkElement>; 
 
     // Iterate over the matched elements
     elements.forEach((element) => { 

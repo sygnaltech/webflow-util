@@ -8,6 +8,7 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
+import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -31,7 +32,9 @@ let core: Sa5Core = Sa5Core.startup();
     // Fixup relative links from the CMS
     // HACK: 
     let elements = Array.from(
-        document.querySelectorAll("[wfu-relative-links]"));
+        document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_URL_RELATIVE_LINKS) // "[wfu-relative-links]"
+            ));
 
     elements.forEach((element: HTMLAnchorElement) => {
         new WfuRelativeLinkFixup(element).init();
@@ -40,7 +43,9 @@ let core: Sa5Core = Sa5Core.startup();
     // Target external links to _blank
     // BUGGED: designer change on how links work ?? 
     elements = Array.from(
-        document.querySelectorAll("[wfu-external-links]"));
+        document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_URL_EXTERNAL_LINKS) // "[wfu-external-links]"
+            ));
 
     elements.forEach((element: HTMLAnchorElement) => {
         new WfuTargetLinks(element).init();

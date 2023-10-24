@@ -8,6 +8,7 @@
  */
 
 
+import { Sa5Attribute } from '../globals';
 import { Sa5Debug } from '../webflow-core/debug';
 
 
@@ -35,9 +36,15 @@ export class Sa5CollectionList {
         console.group("SORT");
 
         const list = this._element;
-        const mode = list.getAttribute("wfu-sort") || "default";
-        const dir = list.getAttribute("wfu-sort-dir") || "asc";
-        const sortType = list.getAttribute("wfu-sort-type") || "string";
+        const mode = list.getAttribute(
+            Sa5Attribute.ATTR_SORT // "wfu-sort"
+            ) || "default";
+        const dir = list.getAttribute(
+            Sa5Attribute.ATTR_SORT_DIR // "wfu-sort-dir"
+            ) || "asc";
+        const sortType = list.getAttribute(
+            Sa5Attribute.ATTR_SORT_TYPE // "wfu-sort-type"
+            ) || "string";
 
         const items = Array.from(list.children);
 
@@ -63,11 +70,11 @@ export class Sa5CollectionList {
 
             items.sort((a: Element, b: Element) => {
                 const key1 = 
-                    a.getAttribute("wfu-sort-key") || 
-                        a.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
+                    a.getAttribute(Sa5Attribute.ATTR_SORT_KEY) || // "wfu-sort-key"
+                        a.querySelector(Sa5Attribute.getBracketed(Sa5Attribute.ATTR_SORT_KEY))?.getAttribute(Sa5Attribute.ATTR_SORT_KEY) || ''; // "[wfu-sort-key]"
                 const key2 = 
-                    b.getAttribute("wfu-sort-key") ||
-                        b.querySelector("[wfu-sort-key]")?.getAttribute("wfu-sort-key") || '';
+                    b.getAttribute(Sa5Attribute.ATTR_SORT_KEY) ||
+                        b.querySelector(Sa5Attribute.getBracketed(Sa5Attribute.ATTR_SORT_KEY))?.getAttribute(Sa5Attribute.ATTR_SORT_KEY) || '';
 
                 // Determine asc sort result
                 let sortResult = 1;
@@ -85,8 +92,6 @@ export class Sa5CollectionList {
                         break;
                     case "string":
                     default:
-
-
 
                         sortResult = key1.localeCompare(key2);
                         console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
@@ -110,7 +115,7 @@ export class Sa5CollectionList {
         items.forEach(item => list.appendChild(item));
 
         // Remove attribute to display 
-        list.removeAttribute("wfu-sort");
+        list.removeAttribute(Sa5Attribute.ATTR_SORT); // "wfu-sort" 
 
         console.groupEnd();
     }

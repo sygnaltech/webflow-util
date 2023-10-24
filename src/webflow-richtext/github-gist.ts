@@ -8,6 +8,8 @@
  * Blog Utilities
  */
 
+import { Sa5Attribute } from "../globals";
+
 
 
 /*
@@ -28,15 +30,19 @@ export class GitHubGist {
         
     initCopyGist() {
 
-        document.querySelectorAll('[wfu-gist-copy]').forEach((el: HTMLElement) => {
+        document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_GIST_COPY) // '[wfu-gist-copy]'
+            ).forEach((el: HTMLElement) => {
             el.addEventListener('click', (e: Event) => {
                 
 //                console.log("clicked"); 
                 
-                let a: string | null = el.getAttribute('wfu-gist-copy');
+                let a: string | null = el.getAttribute(
+                    Sa5Attribute.ATTR_GIST_COPY // 'wfu-gist-copy'
+                    );
 //                console.log(a); 
                 
-                let gist: Element | null = document.querySelector(`[wfu-gist="${a}"]`);
+                let gist: Element | null = document.querySelector(`[${Sa5Attribute.ATTR_GIST}="${a}"]`);
                 
                 if (gist !== null) {
                     this.copyToClipboard(this.getGistCode(gist));

@@ -25,7 +25,9 @@ const init = () => {
     debug.debug ("Initializing");
 
     // Remove any elements that are cookie-suppressed
-    document.querySelectorAll("[wfu-modal]").forEach((element) => {
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL) // "[wfu-modal]"
+        ).forEach((element) => {
 
         const modalElem = element as HTMLElement;
 

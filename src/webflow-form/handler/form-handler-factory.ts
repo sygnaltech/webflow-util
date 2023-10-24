@@ -10,6 +10,7 @@ import { WfuFormHandlerMake } from './make-handler';
 import { WfuFormHandlerN8N } from './n8n-handler';
 import { WfuFormHandlerZapier } from './zapier-handler';
 import { WfuFormHandlerSuccess } from './success-handler';
+import { Sa5Attribute } from '../../globals';
 
 
 
@@ -24,7 +25,9 @@ export class WfuFormHandlerFactory {
     static create(form: Sa5Form, config = {}): WfuFormHandler {
         var handler: WfuFormHandler;
 
-        let type = form.formBlockElement.getAttribute("wfu-form-handler"); 
+        let type = form.formBlockElement.getAttribute(
+            Sa5Attribute.ATTR_FORM_HANDLER // "wfu-form-handler"
+            ); 
 
         switch (type) {
             case "zapier":

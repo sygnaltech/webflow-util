@@ -8,6 +8,7 @@
  * NO-CODE version, keys off of attributes.
  */
 
+import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -43,7 +44,7 @@ const init = () => {
 
 
     // Initialize debugging
-    let debug = new Sa5Debug("sa5-membership");
+    let debug = new Sa5Debug("sa5-user-accounts");
     debug.debug ("Initializing");
 
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;"); 
@@ -53,20 +54,28 @@ const init = () => {
      */
 
     // Show all elements tagged for logged-in users only
-    document.querySelectorAll('[wfu-show-logged-in]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_SHOW_LOGGED_IN) // '[wfu-show-logged-in]'
+        )
       .forEach((element: HTMLElement) => { 
 
         if (membership.isLoggedIn())
-            element.removeAttribute("wfu-show-logged-in"); 
+            element.removeAttribute(
+                Sa5Attribute.ATTR_SHOW_LOGGED_IN // "wfu-show-logged-in"
+                ); 
 
     });
 
     // Hide all elements tagged for logged-out users only
-    document.querySelectorAll('[wfu-hide-logged-in]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_HIDE_LOGGED_IN) // '[wfu-hide-logged-in]'
+        )
       .forEach((element: HTMLElement) => { 
 
         if (!membership.isLoggedIn())
-            element.removeAttribute("wfu-hide-logged-in"); 
+            element.removeAttribute(
+                Sa5Attribute.ATTR_HIDE_LOGGED_IN // "wfu-hide-logged-in"
+                ); 
 
     });
 
@@ -74,7 +83,9 @@ const init = () => {
      * Memberships UX Enhancements 
      */
 
-    document.querySelectorAll('[wfu-login-button]')
+    document.querySelectorAll(
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LOGIN_BUTTON) // '[wfu-login-button]'
+        )
       .forEach((element: HTMLElement) => { 
 
         membership.expandLoginButton(element);

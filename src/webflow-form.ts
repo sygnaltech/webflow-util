@@ -8,6 +8,7 @@
  * Adds capabilities to Webflow Forms and form elements.
  */
 
+import { Sa5Attribute } from './globals';
 import { Sa5Core } from './webflow-core';
 import { Sa5Debug } from './webflow-core/debug';
 
@@ -95,7 +96,7 @@ export class Sa5Form {
                 
                 break;
             case WebflowFormMode.Success:
-console.log("SUCCESS"); 
+// console.log("SUCCESS"); 
                 // Redirect, if appropriate 
                 if (this.redirect) {
                     console.log("redirecting")
@@ -105,7 +106,9 @@ console.log("SUCCESS");
                 }
 
                 // Display message
-                let successMessage = error.querySelector("[wfu-form-message]");
+                let successMessage = error.querySelector(
+                    Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_MESSAGE)
+                    ); // wfu-form-message
                 if (successMessage)
                     successMessage.innerHTML = message;
 
@@ -117,7 +120,9 @@ console.log("SUCCESS");
             case WebflowFormMode.Error:
                 
                 // Display message
-                let errorMessage = error.querySelector("[wfu-form-message]");
+                let errorMessage = error.querySelector(
+                    Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_MESSAGE)
+                    ); // wfu-form-message
                 if (errorMessage)
                     errorMessage.innerHTML = message;
                 

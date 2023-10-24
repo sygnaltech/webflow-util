@@ -8,6 +8,8 @@
  * Accordion Utilities
  */
 
+import { Sa5Attribute } from "../globals";
+
 
 
 /*
@@ -141,7 +143,9 @@ export class WebflowAccordion {
     init(element: HTMLElement) {
 
         // Find accordions
-        const accordionBtns = document.querySelectorAll("[wfu-ui-accordion=header]") as NodeListOf<AccordionElement>;
+        const accordionBtns = document.querySelectorAll(
+            `[${Sa5Attribute.ATTR_UI_ACCORDION}=header]` // "[wfu-ui-accordion=header]"
+            ) as NodeListOf<AccordionElement>;
 
         accordionBtns.forEach((accordion: AccordionElement) => {
 

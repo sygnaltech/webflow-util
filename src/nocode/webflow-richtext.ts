@@ -13,6 +13,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5NestedList } from '../webflow-richtext/nested-list'; 
 import { Sa5Editor } from '../webflow-core/webflow-editor'; 
+import { Sa5Attribute } from '../globals';
 
 const init = () => { 
 
@@ -32,8 +33,9 @@ const init = () => {
      */
 //    console.log("richtext pre-processing lists");
 
-    document.querySelectorAll('.w-richtext[wfu-lists]')
-      .forEach((rtfElem: HTMLElement) => {
+    document.querySelectorAll(
+        `.w-richtext[${Sa5Attribute.ATTR_RICHTEXT_LISTS}]` // '.w-richtext[wfu-lists]')
+      ).forEach((rtfElem: HTMLElement) => {
 
 //        console.log("richtext processing lists");
 
@@ -48,7 +50,9 @@ const init = () => {
         // Remove the attribute
         // So that the skeleton CSS will reveal the underlying
         // processed content.
-        rtfElem.removeAttribute('wfu-lists');
+        rtfElem.removeAttribute(
+            Sa5Attribute.ATTR_RICHTEXT_LISTS // 'wfu-lists'
+            );
 
     });
 

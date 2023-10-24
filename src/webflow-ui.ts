@@ -8,6 +8,8 @@
  * UI Utilities
  */
 
+import { Sa5Attribute } from "./globals";
+
 // import { renderRatingComponent } from "./modules/webflow-ui";
 
 export class Sa5Rating {
@@ -18,7 +20,9 @@ export class Sa5Rating {
 
   set rating(rating: Number) {
     this._rating = rating;
-    this._element.setAttribute("wfu-rating", this._rating.toString());
+    this._element.setAttribute(
+      Sa5Attribute.ATTR_RATING, // "wfu-rating" 
+      this._rating.toString());
     this.render(); 
   }
   get rating(): Number {
@@ -36,7 +40,9 @@ export class Sa5Rating {
   constructor(element: HTMLElement) {
 
     this._element = element;
-    this._rating = Number(element.getAttribute("wfu-rating")); 
+    this._rating = Number(element.getAttribute(
+      Sa5Attribute.ATTR_RATING // "wfu-rating"
+      )); 
 
   }
 
@@ -48,7 +54,9 @@ export class Sa5Rating {
 
   private render() {
 
-    let ratingValue: number = Number(this._element.getAttribute("wfu-rating"));
+    let ratingValue: number = Number(this._element.getAttribute(
+      Sa5Attribute.ATTR_RATING // "wfu-rating"
+      ));
     let exclusionMaskPercent = (100.0 * (5.0 - ratingValue)) / 5.0;
 
     // Portions copyright (c) 2022 by Chris Coyier  (https://codepen.io/chriscoyier/pen/poWvyXQ)

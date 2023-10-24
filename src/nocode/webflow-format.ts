@@ -11,6 +11,7 @@
 import { WebflowFormat } from '../webflow-format';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5Attribute } from '../globals';
 
 const init = () => { 
 
@@ -27,7 +28,9 @@ let core: Sa5Core = Sa5Core.startup();
      * Format numbers & currency
      */
 
-    const elements = document.querySelectorAll('[wfu-format]') as NodeListOf<HTMLElement>; 
+    const elements = document.querySelectorAll(
+      Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORMAT) // '[wfu-format]'
+      ) as NodeListOf<HTMLElement>; 
 
     // Iterate over the matched elements
     elements.forEach((element) => { 
@@ -41,7 +44,9 @@ let core: Sa5Core = Sa5Core.startup();
      * specify moment formatting string 
      */
 
-    document.querySelectorAll(`[wfu-format-date]`)
+    document.querySelectorAll(
+      Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORMAT_DATE) // `[wfu-format-date]`
+      )
       .forEach((element: HTMLElement) => { 
 
         webflowFormat.formatDate(element);

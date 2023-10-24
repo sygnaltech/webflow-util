@@ -20,6 +20,7 @@ import { CountUp, CountUpOptions } from 'countup.js';
 
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5Attribute } from '../globals';
 
 
 
@@ -99,7 +100,7 @@ export class Sa5CountUp {
         const that = this;
 
         // Install self-triggered ones
-        const elements = document.querySelectorAll(`[wfu-countup='${group}']`);
+        const elements = document.querySelectorAll(`[${Sa5Attribute.ATTR_COUNTUP}='${group}']`); // wfu-countup
         elements.forEach((element) => {
 
             // Perform actions on each element
@@ -129,17 +130,21 @@ export class Sa5CountUp {
         const that = this;
 
         // Install self-triggered ones
-        const triggers = document.querySelectorAll(`[wfu-countup-trigger]`);
+        const triggers = document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_COUNTUP_TRIGGER) // `[wfu-countup-trigger]`
+            );
         triggers.forEach((trigger) => {
 
 //        $("[wfu-countup-trigger]").each(function() { 
     
-            const group = trigger.getAttribute("wfu-countup-trigger"); 
+            const group = trigger.getAttribute(
+                Sa5Attribute.ATTR_COUNTUP_TRIGGER // "wfu-countup-trigger"
+                ); 
         
             var countups: CountUp[] = [];
             
             // Install group-triggered countups
-            const elements = document.querySelectorAll(`[wfu-countup='${group}']`);
+            const elements = document.querySelectorAll(`[${Sa5Attribute.ATTR_COUNTUP}='${group}']`); // wfu-countup
             elements.forEach((element) => { 
 
 //                $(`[wfu-countup='${group}']`).each(function() {
@@ -181,7 +186,9 @@ export class Sa5CountUp {
         });
 
         // Install self-triggered ones
-        const counters = document.querySelectorAll(`[wfu-countup]`);
+        const counters = document.querySelectorAll(
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_COUNTUP) // `[wfu-countup]`
+            );
         counters.forEach((c) => {
 //        $("[wfu-countup='']").each(function() {
             

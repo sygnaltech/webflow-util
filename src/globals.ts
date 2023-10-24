@@ -23,7 +23,7 @@ export enum Sa5GlobalEvent {
 export enum Sa5ScriptType {
 
     SCRIPT_TYPE_DATA_ITEM = 'wfu-data-item', 
-    SCRIPT_TYPE_SA5_DATA_ITEM = 'sygnal/sa5-data-proto', // 'sygnal/sa5-data', 
+    SCRIPT_TYPE_SA5_DATA_ITEM = 'sygnal/sa5-data', // 'sygnal/sa5-data-proto', 
 
 }
 
@@ -74,9 +74,12 @@ export enum Sa5Attribute {
 
     // Sort
     ATTR_SORT = 'wfu-sort',
+    ATTR_SORT_DIR = 'wfu-sort-dir',
+    ATTR_SORT_TYPE = 'wfu-sort-type', 
+    ATTR_SORT_KEY = 'wfu-sort-key', 
 
     // Filter
-    ATTR_FILTER = 'wfu-filter',
+    ATTR_FILTER = 'wfu-filter', // Deprecated
     ATTR_FILTER_MATCH = 'wfu-filter-match',
     ATTR_FILTER_EVAL = 'wfu-filter-eval',
     ATTR_FILTER_FUNC = 'wfu-filter-func',
@@ -87,5 +90,82 @@ export enum Sa5Attribute {
 
     // 404
     ATTR_404_SEARCH = 'wfu-404-search',
+
+    // Forms
+    ATTR_FORM_HANDLER = 'wfu-form-handler',
+    ATTR_FORM_MESSAGE = 'wfu-form-message',
+    ATTR_FORM_IPINFO = 'wfu-form-ipinfo',
+
+    // Modals
+    ATTR_MODAL = 'wfu-modal', 
+    ATTR_MODAL_TRIGGER = 'wfu-modal-trigger',
+    ATTR_MODAL_CLOSE = 'wfu-modal-close',
+    ATTR_MODAL_CLOSE_TYPE = 'wfu-modal-close-type',
+    ATTR_MODAL_SUPPRESS_DAYS = 'wfu-modal-suppress-days',
+
+    // Format
+    ATTR_FORMAT = 'wfu-format',
+    ATTR_FORMAT_DATE = 'wfu-format-date',
+    ATTR_FORMAT_HANDLER = 'wfu-format-handler', 
+    ATTR_FORMAT_MODE = 'wfu-format-mode',
+    ATTR_FORMAT_SUFFIX = 'wfu-format-suffix',
+
+    // Countup
+    ATTR_COUNTUP = 'wfu-countup', 
+    ATTR_COUNTUP_TRIGGER = 'wfu-countup-trigger',
+
+    // Demo
+    ATTR_DEMO_LINK = 'wfu-demo-link',
+
+    // Lightboxes
+    ATTR_LIGHTBOX_CAPTIONS = 'wfu-lightbox-captions',
+    ATTR_LIGHTBOX_GROUP = 'wfu-lightbox-group',
+
+    /**
+     * SA5 HTML
+     */
+
+    // Decode
+    ATTR_DECODE = 'wfu-decode',
+
+    // Limits
+    ATTR_LIMIT_MULTIPLE = 'wfu-limit-multiple',
+    ATTR_LIMIT_MULTIPLE_MIN = 'wfu-limit-multiple-min',
+
+    /**
+     * SA5 User Accounts
+     */
+
+    ATTR_SHOW_LOGGED_IN = 'wfu-show-logged-in',
+    ATTR_HIDE_LOGGED_IN = 'wfu-hide-logged-in',
+    ATTR_LOGIN_BUTTON = 'wfu-login-button',
+
+    /**
+     * SA5 Richtext
+     */
+
+    ATTR_RICHTEXT_LISTS = 'wfu-lists',
+    ATTR_RICHTEXT_LIST_THEME = 'wfu-list-theme',
+
+    /**
+     * SA5 URL
+     */
+
+    ATTR_URL_RELATIVE_LINKS = 'wfu-relative-links',
+    ATTR_URL_EXTERNAL_LINKS = 'wfu-external-links',
+
+    /**
+     * SA5 UI
+     */
+
+    // Accordion
+    ATTR_UI_ACCORDION = 'wfu-ui-accordion',
+
+    // Rating
+    ATTR_RATING = 'wfu-rating', 
+
+    // Github GIST
+    ATTR_GIST = 'wfu-gist',
+    ATTR_GIST_COPY = 'wfu-gist-copy',
 
 }

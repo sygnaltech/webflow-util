@@ -9,6 +9,7 @@
  */
 
 
+import { Sa5Attribute } from './globals';
 import { Sa5Core } from './webflow-core'
 import { Sa5Debug } from './webflow-core/debug';
 import { WfuDateHandler } from './webflow-format/date-handler/date-handler';
@@ -77,7 +78,9 @@ export class WebflowFormat {
         const txt = elem.innerText; //$item.text();
         const val: number = parseFloat(txt);
 
-        var fn = elem.getAttribute("wfu-format"); // e.g. "usd";
+        var fn = elem.getAttribute(
+            Sa5Attribute.ATTR_FORMAT // "wfu-format"
+            ); // e.g. "usd";
 
         // Determine the number of decimal places
         // this is set in the Designer, as the formatting of the numeric item
@@ -111,11 +114,15 @@ export class WebflowFormat {
 
 
         // Get the format string from the 'wfu-format-date' attribute
-        const formatString = element.getAttribute("wfu-format-date");
+        const formatString = element.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
+            );
         
         // Check handler
         // Require moment 
-        const formatHandler = element.getAttribute("wfu-format-handler");
+        const formatHandler = element.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_HANDLER // "wfu-format-handler"
+            );
         if (!formatHandler) {
           console.error("SA5 format date is used, but no handler is specified.");
         }
@@ -147,7 +154,9 @@ export class WebflowFormat {
         // }
         
         // Remove the 'wfu-format-date' attribute
-        element.removeAttribute("wfu-format-date");
+        element.removeAttribute(
+            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
+            );
 
 // Luxon & ordinals
 

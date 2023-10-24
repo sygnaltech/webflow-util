@@ -10,6 +10,7 @@
  */
 
 
+import { Sa5Attribute } from '../globals';
 import { Sa5Debug } from '../webflow-core/debug';
 
 
@@ -105,8 +106,12 @@ export class Sa5NestedList {
 
         // Replace list entirely
         let listWrapper = document.createElement("div"); 
-        listWrapper.setAttribute("wfu-list-theme", 
-            this._element.getAttribute("wfu-list-theme") || "default"
+        listWrapper.setAttribute(
+            Sa5Attribute.ATTR_RICHTEXT_LIST_THEME // "wfu-list-theme"
+            , 
+            this._element.getAttribute(
+                Sa5Attribute.ATTR_RICHTEXT_LIST_THEME // "wfu-list-theme"
+                ) || "default"
             );
         listWrapper.appendChild(
             this.createNestedListFromArray(this._element.nodeName, items)

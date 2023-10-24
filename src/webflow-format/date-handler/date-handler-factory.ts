@@ -8,6 +8,7 @@ import { WfuDateHandler } from './date-handler';
 import { WfuDateHandlerMoment } from './moment-handler';
 import { WfuDateHandlerDay } from './day-handler';
 import { booleanValue } from '../../utils';
+import { Sa5Attribute } from '../../globals';
 
 
 
@@ -48,15 +49,23 @@ export class WfuDateHandlerFactory {
 
     static createFromElement(elem: HTMLElement): WfuDateHandler {
 
-        let type = elem.getAttribute("wfu-format-handler"); 
-        let format = elem.getAttribute("wfu-format-date"); 
+        let type = elem.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_HANDLER // "wfu-format-handler"
+            ); 
+        let format = elem.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
+            ); 
 //console.log(type);
 //console.log(format);
 
         const handler = WfuDateHandlerFactory.create(type); 
-        handler.mode = elem.getAttribute("wfu-format-mode") || "date"; 
+        handler.mode = elem.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_MODE // "wfu-format-mode"
+            ) || "date"; 
         handler.formatString = format;
-        handler.suffix = booleanValue(elem.getAttribute("wfu-format-suffix") || "yes"); 
+        handler.suffix = booleanValue(elem.getAttribute(
+            Sa5Attribute.ATTR_FORMAT_SUFFIX // "wfu-format-suffix"
+            ) || "yes"); 
 
         return handler; 
     }
