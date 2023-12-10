@@ -1,0 +1,3783 @@
+
+
+const commerceCurrencyLocales = [{
+    name: 'Afar',
+    location: 'Djibouti',
+    tag: 'aa-DJ'
+  }, {
+    name: 'Afar',
+    location: 'Eritrea',
+    tag: 'aa-ER'
+  }, {
+    name: 'Afar',
+    location: 'Ethiopia',
+    tag: 'aa-ET'
+  }, {
+    name: 'Afrikaans',
+    location: 'Namibia',
+    tag: 'af-NA'
+  }, {
+    name: 'Afrikaans',
+    location: 'South Africa',
+    tag: 'af-ZA'
+  }, {
+    name: 'Aghem',
+    location: 'Cameroon',
+    tag: 'agq-CM'
+  }, {
+    name: 'Akan',
+    location: 'Ghana',
+    tag: 'ak-GH'
+  }, {
+    name: 'Albanian',
+    location: 'Albania',
+    tag: 'sq-AL'
+  }, {
+    name: 'Alsatian',
+    location: 'France',
+    tag: 'gsw-FR'
+  }, {
+    name: 'Alsatian',
+    location: 'Liechtenstein',
+    tag: 'gsw-LI'
+  }, {
+    name: 'Alsatian',
+    location: 'Switzerland',
+    tag: 'gsw-CH'
+  }, {
+    name: 'Amharic',
+    location: 'Ethiopia',
+    tag: 'am-ET'
+  }, {
+    name: 'Arabic',
+    location: 'Algeria',
+    tag: 'ar-DZ'
+  }, {
+    name: 'Arabic',
+    location: 'Bahrain',
+    tag: 'ar-BH'
+  }, {
+    name: 'Arabic',
+    location: 'Chad',
+    tag: 'ar-TD'
+  }, {
+    name: 'Arabic',
+    location: 'Comoros',
+    tag: 'ar-KM'
+  }, {
+    name: 'Arabic',
+    location: 'Djibouti',
+    tag: 'ar-DJ'
+  }, {
+    name: 'Arabic',
+    location: 'Egypt',
+    tag: 'ar-EG'
+  }, {
+    name: 'Arabic',
+    location: 'Eritrea',
+    tag: 'ar-ER'
+  }, {
+    name: 'Arabic',
+    location: 'Iraq',
+    tag: 'ar-IQ'
+  }, {
+    name: 'Arabic',
+    location: 'Israel',
+    tag: 'ar-IL'
+  }, {
+    name: 'Arabic',
+    location: 'Jordan',
+    tag: 'ar-JO'
+  }, {
+    name: 'Arabic',
+    location: 'Kuwait',
+    tag: 'ar-KW'
+  }, {
+    name: 'Arabic',
+    location: 'Lebanon',
+    tag: 'ar-LB'
+  }, {
+    name: 'Arabic',
+    location: 'Libya',
+    tag: 'ar-LY'
+  }, {
+    name: 'Arabic',
+    location: 'Mauritania',
+    tag: 'ar-MR'
+  }, {
+    name: 'Arabic',
+    location: 'Morocco',
+    tag: 'ar-MA'
+  }, {
+    name: 'Arabic',
+    location: 'Oman',
+    tag: 'ar-OM'
+  }, {
+    name: 'Arabic',
+    location: 'Qatar',
+    tag: 'ar-QA'
+  }, {
+    name: 'Arabic',
+    location: 'Saudi Arabia',
+    tag: 'ar-SA'
+  }, {
+    name: 'Arabic',
+    location: 'Somalia',
+    tag: 'ar-SO'
+  }, {
+    name: 'Arabic',
+    location: 'South Sudan',
+    tag: 'ar-SS'
+  }, {
+    name: 'Arabic',
+    location: 'Sudan',
+    tag: 'ar-SD'
+  }, {
+    name: 'Arabic',
+    location: 'Syria',
+    tag: 'ar-SY'
+  }, {
+    name: 'Arabic',
+    location: 'Tunisia',
+    tag: 'ar-TN'
+  }, {
+    name: 'Arabic',
+    location: 'Yemen',
+    tag: 'ar-YE'
+  }, {
+    name: 'Armenian',
+    location: 'Armenia',
+    tag: 'hy-AM'
+  }, {
+    name: 'Assamese',
+    location: 'India',
+    tag: 'as-IN'
+  }, {
+    name: 'Asturian',
+    location: 'Spain',
+    tag: 'ast-ES'
+  }, {
+    name: 'Asu',
+    location: 'Tanzania',
+    tag: 'asa-TZ'
+  }, {
+    name: 'Azerbaijani (Cyrillic)',
+    location: 'Azerbaijan',
+    tag: 'az-Cyrl-AZ'
+  }, {
+    name: 'Azerbaijani (Latin)',
+    location: 'Azerbaijan',
+    tag: 'az-Latn-AZ'
+  }, {
+    name: 'Bafia',
+    location: 'Cameroon',
+    tag: 'ksf-CM'
+  }, {
+    name: 'Bamanankan (Latin)',
+    location: 'Mali',
+    tag: 'bm-Latn-ML'
+  }, {
+    name: 'Bangla',
+    location: 'Bangladesh',
+    tag: 'bn-BD'
+  }, {
+    name: 'Bangla',
+    location: 'India',
+    tag: 'bn-IN'
+  }, {
+    name: 'Basaa',
+    location: 'Cameroon',
+    tag: 'bas-CM'
+  }, {
+    name: 'Bashkir',
+    location: 'Russia',
+    tag: 'ba-RU'
+  }, {
+    name: 'Basque',
+    location: 'Spain',
+    tag: 'eu-ES'
+  }, {
+    name: 'Belarusian',
+    location: 'Belarus',
+    tag: 'be-BY'
+  }, {
+    name: 'Bemba',
+    location: 'Zambia',
+    tag: 'bem-ZM'
+  }, {
+    name: 'Bena',
+    location: 'Tanzania',
+    tag: 'bez-TZ'
+  }, {
+    name: 'Blin',
+    location: 'Eritrea',
+    tag: 'byn-ER'
+  }, {
+    name: 'Bodo',
+    location: 'India',
+    tag: 'brx-IN'
+  }, {
+    name: 'Bosnian (Cyrillic)',
+    location: 'Bosnia and Herzegovina',
+    tag: 'bs-Cyrl-BA'
+  }, {
+    name: 'Bosnian (Latin)',
+    location: 'Bosnia and Herzegovina',
+    tag: 'bs-Latn-BA'
+  }, {
+    name: 'Breton',
+    location: 'France',
+    tag: 'br-FR'
+  }, {
+    name: 'Bulgarian',
+    location: 'Bulgaria',
+    tag: 'bg-BG'
+  }, {
+    name: 'Burmese',
+    location: 'Myanmar',
+    tag: 'my-MM'
+  }, {
+    name: 'Catalan',
+    location: 'Andorra',
+    tag: 'ca-AD'
+  }, {
+    name: 'Catalan',
+    location: 'France',
+    tag: 'ca-FR'
+  }, {
+    name: 'Catalan',
+    location: 'Italy',
+    tag: 'ca-IT'
+  }, {
+    name: 'Catalan',
+    location: 'Spain',
+    tag: 'ca-ES'
+  }, {
+    name: 'Central Atlas Tamazight ',
+    location: 'Morocco',
+    tag: 'tzm-Latn'
+  }, {
+    name: 'Central Kurdish',
+    location: 'Iraq',
+    tag: 'ku-Arab-IQ'
+  }, {
+    name: 'Chechen',
+    location: 'Russia',
+    tag: 'cd-RU'
+  }, {
+    name: 'Cherokee',
+    location: 'United States',
+    tag: 'chr-Cher-US'
+  }, {
+    name: 'Chiga',
+    location: 'Uganda',
+    tag: 'cgg-UG'
+  }, {
+    name: 'Chinese (Simplified)',
+    location: 'Singapore',
+    tag: 'zh-SG'
+  }, {
+    name: 'Chinese (Traditional)',
+    location: 'Taiwan',
+    tag: 'zh-TW'
+  }, {
+    name: 'Church Slavic',
+    location: 'Russia',
+    tag: 'cu-RU'
+  }, {
+    name: 'Cornish',
+    location: 'United Kingdom',
+    tag: 'kw-GB'
+  }, {
+    name: 'Corsican',
+    location: 'France',
+    tag: 'co-FR'
+  }, {
+    name: 'Croatian',
+    location: 'Croatia',
+    tag: 'hr-HR'
+  }, {
+    name: 'Croatian (Latin)',
+    location: 'Bosnia and Herzegovina',
+    tag: 'hr-BA'
+  }, {
+    name: 'Czech',
+    location: 'Czechia',
+    tag: 'cs-CZ'
+  }, {
+    name: 'Danish',
+    location: 'Denmark',
+    tag: 'da-DK'
+  }, {
+    name: 'Danish',
+    location: 'Greenland',
+    tag: 'da-GL'
+  }, {
+    name: 'Dari',
+    location: 'Afghanistan',
+    tag: 'prs-AF'
+  }, {
+    name: 'Divehi',
+    location: 'Maldives',
+    tag: 'dv-MV'
+  }, {
+    name: 'Duala',
+    location: 'Cameroon',
+    tag: 'dua-CM'
+  }, {
+    name: 'Dutch',
+    location: 'Aruba',
+    tag: 'nl-AW'
+  }, {
+    name: 'Dutch',
+    location: 'Belgium',
+    tag: 'nl-BE'
+  }, {
+    name: 'Dutch',
+    location: 'Netherlands',
+    tag: 'nl-NL'
+  }, {
+    name: 'Dutch',
+    location: 'Sint Maarten',
+    tag: 'nl-SX'
+  }, {
+    name: 'Dutch',
+    location: 'Suriname',
+    tag: 'nl-SR'
+  }, {
+    name: 'Dzongkha',
+    location: 'Bhutan',
+    tag: 'dz-BT'
+  }, {
+    name: 'Embu',
+    location: 'Kenya',
+    tag: 'ebu-KE'
+  }, {
+    name: 'English',
+    location: 'American Samoa',
+    tag: 'en-AS'
+  }, {
+    name: 'English',
+    location: 'Anguilla',
+    tag: 'en-AI'
+  }, {
+    name: 'English',
+    location: 'Antigua and Barbuda',
+    tag: 'en-AG'
+  }, {
+    name: 'English',
+    location: 'Australia',
+    tag: 'en-AU'
+  }, {
+    name: 'English',
+    location: 'Austria',
+    tag: 'en-AT'
+  }, {
+    name: 'English',
+    location: 'Bahamas',
+    tag: 'en-BS'
+  }, {
+    name: 'English',
+    location: 'Barbados',
+    tag: 'en-BB'
+  }, {
+    name: 'English',
+    location: 'Belgium',
+    tag: 'en-BE'
+  }, {
+    name: 'English',
+    location: 'Belize',
+    tag: 'en-BZ'
+  }, {
+    name: 'English',
+    location: 'Bermuda',
+    tag: 'en-BM'
+  }, {
+    name: 'English',
+    location: 'Botswana',
+    tag: 'en-BW'
+  }, {
+    name: 'English',
+    location: 'British Indian Ocean Territory',
+    tag: 'en-IO'
+  }, {
+    name: 'English',
+    location: 'British Virgin Islands',
+    tag: 'en-VG'
+  }, {
+    name: 'English',
+    location: 'Burundi',
+    tag: 'en-BI'
+  }, {
+    name: 'English',
+    location: 'Cameroon',
+    tag: 'en-CM'
+  }, {
+    name: 'English',
+    location: 'Canada',
+    tag: 'en-CA'
+  }, {
+    name: 'English',
+    location: 'Cayman Islands',
+    tag: 'en-KY'
+  }, {
+    name: 'English',
+    location: 'Christmas Island',
+    tag: 'en-CX'
+  }, {
+    name: 'English',
+    location: 'Cook Islands',
+    tag: 'en-CK'
+  }, {
+    name: 'English',
+    location: 'Cyprus',
+    tag: 'en-CY'
+  }, {
+    name: 'English',
+    location: 'Denmark',
+    tag: 'en-DK'
+  }, {
+    name: 'English',
+    location: 'Dominica',
+    tag: 'en-DM'
+  }, {
+    name: 'English',
+    location: 'Eritrea',
+    tag: 'en-ER'
+  }, {
+    name: 'English',
+    location: 'Falkland Islands',
+    tag: 'en-FK'
+  }, {
+    name: 'English',
+    location: 'Finland',
+    tag: 'en-FI'
+  }, {
+    name: 'English',
+    location: 'Fiji',
+    tag: 'en-FJ'
+  }, {
+    name: 'English',
+    location: 'Gambia',
+    tag: 'en-GM'
+  }, {
+    name: 'English',
+    location: 'Germany',
+    tag: 'en-DE'
+  }, {
+    name: 'English',
+    location: 'Ghana',
+    tag: 'en-GH'
+  }, {
+    name: 'English',
+    location: 'Gibraltar',
+    tag: 'en-GI'
+  }, {
+    name: 'English',
+    location: 'Grenada',
+    tag: 'en-GD'
+  }, {
+    name: 'English',
+    location: 'Guam',
+    tag: 'en-GU'
+  }, {
+    name: 'English',
+    location: 'Guernsey',
+    tag: 'en-GG'
+  }, {
+    name: 'English',
+    location: 'Guyana',
+    tag: 'en-GY'
+  }, {
+    name: 'English',
+    location: 'Hong Kong',
+    tag: 'en-HK'
+  }, {
+    name: 'English',
+    location: 'India',
+    tag: 'en-IN'
+  }, {
+    name: 'English',
+    location: 'Ireland',
+    tag: 'en-IE'
+  }, {
+    name: 'English',
+    location: 'Isle of Man',
+    tag: 'en-IM'
+  }, {
+    name: 'English',
+    location: 'Israel',
+    tag: 'en-IL'
+  }, {
+    name: 'English',
+    location: 'Jamaica',
+    tag: 'en-JM'
+  }, {
+    name: 'English',
+    location: 'Jersey',
+    tag: 'en-JE'
+  }, {
+    name: 'English',
+    location: 'Kenya',
+    tag: 'en-KE'
+  }, {
+    name: 'English',
+    location: 'Kiribati',
+    tag: 'en-KI'
+  }, {
+    name: 'English',
+    location: 'Lesotho',
+    tag: 'en-LS'
+  }, {
+    name: 'English',
+    location: 'Liberia',
+    tag: 'en-LR'
+  }, {
+    name: 'English',
+    location: 'Madagascar',
+    tag: 'en-MG'
+  }, {
+    name: 'English',
+    location: 'Malawi',
+    tag: 'en-MW'
+  }, {
+    name: 'English',
+    location: 'Malaysia',
+    tag: 'en-MY'
+  }, {
+    name: 'English',
+    location: 'Malta',
+    tag: 'en-MT'
+  }, {
+    name: 'English',
+    location: 'Marshall Islands',
+    tag: 'en-MH'
+  }, {
+    name: 'English',
+    location: 'Mauritius',
+    tag: 'en-MU'
+  }, {
+    name: 'English',
+    location: 'Micronesia',
+    tag: 'en-FM'
+  }, {
+    name: 'English',
+    location: 'Montserrat',
+    tag: 'en-MS'
+  }, {
+    name: 'English',
+    location: 'Namibia',
+    tag: 'en-NA'
+  }, {
+    name: 'English',
+    location: 'Nauru',
+    tag: 'en-NR'
+  }, {
+    name: 'English',
+    location: 'Netherlands',
+    tag: 'en-NL'
+  }, {
+    name: 'English',
+    location: 'New Zealand',
+    tag: 'en-NZ'
+  }, {
+    name: 'English',
+    location: 'Nigeria',
+    tag: 'en-NG'
+  }, {
+    name: 'English',
+    location: 'Niue',
+    tag: 'en-NU'
+  }, {
+    name: 'English',
+    location: 'Norfolk Island',
+    tag: 'en-NF'
+  }, {
+    name: 'English',
+    location: 'Northern Mariana Islands',
+    tag: 'en-MP'
+  }, {
+    name: 'English',
+    location: 'Pakistan',
+    tag: 'en-PK'
+  }, {
+    name: 'English',
+    location: 'Palau',
+    tag: 'en-PW'
+  }, {
+    name: 'English',
+    location: 'Papua New Guinea',
+    tag: 'en-PG'
+  }, {
+    name: 'English',
+    location: 'Puerto Rico',
+    tag: 'en-PR'
+  }, {
+    name: 'English',
+    location: 'Rwanda',
+    tag: 'en-RW'
+  }, {
+    name: 'English',
+    location: 'Saint Kitts and Nevis',
+    tag: 'en-KN'
+  }, {
+    name: 'English',
+    location: 'Saint Lucia',
+    tag: 'en-LC'
+  }, {
+    name: 'English',
+    location: 'Saint Vincent and the Grenadines',
+    tag: 'en-VC'
+  }, {
+    name: 'English',
+    location: 'Samoa',
+    tag: 'en-WS'
+  }, {
+    name: 'English',
+    location: 'Seychelles',
+    tag: 'en-SC'
+  }, {
+    name: 'English',
+    location: 'Sierra Leone',
+    tag: 'en-SL'
+  }, {
+    name: 'English',
+    location: 'Singapore',
+    tag: 'en-SG'
+  }, {
+    name: 'English',
+    location: 'Sint Maarten',
+    tag: 'en-SX'
+  }, {
+    name: 'English',
+    location: 'Slovenia',
+    tag: 'en-SI'
+  }, {
+    name: 'English',
+    location: 'Solomon Islands',
+    tag: 'en-SB'
+  }, {
+    name: 'English',
+    location: 'South Africa',
+    tag: 'en-ZA'
+  }, {
+    name: 'English',
+    location: 'South Sudan',
+    tag: 'en-SS'
+  }, {
+    name: 'English',
+    location: 'Sudan',
+    tag: 'en-SD'
+  }, {
+    name: 'English',
+    location: 'Swaziland',
+    tag: 'en-SZ'
+  }, {
+    name: 'English',
+    location: 'Sweden',
+    tag: 'en-SE'
+  }, {
+    name: 'English',
+    location: 'Switzerland',
+    tag: 'en-CH'
+  }, {
+    name: 'English',
+    location: 'Tanzania',
+    tag: 'en-TZ'
+  }, {
+    name: 'English',
+    location: 'Tokelau',
+    tag: 'en-TK'
+  }, {
+    name: 'English',
+    location: 'Tonga',
+    tag: 'en-TO'
+  }, {
+    name: 'English',
+    location: 'Trinidad and Tobago',
+    tag: 'en-TT'
+  }, {
+    name: 'English',
+    location: 'Turks and Caicos Islands',
+    tag: 'en-TC'
+  }, {
+    name: 'English',
+    location: 'Tuvalu',
+    tag: 'en-TV'
+  }, {
+    name: 'English',
+    location: 'Uganda',
+    tag: 'en-UG'
+  }, {
+    name: 'English',
+    location: 'United Kingdom',
+    tag: 'en-GB'
+  }, {
+    name: 'English',
+    location: 'United States',
+    tag: 'en-US'
+  }, {
+    name: 'English',
+    location: 'Vanuatu',
+    tag: 'en-VU'
+  }, {
+    name: 'English',
+    location: 'Zambia',
+    tag: 'en-ZM'
+  }, {
+    name: 'English',
+    location: 'Zimbabwe',
+    tag: 'en-ZW'
+  }, {
+    name: 'Estonian',
+    location: 'Estonia',
+    tag: 'et-EE'
+  }, {
+    name: 'Ewe',
+    location: 'Ghana',
+    tag: 'ee-GH'
+  }, {
+    name: 'Ewe',
+    location: 'Togo',
+    tag: 'ee-TG'
+  }, {
+    name: 'Ewondo',
+    location: 'Cameroon',
+    tag: 'ewo-CM'
+  }, {
+    name: 'Faroese',
+    location: 'Denmark',
+    tag: 'fo-DK'
+  }, {
+    name: 'Faroese',
+    location: 'Faroe Islands',
+    tag: 'fo-FO'
+  }, {
+    name: 'Filipino',
+    location: 'Philippines',
+    tag: 'fil-PH'
+  }, {
+    name: 'Finnish',
+    location: 'Finland',
+    tag: 'fi-FI'
+  }, {
+    name: 'French',
+    location: 'Algeria',
+    tag: 'fr-DZ'
+  }, {
+    name: 'French',
+    location: 'Belgium',
+    tag: 'fr-BE'
+  }, {
+    name: 'French',
+    location: 'Benin',
+    tag: 'fr-BJ'
+  }, {
+    name: 'French',
+    location: 'Burkina Faso',
+    tag: 'fr-BF'
+  }, {
+    name: 'French',
+    location: 'Burundi',
+    tag: 'fr-BI'
+  }, {
+    name: 'French',
+    location: 'Cameroon',
+    tag: 'fr-CM'
+  }, {
+    name: 'French',
+    location: 'Canada',
+    tag: 'fr-CA'
+  }, {
+    name: 'French',
+    location: 'Central African Republic',
+    tag: 'fr-CF'
+  }, {
+    name: 'French',
+    location: 'Chad',
+    tag: 'fr-TD'
+  }, {
+    name: 'French',
+    location: 'Comoros',
+    tag: 'fr-KM'
+  }, {
+    name: 'French',
+    location: 'Djibouti',
+    tag: 'fr-DJ'
+  }, {
+    name: 'French',
+    location: 'Equatorial Guinea',
+    tag: 'fr-GQ'
+  }, {
+    name: 'French',
+    location: 'France',
+    tag: 'fr-FR'
+  }, {
+    name: 'French',
+    location: 'French Guiana',
+    tag: 'fr-GF'
+  }, {
+    name: 'French',
+    location: 'French Polynesia',
+    tag: 'fr-PF'
+  }, {
+    name: 'French',
+    location: 'Gabon',
+    tag: 'fr-GA'
+  }, {
+    name: 'French',
+    location: 'Guadeloupe',
+    tag: 'fr-GP'
+  }, {
+    name: 'French',
+    location: 'Guinea',
+    tag: 'fr-GN'
+  }, {
+    name: 'French',
+    location: 'Haiti',
+    tag: 'fr-HT'
+  }, {
+    name: 'French',
+    location: 'Luxembourg',
+    tag: 'fr-LU'
+  }, {
+    name: 'French',
+    location: 'Madagascar',
+    tag: 'fr-MG'
+  }, {
+    name: 'French',
+    location: 'Mali',
+    tag: 'fr-ML'
+  }, {
+    name: 'French',
+    location: 'Martinique',
+    tag: 'fr-MQ'
+  }, {
+    name: 'French',
+    location: 'Mauritania',
+    tag: 'fr-MR'
+  }, {
+    name: 'French',
+    location: 'Mauritius',
+    tag: 'fr-MU'
+  }, {
+    name: 'French',
+    location: 'Mayotte',
+    tag: 'fr-YT'
+  }, {
+    name: 'French',
+    location: 'Morocco',
+    tag: 'fr-MA'
+  }, {
+    name: 'French',
+    location: 'New Caledonia',
+    tag: 'fr-NC'
+  }, {
+    name: 'French',
+    location: 'Niger',
+    tag: 'fr-NE'
+  }, {
+    name: 'French',
+    location: 'Reunion',
+    tag: 'fr-RE'
+  }, {
+    name: 'French',
+    location: 'Rwanda',
+    tag: 'fr-RW'
+  }, {
+    name: 'French',
+    location: 'Saint Martin',
+    tag: 'fr-MF'
+  }, {
+    name: 'French',
+    location: 'Saint Pierre and Miquelon',
+    tag: 'fr-PM'
+  }, {
+    name: 'French',
+    location: 'Senegal',
+    tag: 'fr-SN'
+  }, {
+    name: 'French',
+    location: 'Seychelles',
+    tag: 'fr-SC'
+  }, {
+    name: 'French',
+    location: 'Switzerland',
+    tag: 'fr-CH'
+  }, {
+    name: 'French',
+    location: 'Syria',
+    tag: 'fr-SY'
+  }, {
+    name: 'French',
+    location: 'Togo',
+    tag: 'fr-TG'
+  }, {
+    name: 'French',
+    location: 'Tunisia',
+    tag: 'fr-TN'
+  }, {
+    name: 'French',
+    location: 'Vanuatu',
+    tag: 'fr-VU'
+  }, {
+    name: 'French',
+    location: 'Wallis and Futuna',
+    tag: 'fr-WF'
+  }, {
+    name: 'Frisian',
+    location: 'Netherlands',
+    tag: 'fy-NL'
+  }, {
+    name: 'Friulian',
+    location: 'Italy',
+    tag: 'fur-IT'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Burkina Faso',
+    tag: 'ff-Latn-BF'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Cameroon',
+    tag: 'ff-Latn-CM'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Gambia',
+    tag: 'ff-Latn-GM'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Ghana',
+    tag: 'ff-Latn-GH'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Guinea',
+    tag: 'ff-Latn-GN'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Guinea-Bissau',
+    tag: 'ff-Latn-GW'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Liberia',
+    tag: 'ff-Latn-LR'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Mauritania',
+    tag: 'ff-Latn-MR'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Niger',
+    tag: 'ff-Latn-NE'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Nigeria',
+    tag: 'ff-Latn-NG'
+  }, {
+    name: 'Fulah (Latin)',
+    location: 'Sierra Leone',
+    tag: 'ff-Latn-SL'
+  }, {
+    name: 'Fulah',
+    location: 'Cameroon',
+    tag: 'ff-CM'
+  }, {
+    name: 'Fulah',
+    location: 'Guinea',
+    tag: 'ff-GN'
+  }, {
+    name: 'Fulah',
+    location: 'Mauritania',
+    tag: 'ff-MR'
+  }, {
+    name: 'Fulah',
+    location: 'Nigeria',
+    tag: 'ff-NG'
+  }, {
+    name: 'Fulah',
+    location: 'Senegal',
+    tag: 'ff-Latn-SN'
+  }, {
+    name: 'Galician',
+    location: 'Spain',
+    tag: 'gl-ES'
+  }, {
+    name: 'Ganda',
+    location: 'Uganda',
+    tag: 'lg-UG'
+  }, {
+    name: 'Georgian',
+    location: 'Georgia',
+    tag: 'ka-GE'
+  }, {
+    name: 'German',
+    location: 'Austria',
+    tag: 'de-AT'
+  }, {
+    name: 'German',
+    location: 'Belgium',
+    tag: 'de-BE'
+  }, {
+    name: 'German',
+    location: 'Germany',
+    tag: 'de-DE'
+  }, {
+    name: 'German',
+    location: 'Italy',
+    tag: 'de-IT'
+  }, {
+    name: 'German',
+    location: 'Liechtenstein',
+    tag: 'de-LI'
+  }, {
+    name: 'German',
+    location: 'Luxembourg',
+    tag: 'de-LU'
+  }, {
+    name: 'German',
+    location: 'Switzerland',
+    tag: 'de-CH'
+  }, {
+    name: 'Greek',
+    location: 'Cyprus',
+    tag: 'el-CY'
+  }, {
+    name: 'Greek',
+    location: 'Greece',
+    tag: 'el-GR'
+  }, {
+    name: 'Greenlandic',
+    location: 'Greenland',
+    tag: 'kl-GL'
+  }, {
+    name: 'Guarani',
+    location: 'Paraguay',
+    tag: 'gn-PY'
+  }, {
+    name: 'Gujarati',
+    location: 'India',
+    tag: 'gu-IN'
+  }, {
+    name: 'Gusii',
+    location: 'Kenya',
+    tag: 'guz-KE'
+  }, {
+    name: 'Hausa (Latin)',
+    location: 'Ghana',
+    tag: 'ha-Latn-GH'
+  }, {
+    name: 'Hausa (Latin)',
+    location: 'Niger',
+    tag: 'ha-Latn-NE'
+  }, {
+    name: 'Hausa (Latin)',
+    location: 'Nigeria',
+    tag: 'ha-Latn-NG'
+  }, {
+    name: 'Hawaiian',
+    location: 'United States',
+    tag: 'haw-US'
+  }, {
+    name: 'Hebrew',
+    location: 'Israel',
+    tag: 'he-IL'
+  }, {
+    name: 'Hindi',
+    location: 'India',
+    tag: 'hi-IN'
+  }, {
+    name: 'Hungarian',
+    location: 'Hungary',
+    tag: 'hu-HU'
+  }, {
+    name: 'Icelandic',
+    location: 'Iceland',
+    tag: 'is-IS'
+  }, {
+    name: 'Igbo',
+    location: 'Nigeria',
+    tag: 'ig-NG'
+  }, {
+    name: 'Indonesian',
+    location: 'Indonesia',
+    tag: 'id-ID'
+  }, {
+    name: 'Interlingua',
+    location: 'France',
+    tag: 'ia-FR'
+  }, {
+    name: 'Inuktitut (Latin)',
+    location: 'Canada',
+    tag: 'iu-Latn-CA'
+  }, {
+    name: 'Inuktitut (Syllabics)',
+    location: 'Canada',
+    tag: 'iu-Cans-CA'
+  }, {
+    name: 'Irish',
+    location: 'Ireland',
+    tag: 'ga-IE'
+  }, {
+    name: 'Italian',
+    location: 'Italy',
+    tag: 'it-IT'
+  }, {
+    name: 'Italian',
+    location: 'San Marino',
+    tag: 'it-SM'
+  }, {
+    name: 'Italian',
+    location: 'Switzerland',
+    tag: 'it-CH'
+  }, {
+    name: 'Japanese',
+    location: 'Japan',
+    tag: 'ja-JP'
+  }, {
+    name: 'Jola-Fonyi',
+    location: 'Senegal',
+    tag: 'dyo-SN'
+  }, {
+    name: 'Kabyle',
+    location: 'Algeria',
+    tag: 'kab-DZ'
+  }, {
+    name: 'Kako',
+    location: 'Cameroon',
+    tag: 'kkj-CM'
+  }, {
+    name: 'Kalenjin',
+    location: 'Kenya',
+    tag: 'kln-KE'
+  }, {
+    name: 'Kamba',
+    location: 'Kenya',
+    tag: 'kam-KE'
+  }, {
+    name: 'Kannada',
+    location: 'India',
+    tag: 'kn-IN'
+  }, {
+    name: 'Kazakh',
+    location: 'Kazakhstan',
+    tag: 'kk-KZ'
+  }, {
+    name: 'Khmer',
+    location: 'Cambodia',
+    tag: 'km-KH'
+  }, {
+    name: "K'iche",
+    location: 'Guatemala',
+    tag: 'quc-Latn-GT'
+  }, {
+    name: 'Kikuyu',
+    location: 'Kenya',
+    tag: 'ki-KE'
+  }, {
+    name: 'Kinyarwanda',
+    location: 'Rwanda',
+    tag: 'rw-RW'
+  }, {
+    name: 'Kiswahili',
+    location: 'Kenya',
+    tag: 'sw-KE'
+  }, {
+    name: 'Kiswahili',
+    location: 'Tanzania',
+    tag: 'sw-TZ'
+  }, {
+    name: 'Kiswahili',
+    location: 'Uganda',
+    tag: 'sw-UG'
+  }, {
+    name: 'Konkani',
+    location: 'India',
+    tag: 'kok-IN'
+  }, {
+    name: 'Korean',
+    location: 'North Korea',
+    tag: 'ko-KP'
+  }, {
+    name: 'Koyra Chiini',
+    location: 'Mali',
+    tag: 'khq-ML'
+  }, {
+    name: 'Koyraboro Senni',
+    location: 'Mali',
+    tag: 'ses-ML'
+  }, {
+    name: 'Kwasio',
+    location: 'Cameroon',
+    tag: 'nmg-CM'
+  }, {
+    name: 'Kyrgyz',
+    location: 'Kyrgyzstan',
+    tag: 'ky-KG'
+  }, {
+    name: 'Lakota',
+    location: 'United States',
+    tag: 'lkt-US'
+  }, {
+    name: 'Langi',
+    location: 'Tanzania',
+    tag: 'lag-TZ'
+  }, {
+    name: 'Latvian',
+    location: 'Latvia',
+    tag: 'lv-LV'
+  }, {
+    name: 'Lingala',
+    location: 'Angola',
+    tag: 'ln-AO'
+  }, {
+    name: 'Lingala',
+    location: 'Central African Republic',
+    tag: 'ln-CF'
+  }, {
+    name: 'Lithuanian',
+    location: 'Lithuania',
+    tag: 'lt-LT'
+  }, {
+    name: 'Low German ',
+    location: 'Germany',
+    tag: 'nds-DE'
+  }, {
+    name: 'Low German',
+    location: 'Netherlands',
+    tag: 'nds-NL'
+  }, {
+    name: 'Lower Sorbian',
+    location: 'Germany',
+    tag: 'dsb-DE'
+  }, {
+    name: 'Luo',
+    location: 'Kenya',
+    tag: 'luo-KE'
+  }, {
+    name: 'Luxembourgish',
+    location: 'Luxembourg',
+    tag: 'lb-LU'
+  }, {
+    name: 'Luyia',
+    location: 'Kenya',
+    tag: 'luy-KE'
+  }, {
+    name: 'Machame',
+    location: 'Tanzania',
+    tag: 'jmc-TZ'
+  }, {
+    name: 'Makhuwa-Meetto',
+    location: 'Mozambique',
+    tag: 'mgh-MZ'
+  }, {
+    name: 'Makonde',
+    location: 'Tanzania',
+    tag: 'kde-TZ'
+  }, {
+    name: 'Malagasy',
+    location: 'Madagascar',
+    tag: 'mg-MG'
+  }, {
+    name: 'Malay',
+    location: 'Malaysia',
+    tag: 'ms-MY'
+  }, {
+    name: 'Malayalam',
+    location: 'India',
+    tag: 'ml-IN'
+  }, {
+    name: 'Maltese',
+    location: 'Malta',
+    tag: 'mt-MT'
+  }, {
+    name: 'Manx',
+    location: 'Isle of Man',
+    tag: 'gv-IM'
+  }, {
+    name: 'Maori',
+    location: 'New Zealand',
+    tag: 'mi-NZ'
+  }, {
+    name: 'Mapudungun',
+    location: 'Chile',
+    tag: 'arn-CL'
+  }, {
+    name: 'Marathi',
+    location: 'India',
+    tag: 'mr-IN'
+  }, {
+    name: 'Masai',
+    location: 'Kenya',
+    tag: 'mas-KE'
+  }, {
+    name: 'Masai',
+    location: 'Tanzania',
+    tag: 'mas-TZ'
+  }, {
+    name: 'Mazanderani',
+    location: 'Iran',
+    tag: 'mzn-IR'
+  }, {
+    name: 'Meru',
+    location: 'Kenya',
+    tag: 'mer-KE'
+  }, {
+    name: "Meta'",
+    location: 'Cameroon',
+    tag: 'mgo-CM'
+  }, {
+    name: 'Mohawk',
+    location: 'Canada',
+    tag: 'moh-CA'
+  }, {
+    name: 'Mongolian (Cyrillic)',
+    location: 'Mongolia',
+    tag: 'mn-MN'
+  }, {
+    name: 'Mongolian (Traditional)',
+    location: 'Mongolia',
+    tag: 'mn-Mong'
+  }, {
+    name: 'Morisyen',
+    location: 'Mauritius',
+    tag: 'mfe-MU'
+  }, {
+    name: 'Mundang',
+    location: 'Cameroon',
+    tag: 'mua-CM'
+  }, {
+    name: "N'ko",
+    location: 'Guinea',
+    tag: 'nqo-GN'
+  }, {
+    name: 'Nama',
+    location: 'Namibia',
+    tag: 'naq-NA'
+  }, {
+    name: 'Nepali',
+    location: 'India',
+    tag: 'ne-IN'
+  }, {
+    name: 'Nepali',
+    location: 'Nepal',
+    tag: 'ne-NP'
+  }, {
+    name: 'Ngiemboon',
+    location: 'Cameroon',
+    tag: 'nnh-CM'
+  }, {
+    name: 'Ngomba',
+    location: 'Cameroon',
+    tag: 'jgo-CM'
+  }, {
+    name: 'Northern Luri',
+    location: 'Iraq',
+    tag: 'lrc-IQ'
+  }, {
+    name: 'Northern Luri',
+    location: 'Iran',
+    tag: 'lrc-IR'
+  }, {
+    name: 'North Ndebele',
+    location: 'Zimbabwe',
+    tag: 'nd-ZW'
+  }, {
+    name: 'Norwegian (Bokmal)',
+    location: 'Norway',
+    tag: 'nb-NO'
+  }, {
+    name: 'Norwegian (Nynorsk)',
+    location: 'Norway',
+    tag: 'nn-NO'
+  }, {
+    name: 'Norwegian Bokmål',
+    location: 'Svalbard and Jan Mayen',
+    tag: 'nb-SJ'
+  }, {
+    name: 'Nuer',
+    location: 'Sudan',
+    tag: 'nus-SD'
+  }, {
+    name: 'Nuer',
+    location: 'South Sudan',
+    tag: 'nus-SS'
+  }, {
+    name: 'Nyankole',
+    location: 'Uganda',
+    tag: 'nyn-UG'
+  }, {
+    name: 'Occitan',
+    location: 'France',
+    tag: 'oc-FR'
+  }, {
+    name: 'Odia',
+    location: 'India',
+    tag: 'or-IN'
+  }, {
+    name: 'Oromo',
+    location: 'Ethiopia',
+    tag: 'om-ET'
+  }, {
+    name: 'Oromo',
+    location: 'Kenya',
+    tag: 'om-KE'
+  }, {
+    name: 'Pashto',
+    location: 'Afghanistan',
+    tag: 'ps-AF'
+  }, {
+    name: 'Persian',
+    location: 'Afghanistan',
+    tag: 'fa-AF'
+  }, {
+    name: 'Persian',
+    location: 'Iran',
+    tag: 'fa-IR'
+  }, {
+    name: 'Polish',
+    location: 'Poland',
+    tag: 'pl-PL'
+  }, {
+    name: 'Portuguese',
+    location: 'Angola',
+    tag: 'pt-AO'
+  }, {
+    name: 'Portuguese',
+    location: 'Brazil',
+    tag: 'pt-BR'
+  }, {
+    name: 'Portuguese',
+    location: 'Equatorial Guinea',
+    tag: 'pt-GQ'
+  }, {
+    name: 'Portuguese',
+    location: 'Guinea-Bissau',
+    tag: 'pt-GW'
+  }, {
+    name: 'Portuguese',
+    location: 'Luxembourg',
+    tag: 'pt-LU'
+  }, {
+    name: 'Portuguese',
+    location: 'Mozambique',
+    tag: 'pt-MZ'
+  }, {
+    name: 'Portuguese',
+    location: 'Portugal',
+    tag: 'pt-PT'
+  }, {
+    name: 'Portuguese',
+    location: 'Switzerland',
+    tag: 'pt-CH'
+  }, {
+    name: 'Punjabi',
+    location: 'India',
+    tag: 'pa-IN'
+  }, {
+    name: 'Quechua',
+    location: 'Bolivia',
+    tag: 'quz-BO'
+  }, {
+    name: 'Quechua',
+    location: 'Ecuador',
+    tag: 'quz-EC'
+  }, {
+    name: 'Quechua',
+    location: 'Peru',
+    tag: 'quz-PE'
+  }, {
+    name: 'Ripuarian',
+    location: 'Germany',
+    tag: 'ksh-DE'
+  }, {
+    name: 'Romanian',
+    location: 'Moldova',
+    tag: 'ro-MD'
+  }, {
+    name: 'Romanian',
+    location: 'Romania',
+    tag: 'ro-RO'
+  }, {
+    name: 'Romansh',
+    location: 'Switzerland',
+    tag: 'rm-CH'
+  }, {
+    name: 'Rombo',
+    location: 'Tanzania',
+    tag: 'rof-TZ'
+  }, {
+    name: 'Rundi',
+    location: 'Burundi',
+    tag: 'rn-BI'
+  }, {
+    name: 'Russian',
+    location: 'Belarus',
+    tag: 'ru-BY'
+  }, {
+    name: 'Russian',
+    location: 'Kazakhstan',
+    tag: 'ru-KZ'
+  }, {
+    name: 'Russian',
+    location: 'Kyrgyzstan',
+    tag: 'ru-KG'
+  }, {
+    name: 'Russian',
+    location: 'Moldova',
+    tag: 'ru-MD'
+  }, {
+    name: 'Russian',
+    location: 'Russia',
+    tag: 'ru-RU'
+  }, {
+    name: 'Russian',
+    location: 'Ukraine',
+    tag: 'ru-UA'
+  }, {
+    name: 'Rwa',
+    location: 'Tanzania',
+    tag: 'rwk-TZ'
+  }, {
+    name: 'Saho',
+    location: 'Eritrea',
+    tag: 'ssy-ER'
+  }, {
+    name: 'Sakha',
+    location: 'Russia',
+    tag: 'sah-RU'
+  }, {
+    name: 'Samburu',
+    location: 'Kenya',
+    tag: 'saq-KE'
+  }, {
+    name: 'Sami (Inari)',
+    location: 'Finland',
+    tag: 'smn-FI'
+  }, {
+    name: 'Sami (Lule)',
+    location: 'Norway',
+    tag: 'smj-NO'
+  }, {
+    name: 'Sami (Lule)',
+    location: 'Sweden',
+    tag: 'smj-SE'
+  }, {
+    name: 'Sami (Northern)',
+    location: 'Finland',
+    tag: 'se-FI'
+  }, {
+    name: 'Sami (Northern)',
+    location: 'Norway',
+    tag: 'se-NO'
+  }, {
+    name: 'Sami (Northern)',
+    location: 'Sweden',
+    tag: 'se-SE'
+  }, {
+    name: 'Sami (Skolt)',
+    location: 'Finland',
+    tag: 'sms-FI'
+  }, {
+    name: 'Sami (Southern)',
+    location: 'Norway',
+    tag: 'sma-NO'
+  }, {
+    name: 'Sami (Southern)',
+    location: 'Sweden',
+    tag: 'sma-SE'
+  }, {
+    name: 'Sango',
+    location: 'Central African Republic',
+    tag: 'sg-CF'
+  }, {
+    name: 'Sangu',
+    location: 'Tanzania',
+    tag: 'sbp-TZ'
+  }, {
+    name: 'Sanskrit',
+    location: 'India',
+    tag: 'sa-IN'
+  }, {
+    name: 'Scottish Gaelic',
+    location: 'United Kingdom',
+    tag: 'gd-GB'
+  }, {
+    name: 'Sena',
+    location: 'Mozambique',
+    tag: 'seh-MZ'
+  }, {
+    name: 'Serbian (Cyrillic)',
+    location: 'Bosnia and Herzegovina',
+    tag: 'sr-Cyrl-BA'
+  }, {
+    name: 'Serbian (Cyrillic)',
+    location: 'Montenegro',
+    tag: 'sr-Cyrl-ME'
+  }, {
+    name: 'Serbian (Cyrillic)',
+    location: 'Serbia',
+    tag: 'sr-Cyrl-RS'
+  }, {
+    name: 'Serbian (Latin)',
+    location: 'Bosnia and Herzegovina',
+    tag: 'sr-Latn-BA'
+  }, {
+    name: 'Serbian (Latin)',
+    location: 'Montenegro',
+    tag: 'sr-Latn-ME'
+  }, {
+    name: 'Serbian (Latin)',
+    location: 'Serbia',
+    tag: 'sr-Latn-RS'
+  }, {
+    name: 'Sesotho sa Leboa',
+    location: 'South Africa',
+    tag: 'nso-ZA'
+  }, {
+    name: 'Setswana',
+    location: 'Botswana',
+    tag: 'tn-BW'
+  }, {
+    name: 'Setswana',
+    location: 'South Africa',
+    tag: 'tn-ZA'
+  }, {
+    name: 'Shambala',
+    location: 'Tanzania',
+    tag: 'ksb-TZ'
+  }, {
+    name: 'Shona',
+    location: 'Zimbabwe',
+    tag: 'sn-Latn-ZW'
+  }, {
+    name: 'Sinhala',
+    location: 'Sri Lanka',
+    tag: 'si-LK'
+  }, {
+    name: 'Slovak',
+    location: 'Slovakia',
+    tag: 'sk-SK'
+  }, {
+    name: 'Slovenian',
+    location: 'Slovenia',
+    tag: 'sl-SI'
+  }, {
+    name: 'Soga',
+    location: 'Uganda',
+    tag: 'xog-UG'
+  }, {
+    name: 'Somali',
+    location: 'Djibouti',
+    tag: 'so-DJ'
+  }, {
+    name: 'Somali',
+    location: 'Ethiopia',
+    tag: 'so-ET'
+  }, {
+    name: 'Somali',
+    location: 'Kenya',
+    tag: 'so-KE'
+  }, {
+    name: 'Somali',
+    location: 'Somalia',
+    tag: 'so-SO'
+  }, {
+    name: 'Sotho',
+    location: 'South Africa',
+    tag: 'st-ZA'
+  }, {
+    name: 'South Ndebele',
+    location: 'South Africa',
+    tag: 'nr-ZA'
+  }, {
+    name: 'Southern Sotho',
+    location: 'Lesotho',
+    tag: 'st-LS'
+  }, {
+    name: 'Spanish',
+    location: 'Argentina',
+    tag: 'es-AR'
+  }, {
+    name: 'Spanish',
+    location: 'Belize',
+    tag: 'es-BZ'
+  }, {
+    name: 'Spanish',
+    location: 'Bolivia',
+    tag: 'es-BO'
+  }, {
+    name: 'Spanish',
+    location: 'Brazil',
+    tag: 'es-BR'
+  }, {
+    name: 'Spanish',
+    location: 'Chile',
+    tag: 'es-CL'
+  }, {
+    name: 'Spanish',
+    location: 'Colombia',
+    tag: 'es-CO'
+  }, {
+    name: 'Spanish',
+    location: 'Costa Rica',
+    tag: 'es-CR'
+  }, {
+    name: 'Spanish',
+    location: 'Cuba',
+    tag: 'es-CU'
+  }, {
+    name: 'Spanish',
+    location: 'Dominican Republic',
+    tag: 'es-DO'
+  }, {
+    name: 'Spanish',
+    location: 'Ecuador',
+    tag: 'es-EC'
+  }, {
+    name: 'Spanish',
+    location: 'El Salvador',
+    tag: 'es-SV'
+  }, {
+    name: 'Spanish',
+    location: 'Equatorial Guinea',
+    tag: 'es-GQ'
+  }, {
+    name: 'Spanish',
+    location: 'Guatemala',
+    tag: 'es-GT'
+  }, {
+    name: 'Spanish',
+    location: 'Honduras',
+    tag: 'es-HN'
+  }, {
+    name: 'Spanish',
+    location: 'Mexico',
+    tag: 'es-MX'
+  }, {
+    name: 'Spanish',
+    location: 'Nicaragua',
+    tag: 'es-NI'
+  }, {
+    name: 'Spanish',
+    location: 'Panama',
+    tag: 'es-PA'
+  }, {
+    name: 'Spanish',
+    location: 'Paraguay',
+    tag: 'es-PY'
+  }, {
+    name: 'Spanish',
+    location: 'Peru',
+    tag: 'es-PE'
+  }, {
+    name: 'Spanish',
+    location: 'Philippines',
+    tag: 'es-PH'
+  }, {
+    name: 'Spanish',
+    location: 'Puerto Rico',
+    tag: 'es-PR'
+  }, {
+    name: 'Spanish',
+    location: 'Spain',
+    tag: 'es-ES'
+  }, {
+    name: 'Spanish',
+    location: 'United States',
+    tag: 'es-US'
+  }, {
+    name: 'Spanish',
+    location: 'Uruguay',
+    tag: 'es-UY'
+  }, {
+    name: 'Standard Moroccan ',
+    location: 'Morocco',
+    tag: 'zgh-Tfng-MA'
+  }, {
+    name: 'Swati',
+    location: 'South Africa',
+    tag: 'ss-ZA'
+  }, {
+    name: 'Swati',
+    location: 'Swaziland',
+    tag: 'ss-SZ'
+  }, {
+    name: 'Swedish',
+    location: 'Finland',
+    tag: 'sv-FI'
+  }, {
+    name: 'Swedish',
+    location: 'Sweden',
+    tag: 'sv-SE'
+  }, {
+    name: 'Syriac',
+    location: 'Syria',
+    tag: 'syr-SY'
+  }, {
+    name: 'Tachelhit (Latin)',
+    location: 'Morocco',
+    tag: 'shi-Latn-MA'
+  }, {
+    name: 'Taita',
+    location: 'Kenya',
+    tag: 'dav-KE'
+  }, {
+    name: 'Tajik (Cyrillic)',
+    location: 'Tajikistan',
+    tag: 'tg-Cyrl-TJ'
+  }, {
+    name: 'Tamazight (Latin)',
+    location: 'Algeria',
+    tag: 'tzm-Latn-DZ'
+  }, {
+    name: 'Tamil',
+    location: 'India',
+    tag: 'ta-IN'
+  }, {
+    name: 'Tamil',
+    location: 'Malaysia',
+    tag: 'ta-MY'
+  }, {
+    name: 'Tamil',
+    location: 'Singapore',
+    tag: 'ta-SG'
+  }, {
+    name: 'Tamil',
+    location: 'Sri Lanka',
+    tag: 'ta-LK'
+  }, {
+    name: 'Tasawaq',
+    location: 'Niger',
+    tag: 'twq-NE'
+  }, {
+    name: 'Tatar',
+    location: 'Russia',
+    tag: 'tt-RU'
+  }, {
+    name: 'Telugu',
+    location: 'India',
+    tag: 'te-IN'
+  }, {
+    name: 'Teso',
+    location: 'Kenya',
+    tag: 'teo-KE'
+  }, {
+    name: 'Teso',
+    location: 'Uganda',
+    tag: 'teo-UG'
+  }, {
+    name: 'Thai',
+    location: 'Thailand',
+    tag: 'th-TH'
+  }, {
+    name: 'Tibetan',
+    location: 'India',
+    tag: 'bo-IN'
+  }, {
+    name: 'Tigre',
+    location: 'Eritrea',
+    tag: 'tig-ER'
+  }, {
+    name: 'Tigrinya',
+    location: 'Eritrea',
+    tag: 'ti-ER'
+  }, {
+    name: 'Tigrinya',
+    location: 'Ethiopia',
+    tag: 'ti-ET'
+  }, {
+    name: 'Tongan',
+    location: 'Tonga',
+    tag: 'to-TO'
+  }, {
+    name: 'Tsonga',
+    location: 'South Africa',
+    tag: 'ts-ZA'
+  }, {
+    name: 'Turkish',
+    location: 'Cyprus',
+    tag: 'tr-CY'
+  }, {
+    name: 'Turkish',
+    location: 'Turkey',
+    tag: 'tr-TR'
+  }, {
+    name: 'Turkmen',
+    location: 'Turkmenistan',
+    tag: 'tk-TM'
+  }, {
+    name: 'Ukrainian',
+    location: 'Ukraine',
+    tag: 'uk-UA'
+  }, {
+    name: 'Upper Sorbian',
+    location: 'Germany',
+    tag: 'hsb-DE'
+  }, {
+    name: 'Urdu',
+    location: 'India',
+    tag: 'ur-IN'
+  }, {
+    name: 'Uzbek (Cyrillic)',
+    location: 'Uzbekistan',
+    tag: 'uz-Cyrl-UZ'
+  }, {
+    name: 'Uzbek (Latin)',
+    location: 'Uzbekistan',
+    tag: 'uz-Latn-UZ'
+  }, {
+    name: 'Vai',
+    location: 'Liberia',
+    tag: 'vai-Vaii-LR'
+  }, {
+    name: 'Vai (Latin)',
+    location: 'Liberia',
+    tag: 'vai-Latn-LR'
+  }, {
+    name: 'Valencian',
+    location: 'Spain',
+    tag: 'ca-ES'
+  }, {
+    name: 'Venda',
+    location: 'South Africa',
+    tag: 've-ZA'
+  }, {
+    name: 'Vietnamese',
+    location: 'Vietnam',
+    tag: 'vi-VN'
+  }, {
+    name: 'Vunjo',
+    location: 'Tanzania',
+    tag: 'vun-TZ'
+  }, {
+    name: 'Walser',
+    location: 'Switzerland',
+    tag: 'wae-CH'
+  }, {
+    name: 'Welsh',
+    location: 'United Kingdom',
+    tag: 'cy-GB'
+  }, {
+    name: 'Wolaytta',
+    location: 'Ethiopia',
+    tag: 'wal-ET'
+  }, {
+    name: 'Wolof',
+    location: 'Senegal',
+    tag: 'wo-SN'
+  }, {
+    name: 'Xhosa',
+    location: 'South Africa',
+    tag: 'xh-ZA'
+  }, {
+    name: 'Yangben',
+    location: 'Cameroon',
+    tag: 'yav-CM'
+  }, {
+    name: 'Yoruba',
+    location: 'Benin',
+    tag: 'yo-BJ'
+  }, {
+    name: 'Yoruba',
+    location: 'Nigeria',
+    tag: 'yo-NG'
+  }, {
+    name: 'Zarma',
+    location: 'Niger',
+    tag: 'dje-NE'
+  }, {
+    name: 'Zulu',
+    location: 'South Africa',
+    tag: 'zu-ZA'
+  }];
+
+// list of all the languages for the list of locales provided in commerceCurrencyLocales
+const commerceLanguages = [{
+name: 'Afar',
+tag: 'aa'
+}, {
+name: 'Afrikaans',
+tag: 'af'
+}, {
+name: 'Aghem',
+tag: 'agq'
+}, {
+name: 'Akan',
+tag: 'ak'
+}, {
+name: 'Albanian',
+tag: 'sq'
+}, {
+name: 'Alsatian',
+tag: 'gsw'
+}, {
+name: 'Amharic',
+tag: 'am'
+}, {
+name: 'Arabic',
+tag: 'ar'
+}, {
+name: 'Armenian',
+tag: 'hy'
+}, {
+name: 'Assamese',
+tag: 'as'
+}, {
+name: 'Asturian',
+tag: 'ast'
+}, {
+name: 'Asu',
+tag: 'asa'
+}, {
+name: 'Azerbaijani (Cyrillic)',
+tag: 'az-Cyrl'
+}, {
+name: 'Azerbaijani (Latin)',
+tag: 'az-Latn'
+}, {
+name: 'Bafia',
+tag: 'ksf'
+}, {
+name: 'Bamanankan (Latin)',
+tag: 'bm-Latn'
+}, {
+name: 'Bangla',
+tag: 'bn'
+}, {
+name: 'Basaa',
+tag: 'bas'
+}, {
+name: 'Bashkir',
+tag: 'ba'
+}, {
+name: 'Basque',
+tag: 'eu'
+}, {
+name: 'Belarusian',
+tag: 'be'
+}, {
+name: 'Bemba',
+tag: 'bem'
+}, {
+name: 'Bena',
+tag: 'bez'
+}, {
+name: 'Blin',
+tag: 'byn'
+}, {
+name: 'Bodo',
+tag: 'brx'
+}, {
+name: 'Bosnian (Cyrillic)',
+tag: 'bs-Cyrl'
+}, {
+name: 'Bosnian (Latin)',
+tag: 'bs-Latn'
+}, {
+name: 'Breton',
+tag: 'br'
+}, {
+name: 'Bulgarian',
+tag: 'bg'
+}, {
+name: 'Burmese',
+tag: 'my'
+}, {
+name: 'Catalan',
+tag: 'ca'
+}, {
+name: 'Central Atlas Tamazight ',
+tag: 'tzm'
+}, {
+name: 'Central Kurdish',
+tag: 'ku-Arab'
+}, {
+name: 'Chechen',
+tag: 'cd'
+}, {
+name: 'Cherokee',
+tag: 'chr-Cher'
+}, {
+name: 'Chiga',
+tag: 'cgg'
+}, {
+name: 'Chinese (Simplified)',
+tag: 'zh'
+}, {
+name: 'Chinese (Traditional)',
+tag: 'zh'
+}, {
+name: 'Church Slavic',
+tag: 'cu'
+}, {
+name: 'Cornish',
+tag: 'kw'
+}, {
+name: 'Corsican',
+tag: 'co'
+}, {
+name: 'Croatian',
+tag: 'hr'
+}, {
+name: 'Croatian (Latin)',
+tag: 'hr'
+}, {
+name: 'Czech',
+tag: 'cs'
+}, {
+name: 'Danish',
+tag: 'da'
+}, {
+name: 'Dari',
+tag: 'prs'
+}, {
+name: 'Divehi',
+tag: 'dv'
+}, {
+name: 'Duala',
+tag: 'dua'
+}, {
+name: 'Dutch',
+tag: 'nl'
+}, {
+name: 'Dzongkha',
+tag: 'dz'
+}, {
+name: 'Embu',
+tag: 'ebu'
+}, {
+name: 'English',
+tag: 'en'
+}, {
+name: 'Estonian',
+tag: 'et'
+}, {
+name: 'Ewe',
+tag: 'ee'
+}, {
+name: 'Ewondo',
+tag: 'ewo'
+}, {
+name: 'Faroese',
+tag: 'fo'
+}, {
+name: 'Filipino',
+tag: 'fil'
+}, {
+name: 'Finnish',
+tag: 'fi'
+}, {
+name: 'French',
+tag: 'fr'
+}, {
+name: 'Frisian',
+tag: 'fy'
+}, {
+name: 'Friulian',
+tag: 'fur'
+}, {
+name: 'Fulah (Latin)',
+tag: 'ff-Latn'
+}, {
+name: 'Fulah',
+tag: 'ff'
+}, {
+name: 'Galician',
+tag: 'gl'
+}, {
+name: 'Ganda',
+tag: 'lg'
+}, {
+name: 'Georgian',
+tag: 'ka'
+}, {
+name: 'German',
+tag: 'de'
+}, {
+name: 'Greek',
+tag: 'el'
+}, {
+name: 'Greenlandic',
+tag: 'kl'
+}, {
+name: 'Guarani',
+tag: 'gn'
+}, {
+name: 'Gujarati',
+tag: 'gu'
+}, {
+name: 'Gusii',
+tag: 'guz'
+}, {
+name: 'Hausa (Latin)',
+tag: 'ha-Latn'
+}, {
+name: 'Hawaiian',
+tag: 'haw'
+}, {
+name: 'Hebrew',
+tag: 'he'
+}, {
+name: 'Hindi',
+tag: 'hi'
+}, {
+name: 'Hungarian',
+tag: 'hu'
+}, {
+name: 'Icelandic',
+tag: 'is'
+}, {
+name: 'Igbo',
+tag: 'ig'
+}, {
+name: 'Indonesian',
+tag: 'id'
+}, {
+name: 'Interlingua',
+tag: 'ia'
+}, {
+name: 'Inuktitut (Latin)',
+tag: 'iu-Latn'
+}, {
+name: 'Inuktitut (Syllabics)',
+tag: 'iu-Cans'
+}, {
+name: 'Irish',
+tag: 'ga'
+}, {
+name: 'Italian',
+tag: 'it'
+}, {
+name: 'Japanese',
+tag: 'ja'
+}, {
+name: 'Jola-Fonyi',
+tag: 'dyo'
+}, {
+name: 'Kabyle',
+tag: 'kab'
+}, {
+name: 'Kako',
+tag: 'kkj'
+}, {
+name: 'Kalenjin',
+tag: 'kln'
+}, {
+name: 'Kamba',
+tag: 'kam'
+}, {
+name: 'Kannada',
+tag: 'kn'
+}, {
+name: 'Kazakh',
+tag: 'kk'
+}, {
+name: 'Khmer',
+tag: 'km'
+}, {
+name: "K'iche",
+tag: 'quc-Latn'
+}, {
+name: 'Kikuyu',
+tag: 'ki'
+}, {
+name: 'Kinyarwanda',
+tag: 'rw'
+}, {
+name: 'Kiswahili',
+tag: 'sw'
+}, {
+name: 'Konkani',
+tag: 'kok'
+}, {
+name: 'Korean',
+tag: 'ko'
+}, {
+name: 'Koyra Chiini',
+tag: 'khq'
+}, {
+name: 'Koyraboro Senni',
+tag: 'ses'
+}, {
+name: 'Kwasio',
+tag: 'nmg'
+}, {
+name: 'Kyrgyz',
+tag: 'ky'
+}, {
+name: 'Lakota',
+tag: 'lkt'
+}, {
+name: 'Langi',
+tag: 'lag'
+}, {
+name: 'Latvian',
+tag: 'lv'
+}, {
+name: 'Lingala',
+tag: 'ln'
+}, {
+name: 'Lithuanian',
+tag: 'lt'
+}, {
+name: 'Low German ',
+tag: 'nds'
+}, {
+name: 'Low German',
+tag: 'nds'
+}, {
+name: 'Lower Sorbian',
+tag: 'dsb'
+}, {
+name: 'Luo',
+tag: 'luo'
+}, {
+name: 'Luxembourgish',
+tag: 'lb'
+}, {
+name: 'Luyia',
+tag: 'luy'
+}, {
+name: 'Machame',
+tag: 'jmc'
+}, {
+name: 'Makhuwa-Meetto',
+tag: 'mgh'
+}, {
+name: 'Makonde',
+tag: 'kde'
+}, {
+name: 'Malagasy',
+tag: 'mg'
+}, {
+name: 'Malay',
+tag: 'ms'
+}, {
+name: 'Malayalam',
+tag: 'ml'
+}, {
+name: 'Maltese',
+tag: 'mt'
+}, {
+name: 'Manx',
+tag: 'gv'
+}, {
+name: 'Maori',
+tag: 'mi'
+}, {
+name: 'Mapudungun',
+tag: 'arn'
+}, {
+name: 'Marathi',
+tag: 'mr'
+}, {
+name: 'Masai',
+tag: 'mas'
+}, {
+name: 'Mazanderani',
+tag: 'mzn'
+}, {
+name: 'Meru',
+tag: 'mer'
+}, {
+name: "Meta'",
+tag: 'mgo'
+}, {
+name: 'Mohawk',
+tag: 'moh'
+}, {
+name: 'Mongolian (Cyrillic)',
+tag: 'mn'
+}, {
+name: 'Mongolian (Traditional)',
+tag: 'mn'
+}, {
+name: 'Morisyen',
+tag: 'mfe'
+}, {
+name: 'Mundang',
+tag: 'mua'
+}, {
+name: "N'ko",
+tag: 'nqo'
+}, {
+name: 'Nama',
+tag: 'naq'
+}, {
+name: 'Nepali',
+tag: 'ne'
+}, {
+name: 'Ngiemboon',
+tag: 'nnh'
+}, {
+name: 'Ngomba',
+tag: 'jgo'
+}, {
+name: 'Northern Luri',
+tag: 'lrc'
+}, {
+name: 'North Ndebele',
+tag: 'nd'
+}, {
+name: 'Norwegian (Bokmal)',
+tag: 'nb'
+}, {
+name: 'Norwegian (Nynorsk)',
+tag: 'nn'
+}, {
+name: 'Norwegian Bokmål',
+tag: 'nb'
+}, {
+name: 'Nuer',
+tag: 'nus'
+}, {
+name: 'Nyankole',
+tag: 'nyn'
+}, {
+name: 'Occitan',
+tag: 'oc'
+}, {
+name: 'Odia',
+tag: 'or'
+}, {
+name: 'Oromo',
+tag: 'om'
+}, {
+name: 'Pashto',
+tag: 'ps'
+}, {
+name: 'Persian',
+tag: 'fa'
+}, {
+name: 'Polish',
+tag: 'pl'
+}, {
+name: 'Portuguese',
+tag: 'pt'
+}, {
+name: 'Punjabi',
+tag: 'pa'
+}, {
+name: 'Quechua',
+tag: 'quz'
+}, {
+name: 'Ripuarian',
+tag: 'ksh'
+}, {
+name: 'Romanian',
+tag: 'ro'
+}, {
+name: 'Romansh',
+tag: 'rm'
+}, {
+name: 'Rombo',
+tag: 'rof'
+}, {
+name: 'Rundi',
+tag: 'rn'
+}, {
+name: 'Russian',
+tag: 'ru'
+}, {
+name: 'Rwa',
+tag: 'rwk'
+}, {
+name: 'Saho',
+tag: 'ssy'
+}, {
+name: 'Sakha',
+tag: 'sah'
+}, {
+name: 'Samburu',
+tag: 'saq'
+}, {
+name: 'Sami (Inari)',
+tag: 'smn'
+}, {
+name: 'Sami (Lule)',
+tag: 'smj'
+}, {
+name: 'Sami (Northern)',
+tag: 'se'
+}, {
+name: 'Sami (Skolt)',
+tag: 'sms'
+}, {
+name: 'Sami (Southern)',
+tag: 'sma'
+}, {
+name: 'Sango',
+tag: 'sg'
+}, {
+name: 'Sangu',
+tag: 'sbp'
+}, {
+name: 'Sanskrit',
+tag: 'sa'
+}, {
+name: 'Scottish Gaelic',
+tag: 'gd'
+}, {
+name: 'Sena',
+tag: 'seh'
+}, {
+name: 'Serbian (Cyrillic)',
+tag: 'sr-Cyrl'
+}, {
+name: 'Serbian (Latin)',
+tag: 'sr-Latn'
+}, {
+name: 'Sesotho sa Leboa',
+tag: 'nso'
+}, {
+name: 'Setswana',
+tag: 'tn'
+}, {
+name: 'Shambala',
+tag: 'ksb'
+}, {
+name: 'Shona',
+tag: 'sn-Latn'
+}, {
+name: 'Sinhala',
+tag: 'si'
+}, {
+name: 'Slovak',
+tag: 'sk'
+}, {
+name: 'Slovenian',
+tag: 'sl'
+}, {
+name: 'Soga',
+tag: 'xog'
+}, {
+name: 'Somali',
+tag: 'so'
+}, {
+name: 'Sotho',
+tag: 'st'
+}, {
+name: 'South Ndebele',
+tag: 'nr'
+}, {
+name: 'Southern Sotho',
+tag: 'st'
+}, {
+name: 'Spanish',
+tag: 'es'
+}, {
+name: 'Standard Moroccan ',
+tag: 'zgh-Tfng'
+}, {
+name: 'Swati',
+tag: 'ss'
+}, {
+name: 'Swedish',
+tag: 'sv'
+}, {
+name: 'Syriac',
+tag: 'syr'
+}, {
+name: 'Tachelhit (Latin)',
+tag: 'shi-Latn'
+}, {
+name: 'Taita',
+tag: 'dav'
+}, {
+name: 'Tajik (Cyrillic)',
+tag: 'tg-Cyrl'
+}, {
+name: 'Tamazight (Latin)',
+tag: 'tzm-Latn'
+}, {
+name: 'Tamil',
+tag: 'ta'
+}, {
+name: 'Tasawaq',
+tag: 'twq'
+}, {
+name: 'Tatar',
+tag: 'tt'
+}, {
+name: 'Telugu',
+tag: 'te'
+}, {
+name: 'Teso',
+tag: 'teo'
+}, {
+name: 'Thai',
+tag: 'th'
+}, {
+name: 'Tibetan',
+tag: 'bo'
+}, {
+name: 'Tigre',
+tag: 'tig'
+}, {
+name: 'Tigrinya',
+tag: 'ti'
+}, {
+name: 'Tongan',
+tag: 'to'
+}, {
+name: 'Tsonga',
+tag: 'ts'
+}, {
+name: 'Turkish',
+tag: 'tr'
+}, {
+name: 'Turkmen',
+tag: 'tk'
+}, {
+name: 'Ukrainian',
+tag: 'uk'
+}, {
+name: 'Upper Sorbian',
+tag: 'hsb'
+}, {
+name: 'Urdu',
+tag: 'ur'
+}, {
+name: 'Uzbek (Cyrillic)',
+tag: 'uz-Cyrl'
+}, {
+name: 'Uzbek (Latin)',
+tag: 'uz-Latn'
+}, {
+name: 'Vai',
+tag: 'vai-Vaii'
+}, {
+name: 'Vai (Latin)',
+tag: 'vai-Latn'
+}, {
+name: 'Valencian',
+tag: 'ca'
+}, {
+name: 'Venda',
+tag: 've'
+}, {
+name: 'Vietnamese',
+tag: 'vi'
+}, {
+name: 'Vunjo',
+tag: 'vun'
+}, {
+name: 'Walser',
+tag: 'wae'
+}, {
+name: 'Welsh',
+tag: 'cy'
+}, {
+name: 'Wolaytta',
+tag: 'wal'
+}, {
+name: 'Wolof',
+tag: 'wo'
+}, {
+name: 'Xhosa',
+tag: 'xh'
+}, {
+name: 'Yangben',
+tag: 'yav'
+}, {
+name: 'Yoruba',
+tag: 'yo'
+}, {
+name: 'Zarma',
+tag: 'dje'
+}, {
+name: 'Zulu',
+tag: 'zu'
+  }];
+  
+// Stripe supported countries extracted from:
+// https://stripe.com/global
+const STRIPE_SUPPORTED_COUNTRIES = [{
+name: 'Australia',
+code: 'AU'
+}, {
+name: 'Austria',
+code: 'AT'
+}, {
+name: 'Belgium',
+code: 'BE'
+}, {
+name: 'Bulgaria',
+code: 'BG'
+}, {
+name: 'Brazil',
+code: 'BR'
+}, {
+name: 'Canada',
+code: 'CA'
+}, {
+name: 'Croatia',
+code: 'HR'
+}, {
+name: 'Cyprus',
+code: 'CY'
+}, {
+name: 'Czech Republic',
+code: 'CZ'
+}, {
+name: 'Denmark',
+code: 'DK'
+}, {
+name: 'Estonia',
+code: 'EE'
+}, {
+name: 'Finland',
+code: 'FI'
+}, {
+name: 'France',
+code: 'FR'
+}, {
+name: 'Germany',
+code: 'DE'
+}, {
+name: 'Gibraltar',
+code: 'GI'
+}, {
+name: 'Greece',
+code: 'GR'
+}, {
+name: 'Hong Kong',
+code: 'HK'
+}, {
+name: 'Hungary',
+code: 'HU'
+}, {
+name: 'India',
+code: 'IN'
+}, {
+name: 'Ireland',
+code: 'IE'
+}, {
+name: 'Italy',
+code: 'IT'
+}, {
+name: 'Japan',
+code: 'JP'
+}, {
+name: 'Latvia',
+code: 'LV'
+}, {
+name: 'Liechtenstein',
+code: 'LI'
+}, {
+name: 'Lithuania',
+code: 'LT'
+}, {
+name: 'Luxembourg',
+code: 'LU'
+}, {
+name: 'Malaysia',
+code: 'MY'
+}, {
+name: 'Malta',
+code: 'MT'
+}, {
+name: 'Mexico',
+code: 'MX'
+}, {
+name: 'Netherlands',
+code: 'NL'
+}, {
+name: 'New Zealand',
+code: 'NZ'
+}, {
+name: 'Norway',
+code: 'NO'
+}, {
+name: 'Philippines',
+code: 'PH'
+}, {
+name: 'Poland',
+code: 'PL'
+}, {
+name: 'Portugal',
+code: 'PT'
+}, {
+name: 'Romania',
+code: 'RO'
+}, {
+name: 'Singapore',
+code: 'SG'
+}, {
+name: 'Slovakia',
+code: 'SK'
+}, {
+name: 'Slovenia',
+code: 'SI'
+}, {
+name: 'Spain',
+code: 'ES'
+}, {
+name: 'Sweden',
+code: 'SE'
+}, {
+name: 'Switzerland',
+code: 'CH'
+}, {
+name: 'Thailand',
+code: 'TH'
+}, {
+name: 'United Arab Emirates',
+code: 'AE'
+}, {
+name: 'United Kingdom',
+code: 'GB'
+}, {
+name: 'United States',
+code: 'US'
+  }];
+  
+// PayPal supported countries extracted from:
+// curl https://developer.paypal.com/docs/api/reference/country-codes/
+const PAYPAL_SUPPORTED_COUNTRIES = [{
+name: 'Albania',
+code: 'AL',
+postalCodeRequired: false
+}, {
+name: 'Algeria',
+code: 'DZ',
+postalCodeRequired: false
+}, {
+name: 'Andorra',
+code: 'AD',
+postalCodeRequired: false
+}, {
+name: 'Angola',
+code: 'AO',
+postalCodeRequired: false
+}, {
+name: 'Anguilla',
+code: 'AI',
+postalCodeRequired: false
+}, {
+name: 'Antigua and Barbuda',
+code: 'AG',
+postalCodeRequired: false
+}, {
+name: 'Argentina',
+code: 'AR',
+postalCodeRequired: true
+}, {
+name: 'Armenia',
+code: 'AM',
+postalCodeRequired: false
+}, {
+name: 'Aruba',
+code: 'AW',
+postalCodeRequired: false
+}, {
+name: 'Australia',
+code: 'AU',
+postalCodeRequired: true
+}, {
+name: 'Austria',
+code: 'AT',
+postalCodeRequired: true
+}, {
+name: 'Azerbaijan',
+code: 'AZ',
+postalCodeRequired: false
+}, {
+name: 'Bahamas',
+code: 'BS',
+postalCodeRequired: false
+}, {
+name: 'Bahrain',
+code: 'BH',
+postalCodeRequired: false
+}, {
+name: 'Barbados',
+code: 'BB',
+postalCodeRequired: false
+}, {
+name: 'Belarus',
+code: 'BY',
+postalCodeRequired: false
+}, {
+name: 'Belgium',
+code: 'BE',
+postalCodeRequired: false
+}, {
+name: 'Belize',
+code: 'BZ',
+postalCodeRequired: false
+}, {
+name: 'Benin',
+code: 'BJ',
+postalCodeRequired: false
+}, {
+name: 'Bermuda',
+code: 'BM',
+postalCodeRequired: false
+}, {
+name: 'Bhutan',
+code: 'BT',
+postalCodeRequired: true
+}, {
+name: 'Bolivia',
+code: 'BO',
+postalCodeRequired: false
+}, {
+name: 'Bosnia and Herzegovina',
+code: 'BA',
+postalCodeRequired: false
+}, {
+name: 'Botswana',
+code: 'BW',
+postalCodeRequired: false
+}, {
+name: 'Brazil',
+code: 'BR',
+postalCodeRequired: true
+}, {
+name: 'British Virgin Islands',
+code: 'VG',
+postalCodeRequired: false
+}, {
+name: 'Brunei',
+code: 'BN',
+postalCodeRequired: false
+}, {
+name: 'Bulgaria',
+code: 'BG',
+postalCodeRequired: false
+}, {
+name: 'Burkina Faso',
+code: 'BF',
+postalCodeRequired: false
+}, {
+name: 'Burundi',
+code: 'BI',
+postalCodeRequired: false
+}, {
+name: 'Cambodia',
+code: 'KH',
+postalCodeRequired: false
+}, {
+name: 'Cameroon',
+code: 'CM',
+postalCodeRequired: false
+}, {
+name: 'Canada',
+code: 'CA',
+postalCodeRequired: true
+}, {
+name: 'Cape Verde',
+code: 'CV',
+postalCodeRequired: false
+}, {
+name: 'Cayman Islands',
+code: 'KY',
+postalCodeRequired: false
+}, {
+name: 'Chad',
+code: 'TD',
+postalCodeRequired: false
+}, {
+name: 'Chile',
+code: 'CL',
+postalCodeRequired: false
+}, {
+name: 'China',
+code: 'C2',
+postalCodeRequired: true
+}, {
+name: 'Colombia',
+code: 'CO',
+postalCodeRequired: false
+}, {
+name: 'Comoros',
+code: 'KM',
+postalCodeRequired: true
+}, {
+name: 'Congo - Brazzaville',
+code: 'CG',
+postalCodeRequired: false
+}, {
+name: 'Congo - Kinshasa',
+code: 'CD',
+postalCodeRequired: false
+}, {
+name: 'Cook Islands',
+code: 'CK',
+postalCodeRequired: false
+}, {
+name: 'Costa Rica',
+code: 'CR',
+postalCodeRequired: false
+}, {
+name: 'Côte D’ivoire',
+code: 'CI',
+postalCodeRequired: false
+}, {
+name: 'Croatia',
+code: 'HR',
+postalCodeRequired: false
+}, {
+name: 'Cyprus',
+code: 'CY',
+postalCodeRequired: false
+}, {
+name: 'Czech Republic',
+code: 'CZ',
+postalCodeRequired: false
+}, {
+name: 'Denmark',
+code: 'DK',
+postalCodeRequired: true
+}, {
+name: 'Djibouti',
+code: 'DJ',
+postalCodeRequired: false
+}, {
+name: 'Dominica',
+code: 'DM',
+postalCodeRequired: false
+}, {
+name: 'Dominican Republic',
+code: 'DO',
+postalCodeRequired: false
+}, {
+name: 'Ecuador',
+code: 'EC',
+postalCodeRequired: false
+}, {
+name: 'Egypt',
+code: 'EG',
+postalCodeRequired: false
+}, {
+name: 'El Salvador',
+code: 'SV',
+postalCodeRequired: false
+}, {
+name: 'Eritrea',
+code: 'ER',
+postalCodeRequired: false
+}, {
+name: 'Estonia',
+code: 'EE',
+postalCodeRequired: false
+}, {
+name: 'Ethiopia',
+code: 'ET',
+postalCodeRequired: false
+}, {
+name: 'Falkland Islands',
+code: 'FK',
+postalCodeRequired: true
+}, {
+name: 'Faroe Islands',
+code: 'FO',
+postalCodeRequired: true
+}, {
+name: 'Fiji',
+code: 'FJ',
+postalCodeRequired: false
+}, {
+name: 'Finland',
+code: 'FI',
+postalCodeRequired: false
+}, {
+name: 'France',
+code: 'FR',
+postalCodeRequired: true
+}, {
+name: 'French Guiana',
+code: 'GF',
+postalCodeRequired: false
+}, {
+name: 'French Polynesia',
+code: 'PF',
+postalCodeRequired: false
+}, {
+name: 'Gabon',
+code: 'GA',
+postalCodeRequired: false
+}, {
+name: 'Gambia',
+code: 'GM',
+postalCodeRequired: true
+}, {
+name: 'Georgia',
+code: 'GE',
+postalCodeRequired: false
+}, {
+name: 'Germany',
+code: 'DE',
+postalCodeRequired: true
+}, {
+name: 'Gibraltar',
+code: 'GI',
+postalCodeRequired: false
+}, {
+name: 'Greece',
+code: 'GR',
+postalCodeRequired: false
+}, {
+name: 'Greenland',
+code: 'GL',
+postalCodeRequired: true
+}, {
+name: 'Grenada',
+code: 'GD',
+postalCodeRequired: false
+}, {
+name: 'Guadeloupe',
+code: 'GP',
+postalCodeRequired: false
+}, {
+name: 'Guatemala',
+code: 'GT',
+postalCodeRequired: false
+}, {
+name: 'Guinea',
+code: 'GN',
+postalCodeRequired: false
+}, {
+name: 'Guinea-bissau',
+code: 'GW',
+postalCodeRequired: false
+}, {
+name: 'Guyana',
+code: 'GY',
+postalCodeRequired: false
+}, {
+name: 'Honduras',
+code: 'HN',
+postalCodeRequired: false
+}, {
+name: 'Hong Kong Sar China',
+code: 'HK',
+postalCodeRequired: false
+}, {
+name: 'Hungary',
+code: 'HU',
+postalCodeRequired: false
+}, {
+name: 'Iceland',
+code: 'IS',
+postalCodeRequired: false
+}, {
+name: 'India',
+code: 'IN',
+postalCodeRequired: false
+}, {
+name: 'Indonesia',
+code: 'ID',
+postalCodeRequired: false
+}, {
+name: 'Ireland',
+code: 'IE',
+postalCodeRequired: false
+}, {
+name: 'Israel',
+code: 'IL',
+postalCodeRequired: false
+}, {
+name: 'Italy',
+code: 'IT',
+postalCodeRequired: true
+}, {
+name: 'Jamaica',
+code: 'JM',
+postalCodeRequired: false
+}, {
+name: 'Japan',
+code: 'JP',
+postalCodeRequired: true
+}, {
+name: 'Jordan',
+code: 'JO',
+postalCodeRequired: false
+}, {
+name: 'Kazakhstan',
+code: 'KZ',
+postalCodeRequired: false
+}, {
+name: 'Kenya',
+code: 'KE',
+postalCodeRequired: false
+}, {
+name: 'Kiribati',
+code: 'KI',
+postalCodeRequired: true
+}, {
+name: 'Kuwait',
+code: 'KW',
+postalCodeRequired: false
+}, {
+name: 'Kyrgyzstan',
+code: 'KG',
+postalCodeRequired: true
+}, {
+name: 'Laos',
+code: 'LA',
+postalCodeRequired: false
+}, {
+name: 'Latvia',
+code: 'LV',
+postalCodeRequired: false
+}, {
+name: 'Lesotho',
+code: 'LS',
+postalCodeRequired: false
+}, {
+name: 'Liechtenstein',
+code: 'LI',
+postalCodeRequired: false
+}, {
+name: 'Lithuania',
+code: 'LT',
+postalCodeRequired: false
+}, {
+name: 'Luxembourg',
+code: 'LU',
+postalCodeRequired: false
+}, {
+name: 'Macedonia',
+code: 'MK',
+postalCodeRequired: false
+}, {
+name: 'Madagascar',
+code: 'MG',
+postalCodeRequired: false
+}, {
+name: 'Malawi',
+code: 'MW',
+postalCodeRequired: true
+}, {
+name: 'Malaysia',
+code: 'MY',
+postalCodeRequired: false
+}, {
+name: 'Maldives',
+code: 'MV',
+postalCodeRequired: false
+}, {
+name: 'Mali',
+code: 'ML',
+postalCodeRequired: false
+}, {
+name: 'Malta',
+code: 'MT',
+postalCodeRequired: false
+}, {
+name: 'Marshall Islands',
+code: 'MH',
+postalCodeRequired: false
+}, {
+name: 'Martinique',
+code: 'MQ',
+postalCodeRequired: false
+}, {
+name: 'Mauritania',
+code: 'MR',
+postalCodeRequired: true
+}, {
+name: 'Mauritius',
+code: 'MU',
+postalCodeRequired: false
+}, {
+name: 'Mayotte',
+code: 'YT',
+postalCodeRequired: true
+}, {
+name: 'Mexico',
+code: 'MX',
+postalCodeRequired: true
+}, {
+name: 'Micronesia',
+code: 'FM',
+postalCodeRequired: false
+}, {
+name: 'Moldova',
+code: 'MD',
+postalCodeRequired: false
+}, {
+name: 'Monaco',
+code: 'MC',
+postalCodeRequired: false
+}, {
+name: 'Mongolia',
+code: 'MN',
+postalCodeRequired: false
+}, {
+name: 'Montenegro',
+code: 'ME',
+postalCodeRequired: false
+}, {
+name: 'Montserrat',
+code: 'MS',
+postalCodeRequired: false
+}, {
+name: 'Morocco',
+code: 'MA',
+postalCodeRequired: false
+}, {
+name: 'Mozambique',
+code: 'MZ',
+postalCodeRequired: false
+}, {
+name: 'Namibia',
+code: 'NA',
+postalCodeRequired: false
+}, {
+name: 'Nauru',
+code: 'NR',
+postalCodeRequired: true
+}, {
+name: 'Nepal',
+code: 'NP',
+postalCodeRequired: false
+}, {
+name: 'Netherlands',
+code: 'NL',
+postalCodeRequired: true
+}, {
+name: 'New Caledonia',
+code: 'NC',
+postalCodeRequired: false
+}, {
+name: 'New Zealand',
+code: 'NZ',
+postalCodeRequired: false
+}, {
+name: 'Nicaragua',
+code: 'NI',
+postalCodeRequired: false
+}, {
+name: 'Niger',
+code: 'NE',
+postalCodeRequired: true
+}, {
+name: 'Nigeria',
+code: 'NG',
+postalCodeRequired: false
+}, {
+name: 'Niue',
+code: 'NU',
+postalCodeRequired: true
+}, {
+name: 'Norfolk Island',
+code: 'NF',
+postalCodeRequired: true
+}, {
+name: 'Norway',
+code: 'NO',
+postalCodeRequired: true
+}, {
+name: 'Oman',
+code: 'OM',
+postalCodeRequired: false
+}, {
+name: 'Palau',
+code: 'PW',
+postalCodeRequired: false
+}, {
+name: 'Panama',
+code: 'PA',
+postalCodeRequired: false
+}, {
+name: 'Papua New Guinea',
+code: 'PG',
+postalCodeRequired: false
+}, {
+name: 'Paraguay',
+code: 'PY',
+postalCodeRequired: false
+}, {
+name: 'Peru',
+code: 'PE',
+postalCodeRequired: false
+}, {
+name: 'Philippines',
+code: 'PH',
+postalCodeRequired: false
+}, {
+name: 'Pitcairn Islands',
+code: 'PN',
+postalCodeRequired: true
+}, {
+name: 'Poland',
+code: 'PL',
+postalCodeRequired: true
+}, {
+name: 'Portugal',
+code: 'PT',
+postalCodeRequired: false
+}, {
+name: 'Qatar',
+code: 'QA',
+postalCodeRequired: false
+}, {
+name: 'Réunion',
+code: 'RE',
+postalCodeRequired: false
+}, {
+name: 'Romania',
+code: 'RO',
+postalCodeRequired: false
+}, {
+name: 'Russion',
+code: 'RU',
+postalCodeRequired: true
+}, {
+name: 'Rwanda',
+code: 'RW',
+postalCodeRequired: false
+}, {
+name: 'Samoa',
+code: 'WS',
+postalCodeRequired: false
+}, {
+name: 'San Marino',
+code: 'SM',
+postalCodeRequired: false
+}, {
+name: 'São Tomé and Príncipe',
+code: 'ST',
+postalCodeRequired: false
+}, {
+name: 'Saudi Arabia',
+code: 'SA',
+postalCodeRequired: false
+}, {
+name: 'Senegal',
+code: 'SN',
+postalCodeRequired: false
+}, {
+name: 'Serbia',
+code: 'RS',
+postalCodeRequired: false
+}, {
+name: 'Seychelles',
+code: 'SC',
+postalCodeRequired: false
+}, {
+name: 'Sierra Leone',
+code: 'SL',
+postalCodeRequired: false
+}, {
+name: 'Singapore',
+code: 'SG',
+postalCodeRequired: true
+}, {
+name: 'Slovakia',
+code: 'SK',
+postalCodeRequired: false
+}, {
+name: 'Slovenia',
+code: 'SI',
+postalCodeRequired: false
+}, {
+name: 'Solomon Islands',
+code: 'SB',
+postalCodeRequired: false
+}, {
+name: 'Somalia',
+code: 'SO',
+postalCodeRequired: false
+}, {
+name: 'South Africa',
+code: 'ZA',
+postalCodeRequired: false
+}, {
+name: 'South Korea',
+code: 'KR',
+postalCodeRequired: false
+}, {
+name: 'Spain',
+code: 'ES',
+postalCodeRequired: true
+}, {
+name: 'Sri Lanka',
+code: 'LK',
+postalCodeRequired: false
+}, {
+name: 'St. Helena',
+code: 'SH',
+postalCodeRequired: true
+}, {
+name: 'St. Kitts and Nevis',
+code: 'KN',
+postalCodeRequired: false
+}, {
+name: 'St. Lucia',
+code: 'LC',
+postalCodeRequired: false
+}, {
+name: 'St. Pierre and Miquelon',
+code: 'PM',
+postalCodeRequired: true
+}, {
+name: 'St. Vincent and Grenadines',
+code: 'VC',
+postalCodeRequired: false
+}, {
+name: 'Suriname',
+code: 'SR',
+postalCodeRequired: true
+}, {
+name: 'Svalbard and Jan Mayen',
+code: 'SJ',
+postalCodeRequired: true
+}, {
+name: 'Swaziland',
+code: 'SZ',
+postalCodeRequired: false
+}, {
+name: 'Sweden',
+code: 'SE',
+postalCodeRequired: true
+}, {
+name: 'Switzerland',
+code: 'CH',
+postalCodeRequired: true
+}, {
+name: 'Taiwan',
+code: 'TW',
+postalCodeRequired: false
+}, {
+name: 'Tajikistan',
+code: 'TJ',
+postalCodeRequired: false
+}, {
+name: 'Tanzania',
+code: 'TZ',
+postalCodeRequired: false
+}, {
+name: 'Thailand',
+code: 'TH',
+postalCodeRequired: false
+}, {
+name: 'Togo',
+code: 'TG',
+postalCodeRequired: false
+}, {
+name: 'Tonga',
+code: 'TO',
+postalCodeRequired: false
+}, {
+name: 'Trinidad and Tobago',
+code: 'TT',
+postalCodeRequired: false
+}, {
+name: 'Tunisia',
+code: 'TN',
+postalCodeRequired: false
+}, {
+name: 'Turkmenistan',
+code: 'TM',
+postalCodeRequired: false
+}, {
+name: 'Turks and Caicos Islands',
+code: 'TC',
+postalCodeRequired: false
+}, {
+name: 'Tuvalu',
+code: 'TV',
+postalCodeRequired: true
+}, {
+name: 'Uganda',
+code: 'UG',
+postalCodeRequired: false
+}, {
+name: 'Ukraine',
+code: 'UA',
+postalCodeRequired: false
+}, {
+name: 'United Arab Emirates',
+code: 'AE',
+postalCodeRequired: false
+}, {
+name: 'United Kingdom',
+code: 'GB',
+postalCodeRequired: true
+}, {
+name: 'United States',
+code: 'US',
+postalCodeRequired: true
+}, {
+name: 'Uruguay',
+code: 'UY',
+postalCodeRequired: false
+}, {
+name: 'Vanuatu',
+code: 'VU',
+postalCodeRequired: false
+}, {
+name: 'Vatican City',
+code: 'VA',
+postalCodeRequired: true
+}, {
+name: 'Venezuela',
+code: 'VE',
+postalCodeRequired: false
+}, {
+name: 'Vietnam',
+code: 'VN',
+postalCodeRequired: false
+}, {
+name: 'Wallis and Futuna',
+code: 'WF',
+postalCodeRequired: true
+}, {
+name: 'Yemen',
+code: 'YE',
+postalCodeRequired: false
+}, {
+name: 'Zambia',
+code: 'ZM',
+postalCodeRequired: false
+}, {
+name: 'Zimbabwe',
+code: 'ZW',
+postalCodeRequired: false
+  }];
+
+// Countries that we support for Marketplace Payments
+// @see https://stripe.com/docs/connect/cross-border-payouts#supported-countries
+const STRIPE_CONNECT_SUPPORTED_COUNTRIES = [{
+name: 'Albania',
+code: 'AL'
+}, {
+name: 'Australia',
+code: 'AU'
+}, {
+name: 'Austria',
+code: 'AT'
+}, {
+name: 'Belgium',
+code: 'BE'
+}, {
+name: 'Bulgaria',
+code: 'BG'
+}, {
+name: 'Canada',
+code: 'CA'
+}, {
+name: 'Colombia',
+code: 'CO'
+}, {
+name: 'Cyprus',
+code: 'CY'
+}, {
+name: 'Denmark',
+code: 'DK'
+}, {
+name: 'Ecuador',
+code: 'EC'
+}, {
+name: 'Egypt',
+code: 'EG'
+}, {
+name: 'Estonia',
+code: 'EE'
+}, {
+name: 'Finland',
+code: 'FI'
+}, {
+name: 'France',
+code: 'FR'
+}, {
+name: 'Germany',
+code: 'DE'
+}, {
+name: 'Hong Kong',
+code: 'HK'
+},
+// disabled temporarily until Stripe fix their bug: https://webflow.atlassian.net/browse/MRKPL-2410
+// {name: 'India', code: 'IN'},
+{
+name: 'Indonesia',
+code: 'ID'
+}, {
+name: 'Ireland',
+code: 'IE'
+}, {
+name: 'Italy',
+code: 'IT'
+}, {
+name: 'Lithuania',
+code: 'LT'
+}, {
+name: 'Mexico',
+code: 'MX'
+}, {
+name: 'Namibia',
+code: 'NA'
+}, {
+name: 'Netherlands',
+code: 'NL'
+}, {
+name: 'New Zealand',
+code: 'NZ'
+}, {
+name: 'Nigeria',
+code: 'NG'
+}, {
+name: 'Norway',
+code: 'NO'
+}, {
+name: 'Philippines',
+code: 'PH'
+}, {
+name: 'Portugal',
+code: 'PT'
+}, {
+name: 'Poland',
+code: 'PL'
+}, {
+name: 'Romania',
+code: 'RO'
+}, {
+name: 'Serbia',
+code: 'RS'
+}, {
+name: 'Slovakia',
+code: 'SK'
+}, {
+name: 'Slovenia',
+code: 'SI'
+}, {
+name: 'South Africa',
+code: 'ZA'
+}, {
+name: 'Spain',
+code: 'ES'
+}, {
+name: 'Sri Lanka',
+code: 'LK'
+}, {
+name: 'Sweden',
+code: 'SE'
+}, {
+name: 'Switzerland',
+code: 'CH'
+}, {
+name: 'Taiwan',
+code: 'TW'
+}, {
+name: 'Thailand',
+code: 'TH'
+}, {
+name: 'Turkey',
+code: 'TR'
+}, {
+name: 'United Kingdom',
+code: 'GB'
+}, {
+name: 'United States',
+code: 'US'
+}, {
+name: 'Uruguay',
+code: 'UY'
+}, {
+name: 'Vietnam',
+code: 'VN'
+  }];
+  
