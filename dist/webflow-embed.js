@@ -261,7 +261,9 @@
       let wfEmbed = e.parentElement;
       const tempId = "id-" + Sa5Embed.generateRandomString(10);
       wfEmbed.id = tempId;
-      const tableHtml = await Sa5Embed.fetchHtmlAsync(src, "table");
+      if (!config.index)
+        config.index = 0;
+      const tableHtml = await Sa5Embed.fetchHtmlAsync(src, "table", config.index);
       wfEmbed = document.getElementById(tempId);
       wfEmbed.innerHTML = tableHtml;
       if (config.theme) {

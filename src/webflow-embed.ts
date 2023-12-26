@@ -151,8 +151,11 @@ export class Sa5Embed {
 
 //            if (wfEmbed) {
 
+        if (!config.index)
+            config.index = 0;
+
 //              console.log("calling");
-        const tableHtml: string | null = await Sa5Embed.fetchHtmlAsync(src, "table");
+        const tableHtml: string | null = await Sa5Embed.fetchHtmlAsync(src, "table", config.index);
 //console.log("returned", tableHtml);
 
 //console.log("after", wfEmbed); 
