@@ -175,9 +175,10 @@ FS empty list
 
 /*
  * HTML Table Themes 
+ * relocated to webflow-embed.scss 
  */
 
-
+/*
  [wfu-theme="default"] {
     table {
       border-collapse: collapse;
@@ -226,6 +227,7 @@ FS empty list
           
         }}
       
+      // Highlight first column
       tr:nth-child(1) {
         font-weight: 800;
         background-color: rgba(255,255,255,0.2); // #333;
@@ -233,3 +235,4 @@ FS empty list
     }
   }
   
+*/

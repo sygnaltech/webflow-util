@@ -1,0 +1,79 @@
+
+/**
+ * SCSS for SA5 Embeds
+ */
+
+/**
+ * @use: This is the modern replacement for @import. 
+ * Instead of dumping all the imported styles into the global scope, @use treats each imported file as a 
+ * separate module with its own private scope. This means that variables, mixins, and functions from 
+ * the imported file have to be accessed with a namespace based on the filename. 
+ * This helps to prevent naming conflicts and makes the code easier to understand.
+ */
+        
+
+// @use '../webflow-html/limit-items';
+
+
+
+/*
+ * HTML Table Themes 
+ */
+
+ 
+ [wfu-theme="default"] {
+    table {
+      border-collapse: collapse;
+      margin-top: 10px;
+  //    background-color: green;
+      tr {
+        td {
+          padding: 0.2rem 1rem;
+          border: 1px solid white;
+          vertical-align: top; 
+          margin-bottom: 5px; 
+          
+          p {
+            line-height: 22px;
+            font-size: 14px; 
+  //          margin-bottom: 0; // 5px;
+            
+            span {
+    //          line-height: 22px;
+    //          font-size: 14px; 
+              }
+              
+          }
+  
+          ul {
+  //          margin-left: 10px;
+            padding-left: 5px; // 10px;
+            padding-top: 10px;
+            padding-bottom: 0.2rem;
+            
+            li::marker {
+                content: "\2043"; // "&hybull;";
+                color: #2e9dff; // yellow;
+            }
+            
+            li {
+              // list-style-type: square;
+                line-height: 22px;
+                font-size: 14px; 
+                padding-left: 1ch;
+              
+                span {
+                }
+            }
+          }
+          
+        }}
+      
+      // Highlight first column
+      tr:nth-child(1) {
+        font-weight: 800;
+        background-color: rgba(255,255,255,0.2); // #333;
+      }
+    }
+  }
+  
