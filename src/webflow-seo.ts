@@ -12,10 +12,11 @@
 
 import { Sa5Core } from "./webflow-core";
 import { LdJsonArticle } from "./webflow-seo/json-ld/article";
+import { LdJsonCourse } from "./webflow-seo/json-ld/course";
 
 
 Sa5Core.startup(LdJsonArticle);
-
+Sa5Core.startup(LdJsonCourse);
 
 export class Sa5SEO {
 
