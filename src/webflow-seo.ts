@@ -13,10 +13,12 @@
 import { Sa5Core } from "./webflow-core";
 import { LdJsonArticle } from "./webflow-seo/json-ld/article";
 import { LdJsonCourse } from "./webflow-seo/json-ld/course";
+import { LdJsonWebPage } from "./webflow-seo/json-ld/webpage";
 
 
 Sa5Core.startup(LdJsonArticle);
 Sa5Core.startup(LdJsonCourse);
+Sa5Core.startup(LdJsonWebPage); 
 
 export class Sa5SEO {
 
@@ -31,7 +33,7 @@ if ("{{wf {&quot;path&quot;:&quot;course:private&quot;,&quot;type&quot;:&quot;Bo
 </script>
 */ 
 
-  constructor(element: HTMLElement) {
+  constructor() {
 
     // this._element = element;
     // this._rating = Number(element.getAttribute("wfu-rating")); 
