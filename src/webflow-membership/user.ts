@@ -81,7 +81,10 @@ export class Sa5User {
     data = {}; // = new Map();
 
     // Meta data
-    meta = {}; //  = new Map();
+    meta = {}; //  = new Map(); 
+
+    // Raw data
+    raw = {}; 
 
     constructor() {
 
@@ -110,6 +113,9 @@ export class Sa5User {
         this.user_data_loaded.account_info = json.user_data_loaded.account_info;
         this.user_data_loaded.custom_fields = json.user_data_loaded.custom_fields;
         this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
+
+        this.raw = json.raw; 
+        
     }
 
     /** 

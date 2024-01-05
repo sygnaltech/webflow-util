@@ -2,12 +2,12 @@
 /*
  * SA5 
  * webflow-membership
- * Access Groups
+ * Hyperflow
  * 
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Member Information Utilities
+ * User Account Information Utilities
  */
 
 // import { XXH64 } from '../webflow-crypto';
@@ -27,7 +27,7 @@ import { Sa5User } from './user';
  */
 
 //import Md5 from "crypto-api/src/hasher/md5"; 
-export class Sa5UserAccessGroups {
+export class Sa5UserHyperflow {
 
     membership: Sa5UserAccounts;
     accessGroups: string[] = [];
@@ -41,7 +41,7 @@ export class Sa5UserAccessGroups {
 console.log("initAsync"); 
 
         // Determine access group access
-        console.log(await this.getAccessGroupsAsync());
+        console.log(await this.getCurrentUserAsync());
   
         // Iterate and check
 
@@ -49,18 +49,67 @@ console.log("initAsync");
         // this.hasAccessGroup("client");
     }
 
-    async getAccessGroupsAsync() {
+    async getCurrentUserAsync() {
 
-        this.accessGroups = []; // Object.create(null); 
+//        this.accessGroups = []; // Object.create(null); 
         // this.accessGroups.push({ key: "webflow", access: false });
         // this.accessGroups.push({ key: "webflow-2", access: false });
         // this.accessGroups.push({ key: "client", access: false });
 
-        for (let group of this.membership.config.accessGroups) {
-            let hasAccess: boolean = await this.checkAccessGroupAsync(group);
-            if(hasAccess)
-                this.accessGroups.push(group);
-        }
+
+
+        const response = await fetch(
+          `${this.membership.config.hf.currentUserUrl}`
+          );
+//      console.log(`redirected: ${response.redirected}`);
+    
+      console.log('STATUS:', response.status); 
+      
+      const raw = await response.json(); 
+
+      console.log(raw); 
+
+
+
+// Parse this Puppy
+/*
+{
+  id: "658d2c967a397cda826ac938",
+  createdOn: "2023-12-28T08:06:46.759Z",
+  lastUpdated: "2023-12-28T21:58:28.281Z",
+  isEmailVerified: true,
+  lastLogin: "2023-12-28T08:07:35.407Z",
+  data: {
+    country: null,
+    city: null,
+    webflow-micro-consulting: false,
+    webflow-mc-account: null,
+    wmc-map-url: null,
+    bio: null,
+    name: "Michael",
+    email: "memetican@gmail.com",
+    accept-communications: true,
+    accept-privacy: true
+  },
+  status: "verified",
+  accessGroups: [
+    {
+      slug: "webflow-support",
+      type: "admin"
+    }
+  ]
+}
+*/
+
+
+
+
+
+//         for (let group of this.membership.config.accessGroups) {
+// //            let hasAccess: boolean = await this.checkAccessGroupAsync(group);
+//             if(hasAccess)
+//                 this.accessGroups.push(group);
+//         }
 
       //  accessGroups.webflow = false;
       //  accessGroups["webflow-2"] = false;
@@ -83,53 +132,7 @@ console.log("initAsync");
       //x => Object.assign({}, accessGroups, {"hasAccess": "true"})
       //  ); 
         
-        return this.accessGroups; // 
-      }
-
-    async checkAccessGroupAsync(accessGroupCode): Promise<boolean> {
-
-        const response = await fetch(
-            `${this.membership.config.accessGroupsFolder}/${accessGroupCode}`
-            );
-        console.log(`redirected: ${response.redirected}`);
-      
-        console.log('STATUS:', response.status); 
-        
-
-          // https://www.sygnal.com/access-group/webflow
-        // 302
-        // 200 
-        
-          if(!response.redirected)
-          {
-            //no redirection
-            console.log(`Has access group ${accessGroupCode}`);
-            return true; 
-          }
-
-          // Check and report mis-configuration 
-          if(response.status != 200) {
-            console.warn('SA5', `Memberships configuration error- access group ${accessGroupCode} is not queryable.`);
-          }
-
-
-        //   else
-        //   {
-            //redirection
-            console.log(`Not logged in, or no access to ${accessGroupCode}`); 
-
-
-
-            return false; 
-//          }
-      
-        // /log-in?
-          // https://www.sygnal.com/access-group/client
-        // access denied
-        // 302 
-        // /access-denied? 
-        
-
+//        return this.accessGroups; // 
     }
 
 }

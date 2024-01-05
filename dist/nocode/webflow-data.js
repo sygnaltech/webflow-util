@@ -747,6 +747,7 @@
       this.access_groups = [];
       this.data = {};
       this.meta = {};
+      this.raw = {};
       this.isLoggedIn = function() {
         return getCookie("wf_loggedin") || false;
       };
@@ -784,6 +785,7 @@
       this.user_data_loaded.account_info = json.user_data_loaded.account_info;
       this.user_data_loaded.custom_fields = json.user_data_loaded.custom_fields;
       this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
+      this.raw = json.raw;
     }
   };
 
@@ -824,12 +826,32 @@
     }
   };
 
+  // src/webflow-membership/hyperflow.ts
+  var Sa5UserHyperflow = class {
+    constructor(membership) {
+      this.accessGroups = [];
+      this.membership = membership;
+    }
+    async initAsync() {
+      console.log("initAsync");
+      console.log(await this.getCurrentUserAsync());
+    }
+    async getCurrentUserAsync() {
+      const response = await fetch(
+        `${this.membership.config.hf.currentUserUrl}`
+      );
+      console.log("STATUS:", response.status);
+      const raw = await response.json();
+      console.log(raw);
+    }
+  };
+
   // src/webflow-membership.ts
   var StorageKeys = Object.freeze({
     user: "wfuUser",
     userKey: "wfuUserKey"
   });
-  var Sa5Membership = class {
+  var Sa5UserAccounts = class {
     constructor(config = {}) {
       this.userInfoUpdatedCallback = (user) => {
         if (this.config.userInfoUpdatedCallback)
@@ -846,6 +868,10 @@
         advanced: {
           accountInfoLoadDelay: config.advanced?.accountInfoLoadDelay ?? 300,
           accountInfoSaveDelay: config.advanced?.accountInfoSaveDelay ?? 500
+        },
+        hf: {
+          enabled: config.hf?.enabled ?? false,
+          currentUserUrl: config.hf?.currentUserUrl ?? "/_hf/users/current_user"
         }
       };
       let core = Sa5Core.startup();
@@ -946,9 +972,25 @@
         return;
       }
       sessionStorage.removeItem(StorageKeys.user);
-      this.loadUserInfoAsync_loginInfo();
-      this.loadUserInfoAsync_accountInfo();
-      this.loadUserInfoAsync_accessGroups();
+      if (this.config.hf.enabled) {
+        this.loadUserInfoAsync_hyperflow();
+      } else {
+        this.loadUserInfoAsync_loginInfo();
+        this.loadUserInfoAsync_accountInfo();
+        this.loadUserInfoAsync_accessGroups();
+      }
+      this.debug.groupEnd();
+    }
+    async loadUserInfoAsync_hyperflow() {
+      this.debug.group("loadUserInfoAsync_hyperflow");
+      var user = new Sa5User();
+      user.user_data_loaded.email = true;
+      user.user_data_loaded.account_info = true;
+      user.user_data_loaded.access_groups = true;
+      const hf = new Sa5UserHyperflow(this);
+      await hf.initAsync();
+      this.debug.debug("Caching user object [login].", user);
+      this.saveUserInfoCache(user);
       this.debug.groupEnd();
     }
     async loadUserInfoAsync_loginInfo() {
@@ -1248,7 +1290,7 @@
         handlers: []
       };
       if (!this.config.user)
-        this.config.user = new Sa5Membership().loadUserInfoCache();
+        this.config.user = new Sa5UserAccounts().loadUserInfoCache();
     }
     bindAll() {
       let dataBind = document.querySelectorAll(

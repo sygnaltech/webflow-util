@@ -18,20 +18,21 @@ import { Sa5User } from './webflow-membership/user';
 import { WfuDataBinder } from './webflow-databind';
 import { Sa5GlobalEvent } from './globals';
 import { Sa5UserAccessGroups } from './webflow-membership/access-groups';
+import { Sa5UserHyperflow } from './webflow-membership/hyperflow';
 
 const StorageKeys = Object.freeze({
     user: 'wfuUser',
-    userKey: 'wfuUserKey',
+    userKey: 'wfuUserKey'
 });
 
 type GetConfigCallback = (Sa5MembershipConfig) 
-    => Sa5MembershipConfig;
+    => Sa5UserAccountsConfig;
 
 type UserInfoChangedCallback = (user: Sa5User) => void;
 
 
 
-interface Sa5MembershipConfig {
+interface Sa5UserAccountsConfig {
 //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
     userInfoUpdatedCallback?: UserInfoChangedCallback; 
 //    userLogoutPurge?: ((user: Sa5User) => void) | undefined;
@@ -53,7 +54,13 @@ interface Sa5MembershipConfig {
         accountInfoLoadDelay: number; // ms 
         accountInfoSaveDelay: number; // ms 
 
-    }
+    };
+
+    hf: { // Hyperflow
+        enabled: boolean; // false
+        currentUserUrl: string; // '/_hf/users/current_user',
+    }    
+
 }
 
 
@@ -61,11 +68,11 @@ interface Sa5MembershipConfig {
  * Memberships 
  */
 
-export class Sa5Membership {
+export class Sa5UserAccounts {
 
     debug: Sa5Debug;
 
-    config: Sa5MembershipConfig; // Optional config
+    config: Sa5UserAccountsConfig; // Optional config
 
     // Type guard to check if a function is a UserInfoChangedCallback
     private isUserInfoChangedCallback(func: Function): func is UserInfoChangedCallback {
@@ -76,7 +83,7 @@ export class Sa5Membership {
         return func.length === 1;
     }
 
-    constructor(config: Partial<Sa5MembershipConfig> = {}) {
+    constructor(config: Partial<Sa5UserAccountsConfig> = {}) {
 
         // Merge configs, with defaults
         this.config = {
@@ -91,6 +98,12 @@ export class Sa5Membership {
                 accountInfoSaveDelay: 
                     config.advanced?.accountInfoSaveDelay ?? 500,
             },
+            hf: { // Hyperflow 
+                enabled: 
+                    config.hf?.enabled ?? false,
+                currentUserUrl: 
+                    config.hf?.currentUserUrl ?? '/_hf/users/current_user'
+            }
         }
 
         let core: Sa5Core = Sa5Core.startup();
@@ -329,20 +342,78 @@ console.log(core);
             return;
         }
 
-        // Remove user
+        // Remove cached user object
         sessionStorage.removeItem(StorageKeys.user);
 
-        // Load layers asynchronously
-        // for maximum performance
-        // merge dynamically as results are gathered
-        this.loadUserInfoAsync_loginInfo(); // async
-        this.loadUserInfoAsync_accountInfo(); // async
-        this.loadUserInfoAsync_accessGroups(); // async
-    
+        if (this.config.hf.enabled) {
+
+            // Use Hyperflow loader
+            this.loadUserInfoAsync_hyperflow(); // async
+
+        } else {
+
+            // Load layers asynchronously
+            // for maximum performance
+            // merge dynamically as results are gathered
+            this.loadUserInfoAsync_loginInfo(); // async
+            this.loadUserInfoAsync_accountInfo(); // async
+            this.loadUserInfoAsync_accessGroups(); // async
+        
+        }
+
         // Load or create blank
 
         this.debug.groupEnd();
 
+    }
+
+    // Get account info
+    // from Hyperflow 
+    async loadUserInfoAsync_hyperflow() { 
+
+        this.debug.group("loadUserInfoAsync_hyperflow");
+     
+        // Create blank
+        var user = new Sa5User();
+        user.user_data_loaded.email = true;
+        user.user_data_loaded.account_info = true;
+        user.user_data_loaded.access_groups = true;
+
+        const hf: Sa5UserHyperflow = new Sa5UserHyperflow(this);
+
+        await hf.initAsync();
+
+        // const userKey = await this.getUserKey();
+        // if (!userKey) {
+        //     // Logged in but no userKey
+        //     // Typically happens on first login from sign-up auth 
+        //     this.debug.debug("No user key for loading."); 
+
+        //     this.debug.groupEnd();
+        //     return;
+        // }
+
+        // // Loaded successfully
+
+        // user.email = userKey;
+
+        // Cache locally (email only)
+        this.debug.debug("Caching user object [login].", user);
+        this.saveUserInfoCache(user); 
+
+        // // Hydrate user object with other data 
+        // if (this.config.loadUserInfoCallback) {
+        //     await this.config.loadUserInfoCallback(user);
+
+        //     // Cache locally ( updated )
+        //     this.saveUserInfoCache(user); 
+        // }
+
+        // Notify listeners
+        // if (this.config.userInfoUpdatedCallback)
+        //     this.config.userInfoUpdatedCallback(user); // async
+
+        this.debug.groupEnd();
     }
 
     // Get account info

@@ -4715,8 +4715,35 @@
     }
   };
 
+  // src/webflow-seo/json-ld/organization.ts
+  var LdJsonOrganization = class {
+    constructor(name = void 0) {
+      this["@type"] = "Organization";
+      this.name = name;
+    }
+  };
+
+  // src/webflow-seo/json-ld/course.ts
+  var LdJsonCourse = class extends LdJsonBase {
+    constructor() {
+      super();
+      this.provider = new LdJsonOrganization();
+      this["@type"] = "Course";
+    }
+    toJSON() {
+      return {
+        "@context": "https://schema.org",
+        "@type": this["@type"],
+        name: this.name,
+        description: this.description,
+        provider: this.provider || void 0
+      };
+    }
+  };
+
   // src/webflow-seo.ts
   Sa5Core.startup(LdJsonArticle);
+  Sa5Core.startup(LdJsonCourse);
   var Sa5SEO = class {
     constructor(element) {
     }

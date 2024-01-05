@@ -206,6 +206,7 @@
       this.access_groups = [];
       this.data = {};
       this.meta = {};
+      this.raw = {};
       this.isLoggedIn = function() {
         return getCookie("wf_loggedin") || false;
       };
@@ -243,6 +244,7 @@
       this.user_data_loaded.account_info = json.user_data_loaded.account_info;
       this.user_data_loaded.custom_fields = json.user_data_loaded.custom_fields;
       this.user_data_loaded.access_groups = json.user_data_loaded.access_groups;
+      this.raw = json.raw;
     }
   };
 })();

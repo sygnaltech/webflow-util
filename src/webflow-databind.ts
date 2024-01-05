@@ -12,7 +12,7 @@
 import { HtmlBuilder } from './webflow-html-builder';
 
 //import { Database } from './webflow-data.js';
-import { Sa5Membership } from './webflow-membership';
+import { Sa5UserAccounts } from './webflow-membership';
 import { Sa5User } from './webflow-membership/user';
 import { booleanValue, getCookie, identifyElement, selectOptionByValue } from './utils'; 
 //import Handlebars from "handlebars";
@@ -188,7 +188,7 @@ export class WfuDataBinder {
     
         // If no user found, load the current one if available
         if (!this.config.user)
-            this.config.user = new Sa5Membership().loadUserInfoCache();
+            this.config.user = new Sa5UserAccounts().loadUserInfoCache();
 
     }
 
