@@ -39,8 +39,8 @@ const init = () => {
     );
 //    breakpoints.init();
 
-
-    let core: Sa5Core = Sa5Core.startup(); // new Sa5Core();
+    // Factory-create SA5 Core
+    let core: Sa5Core = Sa5Core.startup(); 
 
 
     // Initialize debugging
@@ -55,26 +55,26 @@ const init = () => {
 
     // Show all elements tagged for logged-in users only
     document.querySelectorAll(
-        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_SHOW_LOGGED_IN) // '[wfu-show-logged-in]'
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_SHOW_LOGGED_IN) 
         )
       .forEach((element: HTMLElement) => { 
 
         if (membership.isLoggedIn())
             element.removeAttribute(
-                Sa5Attribute.ATTR_SHOW_LOGGED_IN // "wfu-show-logged-in"
+                Sa5Attribute.ATTR_SHOW_LOGGED_IN 
                 ); 
 
     });
 
     // Hide all elements tagged for logged-out users only
     document.querySelectorAll(
-        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_HIDE_LOGGED_IN) // '[wfu-hide-logged-in]'
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_HIDE_LOGGED_IN) 
         )
       .forEach((element: HTMLElement) => { 
 
         if (!membership.isLoggedIn())
             element.removeAttribute(
-                Sa5Attribute.ATTR_HIDE_LOGGED_IN // "wfu-hide-logged-in"
+                Sa5Attribute.ATTR_HIDE_LOGGED_IN 
                 ); 
 
     });
@@ -84,7 +84,7 @@ const init = () => {
      */
 
     document.querySelectorAll(
-        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LOGIN_BUTTON) // '[wfu-login-button]'
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LOGIN_BUTTON) 
         )
       .forEach((element: HTMLElement) => { 
 
@@ -92,27 +92,17 @@ const init = () => {
 
     });
 
-
-
-
-
-
     /**
      * Load Current User Info 
      */
 
     membership.init();
-//     var userInfo = new Sa5UserInfo({
-// //        userInfoUpdatedCallback: myCallback
-//       }).init(); 
 
     /**
      * Perform routing, if configured
      */
 
-// console.log("pre routing");
     (new Sa5MembershipRouting()).init();
-//    console.log("post routing");
 
 }
 

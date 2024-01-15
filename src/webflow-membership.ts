@@ -21,8 +21,8 @@ import { Sa5UserAccessGroups } from './webflow-membership/access-groups';
 import { Sa5UserHyperflow } from './webflow-membership/hyperflow';
 
 const StorageKeys = Object.freeze({
-    user: 'wfuUser',
-    userKey: 'wfuUserKey'
+    user: 'wfuUser', // sa5_user
+    userKey: 'wfuUserKey' // sa5_user_key
 });
 
 type GetConfigCallback = (Sa5MembershipConfig) 
@@ -50,10 +50,8 @@ interface Sa5UserAccountsConfig {
 
     // Advanced settings
     advanced: {
-
         accountInfoLoadDelay: number; // ms 
         accountInfoSaveDelay: number; // ms 
-
     };
 
     hf: { // Hyperflow
@@ -65,7 +63,7 @@ interface Sa5UserAccountsConfig {
 
 
 /**
- * Memberships 
+ * User Accounts  
  */
 
 export class Sa5UserAccounts {
@@ -107,7 +105,7 @@ export class Sa5UserAccounts {
         }
 
         let core: Sa5Core = Sa5Core.startup();
-console.log(core);
+
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-membership");
         this.debug.debug ("Initializing");
@@ -165,9 +163,7 @@ console.log(core);
         // if (window.location.pathname == `/user-account`) 
         //     return;
 
-        this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
-
-
+        this.debug.group(`SA5 UserInfo init - ${Date.now()}.`);
 
         let core: Sa5Core = Sa5Core.startup();
 
@@ -186,9 +182,11 @@ console.log(core);
             ); 
         }
 
-
-        // Install listeners 
-        // to listen for login events 
+        /**
+         * Install listeners
+         * to listen for login/logout events 
+         */
+        
         // https://stackoverflow.com/questions/9347282/using-jquery-preventing-form-from-submitting 
         // https://stackoverflow.com/questions/11469616/jquery-form-validation-before-ajax-submit
 
@@ -329,8 +327,8 @@ console.log(core);
     // readying it for use. 
     // Should be called on every page at the start. 
     async loadUserInfoAsync() {
-        this.debug.group("loadUserInfoAsync");
 
+        this.debug.group("loadUserInfoAsync");
         this.debug.debug(`isLoggedIn = ${this.isLoggedIn()}`); 
         
         // If not logged in
@@ -644,16 +642,11 @@ console.log(core);
 
     async loadUserInfoAsync_accessGroups() {
 
-console.log("loadUserInfoAsync_accessGroups")
-
         this.debug.group("loadUserInfoAsync_accessGroups");
 
         // Create blank
         var user = new Sa5User();
         user.user_data_loaded.access_groups = true;
-
-
-        console.log("loadUserInfoAsync_accessGroups")
 
         // If null or [], exit 
         if(this.config.accessGroups) { 
@@ -671,7 +664,6 @@ console.log("loadUserInfoAsync_accessGroups")
         this.debug.debug("Caching user object [login].", user);
         this.saveUserInfoCache(user); 
 
-//        this.debug.debug("Not yet implemented.");
         this.debug.groupEnd();
 
     }
@@ -716,7 +708,7 @@ console.log("loadUserInfoAsync_accessGroups")
             userData.access_groups = newUserData.access_groups; 
         }
 
-        // Coalesge loaded info 
+        // Coalesce loaded info 
         userData.user_data_loaded.email = userData.user_data_loaded.email || newUserData.user_data_loaded.email;
         userData.user_data_loaded.account_info = userData.user_data_loaded.account_info || newUserData.user_data_loaded.account_info;
         userData.user_data_loaded.custom_fields = userData.user_data_loaded.custom_fields || newUserData.user_data_loaded.custom_fields;
@@ -743,8 +735,7 @@ console.log("loadUserInfoAsync_accessGroups")
         // Notify listeners 
 //        console.log("%cchecking for handler", "background-color: yellow;");
 
-this.onUserInfoChanged(userData);
-
+        this.onUserInfoChanged(userData);
 
 //         if (this.config.userInfoUpdatedCallback) {
 // //            console.log("%ccalling handler", "background-color: yellow;");
@@ -818,39 +809,9 @@ this.onUserInfoChanged(userData);
         }
     }
     
-
-    // expandLoginButton(elem) {
-
-    //     // Get Webflow Login/Logout button
-    //     const $wfLoginButton = elem.find("[data-wf-user-logout]");
-
-    //     // Setup click event handler on outer DIV
-    //     elem.click(function() {
-    //         // Click inner element
-    //         $wfLoginButton.trigger('click');
-    //     });
-
-    //     // Also interecept and stop propogation so event is not doubled
-    //     $wfLoginButton.click(function(e) {
-    //         e.stopPropagation();
-    //     });
-
-    // }
-
     //#endregion
 
     //#region EVENT
-
-    // Breakpoint changed
-    // loadUserInfoCallback = ((user: Sa5User) => {
-
-    //     // Notify any config-specified handler
-    //     if(this.config.loadUserInfoCallback) 
-    //         this.config.loadUserInfoCallback(
-    //             user
-    //         ); 
-
-    // });
 
     // User Info Updated
     userInfoUpdatedCallback = ((user: Sa5User) => { 
@@ -864,17 +825,6 @@ this.onUserInfoChanged(userData);
             ); 
 
     });
-
-    // Breakpoint changed
-    // userLogoutPurge = ((user: Sa5User) => {
-
-    //     // Notify any config-specified handler
-    //     if(this.config.userLogoutPurge) 
-    //         this.config.userLogoutPurge(
-    //             user
-    //         ); 
-
-    // });
 
     //#endregion
 
@@ -892,63 +842,6 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
-*/
-
-
-    /*
-
-getAccessGroups() {
-  
-    var accessGroups = []; // Object.create(null);
-    accessGroups.push({ key: "webflow", access: false });
-    accessGroups.push({ key: "webflow-2", access: false });
-    accessGroups.push({ key: "client", access: false });
-  //  accessGroups.webflow = false;
-  //  accessGroups["webflow-2"] = false;
-  //  accessGroups.push({"client": false});
-  //  accessGroups = {...accessGroups, ["client"]: false}; 
-  
-    accessGroups.forEach((element, index) => {
-      accessGroups[index].access = true;
-    });
-    
-    
-  //  const ag = accessGroups.map(
-  //x => Object.assign({}, accessGroups, {"hasAccess": "true"})
-  //  ); 
-    
-    return accessGroups; // 
-  }
-  
-  async hasAccessGroup(accessGroup) {
-    
-    const response = await fetch(`/ag/${accessGroup}`);
-    console.log(`redirected: ${response.redirected}`);
-  
-    
-      // https://www.sygnal.com/access-group/webflow
-    // 302
-    // 200 
-    
-      if(!response.redirected)
-      {
-        //no redirection
-        console.log(`Has access group ${accessGroup}`);
-      }
-      else
-      {
-        //redirection
-        console.log(`Not logged in, or no access to ${accessGroup}`);
-      }
-  
-    // /log-in?
-      // https://www.sygnal.com/access-group/client
-    // access denied
-    // 302 
-    // /access-denied? 
-    
-  }
-
 */
 
 }

@@ -209,7 +209,7 @@ export class Sa5Embed {
             const response = await fetch(src);
             const html = await response.text();
 
-console.log("fetch", html)            
+console.log("fetch", html);            
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');

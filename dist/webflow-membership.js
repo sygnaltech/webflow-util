@@ -841,7 +841,6 @@
         }
       };
       let core = Sa5Core.startup();
-      console.log(core);
       this.debug = new Sa5Debug("sa5-membership");
       this.debug.debug("Initializing");
     }
@@ -861,7 +860,7 @@
       });
     }
     init() {
-      this.debug.group(`WfuUserInfo init - ${Date.now()}.`);
+      this.debug.group(`SA5 UserInfo init - ${Date.now()}.`);
       let core = Sa5Core.startup();
       let configHandler = core.getHandler("getMembershipConfig");
       if (!configHandler)
@@ -1078,11 +1077,9 @@
       });
     }
     async loadUserInfoAsync_accessGroups() {
-      console.log("loadUserInfoAsync_accessGroups");
       this.debug.group("loadUserInfoAsync_accessGroups");
       var user = new Sa5User();
       user.user_data_loaded.access_groups = true;
-      console.log("loadUserInfoAsync_accessGroups");
       if (this.config.accessGroups) {
         let accessGroupHandler = new Sa5UserAccessGroups(this);
         await accessGroupHandler.initAsync();

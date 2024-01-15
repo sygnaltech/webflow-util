@@ -4741,57 +4741,8 @@
     }
   };
 
-  // src/webflow-seo/json-ld/profile-page.ts
-  var LdJsonProfilePage = class {
-    constructor(name = void 0) {
-      this["@type"] = "ProfilePage";
-      this.name = name;
-    }
-    toJSON() {
-      return {
-        "@content": "https://schema.org",
-        "@type": this["@type"],
-        name: this.name
-      };
-    }
-  };
-
-  // src/webflow-seo/json-ld/webpage.ts
-  var LdJsonWebPage = class extends LdJsonBase {
-    constructor(name = void 0) {
-      super();
-      this["@type"] = "WebPage";
-      this.name = name;
-    }
-    get publisher() {
-      if (!this._publisher)
-        this._publisher = new LdJsonProfilePage();
-      return this._publisher;
-    }
-    set publisher(publisher) {
-      this._publisher = publisher;
-    }
-    toJSON() {
-      return {
-        "@content": "https://schema.org",
-        "@type": this["@type"],
-        name: this.name,
-        description: this.description,
-        publisher: this.publisher.toJSON()
-      };
-    }
-  };
-
-  // src/webflow-seo.ts
+  // src/nocode/webflow-seo.ts
   Sa5Core.startup(LdJsonArticle);
   Sa5Core.startup(LdJsonCourse);
-  Sa5Core.startup(LdJsonWebPage);
-  var Sa5SEO = class {
-    constructor() {
-    }
-    init() {
-    }
-  };
-  Sa5Core.startup(Sa5SEO);
 })();
 //# sourceMappingURL=webflow-seo.js.map
