@@ -1,0 +1,10 @@
+/**
+ * Layout containers
+ */
+[wfu-layout-preload=hidden] {
+  display: none;
+}
+
+[wfu-layout-preload=invisible] {
+  visibility: hidden;
+}/*# sourceMappingURL=layouts.css.map */
