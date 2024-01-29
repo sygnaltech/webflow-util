@@ -1,6 +1,6 @@
 
 /*
- * webflow-url
+ * SA5 Url (No-Code)
  * 
  * Sygnal Technology Group
  * http://sygnal.com
@@ -25,12 +25,20 @@ let core: Sa5Core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-url");
     debug.debug ("Initializing");
 
-    // Process querystring params into tagged elements
-    // TODO: configure A link behavior
+    /**
+     * Process querystring params into tagged elements
+     * NOTE: A links are currently ignored
+     */
+
+    // TODO: configure A link behavior 
     new WfuQuery().init();
 
-    // Fixup relative links from the CMS
-    // HACK: 
+// https://www.brojo.org/pub?b42d817d_page=2
+
+    /**
+     * Fixup relative links from the CMS
+     */
+
     let elements = Array.from(
         document.querySelectorAll(
             Sa5Attribute.getBracketed(Sa5Attribute.ATTR_URL_RELATIVE_LINKS) // "[wfu-relative-links]"
@@ -40,7 +48,10 @@ let core: Sa5Core = Sa5Core.startup();
         new WfuRelativeLinkFixup(element).init();
     });
 
-    // Target external links to _blank
+    /**
+     * Target external links to _blank
+     */
+
     // BUGGED: designer change on how links work ?? 
     elements = Array.from(
         document.querySelectorAll(
