@@ -214,54 +214,70 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-url/query.ts
-  var WfuQuery = class {
-    constructor() {
+  // src/webflow-url/queryPassthrough.ts
+  var Sa5QueryPassthrough = class {
+    constructor(config = {}) {
+      this.config = {
+        ignorePatterns: config.ignorePatterns ?? [
+          /_page$/
+        ],
+        overwriteExisting: config.overwriteExisting ?? false,
+        internalOnly: config.internalOnly ?? true
+      };
+      this.debug = new Sa5Debug("sa5-url-querypassthrough");
+      this.debug.debug("Initializing");
+      this.debug.debug("Config:", this.config);
     }
     init() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (Array.from(urlParams).length == 0)
-        return;
-      const that = this;
-      let elements = Array.from(
-        document.querySelectorAll("*[wfu-query-param], a")
-      );
-      elements.forEach((element) => {
-        let wfuQueryParam = element.getAttribute("wfu-query-param");
-        if (element.tagName.toLowerCase() === "input" && wfuQueryParam) {
-          element.value = urlParams.get(wfuQueryParam) || "";
-        } else if (element.tagName.toLowerCase() === "a") {
-        } else if (wfuQueryParam) {
-          element.textContent = urlParams.get(wfuQueryParam) || "";
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        const anchor = target.closest("a");
+        if (anchor) {
+          console.log("link clicked");
+          event.preventDefault();
+          const currentPageParams = new URLSearchParams(window.location.search);
+          const anchorParams = new URLSearchParams(anchor.search);
+          const anchorUrl = new URL(anchor.href);
+          if (this.config.internalOnly) {
+            const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
+            if (!isRelativeOrSameHost) {
+              console.log("Not internal, skipping");
+              return;
+            }
+          }
+          event.preventDefault();
+          let newParams = new URLSearchParams();
+          for (const [key, value] of currentPageParams) {
+            console.log(key, value);
+            if (this.shouldIgnoreKey(key))
+              continue;
+            if (anchorParams.has(key) && !this.config.overwriteExisting)
+              continue;
+            console.log("adding", key, value);
+            newParams.set(key, value);
+            console.log(newParams);
+          }
+          console.log("writing", newParams);
+          let newUrl = anchorUrl.origin + anchorUrl.pathname;
+          if (newParams.size > 0)
+            newUrl += "?" + newParams.toString();
+          console.log("Navigating to:", newUrl);
         }
       });
     }
-    processLink(linkElem) {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (linkElem.getAttribute("href") == null)
-        return;
-      var hrefParts = linkElem.getAttribute("href").split("?");
-      var hrefBase = hrefParts[0];
-      var hrefQuery = hrefParts[1];
-      const newParams = new URLSearchParams(hrefQuery);
-      if (linkElem.getAttribute("wfu-query-param") == "-") {
-      } else if (linkElem.getAttribute("wfu-query-param") == "*" || linkElem.getAttribute("wfu-query-param") == void 0 || linkElem.hasAttribute("wfu-query-param") == false) {
-        for (let p of urlParams) {
-          newParams.set(p[0], urlParams.get(p[0]));
+    shouldIgnoreKey(key) {
+      for (const pattern of this.config.ignorePatterns) {
+        if (typeof pattern === "string") {
+          if (pattern === key) {
+            return true;
+          }
+        } else if (pattern instanceof RegExp) {
+          if (pattern.test(key)) {
+            return true;
+          }
         }
-        ;
-        var newHref = hrefBase + "?" + newParams.toString();
-        linkElem.setAttribute("href", newHref);
-      } else {
-        var overrideParams = linkElem.getAttribute("wfu-query-param").split(",");
-        for (let p of overrideParams) {
-          if (urlParams.get(p) != null)
-            newParams.set(p, urlParams.get(p));
-        }
-        ;
-        var newHref = hrefBase + "?" + newParams.toString();
-        linkElem.setAttribute("href", newHref);
       }
+      return false;
     }
   };
 
@@ -323,28 +339,72 @@
     }
   };
 
+  // src/webflow-url.ts
+  var Sa5Url = class {
+    constructor(config = {}) {
+      this.config = {
+        passthrough: config.passthrough ?? true,
+        passthroughConfig: config.passthroughConfig ?? null,
+        fixupRelative: config.fixupRelative ?? true,
+        targetExternal: config.targetExternal ?? true,
+        targetExternalConfig: config.targetExternalConfig ?? {
+          allLinks: false
+        }
+      };
+      this.debug = new Sa5Debug("sa5-url");
+      this.debug.debug("Initializing");
+    }
+    getConfig() {
+      let core = Sa5Core.startup();
+      let configHandler = core.getHandler("urlConfig");
+      if (!configHandler)
+        return;
+      if (configHandler) {
+        this.config = configHandler(
+          this.config
+        );
+      }
+    }
+    init() {
+      this.getConfig();
+      console.log("init url", this.config);
+      if (this.config.passthrough)
+        new Sa5QueryPassthrough().init();
+      if (this.config.fixupRelative) {
+        let elements2 = Array.from(
+          document.querySelectorAll(
+            Sa5Attribute.getBracketed("wfu-relative-links" /* ATTR_URL_RELATIVE_LINKS */)
+          )
+        );
+        elements2.forEach((element) => {
+          new WfuRelativeLinkFixup(element).init();
+        });
+      }
+      if (this.config.targetExternal) {
+        var elements;
+        if (this.config.targetExternalConfig.allLinks)
+          elements = Array.from(
+            document.querySelectorAll("a")
+          );
+        else
+          elements = Array.from(
+            document.querySelectorAll(
+              Sa5Attribute.getBracketed("wfu-external-links" /* ATTR_URL_EXTERNAL_LINKS */)
+            )
+          );
+        elements.forEach((element) => {
+          new WfuTargetLinks(element).init();
+        });
+      }
+    }
+  };
+  Sa5Core.startup(Sa5Url);
+
   // src/nocode/webflow-url.ts
   var init = () => {
     let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-url");
-    debug.debug("Initializing");
-    new WfuQuery().init();
-    let elements = Array.from(
-      document.querySelectorAll(
-        Sa5Attribute.getBracketed("wfu-relative-links" /* ATTR_URL_RELATIVE_LINKS */)
-      )
-    );
-    elements.forEach((element) => {
-      new WfuRelativeLinkFixup(element).init();
-    });
-    elements = Array.from(
-      document.querySelectorAll(
-        Sa5Attribute.getBracketed("wfu-external-links" /* ATTR_URL_EXTERNAL_LINKS */)
-      )
-    );
-    elements.forEach((element) => {
-      new WfuTargetLinks(element).init();
-    });
+    let handler = new Sa5Url();
+    handler.init();
   };
   document.addEventListener("DOMContentLoaded", init);
 })();

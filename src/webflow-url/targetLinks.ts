@@ -12,6 +12,11 @@
 import { Sa5Core } from '../webflow-core'
 
 
+export interface TargetExternalConfig {
+
+    allLinks: boolean; // Indicates all links should be targeted, or attribute region only
+
+}
 
 /*
  * Link-processing functions.

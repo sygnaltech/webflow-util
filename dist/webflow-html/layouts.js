@@ -214,190 +214,25 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-url/queryPassthrough.ts
-  var Sa5QueryPassthrough = class {
+  // src/webflow-html/layouts.ts
+  var Sa5Layouts = class {
+    isLayoutsChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
+    }
     constructor(config = {}) {
       this.config = {
-        ignorePatterns: config.ignorePatterns ?? [
-          /_page$/
-        ],
-        overwriteExisting: config.overwriteExisting ?? false,
-        internalOnly: config.internalOnly ?? true
+        layoutChangedCallback: config.layoutChangedCallback
       };
-      this.debug = new Sa5Debug("sa5-url-querypassthrough");
-      this.debug.debug("Initializing");
-      this.debug.debug("Config:", this.config);
-    }
-    init() {
-      document.addEventListener("click", (event) => {
-        const target = event.target;
-        const anchor = target.closest("a");
-        if (anchor) {
-          console.log("link clicked");
-          event.preventDefault();
-          const currentPageParams = new URLSearchParams(window.location.search);
-          const anchorParams = new URLSearchParams(anchor.search);
-          const anchorUrl = new URL(anchor.href);
-          if (this.config.internalOnly) {
-            const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
-            if (!isRelativeOrSameHost) {
-              console.log("Not internal, skipping");
-              return;
-            }
-          }
-          event.preventDefault();
-          let newParams = new URLSearchParams();
-          for (const [key, value] of currentPageParams) {
-            console.log(key, value);
-            if (this.shouldIgnoreKey(key))
-              continue;
-            if (anchorParams.has(key) && !this.config.overwriteExisting)
-              continue;
-            console.log("adding", key, value);
-            newParams.set(key, value);
-            console.log(newParams);
-          }
-          console.log("writing", newParams);
-          let newUrl = anchorUrl.origin + anchorUrl.pathname;
-          if (newParams.size > 0)
-            newUrl += "?" + newParams.toString();
-          console.log("Navigating to:", newUrl);
-        }
-      });
-    }
-    shouldIgnoreKey(key) {
-      for (const pattern of this.config.ignorePatterns) {
-        if (typeof pattern === "string") {
-          if (pattern === key) {
-            return true;
-          }
-        } else if (pattern instanceof RegExp) {
-          if (pattern.test(key)) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-  };
-
-  // src/webflow-url/relativeLinkFixup.ts
-  var WfuRelativeLinkFixup = class {
-    constructor(element) {
-      this._element = element;
-    }
-    init() {
-      let elems = Array.from(
-        this._element.querySelectorAll(
-          "a[href^='http://.' i], a[href^='https://.' i], a[href^='http://?' i], a[href^='https://?' i]"
-        )
-      );
-      elems.forEach((elem) => {
-        let href = elem.getAttribute("href");
-        if (href) {
-          if (href.startsWith("http://."))
-            href = href.substring(8);
-          if (href.startsWith("https://."))
-            href = href.substring(9);
-          if (href.startsWith("http://?"))
-            href = href.substring(7);
-          if (href.startsWith("https://?"))
-            href = href.substring(8);
-          elem.setAttribute("href", href);
-        }
-      });
-      let elements = Array.from(
-        this._element.querySelectorAll("a[href*='//self/' i], a[href$='//self' i]")
-      );
-      elements.forEach((element) => {
-        let originalHref = element.getAttribute("href");
-        if (originalHref) {
-          const originalUrl = new URL(originalHref);
-          let relativeHref = originalUrl.pathname + originalUrl.search + originalUrl.hash;
-          element.setAttribute("href", relativeHref);
-        }
-      });
-    }
-  };
-
-  // src/webflow-url/targetLinks.ts
-  var WfuTargetLinks = class {
-    constructor(element) {
-      this._element = element;
-    }
-    init() {
-      let elements = Array.from(
-        document.querySelectorAll("a[href^='http://']:not([target]), a[href^='https://']:not([target])")
-      );
-      elements.forEach((element) => {
-        let href = element.getAttribute("href");
-        if (href) {
-          console.debug(`retargeting ${href}.`);
-          element.setAttribute("target", "_blank");
-        }
-      });
-    }
-  };
-
-  // src/webflow-url.ts
-  var Sa5Url = class {
-    constructor(config = {}) {
-      this.config = {
-        passthrough: config.passthrough ?? true,
-        passthroughConfig: config.passthroughConfig ?? null,
-        fixupRelative: config.fixupRelative ?? true,
-        targetExternal: config.targetExternal ?? true,
-        targetExternalConfig: config.targetExternalConfig ?? {
-          allLinks: false
-        }
-      };
-      this.debug = new Sa5Debug("sa5-url");
-      this.debug.debug("Initializing");
-    }
-    getConfig() {
       let core = Sa5Core.startup();
-      let configHandler = core.getHandler("urlConfig");
-      if (!configHandler)
-        return;
-      if (configHandler) {
-        this.config = configHandler(
-          this.config
-        );
-      }
+      const layoutChanged = core.getHandler("layoutChanged");
+      this.config.layoutChangedCallback = layoutChanged;
     }
     init() {
-      this.getConfig();
-      console.log("init url", this.config);
-      if (this.config.passthrough)
-        new Sa5QueryPassthrough().init();
-      if (this.config.fixupRelative) {
-        let elements2 = Array.from(
-          document.querySelectorAll(
-            Sa5Attribute.getBracketed("wfu-relative-links" /* ATTR_URL_RELATIVE_LINKS */)
-          )
-        );
-        elements2.forEach((element) => {
-          new WfuRelativeLinkFixup(element).init();
-        });
-      }
-      if (this.config.targetExternal) {
-        var elements;
-        if (this.config.targetExternalConfig.allLinks)
-          elements = Array.from(
-            document.querySelectorAll("a")
-          );
-        else
-          elements = Array.from(
-            document.querySelectorAll(
-              Sa5Attribute.getBracketed("wfu-external-links" /* ATTR_URL_EXTERNAL_LINKS */)
-            )
-          );
-        elements.forEach((element) => {
-          new WfuTargetLinks(element).init();
-        });
-      }
+      let debug = new Sa5Debug("sa5-html");
+      debug.debug("Layouts initialized.", this.config);
     }
   };
-  Sa5Core.startup(Sa5Url);
 })();
-//# sourceMappingURL=webflow-url.js.map
+//# sourceMappingURL=layouts.js.map
