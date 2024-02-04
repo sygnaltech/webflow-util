@@ -104,10 +104,15 @@
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+    Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
+    Sa5Attribute2["ATTR_ELEMENT_TAB_NAME"] = "wfu-tab-name";
     Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
     Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
     Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";

@@ -14,10 +14,15 @@
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+    Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
+    Sa5Attribute2["ATTR_ELEMENT_TAB_NAME"] = "wfu-tab-name";
     Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
     Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
     Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -511,9 +516,20 @@
         return;
       return this._elementTabMenu.children[index];
     }
-    goToIndex(index) {
-      this.debug.debug(index);
+    goTo(index) {
+      this.debug.debug("goTo", index);
       this.currentIndex = index;
+    }
+    goToName(name) {
+      this.debug.debug("goToName", name);
+      let index = Array.from(this._elementTabMenu.children).findIndex(
+        (child) => child.getAttribute("wfu-tab-name" /* ATTR_ELEMENT_TAB_NAME */) == name
+      );
+      if (index == -1) {
+        console.error(`No tab found with name: ${name}`);
+        return;
+      }
+      this.goTo(index);
     }
     goToNext() {
       if (this.currentIndex == null) {
@@ -523,7 +539,7 @@
       var newTabIndex = this.currentIndex + 1;
       if (newTabIndex >= this.count)
         newTabIndex = 0;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     goToPrev() {
       if (this.currentIndex == null) {
@@ -533,14 +549,14 @@
       var newTabIndex = this.currentIndex - 1;
       if (newTabIndex < 0)
         newTabIndex = this.count - 1;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     goToFirst() {
-      this.goToIndex(0);
+      this.goTo(0);
     }
     goToLast() {
       var newTabIndex = this.count - 1;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     isTabChangedCallback(func) {
       if (!func)
@@ -652,9 +668,19 @@
       let targetChild = filteredChildren[index];
       return targetChild;
     }
-    goToIndex(index) {
+    goTo(index) {
       this.debug.debug(index);
       this.currentIndex = index;
+    }
+    goToName(name) {
+      let index = Array.from(this._elementSliderMask.children).findIndex(
+        (child) => child.getAttribute("wfu-slide-name" /* ATTR_ELEMENT_SLIDE_NAME */) == name
+      );
+      if (index == -1) {
+        console.error(`No slide found with name: ${name}`);
+        return;
+      }
+      this.goTo(index);
     }
     goToNext() {
       if (this.currentIndex == null) {
@@ -664,7 +690,7 @@
       var newSlideIndex = this.currentIndex + 1;
       if (newSlideIndex >= this.count)
         newSlideIndex = 0;
-      this.goToIndex(newSlideIndex);
+      this.goTo(newSlideIndex);
     }
     goToPrev() {
       if (this.currentIndex == null) {
@@ -674,14 +700,14 @@
       var newSlideIndex = this.currentIndex - 1;
       if (newSlideIndex < 0)
         newSlideIndex = this.count - 1;
-      this.goToIndex(newSlideIndex);
+      this.goTo(newSlideIndex);
     }
     goToFirst() {
-      this.goToIndex(0);
+      this.goTo(0);
     }
     goToLast() {
       var newSlideIndex = this.count - 1;
-      this.goToIndex(newSlideIndex);
+      this.goTo(newSlideIndex);
     }
     isSlideChangedCallback(func) {
       if (!func)
@@ -697,6 +723,98 @@
   };
   Sa5Core.startup(WebflowSlider);
 
+  // src/webflow-elements/deck-controller.ts
+  var Action = /* @__PURE__ */ ((Action2) => {
+    Action2["First"] = "first";
+    Action2["Prev"] = "prev";
+    Action2["Next"] = "next";
+    Action2["Last"] = "last";
+    Action2["GoTo"] = "goto";
+    return Action2;
+  })(Action || {});
+  var Sa5DeckController = class {
+    constructor(element) {
+      this.element = element;
+      this.deckName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      const targetName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      if (targetName) {
+        this.deckName = targetName;
+        const tabsElements = document.querySelectorAll(`[wfu-tabs="${targetName}"]`);
+        const sliderElements = document.querySelectorAll(`[wfu-slider="${targetName}"]`);
+        if (tabsElements.length + sliderElements.length > 1) {
+          console.error(`Multiple elements or conflicting elements found with the target name: ${targetName}`);
+        }
+        if (tabsElements.length + sliderElements.length == 0) {
+          console.error(`No elements found with the target name: ${targetName}`);
+        }
+        if (tabsElements.length === 1) {
+          this.tabsElement = tabsElements[0];
+          this.deck = new WebflowTabs(this.tabsElement);
+        } else if (sliderElements.length === 1) {
+          this.sliderElement = sliderElements[0];
+          this.deck = new WebflowSlider(this.sliderElement);
+        }
+      }
+      const actionValue = this.element.getAttribute("wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */);
+      if (actionValue) {
+        this.action = Sa5DeckController.getActionEnum(actionValue);
+        console.log(`Action is valid: ${this.action}`);
+        if (!this.action) {
+          console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        }
+      }
+      this.item = this.element.getAttribute("wfu-deck-action-item" /* ATTR_ELEMENT_DECK_ITEM */);
+    }
+    init() {
+      this.element.addEventListener("click", (event) => {
+        event.preventDefault();
+        switch (this.action) {
+          case "first" /* First */:
+            this.deck.goToFirst();
+            break;
+          case "prev" /* Prev */:
+            this.deck.goToPrev();
+            break;
+          case "next" /* Next */:
+            this.deck.goToNext();
+            break;
+          case "last" /* Last */:
+            this.deck.goToLast();
+            break;
+          case "goto" /* GoTo */:
+            if (typeof this.item === "string" && !isNaN(Number(this.item))) {
+              this.deck.goTo(Number(this.item) - 1);
+            } else if (typeof this.item === "number") {
+              this.deck.goTo(this.item - 1);
+            } else {
+              this.deck.goToName(this.item);
+            }
+            break;
+          default:
+            console.error(`Invalid wfu-deck-action value: ${this.action}`);
+            break;
+        }
+      });
+    }
+    static getActionEnum(actionValue) {
+      const lowerCaseValue = actionValue.toLowerCase();
+      console.log(`lowerCaseValue: ${lowerCaseValue}`);
+      if (Object.keys(Action).some((key) => Action[key] === lowerCaseValue)) {
+        return lowerCaseValue;
+      } else {
+        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        return null;
+      }
+      if (lowerCaseValue in Action) {
+        return Action[lowerCaseValue];
+      } else {
+        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        return null;
+      }
+    }
+  };
+  Sa5Core.startup(Sa5DeckController);
+
   // src/nocode/webflow-elements.ts
   var init = () => {
     let tabElements = document.querySelectorAll(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
@@ -706,6 +824,11 @@
     let sliderElements = document.querySelectorAll(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}]`);
     sliderElements.forEach((element) => {
       var sliderObj = new WebflowSlider(element);
+    });
+    let deckControllerElements = document.querySelectorAll(`[${"wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */}]`);
+    deckControllerElements.forEach((element) => {
+      var deckControllerObj = new Sa5DeckController(element);
+      deckControllerObj.init();
     });
     const buttons = document.querySelectorAll(`[${"wfu-button" /* ATTR_ELEMENT_BUTTON */}]`);
     buttons.forEach((element) => {

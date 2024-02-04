@@ -369,5 +369,290 @@
     }
   };
   Sa5Core.startup(WebflowSlider);
+
+  // src/webflow-elements/tabs.ts
+  var WebflowTabs = class {
+    constructor(element) {
+      this.debug = new Sa5Debug("sa5-webflow-tabs");
+      this.debug.enabled = true;
+      if (!element.classList.contains("w-tabs")) {
+        console.error(
+          `[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}] is not on a tabs element`
+        );
+        return;
+      }
+      this._element = element;
+      this.init();
+    }
+    get element() {
+      return this._element;
+    }
+    get elementTabMenu() {
+      return this._elementTabMenu;
+    }
+    get elementTabContent() {
+      return this._elementTabContent;
+    }
+    get name() {
+      return this._element.getAttribute("wfu-tabs" /* ATTR_ELEMENT_TABS */);
+    }
+    get currentNum() {
+      return this.currentIndex + 1;
+    }
+    set currentNum(num) {
+      this.currentIndex = num - 1;
+    }
+    get currentIndex() {
+      let currentIndex = null;
+      for (let i = 0; i < this._elementTabMenu.children.length; i++) {
+        if (this._elementTabMenu.children[i].classList.contains("w--current")) {
+          currentIndex = i;
+          break;
+        }
+      }
+      return currentIndex;
+    }
+    set currentIndex(index) {
+      if (index < 0)
+        return;
+      if (index >= this.count)
+        return;
+      let clickEvent = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      this.debug.debug("setting tab", index);
+      setTimeout(() => {
+        this.elementTab(index).dispatchEvent(clickEvent);
+      }, 0);
+    }
+    get count() {
+      return this._elementTabMenu.children.length;
+    }
+    goToTabNone() {
+      this.goToTabIndexForced(null);
+    }
+    goToTabIndexForced(index) {
+      Array.from(this._elementTabMenu.querySelectorAll(".w-tab-link")).forEach(
+        (elem) => {
+          elem.classList.remove("w--current");
+          elem.removeAttribute("tabindex");
+          elem.setAttribute("aria-selected", "true");
+        }
+      );
+      Array.from(this._elementTabContent.querySelectorAll(".w-tab-pane")).forEach(
+        (elem) => {
+          elem.classList.remove("w--tab-active");
+        }
+      );
+      if (index) {
+        console.log("setting forced index", index);
+        Array.from(this._elementTabMenu.querySelectorAll(`.w-tab-link:nth-child(${index + 1})`)).forEach(
+          (elem) => {
+            elem.classList.add("w--current");
+          }
+        );
+        Array.from(this._elementTabContent.querySelectorAll(`.w-tab-pane:nth-child(${index + 1})`)).forEach(
+          (elem) => {
+            elem.classList.add("w--tab-active");
+            elem.style.cssText = "style=opacity: 1; transition: opacity 300ms ease 0s;";
+          }
+        );
+      }
+    }
+    getTabIndex(tab) {
+      let index = Array.from(this._elementTabMenu.children).indexOf(tab);
+      if (index == -1) {
+        index = Array.from(this._elementTabContent.children).indexOf(tab);
+      }
+      if (index == -1)
+        return null;
+      return index;
+    }
+    init() {
+      this._elementTabMenu = this._element.querySelector(".w-tab-menu");
+      this._elementTabContent = this._element.querySelector(".w-tab-content");
+      this._observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === "attributes" && mutation.attributeName === "class") {
+            const target = mutation.target;
+            if (target.classList.contains("w--current")) {
+              this.onTabChanged(this.currentIndex);
+            }
+          }
+        }
+      });
+      const config = {
+        attributes: true,
+        childList: true,
+        subtree: true
+      };
+      this._observer.observe(this._elementTabMenu, config);
+      for (let elem of this._elementTabMenu.children) {
+        if (elem.hasAttribute("wfu-tab-default")) {
+          this.debug.debug("default");
+          let defaultTabIndex = this.getTabIndex(elem);
+          this.debug.debug(defaultTabIndex);
+          if (defaultTabIndex != null)
+            this.currentIndex = defaultTabIndex;
+        }
+      }
+      ;
+    }
+    elementTab(index) {
+      if (index < 0)
+        return;
+      if (index >= this.count)
+        return;
+      return this._elementTabMenu.children[index];
+    }
+    goTo(index) {
+      this.debug.debug("goTo", index);
+      this.currentIndex = index;
+    }
+    goToName(name) {
+      this.debug.debug("goToName", name);
+      let index = Array.from(this._elementTabMenu.children).findIndex(
+        (child) => child.getAttribute("wfu-tab-name" /* ATTR_ELEMENT_TAB_NAME */) == name
+      );
+      if (index == -1) {
+        console.error(`No tab found with name: ${name}`);
+        return;
+      }
+      this.goTo(index);
+    }
+    goToNext() {
+      if (this.currentIndex == null) {
+        this.currentIndex = 0;
+        return;
+      }
+      var newTabIndex = this.currentIndex + 1;
+      if (newTabIndex >= this.count)
+        newTabIndex = 0;
+      this.goTo(newTabIndex);
+    }
+    goToPrev() {
+      if (this.currentIndex == null) {
+        this.currentIndex = 0;
+        return;
+      }
+      var newTabIndex = this.currentIndex - 1;
+      if (newTabIndex < 0)
+        newTabIndex = this.count - 1;
+      this.goTo(newTabIndex);
+    }
+    goToFirst() {
+      this.goTo(0);
+    }
+    goToLast() {
+      var newTabIndex = this.count - 1;
+      this.goTo(newTabIndex);
+    }
+    isTabChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
+    }
+    onTabChanged(index) {
+      let core = Sa5Core.startup();
+      core.getHandlers("tabChanged" /* EVENT_TAB_CHANGED */).forEach((func) => {
+        func(this, index);
+      });
+    }
+  };
+  Sa5Core.startup(WebflowTabs);
+
+  // src/webflow-elements/deck-controller.ts
+  var Action = /* @__PURE__ */ ((Action2) => {
+    Action2["First"] = "first";
+    Action2["Prev"] = "prev";
+    Action2["Next"] = "next";
+    Action2["Last"] = "last";
+    Action2["GoTo"] = "goto";
+    return Action2;
+  })(Action || {});
+  var Sa5DeckController = class {
+    constructor(element) {
+      this.element = element;
+      this.deckName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      const targetName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      if (targetName) {
+        this.deckName = targetName;
+        const tabsElements = document.querySelectorAll(`[wfu-tabs="${targetName}"]`);
+        const sliderElements = document.querySelectorAll(`[wfu-slider="${targetName}"]`);
+        if (tabsElements.length + sliderElements.length > 1) {
+          console.error(`Multiple elements or conflicting elements found with the target name: ${targetName}`);
+        }
+        if (tabsElements.length + sliderElements.length == 0) {
+          console.error(`No elements found with the target name: ${targetName}`);
+        }
+        if (tabsElements.length === 1) {
+          this.tabsElement = tabsElements[0];
+          this.deck = new WebflowTabs(this.tabsElement);
+        } else if (sliderElements.length === 1) {
+          this.sliderElement = sliderElements[0];
+          this.deck = new WebflowSlider(this.sliderElement);
+        }
+      }
+      const actionValue = this.element.getAttribute("wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */);
+      if (actionValue) {
+        this.action = Sa5DeckController.getActionEnum(actionValue);
+        console.log(`Action is valid: ${this.action}`);
+        if (!this.action) {
+          console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        }
+      }
+      this.item = this.element.getAttribute("wfu-deck-action-item" /* ATTR_ELEMENT_DECK_ITEM */);
+    }
+    init() {
+      this.element.addEventListener("click", (event) => {
+        event.preventDefault();
+        switch (this.action) {
+          case "first" /* First */:
+            this.deck.goToFirst();
+            break;
+          case "prev" /* Prev */:
+            this.deck.goToPrev();
+            break;
+          case "next" /* Next */:
+            this.deck.goToNext();
+            break;
+          case "last" /* Last */:
+            this.deck.goToLast();
+            break;
+          case "goto" /* GoTo */:
+            if (typeof this.item === "string" && !isNaN(Number(this.item))) {
+              this.deck.goTo(Number(this.item) - 1);
+            } else if (typeof this.item === "number") {
+              this.deck.goTo(this.item - 1);
+            } else {
+              this.deck.goToName(this.item);
+            }
+            break;
+          default:
+            console.error(`Invalid wfu-deck-action value: ${this.action}`);
+            break;
+        }
+      });
+    }
+    static getActionEnum(actionValue) {
+      const lowerCaseValue = actionValue.toLowerCase();
+      console.log(`lowerCaseValue: ${lowerCaseValue}`);
+      if (Object.keys(Action).some((key) => Action[key] === lowerCaseValue)) {
+        return lowerCaseValue;
+      } else {
+        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        return null;
+      }
+      if (lowerCaseValue in Action) {
+        return Action[lowerCaseValue];
+      } else {
+        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        return null;
+      }
+    }
+  };
+  Sa5Core.startup(Sa5DeckController);
 })();
-//# sourceMappingURL=slider.js.map
+//# sourceMappingURL=deck-controller.js.map

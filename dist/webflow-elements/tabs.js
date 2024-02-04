@@ -14,10 +14,15 @@
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
+    Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
+    Sa5Attribute2["ATTR_ELEMENT_TAB_NAME"] = "wfu-tab-name";
     Sa5Attribute2["ATTR_ELEMENT_BUTTON"] = "wfu-button";
     Sa5Attribute2["ATTR_BUTTON_ENABLED"] = "wfu-button-enabled";
     Sa5Attribute2["ATTR_BUTTON_DISABLED_CLASS"] = "wfu-button-disabled-class";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
+    Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -351,9 +356,20 @@
         return;
       return this._elementTabMenu.children[index];
     }
-    goToIndex(index) {
-      this.debug.debug(index);
+    goTo(index) {
+      this.debug.debug("goTo", index);
       this.currentIndex = index;
+    }
+    goToName(name) {
+      this.debug.debug("goToName", name);
+      let index = Array.from(this._elementTabMenu.children).findIndex(
+        (child) => child.getAttribute("wfu-tab-name" /* ATTR_ELEMENT_TAB_NAME */) == name
+      );
+      if (index == -1) {
+        console.error(`No tab found with name: ${name}`);
+        return;
+      }
+      this.goTo(index);
     }
     goToNext() {
       if (this.currentIndex == null) {
@@ -363,7 +379,7 @@
       var newTabIndex = this.currentIndex + 1;
       if (newTabIndex >= this.count)
         newTabIndex = 0;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     goToPrev() {
       if (this.currentIndex == null) {
@@ -373,14 +389,14 @@
       var newTabIndex = this.currentIndex - 1;
       if (newTabIndex < 0)
         newTabIndex = this.count - 1;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     goToFirst() {
-      this.goToIndex(0);
+      this.goTo(0);
     }
     goToLast() {
       var newTabIndex = this.count - 1;
-      this.goToIndex(newTabIndex);
+      this.goTo(newTabIndex);
     }
     isTabChangedCallback(func) {
       if (!func)
