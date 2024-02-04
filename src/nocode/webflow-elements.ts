@@ -16,6 +16,7 @@ import { Sa5Button } from '../webflow-elements/button';
 import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
 import { WebflowTabs } from '../webflow-elements/tabs';
 import { WebflowSlider } from '../webflow-elements/slider';
+import { Sa5DeckController } from '../webflow-elements/deck-controller';
 
 
 const init = () => { 
@@ -52,6 +53,17 @@ const init = () => {
 
     });
 
+    /**
+     * Deck Controllers
+     */
+
+    let deckControllerElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_DECK_ACTION}]`);
+    deckControllerElements.forEach(element => {
+
+        var deckControllerObj = new Sa5DeckController(element as HTMLElement);
+        deckControllerObj.init();
+
+    });    
 
     /**
      * Buttons

@@ -281,7 +281,7 @@ export class WebflowSlider implements IDeckNavigation {
 
     // Goes to the identified slide 
     // raises navigation events
-    goToIndex(index: number) {
+    goTo(index: number) {
 
         // Eventing tab change (pre)
         // from & to tabs
@@ -292,6 +292,24 @@ export class WebflowSlider implements IDeckNavigation {
 
         // Eventing tab change (post)
         // from & to slide
+    }
+
+    goToName(name: string) {
+
+        // Get the index of the slide with the matching name
+        let index = Array.from(this._elementSliderMask.children)
+            .findIndex(child => 
+                (child as HTMLElement).getAttribute(Sa5Attribute.ATTR_ELEMENT_SLIDE_NAME) == name
+            );
+
+        // If no match found, return
+        if (index == -1) {
+            console.error(`No slide found with name: ${name}`);            
+            return;
+        }
+
+        this.goTo(index);
+
     }
 
     goToNext() {
@@ -307,7 +325,7 @@ export class WebflowSlider implements IDeckNavigation {
         if (newSlideIndex >= this.count)
             newSlideIndex = 0;
 
-        this.goToIndex(newSlideIndex);
+        this.goTo(newSlideIndex);
 
     }
 
@@ -324,13 +342,13 @@ export class WebflowSlider implements IDeckNavigation {
         if (newSlideIndex < 0)
             newSlideIndex = this.count - 1;
         
-        this.goToIndex(newSlideIndex);
+        this.goTo(newSlideIndex);
 
     }
 
     goToFirst() {
                 
-        this.goToIndex(0);
+        this.goTo(0);
 
     }
 
@@ -338,7 +356,7 @@ export class WebflowSlider implements IDeckNavigation {
 
         var newSlideIndex: number = this.count - 1;
 
-        this.goToIndex(newSlideIndex);
+        this.goTo(newSlideIndex);
 
     }
 

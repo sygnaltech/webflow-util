@@ -48,10 +48,15 @@ export enum Sa5Attribute {
 
     // Elements 
     ATTR_ELEMENT_SLIDER = 'wfu-slider',
+        ATTR_ELEMENT_SLIDE_NAME = 'wfu-slide-name',
     ATTR_ELEMENT_TABS = 'wfu-tabs',
+        ATTR_ELEMENT_TAB_NAME = 'wfu-tab-name',
     ATTR_ELEMENT_BUTTON = 'wfu-button', 
         ATTR_BUTTON_ENABLED = 'wfu-button-enabled', 
         ATTR_BUTTON_DISABLED_CLASS = 'wfu-button-disabled-class',
+    ATTR_ELEMENT_DECK_TARGET = 'wfu-deck-target',
+        ATTR_ELEMENT_DECK_ACTION = 'wfu-deck-action',
+        ATTR_ELEMENT_DECK_ITEM = 'wfu-deck-action-item',
 
     // Data
     ATTR_DATA = 'wfu-data',

@@ -6,7 +6,8 @@ interface IDeckNavigation {
     goToLast(): void;
     goToNext(): void;
     goToPrev(): void;
-    goToIndex(index: number): void;
+    goTo(index: number): void;
+    goToName(name: string): void;
 
     // Properties with getter and setter
     currentNum: number; // This acts as a shorthand for both getter and setter

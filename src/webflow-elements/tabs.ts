@@ -314,17 +314,37 @@ export class WebflowTabs implements IDeckNavigation {
 
     // Goes to the identified tab 
     // raises navigation events
-    goToIndex(index: number) {
+    goTo(index: number) {
 
         // Eventing tab change (pre)
         // from & to tabs
 
-        this.debug.debug(index);
+        this.debug.debug("goTo", index);
         
         this.currentIndex = index;
 
         // Eventing tab change (post)
         // from & to tabs
+    }
+
+    goToName(name: string): void {
+
+        this.debug.debug("goToName", name);
+
+        // Get the index of the slide with the matching name
+        let index = Array.from(this._elementTabMenu.children)
+            .findIndex(child => 
+                (child as HTMLElement).getAttribute(Sa5Attribute.ATTR_ELEMENT_TAB_NAME) == name
+            );
+
+        // If no match found, return
+        if (index == -1) {
+            console.error(`No tab found with name: ${name}`);            
+            return;
+        }
+
+        this.goTo(index);
+
     }
 
     goToNext() {
@@ -340,7 +360,7 @@ export class WebflowTabs implements IDeckNavigation {
         if (newTabIndex >= this.count)
             newTabIndex = 0;
 
-        this.goToIndex(newTabIndex);
+        this.goTo(newTabIndex);
 
     }
 
@@ -357,13 +377,13 @@ export class WebflowTabs implements IDeckNavigation {
         if (newTabIndex < 0)
             newTabIndex = this.count - 1;
         
-        this.goToIndex(newTabIndex);
+        this.goTo(newTabIndex);
 
     }
 
     goToFirst() {
                 
-        this.goToIndex(0);
+        this.goTo(0);
 
     }
 
@@ -371,7 +391,7 @@ export class WebflowTabs implements IDeckNavigation {
 
         var newTabIndex: number = this.count - 1;
 
-        this.goToIndex(newTabIndex);
+        this.goTo(newTabIndex);
 
     }
 
