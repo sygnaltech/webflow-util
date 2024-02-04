@@ -6,7 +6,7 @@
     "sourceMap": true,
     "rootDir": "./src",
     "module": "commonjs", // "es6", // "commonjs"
-    "target": "es6",
+    "target": "es2020", // "es6",
     "esModuleInterop": true, 
     
     // Cannot find module 'ts-transformer-keys'. Did you mean to set the 'moduleResolution' option to 'node', or to add aliases to the 'paths' option?
