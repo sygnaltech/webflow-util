@@ -41,7 +41,18 @@ export class Sa5DeckController {
     constructor(element: HTMLElement) {
 
         this.element = element; 
-        this.deckName = element.getAttribute(Sa5Attribute.ATTR_ELEMENT_DECK_TARGET); 
+
+        // Get the action value from the wfu-deck-action attribute
+        const actionValue = this.element.getAttribute(Sa5Attribute.ATTR_ELEMENT_DECK_ACTION);
+        if (actionValue) {
+            this.action = Sa5DeckController.getActionEnum(actionValue);
+//            console.log(`Action is valid: ${this.action}`);
+
+            if (!this.action) {
+                // The action is valid, proceed with your logic
+                console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+            }
+        }
 
         // Get the target deck element
         const targetName = element.getAttribute(Sa5Attribute.ATTR_ELEMENT_DECK_TARGET);
@@ -72,18 +83,22 @@ export class Sa5DeckController {
                 this.deck = new WebflowSlider(this.sliderElement);  
             }
 
-        }
+        } else {
 
-        // Get the action value from the wfu-deck-action attribute
-        const actionValue = this.element.getAttribute(Sa5Attribute.ATTR_ELEMENT_DECK_ACTION);
-        if (actionValue) {
-            this.action = Sa5DeckController.getActionEnum(actionValue);
-            console.log(`Action is valid: ${this.action}`);
+            // Get the nearest parent element with an attribute of wfu-tabs or wfu-slider
+            const tabsParent = this.element.closest(`[${Sa5Attribute.ATTR_ELEMENT_TABS}]`);
+            const sliderParent = this.element.closest(`[${Sa5Attribute.ATTR_ELEMENT_SLIDER}]`);
 
-            if (!this.action) {
-                // The action is valid, proceed with your logic
-                console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+            if (tabsParent) {
+                this.tabsElement = tabsParent as HTMLElement;
+                this.deck = new WebflowTabs(this.tabsElement);
+            } else if (sliderParent) {
+                this.sliderElement = sliderParent as HTMLElement;
+                this.deck = new WebflowSlider(this.sliderElement);
+            } else {
+                console.error(`No valid target element found for the wfu-deck-action element`);
             }
+
         }
 
         // Get the item value from the wfu-deck-action-item attribute
@@ -98,8 +113,6 @@ export class Sa5DeckController {
             // block button click 
             event.preventDefault();
             
-//            console.log("button clicked."); 
-
             switch (this.action) {
                 case Action.First:
                     this.deck.goToFirst();
@@ -140,27 +153,15 @@ export class Sa5DeckController {
     static getActionEnum (actionValue: string): Action | null {
         const lowerCaseValue = actionValue.toLowerCase();
 
-console.log(`lowerCaseValue: ${lowerCaseValue}`);
+//        console.log(`lowerCaseValue: ${lowerCaseValue}`);
 
-
-if (Object.keys(Action).some(key => Action[key as keyof typeof Action] === lowerCaseValue)) {
-    return lowerCaseValue as Action;
-} else {
-    console.error(`Invalid wfu-deck-action value: ${actionValue}`);
-    return null;
-}
-
-
-
-
-
-
-        if (lowerCaseValue in Action) {
-            return Action[lowerCaseValue as keyof typeof Action];
+        if (Object.keys(Action).some(key => Action[key as keyof typeof Action] === lowerCaseValue)) {
+            return lowerCaseValue as Action;
         } else {
             console.error(`Invalid wfu-deck-action value: ${actionValue}`);
             return null;
         }
+
     };
 
 }

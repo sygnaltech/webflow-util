@@ -735,7 +735,13 @@
   var Sa5DeckController = class {
     constructor(element) {
       this.element = element;
-      this.deckName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      const actionValue = this.element.getAttribute("wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */);
+      if (actionValue) {
+        this.action = Sa5DeckController.getActionEnum(actionValue);
+        if (!this.action) {
+          console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        }
+      }
       const targetName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
       if (targetName) {
         this.deckName = targetName;
@@ -754,13 +760,17 @@
           this.sliderElement = sliderElements[0];
           this.deck = new WebflowSlider(this.sliderElement);
         }
-      }
-      const actionValue = this.element.getAttribute("wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */);
-      if (actionValue) {
-        this.action = Sa5DeckController.getActionEnum(actionValue);
-        console.log(`Action is valid: ${this.action}`);
-        if (!this.action) {
-          console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+      } else {
+        const tabsParent = this.element.closest(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
+        const sliderParent = this.element.closest(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}]`);
+        if (tabsParent) {
+          this.tabsElement = tabsParent;
+          this.deck = new WebflowTabs(this.tabsElement);
+        } else if (sliderParent) {
+          this.sliderElement = sliderParent;
+          this.deck = new WebflowSlider(this.sliderElement);
+        } else {
+          console.error(`No valid target element found for the wfu-deck-action element`);
         }
       }
       this.item = this.element.getAttribute("wfu-deck-action-item" /* ATTR_ELEMENT_DECK_ITEM */);
@@ -798,15 +808,8 @@
     }
     static getActionEnum(actionValue) {
       const lowerCaseValue = actionValue.toLowerCase();
-      console.log(`lowerCaseValue: ${lowerCaseValue}`);
       if (Object.keys(Action).some((key) => Action[key] === lowerCaseValue)) {
         return lowerCaseValue;
-      } else {
-        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
-        return null;
-      }
-      if (lowerCaseValue in Action) {
-        return Action[lowerCaseValue];
       } else {
         console.error(`Invalid wfu-deck-action value: ${actionValue}`);
         return null;
