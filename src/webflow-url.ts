@@ -54,12 +54,15 @@ export class Sa5Url {
     constructor(config: Partial<Sa5UrlConfig> = {}) {
 
         this.config = {
-            passthrough: config.passthrough ?? true, // false,
-            passthroughConfig: config.passthroughConfig ?? null,
+            passthrough: config.passthrough ?? false,
+            passthroughConfig: config.passthroughConfig ?? {
+                ignorePatterns: [
+                    /_page$/
+                ], 
+                overwriteExisting: config.passthroughConfig?.overwriteExisting ?? false, 
+                internalOnly: config.passthroughConfig?.internalOnly ?? true
+            },
             fixupRelative: config.fixupRelative ?? true,
-            //  { ignorePatterns: [
-            //     /_page$/
-            // ] },
             targetExternal: config.targetExternal ?? true,
             targetExternalConfig: config.targetExternalConfig ?? {
                 allLinks: false,
@@ -72,6 +75,7 @@ export class Sa5Url {
 
     }
 
+    // Handle config modifications 
     getConfig() {
 
         let core: Sa5Core = Sa5Core.startup();
@@ -85,11 +89,16 @@ export class Sa5Url {
         // this.config.getConfigCallback 
         //     = core.getHandler('getMembershipRoutingConfig') as GetConfigCallback; 
 
+//        console.log("pre config", this.config)
+
         if(configHandler) {
             this.config = configHandler(
                 this.config
             ); 
         }        
+
+//        console.log("post config", this.config)
+
     }
 
     init() {
@@ -104,11 +113,15 @@ export class Sa5Url {
         // TODO: configure A link behavior 
 //        new WfuQuery().init();
 
-console.log("init url", this.config)
+// console.log("init url", this.config)
 
-        if(this.config.passthrough)
-            new Sa5QueryPassthrough().init();
+        if(this.config.passthrough) {
 
+            new Sa5QueryPassthrough(
+                this.config.passthroughConfig
+            ).init(); 
+
+        }
 
         /**
          * Fixup relative links from the CMS

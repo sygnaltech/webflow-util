@@ -238,7 +238,6 @@
         const target = event.target;
         const anchor = target.closest("a");
         if (anchor) {
-          console.log("link clicked");
           event.preventDefault();
           const currentPageParams = new URLSearchParams(window.location.search);
           const anchorParams = new URLSearchParams(anchor.search);
@@ -246,27 +245,22 @@
           if (this.config.internalOnly) {
             const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
             if (!isRelativeOrSameHost) {
-              console.log("Not internal, skipping");
               return;
             }
           }
           event.preventDefault();
           let newParams = new URLSearchParams();
           for (const [key, value] of currentPageParams) {
-            console.log(key, value);
             if (this.shouldIgnoreKey(key))
               continue;
             if (anchorParams.has(key) && !this.config.overwriteExisting)
               continue;
-            console.log("adding", key, value);
             newParams.set(key, value);
-            console.log(newParams);
           }
-          console.log("writing", newParams);
           let newUrl = anchorUrl.origin + anchorUrl.pathname;
           if (newParams.size > 0)
             newUrl += "?" + newParams.toString();
-          console.log("Navigating to:", newUrl);
+          window.location.href = newUrl;
         }
       });
     }
@@ -348,8 +342,14 @@
   var Sa5Url = class {
     constructor(config = {}) {
       this.config = {
-        passthrough: config.passthrough ?? true,
-        passthroughConfig: config.passthroughConfig ?? null,
+        passthrough: config.passthrough ?? false,
+        passthroughConfig: config.passthroughConfig ?? {
+          ignorePatterns: [
+            /_page$/
+          ],
+          overwriteExisting: config.passthroughConfig?.overwriteExisting ?? false,
+          internalOnly: config.passthroughConfig?.internalOnly ?? true
+        },
         fixupRelative: config.fixupRelative ?? true,
         targetExternal: config.targetExternal ?? true,
         targetExternalConfig: config.targetExternalConfig ?? {
@@ -372,9 +372,11 @@
     }
     init() {
       this.getConfig();
-      console.log("init url", this.config);
-      if (this.config.passthrough)
-        new Sa5QueryPassthrough().init();
+      if (this.config.passthrough) {
+        new Sa5QueryPassthrough(
+          this.config.passthroughConfig
+        ).init();
+      }
       if (this.config.fixupRelative) {
         let elements2 = Array.from(
           document.querySelectorAll(

@@ -59,7 +59,6 @@
         const target = event.target;
         const anchor = target.closest("a");
         if (anchor) {
-          console.log("link clicked");
           event.preventDefault();
           const currentPageParams = new URLSearchParams(window.location.search);
           const anchorParams = new URLSearchParams(anchor.search);
@@ -67,27 +66,22 @@
           if (this.config.internalOnly) {
             const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
             if (!isRelativeOrSameHost) {
-              console.log("Not internal, skipping");
               return;
             }
           }
           event.preventDefault();
           let newParams = new URLSearchParams();
           for (const [key, value] of currentPageParams) {
-            console.log(key, value);
             if (this.shouldIgnoreKey(key))
               continue;
             if (anchorParams.has(key) && !this.config.overwriteExisting)
               continue;
-            console.log("adding", key, value);
             newParams.set(key, value);
-            console.log(newParams);
           }
-          console.log("writing", newParams);
           let newUrl = anchorUrl.origin + anchorUrl.pathname;
           if (newParams.size > 0)
             newUrl += "?" + newParams.toString();
-          console.log("Navigating to:", newUrl);
+          window.location.href = newUrl;
         }
       });
     }

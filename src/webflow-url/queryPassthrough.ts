@@ -61,14 +61,14 @@ export class Sa5QueryPassthrough {
 
             if (anchor) {
 
-                console.log("link clicked"); 
+//                console.log("link clicked"); 
                 
                 event.preventDefault();
 
                 const currentPageParams = new URLSearchParams(window.location.search);
 
                 // Get the parameters of the anchor URL
-const anchorParams = new URLSearchParams(anchor.search);
+                const anchorParams = new URLSearchParams(anchor.search);
 
                 // Parse the URL and query string
                 const anchorUrl = new URL(anchor.href);
@@ -82,7 +82,7 @@ const anchorParams = new URLSearchParams(anchor.search);
                     const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
 
                     if(!isRelativeOrSameHost) {
-                        console.log("Not internal, skipping");
+//                        console.log("Not internal, skipping");
                         return;
                     }
                 }
@@ -105,7 +105,7 @@ const anchorParams = new URLSearchParams(anchor.search);
                     // if (!this.shouldIgnoreKey(key) && !anchorParams.has(key)) {
                     //     anchorParams.append(key, value);
 
-console.log(key, value); 
+//                    console.log(key, value); 
 
                     if (this.shouldIgnoreKey(key))
                         continue; 
@@ -125,12 +125,12 @@ console.log(key, value);
 
                     // Ignore redir Webflow params (user accounts)
                     // TODO: 
-console.log("adding", key, value);
+//                    console.log("adding", key, value);
                     // Add this one
 //                    newParams[key] = value;
                     newParams.set(key, value);
 
-                    console.log(newParams)
+//                    console.log(newParams)
                 }
 
                 // Add or override other parameters as needed
@@ -149,7 +149,7 @@ console.log("adding", key, value);
                 // }
 
 
-                    console.log("writing", newParams)
+//                console.log("writing", newParams)
 
 
                 // Construct the new URL with the modified query string
@@ -159,28 +159,33 @@ console.log("adding", key, value);
                     newUrl +=  '?' + newParams.toString();
 
                 // Navigate to the new URL
-                console.log('Navigating to:', newUrl);
-//                window.location.href = newUrl;
+//                console.log('Navigating to:', newUrl);
+                window.location.href = newUrl;
             }
 
-
-
-    });
+        });
 
     }
 
     shouldIgnoreKey(key: string): boolean {
+
+//        console.log("checking", key, this.config.ignorePatterns)
+
         for (const pattern of this.config.ignorePatterns) {
             if (typeof pattern === 'string') {
                 if (pattern === key) {
+//                    console.log("ignoring", key);
                     return true;
                 }
             } else if (pattern instanceof RegExp) {
                 if (pattern.test(key)) {
+//                    console.log("ignoring", key);
                     return true;
                 }
             }
         }
+
+//        console.log("not ignoring", key);
         return false;
     }
 
