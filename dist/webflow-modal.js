@@ -175,6 +175,7 @@
     Sa5Attribute2["ATTR_LAYOUT"] = "wfu-layout";
     Sa5Attribute2["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
     Sa5Attribute2["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
+    Sa5Attribute2["ATTR_LAYOUT_ZONE"] = "wfu-layout-zone";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 

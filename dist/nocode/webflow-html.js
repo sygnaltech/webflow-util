@@ -90,6 +90,7 @@
         Sa5Attribute2["ATTR_LAYOUT"] = "wfu-layout";
         Sa5Attribute2["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
         Sa5Attribute2["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
+        Sa5Attribute2["ATTR_LAYOUT_ZONE"] = "wfu-layout-zone";
         return Sa5Attribute2;
       })(Sa5Attribute || {});
     }
@@ -519,24 +520,29 @@
       init_debug();
       Sa5LayoutHandler = class {
         constructor(layoutContainer, config = {}) {
+          this.zone = null;
           this.debug = new Sa5Debug("sa5-layout-handler");
           this.debug.debug("Initializing");
           this.container = layoutContainer;
           this.name = this.container.getAttribute("wfu-layout");
+          this.zone = this.container.getAttribute("wfu-layout-zone") || null;
         }
         layout() {
+          if (this.container.getAttribute("wfu-layout-init") === "clear") {
+            this.container.innerHTML = "";
+          }
+          let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
+          if (this.zone)
+            selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
           const targetedElements = document.querySelectorAll(
-            `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`
+            selector
           );
           targetedElements.forEach((element2) => {
-            const targetName = element2.getAttribute(
-              "wfu-layout-target" /* ATTR_LAYOUT_TARGET */
-            );
-            const targetElement = document.querySelector(`[wfu-layout="${targetName}"]`);
-            if (targetElement) {
-              targetElement.appendChild(element2);
+            if (this.container) {
+              this.container.appendChild(element2);
             }
           });
+          this.container.removeAttribute("wfu-preload");
         }
       };
     }
@@ -565,8 +571,11 @@
             tabMenu.innerHTML = "";
             tabContent.innerHTML = "";
           }
+          let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
+          if (this.zone)
+            selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
           const targetedElements = document.querySelectorAll(
-            `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`
+            selector
           );
           targetedElements.forEach((element2) => {
             const tabName = element2.getAttribute("wfu-layout-item-name");
@@ -580,12 +589,12 @@
             contentPane.dataset.wTab = tabName;
             contentPane.appendChild(element2);
             this.container.querySelector(".w-tab-content").appendChild(contentPane);
-            const firstTab = this.container.querySelector(".w-tab-menu .w-tab-link");
-            const firstTabContent = this.container.querySelector(".w-tab-content .w-tab-pane");
-            if (firstTab && firstTabContent) {
-            }
-            element2.removeAttribute("wfu-tabs-target");
           });
+          const firstTab = this.container.querySelector(".w-tab-menu .w-tab-link");
+          const firstTabContent = this.container.querySelector(".w-tab-content .w-tab-pane");
+          if (firstTab && firstTabContent) {
+          }
+          this.container.removeAttribute("wfu-preload");
         }
       };
     }
