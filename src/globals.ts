@@ -173,4 +173,12 @@ export enum Sa5Attribute {
     ATTR_GIST = 'wfu-gist',
     ATTR_GIST_COPY = 'wfu-gist-copy',
 
+    /**
+     * SA5 Layout 
+     */
+
+    ATTR_LAYOUT = 'wfu-layout', 
+    ATTR_LAYOUT_HANDLER = 'wfu-layout-handler',
+    ATTR_LAYOUT_TARGET = 'wfu-layout-target',
+
 }

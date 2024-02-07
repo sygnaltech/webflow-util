@@ -17,6 +17,7 @@ import { Sa5CollectionList } from '../webflow-html/collection-list';
 // import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5Attribute } from '../globals';
 import { Sa5Designer } from '../webflow-core/designer';
+import { Sa5Layouts } from '../webflow-html/layout';
 
 const init = () => { 
 
@@ -36,14 +37,28 @@ const init = () => {
     let obj = new Sa5Html({
         dynamicAttributes: true
     }).init();
-    
-
 
 //    const wfuEditor = new WfuEditor();
 
     // Init Editor mode detection
     const editor = new Sa5Editor(); 
 
+    /**
+     * Layout items
+     */
+
+    (new Sa5Layouts).init();
+
+    // let layoutElements = Array.from(
+    //     document.querySelectorAll(
+    //         Sa5Attribute.getBracketed(Sa5Attribute.ATTR_LAYOUT) // '[wfu-layout]'
+    //     ));
+
+    // layoutElements.forEach(element => {
+    //     sequence(element as HTMLElement);
+
+
+    // });    
 
     /**
      * Sequence items
@@ -57,19 +72,12 @@ const init = () => {
     sequenceGroupElements.forEach(element => {
         sequence(element as HTMLElement);
     });
-    
-//   // Sequence items 
-//   $("[wfu-seq-group").each(function () {
-//     sequence($(this));
-// });
 
-
-    // Unwrap tagged items
-
-
+    /**
+     * Unwrap tagged items
+     */
 
     /*
-  
 //    $("*[wfu-unwrap]").each(function (index) {
 
         //        console.log($(this).attr("wfu-filter"));
@@ -79,8 +87,7 @@ const init = () => {
   //      if (visible)
   //          $(this).css("display", "block");
 //    });
-*/
-
+    */
 
     /** 
      * Decode html chunk
@@ -98,7 +105,8 @@ const init = () => {
 
     /** 
      * Sort items 
-     * Innermost first, to support nested sorts
+     * Innermost first, to support nested sorts.
+     * Maximum 3 levels of depth 
      */
 
     document.querySelectorAll(`[${Sa5Attribute.ATTR_SORT}] [${Sa5Attribute.ATTR_SORT}] [${Sa5Attribute.ATTR_SORT}]`)
@@ -122,20 +130,6 @@ const init = () => {
      * Place on item you want to conditionally hide 
      * TODO: add remove mode for non-matches? 
      */
-
-//     document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER_MATCH}]`)
-//       .forEach((element: HTMLElement) => {
-
-//         let filterEval = element.getAttribute('wfu-filter') as string;
-
-// //        console.log(filterEval);
-
-//         let visible = eval(filterEval);
-//         if (visible) {
-//             element.removeAttribute("wfu-filter");
-//         }
-
-//     });
 
     document.querySelectorAll(`[${Sa5Attribute.ATTR_FILTER}],[${Sa5Attribute.ATTR_FILTER_EVAL}]`)
       .forEach((element: HTMLElement) => {
@@ -254,7 +248,10 @@ const init = () => {
 
     });
 
-    // // Remove any designer-only element
+    /**
+     * Remove any designer-only elements
+     */
+
     // (new Sa5Designer).init();    
 
 }

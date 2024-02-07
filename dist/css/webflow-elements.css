@@ -1,3 +1,19 @@
+/**
+ * Preload
+ * 
+ * Preload is an attribute that is used to hide elements until they are data-bound. 
+ * This is useful for hiding elements that are being loaded from a CMS or other 
+ * data source. 
+ * 
+ * The attribute can be set to "hidden" or "invisible".
+ * It is removed after data-binding to make the element visible. 
+
+ * Usage: 
+ * 
+ * <div>No pre-loader, visible</div>
+ * <div wfu-preload="hidden">This will be hidden until data-bound</div>
+ * <div wfu-preload="invisible">This will be invisible until data-bound</div>
+ */
 [wfu-preload=hidden] {
   display: none;
 }

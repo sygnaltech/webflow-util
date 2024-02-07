@@ -89,6 +89,9 @@
     Sa5Attribute2["ATTR_RATING"] = "wfu-rating";
     Sa5Attribute2["ATTR_GIST"] = "wfu-gist";
     Sa5Attribute2["ATTR_GIST_COPY"] = "wfu-gist-copy";
+    Sa5Attribute2["ATTR_LAYOUT"] = "wfu-layout";
+    Sa5Attribute2["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
+    Sa5Attribute2["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 

@@ -6,8 +6,9 @@
  */
 
 
-import { Sa5Core } from '../../webflow-core';
-import { Sa5Debug } from '../../webflow-core/debug';
+import { Sa5Attribute } from '../../../globals';
+import { Sa5Core } from '../../../webflow-core';
+import { Sa5Debug } from '../../../webflow-core/debug';
 //import { Sa5Form, WebflowFormMode } from '../../webflow-form';
 
 
@@ -28,6 +29,7 @@ export class Sa5LayoutHandler {
     container: HTMLElement; 
     config; // Optional config
     handler;
+    name: string;
 
     constructor(layoutContainer: HTMLElement, config = {}) {
 
@@ -37,6 +39,8 @@ export class Sa5LayoutHandler {
 
         this.container = layoutContainer; 
 
+        this.name = this.container.getAttribute("wfu-layout"); 
+
         // let action = this.form.formElement.getAttribute("action");
         // this.debug.debug("action", action);
 
@@ -45,32 +49,26 @@ export class Sa5LayoutHandler {
         //     .getAttribute("data-wait");
         // this.debug.debug(`waitMessage: ${waitMessage}`);
 
-    }
-
-
-    
-    init() {
-
-        // const form = this.form;
-
-        // this.debug.debug("WFU Handle Form submit to webhook (success response).");
-
-
+//        console.log("layout handler", this.name, this.container, config); 
 
     }
 
-    layout() {
-
-        // Find all elements with 'wfu-layout-move' attribute
-        const movableElements = document.querySelectorAll('[wfu-layout-move]');
+    layout() { 
+// console.log("layout handler layout", this.name, this.container, this.config);
+        // Find all elements with 'wfu-layout-target' attribute
+        const targetedElements = document.querySelectorAll(
+            `[${Sa5Attribute.ATTR_LAYOUT_TARGET}='${this.name}']` // '[wfu-layout-target]'
+            );
       
         // Iterate over the collection of movable elements
-        movableElements.forEach(element => {
-          // Get the value of the 'wfu-layout-move' attribute
-          const moveValue = element.getAttribute('wfu-layout-move');
+        targetedElements.forEach(element => {
+          // Get the value of the 'wfu-layout-mtargetove' attribute
+          const targetName = element.getAttribute(
+            Sa5Attribute.ATTR_LAYOUT_TARGET
+            );
       
           // Find the corresponding target element
-          const targetElement = document.querySelector(`[wfu-layout-target="${moveValue}"]`);
+          const targetElement = document.querySelector(`[wfu-layout="${targetName}"]`);
       
           // If a target is found, append the movable element as its child
           if (targetElement) {
