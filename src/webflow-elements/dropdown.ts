@@ -1,11 +1,11 @@
 
 /*
- * webflow-core
+ * webflow-elements
  * 
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Core Utilities
+ * Elements 
  */
 
 
@@ -16,7 +16,6 @@
 
 
 /*
-
 <div class="nav-item-frame">
   <div data-delay="0" data-hover="true" class="dropdown w-dropdown" style="max-width: 940px;">
     <div class="navigation-link w-dropdown-toggle" id="w-dropdown-toggle-2" aria-controls="w-dropdown-list-2" aria-haspopup="menu" aria-expanded="false" role="button" tabindex="0">
@@ -36,22 +35,6 @@
 */
 
 /*
-
-.w-dropdown-toggle
-.w--open
-
-dropdown.open
-.close
-.toggle
-
-opened
-
-
-// Toggle the dropdown
-const dropdownToggle = document.querySelector('#menu-search .w-dropdown-toggle') as HTMLElement; 
-dropdownToggle.dispatchEvent(new Event('mousedown'));
-dropdownToggle.dispatchEvent(new Event('mouseup'));
-
 // Give input to the search input
 const search = document.querySelector("#search-input") as HTMLElement;
 search.focus();
@@ -59,27 +42,30 @@ search.click();
 
 https://www.youtube.com/watch?v=HvLqXnSjoSA&t=3s&ab_channel=FrancescoCastronuovo
 https://github.com/francesco-castronuovo/opened-dropdown/blob/main/main.js
-
 */
 
-// [wfu-tabs=IDENTIFIER]
-
-// Separately, we...
-// 1. create this element for anything [wfu-tabs].w-tabs 
-// 1. install click handlers for [wfu-tabs=x] other elements
-//      anything? 
-// Have the internal handlers perform actions
-// wfu-tab-action=first|last|next|prev|clear ? 
+import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core'
 import { Sa5Debug } from '../webflow-core/debug'
 
 
+enum Sa5DropdownType {
+    Native = "native", // Webflow
+    Custom = "custom" // SA5 replaced
+}
 
-export class WebflowDropdown {
+
+export class Sa5Dropdown {
     
     private _element: HTMLElement;
     private _elementToggle: HTMLElement;
     private _elementList: HTMLElement;
+
+    private _delayMs: number = 100; // ms
+
+    private _type: Sa5DropdownType = Sa5DropdownType.Native; 
+
+    valid: boolean = false;
 
     //#region PROPERTYS
 
@@ -96,6 +82,29 @@ export class WebflowDropdown {
         return this._elementList;
     }
 
+    get delayMs(): number {
+        return this._delayMs;
+    }
+    set delayMs(val: number) {
+        this._delayMs = val;
+    }
+
+
+    async checkOpen(): Promise<boolean | null> {
+        if (!this._elementToggle) {
+            return null;
+        }
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+        //        console.log('w--open', this._elementToggle?.classList.contains('w--open'))
+                resolve(this._elementToggle?.classList.contains('w--open'));
+            }, this._delayMs);
+        });
+    }
+
+
+    /*
     get opened(): boolean | null {
         
         if (!this._elementToggle)
@@ -127,7 +136,7 @@ export class WebflowDropdown {
 
 //        this.elementTabMenu.children[index].click
     }
-
+*/
 
 
     //#endregion
@@ -137,7 +146,8 @@ export class WebflowDropdown {
     constructor(element: HTMLElement) {
 
         // Initialize
-        this.init(element);
+        this._element = element;
+        this.init();
 
     }
 
@@ -146,49 +156,101 @@ export class WebflowDropdown {
     //#region METHODS
 
     // Initialize the class to the element
-    init(element: HTMLElement) {
+    init() {
+
+//       console.log("init."); 
 
         // Verify it's a tabs element .w-tabs
-        if(!element.classList.contains("w-dropdown")) {
-            console.error ("sa5-core", "element is not on a dropdown element");
+        if(!this._element.classList.contains("w-dropdown")) {
+   //         console.error ("sa5-core", "element is not on a dropdown element");
+            this.valid = false;
             return;
         }
 
-        console.log("init."); 
+        // Determine type
+        const typeAttribute = this._element.getAttribute('wfu-dropdown-type')?.toLowerCase(); // Convert to lowercase
+        if (!typeAttribute) {
+            this._type = Sa5DropdownType.Native;
+        } else if (!(typeAttribute.toLowerCase() in Sa5DropdownType)) {
+            this.valid = false; 
+            throw new Error("Invalid dropdown type");
+            return;
+        } else {
+            // Safe casting since we know typeAttribute is a valid key
+            this._type = Sa5DropdownType[typeAttribute.toLowerCase() as keyof typeof Sa5DropdownType];
+        }
+
+   //     console.log(`Type is ${this._type}`); 
 
         // Inventory parts
-        this._element = element; 
-        this._elementToggle = element.querySelector('.w-dropdown-toggle');
-        this._elementList = element.querySelector('.w-dropdown-list');
+        this._elementToggle = this._element.querySelector('.w-dropdown-toggle');
+        if(!this._elementToggle) {
+            this.valid = false;
+            return false;
+        }
+
+        this._elementList = this._element.querySelector('.w-dropdown-list');
+        if(!this._elementList) {
+            this.valid = false;
+            return false;
+        }
+
+        this.valid = true;
+
+//  console.log("init succeeded")
+
+        // Perform any init actions
+        switch(this._element.getAttribute(Sa5Attribute.ATTR_ELEMENT_DROPDOWN_INIT)?.toLowerCase()) {
+            case "open": {
+//                console.log("opening")
+                this.open();
+                break;
+            }
+        }
 
     }
+
+    /**
+     * Returns true if the dropdown appears to be initialized validly
+     */
+    // valid(): boolean {
+
+    //     if(!this._element) return false;
+    //     if(!this._elementToggle) return false;
+    //     if(!this._elementList) return false;
+
+    //     return true;
+    // }
  
     // Open the dropdown
-    open(): void { 
+    async open() { 
 
-        console.log("open");
-        if(!this.opened) 
+  //      console.log("open");
+//        if(!this.opened) 
+        if(!await this.checkOpen())
             this.toggle();            
 
     }
 
     // Close the dropdown
-    close(): void {
+    async close() {
 
-        console.log("close");
-        if(this.opened)
+   //     console.log("close");
+        if(await this.checkOpen())
             this.toggle();
 
     }
 
     // Goes to the identified tab 
     // raises navigation events
-    toggle(): void {
+    async toggle() {
         
-        console.log("toggle");
+//        console.debug("toggle");
         this._elementToggle.dispatchEvent(new Event('mousedown'));
-        this._elementToggle.dispatchEvent(new Event('mouseup'));
-
+//        this._elementToggle.dispatchEvent(new Event('mouseup'));
+        setTimeout(() => {
+            this._elementToggle.dispatchEvent(new Event('mouseup'));
+        }, 1);
     }
 
 
@@ -205,7 +267,17 @@ export class WebflowDropdown {
     //#endregion
 
 }
-
 // (window as any).WebflowDropdown = WebflowDropdown;
+Sa5Core.startup(Sa5Dropdown);
+
+/**
+ * LEGACY HACK
+ * To continue supporting WebflowDropdown class name 
+ */
+
+export class WebflowDropdown extends Sa5Dropdown {
+}
+
 Sa5Core.startup(WebflowDropdown);
+
 

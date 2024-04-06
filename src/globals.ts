@@ -57,6 +57,11 @@ export enum Sa5Attribute {
     ATTR_ELEMENT_DECK_TARGET = 'wfu-deck-target',
         ATTR_ELEMENT_DECK_ACTION = 'wfu-deck-action',
         ATTR_ELEMENT_DECK_ITEM = 'wfu-deck-action-item',
+    ATTR_ELEMENT_DROPDOWN = 'wfu-dropdown',
+        ATTR_ELEMENT_DROPDOWN_NAME = 'wfu-dropdown-name',
+        ATTR_ELEMENT_DROPDOWN_INIT = 'wfu-dropdown-init',
+        ATTR_ELEMENT_DROPDOWN_TYPE = 'wfu-dropdown-type',
+    
 
     // Data
     ATTR_DATA = 'wfu-data',

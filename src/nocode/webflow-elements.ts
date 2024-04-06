@@ -17,6 +17,7 @@ import { Sa5LightboxCaptionHandler } from '../webflow-lightbox/caption-handler';
 import { WebflowTabs } from '../webflow-elements/tabs';
 import { WebflowSlider } from '../webflow-elements/slider';
 import { Sa5DeckController } from '../webflow-elements/deck-controller';
+import { Sa5Dropdown } from '../webflow-elements/dropdown';
 
 
 const init = () => { 
@@ -74,6 +75,18 @@ const init = () => {
 
         // Do something with each element
         new Sa5Button(element).init();
+
+    });
+
+    /**
+     * Dropdowns
+     */
+
+    const dropdowns = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_DROPDOWN}]`) as NodeListOf<HTMLElement>; 
+    dropdowns.forEach((element) => { 
+
+        // Do something with each element
+        new Sa5Dropdown(element).init();
 
     });
 

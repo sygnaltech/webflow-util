@@ -23,6 +23,10 @@
     Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_DROPDOWN"] = "wfu-dropdown";
+    Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
+    Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
+    Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_TYPE"] = "wfu-dropdown-type";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -224,7 +228,19 @@
   Sa5Core.startup();
 
   // src/webflow-elements/dropdown.ts
-  var WebflowDropdown = class {
+  var Sa5DropdownType = /* @__PURE__ */ ((Sa5DropdownType2) => {
+    Sa5DropdownType2["Native"] = "native";
+    Sa5DropdownType2["Custom"] = "custom";
+    return Sa5DropdownType2;
+  })(Sa5DropdownType || {});
+  var Sa5Dropdown = class {
+    constructor(element) {
+      this._delayMs = 100;
+      this._type = "native" /* Native */;
+      this.valid = false;
+      this._element = element;
+      this.init();
+    }
     get element() {
       return this._element;
     }
@@ -234,50 +250,74 @@
     get elementList() {
       return this._elementList;
     }
-    get opened() {
-      if (!this._elementToggle)
+    get delayMs() {
+      return this._delayMs;
+    }
+    set delayMs(val) {
+      this._delayMs = val;
+    }
+    async checkOpen() {
+      if (!this._elementToggle) {
         return null;
-      if (this._elementToggle.classList.contains("w--open")) {
-        return true;
       }
-      return false;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this._elementToggle?.classList.contains("w--open"));
+        }, this._delayMs);
+      });
     }
-    set opened(state) {
-      if (state)
-        open();
-      else
-        close();
-    }
-    constructor(element) {
-      this.init(element);
-    }
-    init(element) {
-      if (!element.classList.contains("w-dropdown")) {
-        console.error("sa5-core", "element is not on a dropdown element");
+    init() {
+      if (!this._element.classList.contains("w-dropdown")) {
+        this.valid = false;
         return;
       }
-      console.log("init.");
-      this._element = element;
-      this._elementToggle = element.querySelector(".w-dropdown-toggle");
-      this._elementList = element.querySelector(".w-dropdown-list");
+      const typeAttribute = this._element.getAttribute("wfu-dropdown-type")?.toLowerCase();
+      if (!typeAttribute) {
+        this._type = "native" /* Native */;
+      } else if (!(typeAttribute.toLowerCase() in Sa5DropdownType)) {
+        this.valid = false;
+        throw new Error("Invalid dropdown type");
+        return;
+      } else {
+        this._type = Sa5DropdownType[typeAttribute.toLowerCase()];
+      }
+      this._elementToggle = this._element.querySelector(".w-dropdown-toggle");
+      if (!this._elementToggle) {
+        this.valid = false;
+        return false;
+      }
+      this._elementList = this._element.querySelector(".w-dropdown-list");
+      if (!this._elementList) {
+        this.valid = false;
+        return false;
+      }
+      this.valid = true;
+      switch (this._element.getAttribute("wfu-dropdown-init" /* ATTR_ELEMENT_DROPDOWN_INIT */)?.toLowerCase()) {
+        case "open": {
+          this.open();
+          break;
+        }
+      }
     }
-    open() {
-      console.log("open");
-      if (!this.opened)
+    async open() {
+      if (!await this.checkOpen())
         this.toggle();
     }
-    close() {
-      console.log("close");
-      if (this.opened)
+    async close() {
+      if (await this.checkOpen())
         this.toggle();
     }
-    toggle() {
-      console.log("toggle");
+    async toggle() {
       this._elementToggle.dispatchEvent(new Event("mousedown"));
-      this._elementToggle.dispatchEvent(new Event("mouseup"));
+      setTimeout(() => {
+        this._elementToggle.dispatchEvent(new Event("mouseup"));
+      }, 1);
     }
     onOpenChanged() {
     }
+  };
+  Sa5Core.startup(Sa5Dropdown);
+  var WebflowDropdown = class extends Sa5Dropdown {
   };
   Sa5Core.startup(WebflowDropdown);
 })();

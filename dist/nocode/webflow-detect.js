@@ -23,6 +23,10 @@
     Sa5Attribute3["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
     Sa5Attribute3["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
     Sa5Attribute3["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
+    Sa5Attribute3["ATTR_ELEMENT_DROPDOWN"] = "wfu-dropdown";
+    Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
+    Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
+    Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_TYPE"] = "wfu-dropdown-type";
     Sa5Attribute3["ATTR_DATA"] = "wfu-data";
     Sa5Attribute3["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute3["ATTR_DATA_DSN"] = "wfu-data-dsn";
