@@ -234,37 +234,148 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-commerce.ts
-  var WindcavePayment = class {
-    generateUrl() {
-      var hrefBase = "https://sec.windcave.com/pxaccess/pxpay/payform";
-      const urlParams = new URLSearchParams();
-      urlParams.set("userid", this.userid);
-      urlParams.set("amount", Number(this.amount).toFixed(2));
-      urlParams.set("currencyname", this.currencyname);
-      urlParams.set("txndata1", this.txndata1);
-      urlParams.set("txndata2", this.txndata2);
-      urlParams.set("txndata3", this.txndata3);
-      urlParams.set("email", this.email);
-      var newHref = hrefBase + "?" + urlParams.toString();
-      newHref = newHref.replace("+", "%20");
-      return newHref;
+  // src/webflow-layout/layout/handler/layout-handler.ts
+  var Sa5LayoutHandler = class {
+    constructor(layoutContainer, config = {}) {
+      this.zone = null;
+      this.debug = new Sa5Debug("sa5-layout-handler");
+      this.debug.debug("Initializing");
+      this.container = layoutContainer;
+      this.name = this.container.getAttribute("wfu-layout");
+      this.zone = this.container.getAttribute("wfu-layout-zone") || null;
+    }
+    layout() {
+      if (this.container.getAttribute("wfu-layout-init") === "clear") {
+        this.container.innerHTML = "";
+      }
+      let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
+      if (this.zone)
+        selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
+      const targetedElements = document.querySelectorAll(
+        selector
+      );
+      targetedElements.forEach((element) => {
+        if (this.container) {
+          this.container.appendChild(element);
+        }
+      });
+      this.container.removeAttribute("wfu-preload");
     }
   };
-  Sa5Core.startup(WindcavePayment);
-  var PaypalPayment = class {
-    generateUrl() {
-      var hrefBase = "https://www.paypal.com/cgi-bin/webscr";
-      const urlParams = new URLSearchParams();
-      urlParams.set("business", this.business);
-      urlParams.set("cmd", "_xclick");
-      urlParams.set("currency_code", this.currency_code);
-      urlParams.set("amount", Number(this.amount).toFixed(2));
-      urlParams.set("item_name", this.item_name);
-      var newHref = hrefBase + "?" + urlParams.toString();
-      return newHref;
+
+  // src/webflow-layout/layout/handler/tabs-handler.ts
+  var Sa5LayoutHandlerTabs = class extends Sa5LayoutHandler {
+    constructor(elem, config) {
+      super(elem, config);
+      this.tabMenu = this.container.querySelector(".w-tab-menu");
+      this.tabContent = this.container.querySelector(".w-tab-content");
+      const firstTabMenuItem = this.tabMenu.children[0];
+      this.tabMenuClasses = firstTabMenuItem ? firstTabMenuItem.className : "";
+      const firstTabContentItem = this.tabContent.children[0];
+      this.tabContentClasses = firstTabContentItem ? firstTabContentItem.className : "";
+    }
+    layout() {
+      if (this.container.getAttribute("wfu-layout-init") === "clear") {
+        const tabMenu = this.container.querySelector(".w-tab-menu");
+        const tabContent = this.container.querySelector(".w-tab-content");
+        tabMenu.innerHTML = "";
+        tabContent.innerHTML = "";
+      }
+      let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
+      if (this.zone)
+        selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
+      const targetedElements = document.querySelectorAll(
+        selector
+      );
+      targetedElements.forEach((element) => {
+        const tabName = element.getAttribute("wfu-layout-item-name");
+        const newTab = document.createElement("a");
+        newTab.className = `w-inline-block w-tab-link ${this.tabMenuClasses}`;
+        newTab.dataset.wTab = tabName;
+        newTab.innerHTML = `<div>${tabName}</div>`;
+        this.container.querySelector(".w-tab-menu").appendChild(newTab);
+        const contentPane = document.createElement("div");
+        contentPane.className = `w-tab-pane ${this.tabContentClasses}`;
+        contentPane.dataset.wTab = tabName;
+        contentPane.appendChild(element);
+        this.container.querySelector(".w-tab-content").appendChild(contentPane);
+      });
+      const firstTab = this.container.querySelector(".w-tab-menu .w-tab-link");
+      const firstTabContent = this.container.querySelector(".w-tab-content .w-tab-pane");
+      if (firstTab && firstTabContent) {
+      }
+      this.container.removeAttribute("wfu-preload");
     }
   };
-  Sa5Core.startup(PaypalPayment);
+
+  // src/webflow-layout/layout/handler/layout-handler-factory.ts
+  var Sa5LayoutHandlerFactory = class {
+    constructor(layoutContainer, config = {}) {
+    }
+    static createFromElement(layoutContainer, config = {}) {
+      var handler;
+      let type = layoutContainer.getAttribute(
+        "wfu-layout-handler" /* ATTR_LAYOUT_HANDLER */
+      ) || "auto";
+      if (type == "auto") {
+        if (layoutContainer.classList.contains("w-tabs")) {
+          type = "tabs";
+        } else {
+          type = "default";
+        }
+      }
+      switch (type) {
+        case "tabs":
+          handler = new Sa5LayoutHandlerTabs(layoutContainer, config);
+          break;
+        case "default":
+          handler = new Sa5LayoutHandler(layoutContainer, config);
+          break;
+        default:
+          console.error(`Unknown wfu-layout-handler - ${type}`);
+          break;
+      }
+      return handler;
+    }
+  };
+
+  // src/webflow-layout/layout.ts
+  var Sa5Layouts = class {
+    isLayoutsChangedCallback(func) {
+      if (!func)
+        return false;
+      return func.length === 1;
+    }
+    constructor(config = {}) {
+      this.config = {
+        layoutChangedCallback: config.layoutChangedCallback
+      };
+      let core = Sa5Core.startup();
+      const layoutChanged = core.getHandler("layoutChanged");
+      this.config.layoutChangedCallback = layoutChanged;
+    }
+    init() {
+      let debug = new Sa5Debug("sa5-html");
+      debug.debug("Layouts initialized.", this.config);
+      let layoutElements = Array.from(
+        document.querySelectorAll(
+          Sa5Attribute.getBracketed("wfu-layout" /* ATTR_LAYOUT */)
+        )
+      );
+      layoutElements.forEach((element) => {
+        let handler = Sa5LayoutHandlerFactory.createFromElement(element);
+        handler.layout();
+      });
+    }
+  };
+
+  // src/nocode/webflow-layout.ts
+  var init = () => {
+    let core = Sa5Core.startup();
+    let debug = new Sa5Debug("sa5-layout");
+    debug.debug("Initializing");
+    new Sa5Layouts().init();
+  };
+  document.addEventListener("DOMContentLoaded", init);
 })();
-//# sourceMappingURL=webflow-commerce.js.map
+//# sourceMappingURL=webflow-layout.js.map

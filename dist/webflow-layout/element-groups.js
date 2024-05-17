@@ -95,115 +95,76 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
-  // src/webflow-elements/accordion.ts
-  var WebflowAccordion = class {
-    get element() {
-      return this._element;
+  // src/webflow-layout/element-groups.ts
+  var Sa5ElementGroups = class {
+    constructor() {
     }
-    get elementTabMenu() {
-      return this._elementTabMenu;
-    }
-    get elementTabContent() {
-      return this._elementTabContent;
-    }
-    get tabIndex() {
-      let currentIndex = null;
-      for (let i = 0; i < this._elementTabMenu.children.length; i++) {
-        if (this._elementTabMenu.children[i].classList.contains("w--current")) {
-          currentIndex = i;
-          break;
+    setElementValue(group, name, value) {
+      var selector;
+      if (group) {
+        selector = `[${"wfu-element-display" /* ATTR_ELEMENTGROUP_GROUP */}="${group}"][${"wfu-element-name" /* ATTR_ELEMENTGROUP_NAME */}="${name}"]`;
+      } else {
+        selector = `[${"wfu-element-name" /* ATTR_ELEMENTGROUP_NAME */}="${name}"]:not([${"wfu-element-display" /* ATTR_ELEMENTGROUP_GROUP */}])`;
+      }
+      const elements = document.querySelectorAll(selector);
+      elements.forEach((element) => {
+        switch (element.tagName) {
+          case "INPUT":
+            const inputElement = element;
+            inputElement.value = value;
+            break;
+          case "SELECT":
+            const selectElement = element;
+            selectElement.value = value;
+            break;
+          case "TEXTAREA":
+            const textAreaElement = element;
+            textAreaElement.value = value;
+            break;
+          default:
+            element.innerText = value;
+            break;
         }
-      }
-      return currentIndex;
-    }
-    set tabIndex(index) {
-      if (index < 0)
-        return;
-      if (index >= this.tabCount)
-        return;
-      let clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window
       });
-      this.elementTab(index).dispatchEvent(clickEvent);
     }
-    get tabCount() {
-      return this._elementTabMenu.children.length;
+    hideElement(elem) {
+      elem.style.display = "none";
     }
-    constructor(element) {
-      this.init(element);
+    showElement(elem) {
+      const display = elem.getAttribute("wfu-element-display" /* ATTR_ELEMENTGROUP_DISPLAY */);
+      elem.style.display = display || "block";
     }
-    init(element) {
-      const accordionBtns = document.querySelectorAll(
-        `[${"wfu-ui-accordion" /* ATTR_UI_ACCORDION */}=header]`
-      );
-      accordionBtns.forEach((accordion) => {
-        accordion.onclick = function() {
-          accordion.classList.toggle("is-open");
-          let content = accordion.nextElementSibling;
-          console.log(content);
-          if (content.style.maxHeight) {
-            content.style.maxHeight = "auto";
-          } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            console.log(content.style.maxHeight);
+    selectGroupElement(group, item) {
+      console.log("select", group, item);
+      const groupElements = document.querySelectorAll(`[${"wfu-element-display" /* ATTR_ELEMENTGROUP_GROUP */}="${group}"]`);
+      groupElements.forEach((elem) => {
+        this.hideElement(elem);
+      });
+      const specificElements = document.querySelectorAll(`[${"wfu-element-display" /* ATTR_ELEMENTGROUP_GROUP */}="${group}"][${"wfu-element-name" /* ATTR_ELEMENTGROUP_NAME */}="${item}"]`);
+      specificElements.forEach((elem) => {
+        this.showElement(elem);
+      });
+    }
+    init() {
+      const radios = document.querySelectorAll(`input[type="radio"][${"wfu-element-action" /* ATTR_ELEMENTGROUP_ACTION */}]`);
+      radios.forEach((radio) => {
+        radio.addEventListener("change", function() {
+          if (this.checked) {
+            const action = this.getAttribute("wfu-element-action" /* ATTR_ELEMENTGROUP_ACTION */);
+            const group = this.getAttribute("wfu-element-target-group" /* ATTR_ELEMENTGROUP_TARGETGROUP */);
+            const name = this.getAttribute("wfu-element-target-name" /* ATTR_ELEMENTGROUP_TARGETNAME */);
+            switch (action) {
+              case "select":
+                name.split(",").each((n) => {
+                  this.selectGroupElement(group, n);
+                });
+                break;
+            }
+            this.selectGroupElement(group, name);
           }
-        };
+        });
       });
-    }
-    init2(element) {
-      if (!element.classList.contains("w-tabs")) {
-        console.error("[wfu-tabs] is not on a tabs element");
-        return;
-      }
-      console.log("init.");
-      this._element = element;
-      this._elementTabMenu = element.querySelector(".w-tab-menu");
-      this._elementTabContent = element.querySelector(".w-tab-content");
-      console.log("count", this.tabCount);
-      console.log("index", this.tabIndex);
-    }
-    elementTab(index) {
-      if (index < 0)
-        return;
-      if (index >= this.tabCount)
-        return;
-      return this._elementTabMenu.children[index];
-    }
-    goToTabIndex(index) {
-      console.log(index);
-      this.tabIndex = index;
-    }
-    goToNextTab() {
-      if (this.tabIndex == null) {
-        this.tabIndex = 0;
-        return;
-      }
-      var newTabIndex = this.tabIndex + 1;
-      if (newTabIndex >= this.tabCount)
-        newTabIndex = 0;
-      this.goToTabIndex(newTabIndex);
-    }
-    goToPrevTab() {
-      if (this.tabIndex == null) {
-        this.tabIndex = 0;
-        return;
-      }
-      var newTabIndex = this.tabIndex - 1;
-      if (newTabIndex < 0)
-        newTabIndex = this.tabCount - 1;
-      this.goToTabIndex(newTabIndex);
-    }
-    goToFirstTab() {
-      this.goToTabIndex(0);
-    }
-    goToLastTab() {
-      var newTabIndex = this.tabCount - 1;
-      this.goToTabIndex(newTabIndex);
-    }
-    onTabChanged() {
     }
   };
 })();
-//# sourceMappingURL=accordion.js.map
+//# sourceMappingURL=element-groups.js.map

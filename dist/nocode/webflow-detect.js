@@ -85,6 +85,13 @@
     Sa5Attribute3["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
     Sa5Attribute3["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
     Sa5Attribute3["ATTR_LAYOUT_ZONE"] = "wfu-layout-zone";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_NAME"] = "wfu-element-name";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_GROUP"] = "wfu-element-display";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_DEFAULT"] = "wfu-element-default";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_DISPLAY"] = "wfu-element-display";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_TARGETGROUP"] = "wfu-element-target-group";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_TARGETNAME"] = "wfu-element-target-name";
+    Sa5Attribute3["ATTR_ELEMENTGROUP_ACTION"] = "wfu-element-action";
     return Sa5Attribute3;
   })(Sa5Attribute || {});
 
