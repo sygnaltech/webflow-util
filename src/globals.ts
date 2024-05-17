@@ -187,4 +187,12 @@ export enum Sa5Attribute {
     ATTR_LAYOUT_TARGET = 'wfu-layout-target',
     ATTR_LAYOUT_ZONE = 'wfu-layout-zone',
 
+    ATTR_ELEMENTGROUP_NAME = 'wfu-element-name',
+    ATTR_ELEMENTGROUP_GROUP = 'wfu-element-display',
+    ATTR_ELEMENTGROUP_DEFAULT = 'wfu-element-default',
+    ATTR_ELEMENTGROUP_DISPLAY = 'wfu-element-display',
+    ATTR_ELEMENTGROUP_TARGETGROUP = 'wfu-element-target-group',
+    ATTR_ELEMENTGROUP_TARGETNAME = 'wfu-element-target-name',
+    ATTR_ELEMENTGROUP_ACTION = 'wfu-element-action',
+
 }

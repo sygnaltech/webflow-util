@@ -1,0 +1,8 @@
+
+[wfu-element-name] {
+    display: none;
+}
+
+[wfu-element-default] {
+    display: block; // BUG: not element display type aware 
+}

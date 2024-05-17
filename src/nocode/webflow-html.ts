@@ -16,8 +16,8 @@ import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
 // import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5Attribute } from '../globals';
-import { Sa5Designer } from '../webflow-core/designer';
-import { Sa5Layouts } from '../webflow-html/layout';
+//import { Sa5Designer } from '../webflow-core/designer';
+//import { Sa5Layouts } from '../webflow-html/layout';
 
 const init = () => { 
 
@@ -47,7 +47,7 @@ const init = () => {
      * Layout items
      */
 
-    (new Sa5Layouts).init();
+//    (new Sa5Layouts).init();
 
     // let layoutElements = Array.from(
     //     document.querySelectorAll(

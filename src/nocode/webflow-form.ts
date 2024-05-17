@@ -43,14 +43,28 @@ let core: Sa5Core = Sa5Core.startup();
 
     });
 
-    // Catch any submits on forms
-    // Which post to Zapier-webhooks 
-    document.querySelectorAll(
-        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // '[wfu-form-handler]'
-        )
-      .forEach((element: HTMLElement) => {
+debug.debug("Checking for forms", Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER));
 
-// console.log("installing form handler."); 
+
+console.log("forms", document.querySelectorAll("form"));
+
+console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
+
+    // Catch any submits on forms
+    const formsHandled = document.querySelectorAll(
+//        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // 
+        `div[wfu-form-handler]`
+        );
+
+        console.log(formsHandled);
+
+      formsHandled.forEach((element: HTMLElement) => {
+
+ console.log("installing form handler 1."); 
+
+
+
+        debug.debug("Form detected, installing form handler.");
 
         WfuFormHandlerFactory.createFromElement(element)
             .init();
@@ -94,5 +108,5 @@ let core: Sa5Core = Sa5Core.startup();
 }
 
 document.addEventListener("DOMContentLoaded", init)
-
+//document.addEventListener("load", init)
 
