@@ -18,6 +18,7 @@ import { WebflowTabs } from '../webflow-elements/tabs';
 import { WebflowSlider } from '../webflow-elements/slider';
 import { Sa5DeckController } from '../webflow-elements/deck-controller';
 import { Sa5Dropdown } from '../webflow-elements/dropdown';
+import { Sa5Autocomplete } from '../webflow-elements/autocomplete';
 
 
 const init = () => { 
@@ -87,6 +88,18 @@ const init = () => {
 
         // Do something with each element
         new Sa5Dropdown(element).init();
+
+    });
+
+    /**
+     * Autocomplete Elements
+     */
+
+    const autocompletes = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_AUTOCOMPLETE}]`) as NodeListOf<HTMLElement>; 
+    autocompletes.forEach((element) => { 
+
+        // Create & init each element
+        new Sa5Autocomplete(element).init();
 
     });
 

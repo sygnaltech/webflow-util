@@ -27,6 +27,13 @@
     Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
     Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
     Sa5Attribute3["ATTR_ELEMENT_DROPDOWN_TYPE"] = "wfu-dropdown-type";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE"] = "wfu-autocomplete";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_INPUT"] = "wfu-autocomplete-input";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_LIST"] = "wfu-autocomplete-list";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_ITEM"] = "wfu-autocomplete-item";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION"] = "wfu-autocomplete-item-action";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH"] = "wfu-autocomplete-item-match";
+    Sa5Attribute3["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT"] = "wfu-autocomplete-item-layout";
     Sa5Attribute3["ATTR_DATA"] = "wfu-data";
     Sa5Attribute3["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute3["ATTR_DATA_DSN"] = "wfu-data-dsn";

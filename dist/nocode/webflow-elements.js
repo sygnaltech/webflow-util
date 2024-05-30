@@ -27,6 +27,13 @@
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_TYPE"] = "wfu-dropdown-type";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE"] = "wfu-autocomplete";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_INPUT"] = "wfu-autocomplete-input";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_LIST"] = "wfu-autocomplete-list";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM"] = "wfu-autocomplete-item";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION"] = "wfu-autocomplete-item-action";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH"] = "wfu-autocomplete-item-match";
+    Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT"] = "wfu-autocomplete-item-layout";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -890,12 +897,12 @@
       this._elementToggle = this._element.querySelector(".w-dropdown-toggle");
       if (!this._elementToggle) {
         this.valid = false;
-        return false;
+        return;
       }
       this._elementList = this._element.querySelector(".w-dropdown-list");
       if (!this._elementList) {
         this.valid = false;
-        return false;
+        return;
       }
       this.valid = true;
       switch (this._element.getAttribute("wfu-dropdown-init" /* ATTR_ELEMENT_DROPDOWN_INIT */)?.toLowerCase()) {
@@ -927,6 +934,66 @@
   };
   Sa5Core.startup(WebflowDropdown);
 
+  // src/webflow-elements/autocomplete.ts
+  var Sa5Autocomplete = class extends Sa5Dropdown {
+    constructor(element) {
+      super(element);
+      this.valid = false;
+      this.init();
+    }
+    get elementInput() {
+      return this._elementInput;
+    }
+    init() {
+      super.init();
+      this.setupListeners();
+      this._elementInput = super.elementToggle.querySelector(`[${"wfu-autocomplete-input" /* ATTR_ELEMENT_AUTOCOMPLETE_INPUT */}]`);
+      if (!this._elementInput) {
+        this.valid = false;
+        return false;
+      }
+      this.valid = true;
+    }
+    actionSiteSearch(matchingString) {
+      const query = encodeURIComponent(matchingString);
+      const url = `/search?query=${query}`;
+      window.location.href = url;
+    }
+    displayMatchingElements(matchingString) {
+      const listElement = super.elementList;
+      const lowerCaseMatchingString = matchingString.toLowerCase();
+      const elements = listElement.querySelectorAll(`[${"wfu-autocomplete-item" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM */}]`);
+      elements.forEach((element) => {
+        element.style.display = "none";
+      });
+      elements.forEach((element) => {
+        const attributeValue = element.getAttribute("wfu-autocomplete-item-match" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH */)?.toLowerCase();
+        console.log(lowerCaseMatchingString, attributeValue);
+        if (attributeValue && attributeValue.includes(lowerCaseMatchingString)) {
+          const itemLayout = element.getAttribute("wfu-autocomplete-item-layout" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT */) || "block";
+          element.style.display = itemLayout;
+        }
+      });
+    }
+    setupListeners() {
+      const inputElement = super.elementToggle.querySelector(`[${"wfu-autocomplete-input" /* ATTR_ELEMENT_AUTOCOMPLETE_INPUT */}]`);
+      if (inputElement) {
+        inputElement.addEventListener("input", () => {
+          this.displayMatchingElements(inputElement.value);
+        });
+      } else {
+        console.error("no input element found for tour search.");
+      }
+      const searchElement = super.elementList.querySelector(`[${"wfu-autocomplete-item-action" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION */}=search]`);
+      if (searchElement) {
+        searchElement.addEventListener("click", () => {
+          this.actionSiteSearch(inputElement.value);
+        });
+      }
+    }
+  };
+  Sa5Core.startup(Sa5Autocomplete);
+
   // src/nocode/webflow-elements.ts
   var init = () => {
     let tabElements = document.querySelectorAll(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
@@ -949,6 +1016,10 @@
     const dropdowns = document.querySelectorAll(`[${"wfu-dropdown" /* ATTR_ELEMENT_DROPDOWN */}]`);
     dropdowns.forEach((element) => {
       new Sa5Dropdown(element).init();
+    });
+    const autocompletes = document.querySelectorAll(`[${"wfu-autocomplete" /* ATTR_ELEMENT_AUTOCOMPLETE */}]`);
+    autocompletes.forEach((element) => {
+      new Sa5Autocomplete(element).init();
     });
     let useLightboxCaptionHandler = false;
     const elements = document.querySelectorAll(

@@ -61,6 +61,13 @@ export enum Sa5Attribute {
         ATTR_ELEMENT_DROPDOWN_NAME = 'wfu-dropdown-name',
         ATTR_ELEMENT_DROPDOWN_INIT = 'wfu-dropdown-init',
         ATTR_ELEMENT_DROPDOWN_TYPE = 'wfu-dropdown-type',
+    ATTR_ELEMENT_AUTOCOMPLETE = 'wfu-autocomplete',
+        ATTR_ELEMENT_AUTOCOMPLETE_INPUT = 'wfu-autocomplete-input',
+        ATTR_ELEMENT_AUTOCOMPLETE_LIST = 'wfu-autocomplete-list',
+        ATTR_ELEMENT_AUTOCOMPLETE_ITEM = 'wfu-autocomplete-item',
+        ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION = 'wfu-autocomplete-item-action',
+        ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH = 'wfu-autocomplete-item-match',
+        ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT = 'wfu-autocomplete-item-layout',
     
 
     // Data

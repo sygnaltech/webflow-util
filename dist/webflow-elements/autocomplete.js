@@ -241,22 +241,158 @@
   };
   Sa5Core.startup();
 
-  // src/nocode/webflow-404.ts
-  var init = () => {
-    let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-404");
-    debug.debug("Initializing");
-    set404SearchInputValue();
-  };
-  function set404SearchInputValue() {
-    const url = new URL(window.location.href);
-    const path = url.pathname;
-    const searchQuery = path.slice(1).split("/").map((segment) => segment.replace(/-/g, " ")).reverse().join(" ");
-    const inputElement = document.querySelector(`[${"wfu-404-search" /* ATTR_404_SEARCH */}]`);
-    if (inputElement) {
-      inputElement.value = searchQuery;
+  // src/webflow-elements/dropdown.ts
+  var Sa5DropdownType = /* @__PURE__ */ ((Sa5DropdownType2) => {
+    Sa5DropdownType2["Native"] = "native";
+    Sa5DropdownType2["Custom"] = "custom";
+    return Sa5DropdownType2;
+  })(Sa5DropdownType || {});
+  var Sa5Dropdown = class {
+    constructor(element) {
+      this._delayMs = 100;
+      this._type = "native" /* Native */;
+      this.valid = false;
+      this._element = element;
+      this.init();
     }
-  }
-  document.addEventListener("DOMContentLoaded", init);
+    get element() {
+      return this._element;
+    }
+    get elementToggle() {
+      return this._elementToggle;
+    }
+    get elementList() {
+      return this._elementList;
+    }
+    get delayMs() {
+      return this._delayMs;
+    }
+    set delayMs(val) {
+      this._delayMs = val;
+    }
+    async checkOpen() {
+      if (!this._elementToggle) {
+        return null;
+      }
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this._elementToggle?.classList.contains("w--open"));
+        }, this._delayMs);
+      });
+    }
+    init() {
+      if (!this._element.classList.contains("w-dropdown")) {
+        this.valid = false;
+        return;
+      }
+      const typeAttribute = this._element.getAttribute("wfu-dropdown-type")?.toLowerCase();
+      if (!typeAttribute) {
+        this._type = "native" /* Native */;
+      } else if (!(typeAttribute.toLowerCase() in Sa5DropdownType)) {
+        this.valid = false;
+        throw new Error("Invalid dropdown type");
+        return;
+      } else {
+        this._type = Sa5DropdownType[typeAttribute.toLowerCase()];
+      }
+      this._elementToggle = this._element.querySelector(".w-dropdown-toggle");
+      if (!this._elementToggle) {
+        this.valid = false;
+        return;
+      }
+      this._elementList = this._element.querySelector(".w-dropdown-list");
+      if (!this._elementList) {
+        this.valid = false;
+        return;
+      }
+      this.valid = true;
+      switch (this._element.getAttribute("wfu-dropdown-init" /* ATTR_ELEMENT_DROPDOWN_INIT */)?.toLowerCase()) {
+        case "open": {
+          this.open();
+          break;
+        }
+      }
+    }
+    async open() {
+      if (!await this.checkOpen())
+        this.toggle();
+    }
+    async close() {
+      if (await this.checkOpen())
+        this.toggle();
+    }
+    async toggle() {
+      this._elementToggle.dispatchEvent(new Event("mousedown"));
+      setTimeout(() => {
+        this._elementToggle.dispatchEvent(new Event("mouseup"));
+      }, 1);
+    }
+    onOpenChanged() {
+    }
+  };
+  Sa5Core.startup(Sa5Dropdown);
+  var WebflowDropdown = class extends Sa5Dropdown {
+  };
+  Sa5Core.startup(WebflowDropdown);
+
+  // src/webflow-elements/autocomplete.ts
+  var Sa5Autocomplete = class extends Sa5Dropdown {
+    constructor(element) {
+      super(element);
+      this.valid = false;
+      this.init();
+    }
+    get elementInput() {
+      return this._elementInput;
+    }
+    init() {
+      super.init();
+      this.setupListeners();
+      this._elementInput = super.elementToggle.querySelector(`[${"wfu-autocomplete-input" /* ATTR_ELEMENT_AUTOCOMPLETE_INPUT */}]`);
+      if (!this._elementInput) {
+        this.valid = false;
+        return false;
+      }
+      this.valid = true;
+    }
+    actionSiteSearch(matchingString) {
+      const query = encodeURIComponent(matchingString);
+      const url = `/search?query=${query}`;
+      window.location.href = url;
+    }
+    displayMatchingElements(matchingString) {
+      const listElement = super.elementList;
+      const lowerCaseMatchingString = matchingString.toLowerCase();
+      const elements = listElement.querySelectorAll(`[${"wfu-autocomplete-item" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM */}]`);
+      elements.forEach((element) => {
+        element.style.display = "none";
+      });
+      elements.forEach((element) => {
+        const attributeValue = element.getAttribute("wfu-autocomplete-item-match" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH */)?.toLowerCase();
+        console.log(lowerCaseMatchingString, attributeValue);
+        if (attributeValue && attributeValue.includes(lowerCaseMatchingString)) {
+          const itemLayout = element.getAttribute("wfu-autocomplete-item-layout" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT */) || "block";
+          element.style.display = itemLayout;
+        }
+      });
+    }
+    setupListeners() {
+      const inputElement = super.elementToggle.querySelector(`[${"wfu-autocomplete-input" /* ATTR_ELEMENT_AUTOCOMPLETE_INPUT */}]`);
+      if (inputElement) {
+        inputElement.addEventListener("input", () => {
+          this.displayMatchingElements(inputElement.value);
+        });
+      } else {
+        console.error("no input element found for tour search.");
+      }
+      const searchElement = super.elementList.querySelector(`[${"wfu-autocomplete-item-action" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION */}=search]`);
+      if (searchElement) {
+        searchElement.addEventListener("click", () => {
+          this.actionSiteSearch(inputElement.value);
+        });
+      }
+    }
+  };
+  Sa5Core.startup(Sa5Autocomplete);
 })();
-//# sourceMappingURL=webflow-404.js.map
+//# sourceMappingURL=autocomplete.js.map

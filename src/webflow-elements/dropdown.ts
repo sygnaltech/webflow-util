@@ -11,7 +11,8 @@
 
 
 /*
- * Webflow Dropdown.
+ * Webflow Dropdown. 
+ * Represents a single dropdown element. 
  */
 
 
@@ -186,13 +187,13 @@ export class Sa5Dropdown {
         this._elementToggle = this._element.querySelector('.w-dropdown-toggle');
         if(!this._elementToggle) {
             this.valid = false;
-            return false;
+            return;
         }
 
         this._elementList = this._element.querySelector('.w-dropdown-list');
         if(!this._elementList) {
             this.valid = false;
-            return false;
+            return;
         }
 
         this.valid = true;
