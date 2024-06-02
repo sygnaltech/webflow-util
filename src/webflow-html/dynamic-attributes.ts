@@ -35,28 +35,57 @@ export class Sa5HtmlDynamicAttributes {
         debug.debug ("Dynamic attributes initialized.", this.config);
     
         // Select all elements in the document
-        var allElements = document.querySelectorAll('*');
+        var allElements = document.querySelectorAll<HTMLElement>('*');
 
         // Iterate over all elements
-        allElements.forEach(function(element) {
-
+        allElements.forEach(element => {
             // Iterate over all attributes of each element
-            for (var i = 0; i < element.attributes.length; i++) {
-                var attr = element.attributes[i]; 
-
-                // Check if attribute name starts with 'x-'
-                if (attr.name.startsWith('x-')) {
-                    // Do something with the element or attribute
-
-                    var newAttrName = attr.name.slice(2);
-                    // Set the new attribute on the element with the same value as the old attribute
-                    element.setAttribute(newAttrName, attr.value);
-
-//                    console.log('Element:', element, 'Attribute:', attr.name, 'Value:', attr.value);
+            Array.from(element.attributes).forEach(attr => {
+            // Check if attribute name starts with 'x-'
+            if (attr.name.startsWith('x-')) {
+                // Create a new attribute name by removing 'x-'
+                const newAttrName = attr.name.slice(2);
+    
+                // Set the new attribute on the element with the same value as the old attribute
+                element.setAttribute(newAttrName, attr.value);
+    
+                // Special case: if element is a textarea and newAttrName is "input"
+                switch(element.tagName.toLowerCase()) {
+                    case "textarea":
+                        if (newAttrName === 'value') 
+                            (element as HTMLTextAreaElement).value = attr.value;
+                        break;
                 }
-            }
 
+                // Optional: log the new attribute for debugging
+                debug.debug(`Element: ${element.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);
+            }
+            });
         });
+
+//         // Iterate over all elements
+//         allElements.forEach(element => {
+
+//             // Iterate over all attributes of each element
+//             for (var i = 0; i < element.attributes.length; i++) {
+//                 var attr = element.attributes[i]; 
+
+//                 // Check if attribute name starts with 'x-'
+//                 if (attr.name.startsWith('x-')) {
+//                     // Do something with the element or attribute
+
+//                     var newAttrName = attr.name.slice(2);
+//                     // Set the new attribute on the element with the same value as the old attribute
+//                     element.setAttribute(newAttrName, attr.value);
+
+//                     // Special element handling
+// //                    switch(element.typ)
+
+// //                    console.log('Element:', element, 'Attribute:', attr.name, 'Value:', attr.value);
+//                 }
+//             }
+
+//         });
 
     }
 

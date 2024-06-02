@@ -285,14 +285,20 @@
           let debug2 = new Sa5Debug("sa5-html");
           debug2.debug("Dynamic attributes initialized.", this.config);
           var allElements = document.querySelectorAll("*");
-          allElements.forEach(function(element2) {
-            for (var i = 0; i < element2.attributes.length; i++) {
-              var attr = element2.attributes[i];
+          allElements.forEach((element2) => {
+            Array.from(element2.attributes).forEach((attr) => {
               if (attr.name.startsWith("x-")) {
-                var newAttrName = attr.name.slice(2);
+                const newAttrName = attr.name.slice(2);
                 element2.setAttribute(newAttrName, attr.value);
+                switch (element2.tagName.toLowerCase()) {
+                  case "textarea":
+                    if (newAttrName === "value")
+                      element2.value = attr.value;
+                    break;
+                }
+                debug2.debug(`Element: ${element2.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);
               }
-            }
+            });
           });
         }
       };
