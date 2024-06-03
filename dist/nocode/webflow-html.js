@@ -272,10 +272,51 @@
     }
   });
 
+  // src/utils.ts
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
+  function decodeHTML(text) {
+    let parser = new DOMParser();
+    let dom = parser.parseFromString(
+      `<!doctype html><body>${text}`,
+      "text/html"
+    );
+    return dom.body.textContent || "";
+  }
+  function sequence(groupElement) {
+    const groupName = groupElement.getAttribute("wfu-seq-group");
+    console.log("sequence group", groupName);
+    let i = 0;
+    const elements = groupElement.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    elements.forEach((element2) => {
+      element2.innerHTML = (++i).toString();
+    });
+  }
+  var init_utils = __esm({
+    "src/utils.ts"() {
+    }
+  });
+
   // src/webflow-html/dynamic-attributes.ts
   var Sa5HtmlDynamicAttributes;
   var init_dynamic_attributes = __esm({
     "src/webflow-html/dynamic-attributes.ts"() {
+      init_utils();
       init_debug();
       Sa5HtmlDynamicAttributes = class {
         constructor(config) {
@@ -294,6 +335,20 @@
                   case "textarea":
                     if (newAttrName === "value")
                       element2.value = attr.value;
+                    break;
+                  case "select":
+                    if (newAttrName === "value")
+                      element2.value = attr.value;
+                    break;
+                  case "input":
+                    switch (element2.getAttribute("type")) {
+                      case "checkbox":
+                        if (booleanValue(attr.value))
+                          element2.setAttribute("checked", "checked");
+                        else
+                          element2.removeAttribute("checked");
+                        break;
+                    }
                     break;
                 }
                 debug2.debug(`Element: ${element2.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);
@@ -436,29 +491,6 @@
           observer.observe(titleElement, { childList: true });
         }
       };
-    }
-  });
-
-  // src/utils.ts
-  function decodeHTML(text) {
-    let parser = new DOMParser();
-    let dom = parser.parseFromString(
-      `<!doctype html><body>${text}`,
-      "text/html"
-    );
-    return dom.body.textContent || "";
-  }
-  function sequence(groupElement) {
-    const groupName = groupElement.getAttribute("wfu-seq-group");
-    console.log("sequence group", groupName);
-    let i = 0;
-    const elements = groupElement.querySelectorAll(`[wfu-seq="${groupName}"]`);
-    elements.forEach((element2) => {
-      element2.innerHTML = (++i).toString();
-    });
-  }
-  var init_utils = __esm({
-    "src/utils.ts"() {
     }
   });
 

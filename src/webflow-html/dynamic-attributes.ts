@@ -13,6 +13,7 @@
  */
 
 
+import { booleanValue } from '../utils';
 import { Sa5Debug } from '../webflow-core/debug';
 
 
@@ -54,6 +55,20 @@ export class Sa5HtmlDynamicAttributes {
                     case "textarea":
                         if (newAttrName === 'value') 
                             (element as HTMLTextAreaElement).value = attr.value;
+                        break;
+                    case "select":
+                        if (newAttrName === 'value') 
+                            (element as HTMLSelectElement).value = attr.value;
+                        break;
+                    case "input":
+                        switch (element.getAttribute("type")) {
+                            case "checkbox":
+                                if(booleanValue(attr.value))
+                                    element.setAttribute("checked", "checked");
+                                else
+                                    element.removeAttribute("checked");
+                                break;
+                        }
                         break;
                 }
 

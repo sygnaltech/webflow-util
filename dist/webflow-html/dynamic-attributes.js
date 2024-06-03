@@ -1,4 +1,23 @@
 (() => {
+  // src/utils.ts
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -58,6 +77,20 @@
               case "textarea":
                 if (newAttrName === "value")
                   element.value = attr.value;
+                break;
+              case "select":
+                if (newAttrName === "value")
+                  element.value = attr.value;
+                break;
+              case "input":
+                switch (element.getAttribute("type")) {
+                  case "checkbox":
+                    if (booleanValue(attr.value))
+                      element.setAttribute("checked", "checked");
+                    else
+                      element.removeAttribute("checked");
+                    break;
+                }
                 break;
             }
             debug.debug(`Element: ${element.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);

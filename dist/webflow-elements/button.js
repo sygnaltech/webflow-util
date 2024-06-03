@@ -107,6 +107,7 @@
     switch (val.toLowerCase()) {
       case "false":
       case "f":
+      case "":
       case "0":
       case "no":
       case "off":
