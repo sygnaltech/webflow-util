@@ -9,6 +9,7 @@
  */
 
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -45,7 +46,8 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-user-accounts");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;"); 
 

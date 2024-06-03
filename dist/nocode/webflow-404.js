@@ -102,6 +102,9 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -115,10 +118,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -245,7 +248,7 @@
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-404");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     set404SearchInputValue();
   };
   function set404SearchInputValue() {

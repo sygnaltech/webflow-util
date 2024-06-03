@@ -10,6 +10,7 @@
 
 // import {  } from '../modules/webflow-form';
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -25,7 +26,8 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-form");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     // const sa5Hotkeys = new Sa5Hotkeys();
     // sa5Hotkeys.init();

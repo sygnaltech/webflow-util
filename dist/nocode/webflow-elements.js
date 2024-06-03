@@ -155,10 +155,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -995,8 +995,14 @@
   };
   Sa5Core.startup(Sa5Autocomplete);
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-elements.ts
   var init = () => {
+    let core = Sa5Core.startup();
+    let debug = new Sa5Debug("sa5-elements");
+    debug.debug(`Initializing ${VERSION}`);
     let tabElements = document.querySelectorAll(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
     tabElements.forEach((element) => {
       var tabObj = new WebflowTabs(element);

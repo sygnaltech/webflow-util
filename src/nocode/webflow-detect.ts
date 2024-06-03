@@ -15,6 +15,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
 import { Sa5Attribute, Sa5GlobalVar } from '../globals';
 import { Sa5Detect } from '../webflow-detect';
+import { VERSION } from '../version';
 
 // type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
 
@@ -43,7 +44,7 @@ import { Sa5Detect } from '../webflow-detect';
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-detect");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
     /**
      * Get IP Info, GeoLocation 

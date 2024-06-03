@@ -9,6 +9,7 @@
  */
 
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -19,7 +20,7 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-404");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
     // parse url, put into search field
     // [wfu-404-search]

@@ -115,10 +115,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -409,11 +409,14 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-modal.ts
   var init2 = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-modal");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-modal" /* ATTR_MODAL */)
     ).forEach((element) => {

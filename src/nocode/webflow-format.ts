@@ -12,6 +12,7 @@ import { WebflowFormat } from '../webflow-format';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 
 const init = () => { 
 
@@ -20,7 +21,8 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-format");
-//    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     const webflowFormat = new WebflowFormat();
 

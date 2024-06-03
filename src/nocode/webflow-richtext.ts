@@ -14,6 +14,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5NestedList } from '../webflow-richtext/nested-list'; 
 import { Sa5Editor } from '../webflow-core/webflow-editor'; 
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 
 const init = () => { 
 
@@ -22,7 +23,8 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-richtext");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     const gitHubGist = new GitHubGist();
 

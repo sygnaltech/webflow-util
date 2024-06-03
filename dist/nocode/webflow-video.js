@@ -115,10 +115,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -2677,11 +2677,14 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-video.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-video");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     let videos = document.querySelectorAll(`[${"wfu-video" /* ATTR_VIDEO */}]`);
     videos.forEach((element) => {
       Sa5VideoPlayerFactory.create(element).init();

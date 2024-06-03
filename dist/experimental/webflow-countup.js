@@ -205,10 +205,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {

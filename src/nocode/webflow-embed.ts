@@ -8,6 +8,7 @@
  */
 
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Embed } from '../webflow-embed';
@@ -32,10 +33,7 @@ const initAsync = async() => {
     
     // Initialize debugging
     let debug = new Sa5Debug("sa5-embed");
-//console.log("INITIALIZING.")
-    debug.debug ("Initializing");
-
-    debug.debug ("sa5-embed init.");
+    debug.debug (`Initializing ${VERSION}`);
 
     // Init embeds
     

@@ -12,6 +12,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Layouts } from '../webflow-layout/layout';
 import { Sa5ElementGroups } from '../webflow-layout/element-groups';
+import { VERSION } from '../version';
 
 const init = () => { 
 
@@ -21,7 +22,8 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-layout");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     /**
      * Layout items

@@ -16,6 +16,7 @@ import { sequence, decodeHTML } from '../utils';
 import { Sa5CollectionList } from '../webflow-html/collection-list';
 // import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 //import { Sa5Designer } from '../webflow-core/designer';
 //import { Sa5Layouts } from '../webflow-html/layout';
 
@@ -27,7 +28,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-html");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
     // Dynamic Attributes
 //    applyDynamicAttributes();

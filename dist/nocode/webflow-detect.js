@@ -115,10 +115,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -507,12 +507,15 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-detect.ts
   (async () => {
     console.log("DETECT");
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-detect");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     let detect = new Sa5Detect();
     let routingRules = window["sa5-route" /* GLOBAL_ROUTE */];
     if (routingRules)

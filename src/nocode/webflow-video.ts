@@ -13,6 +13,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 
 // type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
 
@@ -24,7 +25,8 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-video");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
 
     /**

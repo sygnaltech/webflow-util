@@ -12,6 +12,7 @@ import { WebflowInfo } from '../webflow-demo';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 
 const init = () => { 
 
@@ -20,7 +21,7 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("wfu-demo");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
     const webflowInfo = new WebflowInfo();
 

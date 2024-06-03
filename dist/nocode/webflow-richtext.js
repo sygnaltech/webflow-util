@@ -159,10 +159,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -387,11 +387,14 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-richtext.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-richtext");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     const gitHubGist = new GitHubGist();
     document.querySelectorAll(
       `.w-richtext[${"wfu-lists" /* ATTR_RICHTEXT_LISTS */}]`

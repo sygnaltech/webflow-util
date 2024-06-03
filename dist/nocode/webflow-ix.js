@@ -115,10 +115,10 @@
     set persistentDebug(active) {
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug("sa5-core debug enabled (persistent).");
+        console.debug(`sa5-core debug enabled (persistent).`);
       } else {
         localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug("sa5-core debug disabled (persistent).");
+        console.debug(`sa5-core debug disabled (persistent).`);
       }
     }
     get enabled() {
@@ -241,11 +241,14 @@
   };
   Sa5Core.startup();
 
+  // src/version.ts
+  var VERSION = "5.3.23";
+
   // src/nocode/webflow-ix.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-ix");
-    debug.debug("Initializing");
+    debug.debug(`Initializing ${VERSION}`);
     const links = document.querySelectorAll('a[href^="##"]');
     links.forEach((link) => {
       const value = link.getAttribute("href")?.substring(2);

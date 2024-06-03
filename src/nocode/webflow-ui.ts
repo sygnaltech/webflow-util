@@ -8,9 +8,18 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
+import { VERSION } from '../version';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Rating } from '../webflow-ui';
 
 const init = () => { 
+
+    let core: Sa5Core = Sa5Core.startup();
+
+    // Initialize debugging
+    let debug = new Sa5Debug("sa5-ui");
+    debug.debug (`Initializing ${VERSION}`);
 
     // Find all rating components
     document.querySelectorAll('div[wfu-ui="rating"]')

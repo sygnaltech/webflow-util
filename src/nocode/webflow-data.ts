@@ -9,6 +9,7 @@
  */
 
 //import { WfuQuery, WfuRelativeLinkFixup, WfuTargetLinks } from '../webflow-url';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -30,7 +31,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-data");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
     // Create datastore
     var ds: Sa5Datastore = new Sa5Datastore();

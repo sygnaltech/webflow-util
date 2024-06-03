@@ -16,6 +16,7 @@ import { LdJsonCourse } from "../webflow-seo/json-ld/course";
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5SEO } from "../webflow-seo";
 import { LdJsonWebPage } from "../webflow-seo/json-ld/webpage";
+import { VERSION } from "../version";
 
 
 Sa5Core.startup(LdJsonArticle);
@@ -30,7 +31,8 @@ const init = () => {
 
   // Initialize debugging
   let debug = new Sa5Debug("sa5-seo");
-  debug.debug ("Initializing");
+  debug.debug (`Initializing ${VERSION}`);
+
 
 //  const seo = new Sa5SEO(); 
 

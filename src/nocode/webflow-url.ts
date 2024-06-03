@@ -9,6 +9,7 @@
  */
 
 import { Sa5Attribute } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Url } from '../webflow-url';
@@ -22,8 +23,8 @@ const init = () => {
     let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
-//    let debug = new Sa5Debug("sa5-url");
-//    debug.debug ("Initializing");
+    let debug = new Sa5Debug("sa5-url");
+    debug.debug (`Initializing ${VERSION}`);
 
     let handler: Sa5Url = new Sa5Url();
     handler.init();

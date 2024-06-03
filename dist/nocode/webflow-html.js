@@ -130,10 +130,10 @@
         set persistentDebug(active) {
           if (active) {
             localStorage.setItem(this.localStorageDebugFlag, "true");
-            console.debug("sa5-core debug enabled (persistent).");
+            console.debug(`sa5-core debug enabled (persistent).`);
           } else {
             localStorage.removeItem(this.localStorageDebugFlag);
-            console.debug("sa5-core debug disabled (persistent).");
+            console.debug(`sa5-core debug disabled (persistent).`);
           }
         }
         get enabled() {
@@ -568,6 +568,14 @@
     }
   });
 
+  // src/version.ts
+  var VERSION;
+  var init_version = __esm({
+    "src/version.ts"() {
+      VERSION = "5.3.23";
+    }
+  });
+
   // src/nocode/webflow-html.ts
   var require_webflow_html = __commonJS({
     "src/nocode/webflow-html.ts"(exports, module) {
@@ -578,10 +586,11 @@
       init_utils();
       init_collection_list();
       init_globals();
+      init_version();
       var init = () => {
         let core = Sa5Core.startup();
         let debug = new Sa5Debug("sa5-html");
-        debug.debug("Initializing");
+        debug.debug(`Initializing ${VERSION}`);
         let obj = new Sa5Html({
           dynamicAttributes: true
         }).init();

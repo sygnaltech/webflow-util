@@ -19,11 +19,20 @@ import { WebflowSlider } from '../webflow-elements/slider';
 import { Sa5DeckController } from '../webflow-elements/deck-controller';
 import { Sa5Dropdown } from '../webflow-elements/dropdown';
 import { Sa5Autocomplete } from '../webflow-elements/autocomplete';
+import { Sa5Core } from '../webflow-core';
+import { Sa5Debug } from '../webflow-core/debug';
+import { VERSION } from '../version';
 
 
 const init = () => { 
 
     // elements is a NodeList of all elements with the "wfu-tabs" attribute
+
+    let core: Sa5Core = Sa5Core.startup();
+
+    // Initialize debugging
+    let debug = new Sa5Debug("sa5-elements");
+    debug.debug (`Initializing ${VERSION}`);
     
     // [wfu-tab-default]
 

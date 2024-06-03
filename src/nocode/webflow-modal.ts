@@ -15,6 +15,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Attribute } from '../globals';
 
 import { Sa5Modal } from '../webflow-modal'; 
+import { VERSION } from '../version';
 
 const init = () => { 
 
@@ -22,7 +23,8 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-modal");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
+
 
     // Remove any elements that are cookie-suppressed
     document.querySelectorAll(

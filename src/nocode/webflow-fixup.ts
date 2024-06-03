@@ -8,6 +8,7 @@
  * NO-CODE version, keys off of [wfu] attributes.
  */
 
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
 
@@ -19,7 +20,7 @@ const init = () => {
   
     // Initialize debugging
     let debug = new Sa5Debug("sa5-fixup");
-    debug.debug ("Initializing");
+    debug.debug (`Initializing ${VERSION}`);
 
 
     // Editor fixups
