@@ -2678,7 +2678,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.3.23";
+  var VERSION = "5.3.24";
 
   // src/nocode/webflow-video.ts
   var init = () => {

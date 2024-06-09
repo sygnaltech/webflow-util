@@ -981,9 +981,10 @@
       if (inputElement) {
         inputElement.addEventListener("input", () => {
           this.displayMatchingElements(inputElement.value);
+          super.open();
         });
       } else {
-        console.error("no input element found for tour search.");
+        console.error("no input element found for autocomplete.");
       }
       const searchElement = super.elementList.querySelector(`[${"wfu-autocomplete-item-action" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION */}=search]`);
       if (searchElement) {
@@ -996,7 +997,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.3.23";
+  var VERSION = "5.3.24";
 
   // src/nocode/webflow-elements.ts
   var init = () => {

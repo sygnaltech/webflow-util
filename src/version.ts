@@ -1,3 +1,3 @@
 
-export const VERSION = '5.3.23'; // Update this manually on each release
+export const VERSION = '5.3.24'; // Update this manually on each release
 

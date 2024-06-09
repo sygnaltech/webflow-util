@@ -1,17 +1,12 @@
 
 /*
  * sa5-elements
+ * Autocomplete
  * 
  * Sygnal Technology Group
  * http://sygnal.com
  * 
  * Elements 
- */
-
-
-
-/*
- * SA5 Autocomplete.
  */
 
 
@@ -51,17 +46,6 @@ import { Sa5Dropdown } from './dropdown';
 
 
 
-// ATTR_ELEMENT_AUTOCOMPLETE = 'wfu-autocomplete',
-// ATTR_ELEMENT_AUTOCOMPLETE_INPUT = 'wfu-autocomplete-input',
-// ATTR_ELEMENT_AUTOCOMPLETE_LIST = 'wfu-autocomplete-list',
-// ATTR_ELEMENT_AUTOCOMPLETE_ITEM = 'wfu-autocomplete-item',
-// ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION = 'wfu-autocomplete-item-action',
-// ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH = 'wfu-autocomplete-item-match',
-
-// enum Sa5DropdownType {
-//     Native = "native", // Webflow
-//     Custom = "custom" // SA5 replaced
-// }
 
 
 export class Sa5Autocomplete extends Sa5Dropdown {
@@ -69,35 +53,13 @@ export class Sa5Autocomplete extends Sa5Dropdown {
 //    private _element: HTMLElement;
     private _elementInput: HTMLElement;
 
-    // private _elementList: HTMLElement;
-    // private _delayMs: number = 100; // ms
-    // private _elementDropdown: Sa5Dropdown; 
-
-//    private _type: Sa5DropdownType = Sa5DropdownType.Native; 
-
     valid: boolean = false;
 
     //#region PROPERTYS
 
-    // .w-dropdown
-    // get element(): HTMLElement {
-    //     return this._element;
-    // }
-    // w-dropdown-toggle
     get elementInput(): HTMLElement {
         return this._elementInput;
     }
-    // // w-dropdown-list
-    // get elementListItems(): HTMLElement {
-    //     return this._elementList;
-    // }
-
-    // get delayMs(): number {
-    //     return this._delayMs;
-    // }
-    // set delayMs(val: number) {
-    //     this._delayMs = val;
-    // }
 
     //#endregion
 
@@ -123,36 +85,6 @@ export class Sa5Autocomplete extends Sa5Dropdown {
         // Iterate and init individual elements 
         this.setupListeners(); 
 
-        // Element structure; 
-        // Drowdown Element
-        // Input
-        // List items
-        // Search item
-
-//       console.log("init."); 
-
-//         // Verify it's a tabs element .w-tabs
-//         if(!this._element.classList.contains("w-dropdown")) {
-//    //         console.error ("sa5-core", "element is not on a dropdown element");
-//             this.valid = false;
-//             return;
-//         }
-
-        // // Determine type
-        // const typeAttribute = this._element.getAttribute('wfu-dropdown-type')?.toLowerCase(); // Convert to lowercase
-        // if (!typeAttribute) {
-        //     this._type = Sa5DropdownType.Native;
-        // } else if (!(typeAttribute.toLowerCase() in Sa5DropdownType)) {
-        //     this.valid = false; 
-        //     throw new Error("Invalid dropdown type");
-        //     return;
-        // } else {
-        //     // Safe casting since we know typeAttribute is a valid key
-        //     this._type = Sa5DropdownType[typeAttribute.toLowerCase() as keyof typeof Sa5DropdownType];
-        // }
-
-   //     console.log(`Type is ${this._type}`); 
-
         // Inventory parts
         this._elementInput = super.elementToggle.querySelector(`[${Sa5Attribute.ATTR_ELEMENT_AUTOCOMPLETE_INPUT}]`);
         if(!this._elementInput) {
@@ -160,20 +92,21 @@ export class Sa5Autocomplete extends Sa5Dropdown {
             return false;
         }
 
-        // this._elementList = this._element.querySelector('.w-dropdown-list');
-        // if(!this._elementList) {
-        //     this.valid = false;
-        //     return false;
-        // }
-
         this.valid = true;
 
     }
 
+    /**
+     * Perform a site search using the input text 
+     * @param matchingString 
+     */
     actionSiteSearch(matchingString: string): void {
+
         const query = encodeURIComponent(matchingString);
         const url = `/search?query=${query}`;
+
         window.location.href = url;
+
     }
   
     displayMatchingElements(matchingString: string) {
@@ -228,9 +161,10 @@ export class Sa5Autocomplete extends Sa5Dropdown {
           // Add event listener for input changes
           inputElement.addEventListener('input', () => {
             this.displayMatchingElements(inputElement.value);
+            super.open();
           });
         } else {
-          console.error("no input element found for tour search."); 
+          console.error("no input element found for autocomplete."); 
     //      return;
           // error
         }
@@ -244,18 +178,7 @@ export class Sa5Autocomplete extends Sa5Dropdown {
           });
         }
     
-      }
-
-    //#endregion
-
-    //#region EVENTS
-
-    // onOpenChanged() {
-    //     // Detect change ( mutationobserver? )
-    //     // Raise event
-    // }
-
-    //#endregion
+    }
 
 } 
 
