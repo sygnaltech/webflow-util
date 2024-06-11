@@ -39,6 +39,7 @@
     "hotkeys-js": "^3.11.2",
     "luxon": "^3.4.4",
     "moment": "^2.29.4",
+    "three": "^0.165.0",
     "typescript-cookie": "^1.0.6"
   }
 }
