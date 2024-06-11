@@ -9,7 +9,6 @@ export class Sa5DepthMapEffect extends Sa5Effect {
     private planeMaterial: THREE.ShaderMaterial;
     private plane: THREE.Mesh;
     private textureLoader: THREE.TextureLoader = new THREE.TextureLoader();
-    private sizes = { width: window.innerWidth, height: window.innerHeight };
     private cursor = { x: 0, y: 0, lerpX: 0, lerpY: 0 };
     private originalImageDetails = { width: 0, height: 0, aspectRatio: 0 };
     private settings = {
@@ -18,12 +17,14 @@ export class Sa5DepthMapEffect extends Sa5Effect {
         originalImagePath: '',
         depthImagePath: ''
     };
+    private imageElement: HTMLImageElement;
+    private canvasElement: HTMLCanvasElement;
 
     constructor(elem: HTMLElement, config = {}) {
         super(elem, config);
-        this.settings.originalImagePath = (elem as HTMLImageElement).src;
-        this.settings.depthImagePath = (elem as HTMLImageElement).getAttribute('wfu-effect-setting-depth-map') || '';
-        // Removed the init call from the constructor
+        this.imageElement = elem as HTMLImageElement;
+        this.settings.originalImagePath = this.imageElement.src;
+        this.settings.depthImagePath = this.imageElement.getAttribute('wfu-effect-setting-depth-map') || '';
     }
 
     init() {
@@ -33,46 +34,57 @@ export class Sa5DepthMapEffect extends Sa5Effect {
         this.loadImages();
         this.animate();
 
-        this.elem.addEventListener('mousemove', this.onMouseMove.bind(this));
         window.addEventListener('resize', this.onWindowResize.bind(this));
     }
 
     private setupScene() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100);
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 100); // Aspect ratio will be set later
         this.camera.position.z = 0.7;
         this.scene.add(this.camera);
 
         const canvas = document.createElement('canvas');
-        const parent = this.elem.parentNode;
+        this.canvasElement = canvas; // Store the canvas element
+
+        const parent = this.imageElement.parentNode;
 
         if (parent) {
-            parent.replaceChild(canvas, this.elem);  // Replace image with canvas
+            parent.replaceChild(canvas, this.imageElement);  // Replace image with canvas
+            this.elem = canvas; 
         } else {
             console.error('Parent node not found for the element.');
             return;
         }
 
-        this.renderer = new THREE.WebGLRenderer({ canvas });
-        this.renderer.setSize(this.sizes.width, this.sizes.height);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.canvasElement.addEventListener('mousemove', this.onMouseMove.bind(this));
+
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvasElement });
     }
 
     private loadImages() {
         this.textureLoader.load(this.settings.depthImagePath, (depthTexture) => {
             this.textureLoader.load(this.settings.originalImagePath, (originalTexture) => {
-                this.originalImageDetails.width = originalTexture.image.width;
-                this.originalImageDetails.height = originalTexture.image.height;
-                this.originalImageDetails.aspectRatio = originalTexture.image.width / originalTexture.image.height;
+                this.originalImageDetails.width = this.imageElement.naturalWidth;
+                this.originalImageDetails.height = this.imageElement.naturalHeight;
+                this.originalImageDetails.aspectRatio = this.originalImageDetails.width / this.originalImageDetails.height;
 
                 if (this.planeMaterial) {
                     this.planeMaterial.uniforms.originalTexture.value = originalTexture;
                     this.planeMaterial.uniforms.depthTexture.value = depthTexture;
                 }
 
+                this.updateCanvasSize();
                 this.resize(); // Update plane geometry scale
             });
         });
+    }
+
+    private updateCanvasSize() {
+        this.canvasElement.width = this.originalImageDetails.width;
+        this.canvasElement.height = this.originalImageDetails.height;
+        this.renderer.setSize(this.canvasElement.width, this.canvasElement.height);
+        this.camera.aspect = this.originalImageDetails.aspectRatio;
+        this.camera.updateProjectionMatrix();
     }
 
     private create3dImage() {
@@ -100,15 +112,15 @@ export class Sa5DepthMapEffect extends Sa5Effect {
                 varying vec2 vUv;
 
                 vec2 mirrored(vec2 v) {
-                    vec2 m = mod(v,2.);
-                    return mix(m,2.0 - m, step(1.0 ,m));
+                    vec2 m = mod(v, 2.0);
+                    return mix(m, 2.0 - m, step(1.0, m));
                 }
 
                 void main() {
                     vec4 depthMap = texture2D(depthTexture, mirrored(vUv));
                     vec2 fake3d = vec2(vUv.x + (depthMap.r - 0.5) * uMouse.x / uThreshold.x, vUv.y + (depthMap.r - 0.5) * uMouse.y / uThreshold.y);
 
-                    gl_FragColor = texture2D(originalTexture,mirrored(fake3d));
+                    gl_FragColor = texture2D(originalTexture, mirrored(fake3d));
                 }
             `,
             vertexShader: `
@@ -128,28 +140,32 @@ export class Sa5DepthMapEffect extends Sa5Effect {
     }
 
     private resize() {
-        this.sizes.width = window.innerWidth;
-        this.sizes.height = window.innerHeight;
-        this.camera.aspect = this.sizes.width / this.sizes.height;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(this.sizes.width, this.sizes.height);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        const imageAspect = this.originalImageDetails.aspectRatio;
+        const canvasAspect = this.canvasElement.width / this.canvasElement.height;
 
-        // Update plane scale based on image aspect ratio
-        if (this.originalImageDetails.aspectRatio > this.sizes.width / this.sizes.height) {
-            this.plane.scale.set(1, 1 / this.originalImageDetails.aspectRatio, 1);
+        let scaleX = 1;
+        let scaleY = 1;
+
+        if (canvasAspect > imageAspect) {
+            scaleX = canvasAspect / imageAspect;
+            scaleY = 1;
         } else {
-            this.plane.scale.set(this.originalImageDetails.aspectRatio, 1, 1);
+            scaleX = 1;
+            scaleY = imageAspect / canvasAspect;
         }
+
+        this.plane.scale.set(scaleX, scaleY, 1);
     }
 
     private onWindowResize() {
+        this.updateCanvasSize();
         this.resize();
     }
 
     private onMouseMove(event: MouseEvent) {
-        this.cursor.x = event.clientX / this.sizes.width - 0.5;
-        this.cursor.y = event.clientY / this.sizes.height - 0.5;
+        const rect = this.canvasElement.getBoundingClientRect();
+        this.cursor.x = (event.clientX - rect.left) / this.canvasElement.width - 0.5;
+        this.cursor.y = (event.clientY - rect.top) / this.canvasElement.height - 0.5;
     }
 
     private animate() {
