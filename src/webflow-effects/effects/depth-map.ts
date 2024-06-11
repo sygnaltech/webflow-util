@@ -23,26 +23,11 @@ export class Sa5DepthMapEffect extends Sa5Effect {
         super(elem, config);
         this.settings.originalImagePath = (elem as HTMLImageElement).src;
         this.settings.depthImagePath = (elem as HTMLImageElement).getAttribute('wfu-effect-setting-depth-map') || '';
-
-
-console.log("DEPTH MAP")
-
-console.log(elem);
-
-console.log(this.elem.parentNode)
-
-console.log(this.settings.originalImagePath)
-
-console.log(this.settings.depthImagePath)
-
-//        this.init();
+        // Removed the init call from the constructor
     }
 
     init() {
-//        super.init();
-
-        console.log("init", this.elem.parentNode)
-
+        super.init();
         this.setupScene();
         this.create3dImage();
         this.loadImages();
@@ -59,13 +44,6 @@ console.log(this.settings.depthImagePath)
         this.scene.add(this.camera);
 
         const canvas = document.createElement('canvas');
-
-
-console.log(canvas);
-
-console.log(this.elem);
-
-//        this.elem.parentNode!.replaceChild(canvas, this.elem);  // Replace image with canvas
         const parent = this.elem.parentNode;
 
         if (parent) {
@@ -74,7 +52,6 @@ console.log(this.elem);
             console.error('Parent node not found for the element.');
             return;
         }
-
 
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.setSize(this.sizes.width, this.sizes.height);
@@ -86,14 +63,14 @@ console.log(this.elem);
             this.textureLoader.load(this.settings.originalImagePath, (originalTexture) => {
                 this.originalImageDetails.width = originalTexture.image.width;
                 this.originalImageDetails.height = originalTexture.image.height;
-                this.originalImageDetails.aspectRatio = originalTexture.image.height / originalTexture.image.width;
+                this.originalImageDetails.aspectRatio = originalTexture.image.width / originalTexture.image.height;
 
                 if (this.planeMaterial) {
                     this.planeMaterial.uniforms.originalTexture.value = originalTexture;
                     this.planeMaterial.uniforms.depthTexture.value = depthTexture;
                 }
 
-                this.resize();
+                this.resize(); // Update plane geometry scale
             });
         });
     }
@@ -157,6 +134,13 @@ console.log(this.elem);
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Update plane scale based on image aspect ratio
+        if (this.originalImageDetails.aspectRatio > this.sizes.width / this.sizes.height) {
+            this.plane.scale.set(1, 1 / this.originalImageDetails.aspectRatio, 1);
+        } else {
+            this.plane.scale.set(this.originalImageDetails.aspectRatio, 1, 1);
+        }
     }
 
     private onWindowResize() {

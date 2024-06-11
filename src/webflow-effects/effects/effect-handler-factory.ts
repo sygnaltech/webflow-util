@@ -24,8 +24,6 @@ export class WfuEffectHandlerFactory {
 //            Sa5Attribute.ATTR_FORM_HANDLER // "wfu-form-handler"
             ); 
 
-console.log("factory 2", elem.parentNode)
-
         switch (type) {
             case "depthmap":
 
@@ -44,23 +42,8 @@ console.log("factory 2", elem.parentNode)
 
     static createFromElement(elem: HTMLElement): Sa5Effect {
 
-        // let form: Sa5Form = new Sa5Form(elem);
-
-        // // if form is valid
-        // if (!form.isValid) {
-        //     console.error("Cannot only instantiate Sa5 form handler from a Form element."); 
-        // }
-
         return this.create(elem); 
 
     }
 
 }
-
-/* 
-// https://dev.to/sanderdebr/js-es6-design-patterns-factory-3a3g 
-export const WfuFormHandlerFactory = {
-    create: function (type, elem, config) {
-    }
-}
-*/

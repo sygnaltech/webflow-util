@@ -68,8 +68,6 @@ export class Sa5EffectsController {
             ));
     
         effectsElements.forEach(element => { 
-  
-console.log("factory", element, element.parentElement, element.parentNode)
 
             if (!element.parentNode) {
                 console.error("Element has no parent node, cannot initialize handler:", element);

@@ -19498,14 +19498,9 @@ void main() {
       };
       this.settings.originalImagePath = elem.src;
       this.settings.depthImagePath = elem.getAttribute("wfu-effect-setting-depth-map") || "";
-      console.log("DEPTH MAP");
-      console.log(elem);
-      console.log(this.elem.parentNode);
-      console.log(this.settings.originalImagePath);
-      console.log(this.settings.depthImagePath);
     }
     init() {
-      console.log("init", this.elem.parentNode);
+      super.init();
       this.setupScene();
       this.create3dImage();
       this.loadImages();
@@ -19519,8 +19514,6 @@ void main() {
       this.camera.position.z = 0.7;
       this.scene.add(this.camera);
       const canvas = document.createElement("canvas");
-      console.log(canvas);
-      console.log(this.elem);
       const parent = this.elem.parentNode;
       if (parent) {
         parent.replaceChild(canvas, this.elem);
@@ -19537,7 +19530,7 @@ void main() {
         this.textureLoader.load(this.settings.originalImagePath, (originalTexture) => {
           this.originalImageDetails.width = originalTexture.image.width;
           this.originalImageDetails.height = originalTexture.image.height;
-          this.originalImageDetails.aspectRatio = originalTexture.image.height / originalTexture.image.width;
+          this.originalImageDetails.aspectRatio = originalTexture.image.width / originalTexture.image.height;
           if (this.planeMaterial) {
             this.planeMaterial.uniforms.originalTexture.value = originalTexture;
             this.planeMaterial.uniforms.depthTexture.value = depthTexture;
@@ -19602,6 +19595,11 @@ void main() {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(this.sizes.width, this.sizes.height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      if (this.originalImageDetails.aspectRatio > this.sizes.width / this.sizes.height) {
+        this.plane.scale.set(1, 1 / this.originalImageDetails.aspectRatio, 1);
+      } else {
+        this.plane.scale.set(this.originalImageDetails.aspectRatio, 1, 1);
+      }
     }
     onWindowResize() {
       this.resize();
@@ -19637,7 +19635,6 @@ void main() {
       let type = elem.getAttribute(
         `wfu-effect`
       );
-      console.log("factory 2", elem.parentNode);
       switch (type) {
         case "depthmap":
           handler = new Sa5DepthMapEffect(elem, config);
@@ -19668,7 +19665,6 @@ void main() {
         )
       );
       effectsElements.forEach((element) => {
-        console.log("factory", element, element.parentElement, element.parentNode);
         if (!element.parentNode) {
           console.error("Element has no parent node, cannot initialize handler:", element);
           return;
