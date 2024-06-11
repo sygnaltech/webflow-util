@@ -1,6 +1,3 @@
-
-
-
 import { Sa5Effect } from './effect-handler';
 import * as THREE from 'three';
 
@@ -8,37 +5,48 @@ export class Sa5DepthMapEffect extends Sa5Effect {
     private scene: THREE.Scene;
     private camera: THREE.PerspectiveCamera;
     private renderer: THREE.WebGLRenderer;
-    private material: THREE.ShaderMaterial;
-    private mesh: THREE.Mesh;
-    private mouse: THREE.Vector2 = new THREE.Vector2(0.5, 0.5);
-    private sizes = { width: window.innerWidth, height: window.innerHeight };
-    private cursor = { x: 0, y: 0, lerpX: 0, lerpY: 0 };
-    private originalImageDetails = { width: 0, height: 0, aspectRatio: 0 };
     private planeGeometry: THREE.PlaneGeometry;
     private planeMaterial: THREE.ShaderMaterial;
     private plane: THREE.Mesh;
-    private textureLoader = new THREE.TextureLoader();
+    private textureLoader: THREE.TextureLoader = new THREE.TextureLoader();
+    private sizes = { width: window.innerWidth, height: window.innerHeight };
+    private cursor = { x: 0, y: 0, lerpX: 0, lerpY: 0 };
+    private originalImageDetails = { width: 0, height: 0, aspectRatio: 0 };
     private settings = {
         xThreshold: 20,
         yThreshold: 20,
-        originalImagePath: 'https://assets.codepen.io/1616030/wf-memetican_woman_at_the_beach_in_a_bikini._Beautiful_woman_and_b_1cba33a6-be82-4456-9c06-2364efc4ff92.jpg',
-        depthImagePath: 'https://assets.codepen.io/1616030/map1.png',
+        originalImagePath: '',
+        depthImagePath: ''
     };
 
     constructor(elem: HTMLElement, config = {}) {
-        super(elem, config); 
+        super(elem, config);
+        this.settings.originalImagePath = (elem as HTMLImageElement).src;
+        this.settings.depthImagePath = (elem as HTMLImageElement).getAttribute('wfu-effect-setting-depth-map') || '';
 
+
+console.log("DEPTH MAP")
+
+console.log(elem);
+
+console.log(this.elem.parentNode)
+
+console.log(this.settings.originalImagePath)
+
+console.log(this.settings.depthImagePath)
+
+//        this.init();
     }
-    
+
     init() {
-        super.init();
+//        super.init();
 
-console.log("depth map init"); 
+        console.log("init", this.elem.parentNode)
 
-this.setupScene();
-this.create3dImage();
-this.loadImages();
-this.animate();
+        this.setupScene();
+        this.create3dImage();
+        this.loadImages();
+        this.animate();
 
         this.elem.addEventListener('mousemove', this.onMouseMove.bind(this));
         window.addEventListener('resize', this.onWindowResize.bind(this));
@@ -51,7 +59,23 @@ this.animate();
         this.scene.add(this.camera);
 
         const canvas = document.createElement('canvas');
-        this.elem.appendChild(canvas);
+
+
+console.log(canvas);
+
+console.log(this.elem);
+
+//        this.elem.parentNode!.replaceChild(canvas, this.elem);  // Replace image with canvas
+        const parent = this.elem.parentNode;
+
+        if (parent) {
+            parent.replaceChild(canvas, this.elem);  // Replace image with canvas
+        } else {
+            console.error('Parent node not found for the element.');
+            return;
+        }
+
+
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -74,15 +98,12 @@ this.animate();
         });
     }
 
-
     private create3dImage() {
         if (this.plane) {
             this.planeGeometry.dispose();
             this.planeMaterial.dispose();
             this.scene.remove(this.plane);
         }
-
-console.log("create3dImage"); 
 
         this.planeGeometry = new THREE.PlaneGeometry(1, 1);
         this.planeMaterial = new THREE.ShaderMaterial({
@@ -157,15 +178,13 @@ console.log("create3dImage");
             this.cursor.lerpX += (parallaxX - this.cursor.lerpX) * 0.1;
             this.cursor.lerpY += (parallaxY - this.cursor.lerpY) * 0.1;
 
-            this.planeMaterial.uniforms.uMouse.value = new THREE.Vector2(this.cursor.lerpX, this.cursor.lerpY);
-            this.renderer.render(this.scene, this.camera);
+            if (this.planeMaterial) {
+                this.planeMaterial.uniforms.uMouse.value = new THREE.Vector2(this.cursor.lerpX, this.cursor.lerpY);
+            }
 
+            this.renderer.render(this.scene, this.camera);
             requestAnimationFrame(tick);
         };
         tick();
     }
-    
 }
-
-
-

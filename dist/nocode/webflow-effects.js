@@ -19486,21 +19486,26 @@ void main() {
   var Sa5DepthMapEffect = class extends Sa5Effect {
     constructor(elem, config = {}) {
       super(elem, config);
-      this.mouse = new Vector2(0.5, 0.5);
+      this.textureLoader = new TextureLoader();
       this.sizes = { width: window.innerWidth, height: window.innerHeight };
       this.cursor = { x: 0, y: 0, lerpX: 0, lerpY: 0 };
       this.originalImageDetails = { width: 0, height: 0, aspectRatio: 0 };
-      this.textureLoader = new TextureLoader();
       this.settings = {
         xThreshold: 20,
         yThreshold: 20,
-        originalImagePath: "https://assets.codepen.io/1616030/wf-memetican_woman_at_the_beach_in_a_bikini._Beautiful_woman_and_b_1cba33a6-be82-4456-9c06-2364efc4ff92.jpg",
-        depthImagePath: "https://assets.codepen.io/1616030/map1.png"
+        originalImagePath: "",
+        depthImagePath: ""
       };
+      this.settings.originalImagePath = elem.src;
+      this.settings.depthImagePath = elem.getAttribute("wfu-effect-setting-depth-map") || "";
+      console.log("DEPTH MAP");
+      console.log(elem);
+      console.log(this.elem.parentNode);
+      console.log(this.settings.originalImagePath);
+      console.log(this.settings.depthImagePath);
     }
     init() {
-      super.init();
-      console.log("depth map init");
+      console.log("init", this.elem.parentNode);
       this.setupScene();
       this.create3dImage();
       this.loadImages();
@@ -19514,7 +19519,15 @@ void main() {
       this.camera.position.z = 0.7;
       this.scene.add(this.camera);
       const canvas = document.createElement("canvas");
-      this.elem.appendChild(canvas);
+      console.log(canvas);
+      console.log(this.elem);
+      const parent = this.elem.parentNode;
+      if (parent) {
+        parent.replaceChild(canvas, this.elem);
+      } else {
+        console.error("Parent node not found for the element.");
+        return;
+      }
       this.renderer = new WebGLRenderer({ canvas });
       this.renderer.setSize(this.sizes.width, this.sizes.height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -19539,7 +19552,6 @@ void main() {
         this.planeMaterial.dispose();
         this.scene.remove(this.plane);
       }
-      console.log("create3dImage");
       this.planeGeometry = new PlaneGeometry(1, 1);
       this.planeMaterial = new ShaderMaterial({
         uniforms: {
@@ -19606,7 +19618,9 @@ void main() {
         const parallaxY = -this.cursor.y * 0.5;
         this.cursor.lerpX += (parallaxX - this.cursor.lerpX) * 0.1;
         this.cursor.lerpY += (parallaxY - this.cursor.lerpY) * 0.1;
-        this.planeMaterial.uniforms.uMouse.value = new Vector2(this.cursor.lerpX, this.cursor.lerpY);
+        if (this.planeMaterial) {
+          this.planeMaterial.uniforms.uMouse.value = new Vector2(this.cursor.lerpX, this.cursor.lerpY);
+        }
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(tick);
       };
@@ -19623,6 +19637,7 @@ void main() {
       let type = elem.getAttribute(
         `wfu-effect`
       );
+      console.log("factory 2", elem.parentNode);
       switch (type) {
         case "depthmap":
           handler = new Sa5DepthMapEffect(elem, config);
@@ -19653,7 +19668,16 @@ void main() {
         )
       );
       effectsElements.forEach((element) => {
+        console.log("factory", element, element.parentElement, element.parentNode);
+        if (!element.parentNode) {
+          console.error("Element has no parent node, cannot initialize handler:", element);
+          return;
+        }
         let handler = WfuEffectHandlerFactory.createFromElement(element);
+        if (!handler) {
+          console.error("Handler creation failed for element:", element);
+          return;
+        }
         handler.init();
       });
     }

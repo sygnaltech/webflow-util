@@ -24,6 +24,8 @@ export class WfuEffectHandlerFactory {
 //            Sa5Attribute.ATTR_FORM_HANDLER // "wfu-form-handler"
             ); 
 
+console.log("factory 2", elem.parentNode)
+
         switch (type) {
             case "depthmap":
 
