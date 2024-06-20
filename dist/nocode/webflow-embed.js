@@ -1,6 +1,6 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -357,6 +357,10 @@
       const webflowEmbed = await Sa5Embed.createFromScriptElementAsync(scriptElement);
     });
   };
-  document.addEventListener("DOMContentLoaded", initAsync);
+  if (document.readyState !== "loading") {
+    initAsync();
+  } else {
+    document.addEventListener("DOMContentLoaded", initAsync);
+  }
 })();
 //# sourceMappingURL=webflow-embed.js.map

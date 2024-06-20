@@ -261,7 +261,7 @@
   Sa5Core.startup(WebflowInfo);
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-demo.ts
   var init = () => {
@@ -276,6 +276,10 @@
       webflowInfo.updateHrefToWebflowPreviewLink(element);
     });
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-demo.js.map

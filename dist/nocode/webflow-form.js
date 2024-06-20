@@ -103,7 +103,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -629,6 +629,10 @@
       WfuFormHandlerFactory.createFromElement(element).init();
     });
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-form.js.map

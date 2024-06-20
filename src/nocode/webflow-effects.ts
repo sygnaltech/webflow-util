@@ -29,4 +29,10 @@ const init = () => {
 
 }
 
-document.addEventListener("DOMContentLoaded", init); 
+
+// Auto-execute on DOM load
+if (document.readyState !== 'loading') {
+    init();
+} else {
+    document.addEventListener("DOMContentLoaded", init);
+}

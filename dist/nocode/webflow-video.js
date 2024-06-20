@@ -2678,7 +2678,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-video.ts
   var init = () => {
@@ -2693,7 +2693,11 @@
     webflowVideo.processAllYouTubeNorel();
     webflowVideo.processAllDataPosterUrls();
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 /*!
  * weakmap-polyfill v2.0.4 - ECMAScript6 WeakMap polyfill

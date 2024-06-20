@@ -51,7 +51,14 @@ const initAsync = async() => {
 
 }
 
-document.addEventListener("DOMContentLoaded", initAsync);
+
+// Auto-execute on DOM load
+if (document.readyState !== 'loading') {
+    initAsync();
+} else {
+    document.addEventListener("DOMContentLoaded", initAsync);
+}
+
 
 
 

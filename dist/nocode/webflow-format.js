@@ -966,7 +966,7 @@
   Sa5Core.startup(WebflowFormat);
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-format.ts
   var init = () => {
@@ -986,6 +986,10 @@
       webflowFormat.formatDate(element);
     });
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-format.js.map

@@ -572,7 +572,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.3.24";
+      VERSION = "5.4.0";
     }
   });
 
@@ -681,7 +681,11 @@
           }
         });
       };
-      document.addEventListener("DOMContentLoaded", init);
+      if (document.readyState !== "loading") {
+        init();
+      } else {
+        document.addEventListener("DOMContentLoaded", init);
+      }
     }
   });
   require_webflow_html();

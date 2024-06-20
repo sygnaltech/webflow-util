@@ -109,6 +109,10 @@ console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
 
 }
 
-document.addEventListener("DOMContentLoaded", init)
-//document.addEventListener("load", init)
+// Auto-execute on DOM load
+if (document.readyState !== 'loading') {
+    init();
+} else {
+    document.addEventListener("DOMContentLoaded", init);
+}
 

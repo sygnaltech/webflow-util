@@ -410,7 +410,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-modal.ts
   var init2 = () => {
@@ -425,7 +425,11 @@
       modal.init();
     });
   };
-  document.addEventListener("DOMContentLoaded", init2);
+  if (document.readyState !== "loading") {
+    init2();
+  } else {
+    document.addEventListener("DOMContentLoaded", init2);
+  }
 })();
 /*! typescript-cookie v1.0.6 | MIT */
 //# sourceMappingURL=webflow-modal.js.map

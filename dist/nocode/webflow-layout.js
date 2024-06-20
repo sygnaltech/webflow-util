@@ -377,7 +377,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-layout.ts
   var init = () => {
@@ -386,6 +386,10 @@
     debug.debug(`Initializing ${VERSION}`);
     new Sa5Layouts().init();
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-layout.js.map

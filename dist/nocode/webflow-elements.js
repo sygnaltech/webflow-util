@@ -997,7 +997,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-elements.ts
   var init = () => {
@@ -1063,6 +1063,10 @@
       });
     }
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-elements.js.map

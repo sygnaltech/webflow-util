@@ -769,7 +769,7 @@
   Sa5Core.startup(Sa5Hotkeys);
 
   // src/version.ts
-  var VERSION = "5.3.24";
+  var VERSION = "5.4.0";
 
   // src/nocode/webflow-hotkeys.ts
   var init = () => {
@@ -779,6 +779,10 @@
     const sa5Hotkeys = new Sa5Hotkeys();
     sa5Hotkeys.init();
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=webflow-hotkeys.js.map
