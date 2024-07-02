@@ -4618,6 +4618,7 @@
         ...defaultConfig,
         ...this.normalizeConfig(config3)
       };
+      this.modalContainer = this.createModalContainer();
       let core = Sa5Core.startup();
     }
     normalizeConfig(config3) {
@@ -4636,11 +4637,109 @@
           throw new Error(`Invalid mode: ${mode}`);
       }
     }
+    createModalContainer() {
+      const container = document.createElement("div");
+      container.style.position = "fixed";
+      container.style.top = "50%";
+      container.style.left = "50%";
+      container.style.transform = "translate(-50%, -50%)";
+      container.style.backgroundColor = "#fff";
+      container.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.25)";
+      container.style.zIndex = "9999";
+      container.style.display = "none";
+      const closeButton = document.createElement("button");
+      closeButton.innerHTML = "&times;";
+      closeButton.style.position = "absolute";
+      closeButton.style.top = "10px";
+      closeButton.style.right = "10px";
+      closeButton.style.cursor = "pointer";
+      closeButton.style.background = "none";
+      closeButton.style.border = "none";
+      closeButton.style.fontSize = "24px";
+      closeButton.style.lineHeight = "24px";
+      closeButton.style.fontWeight = "bold";
+      closeButton.style.color = "#333";
+      closeButton.addEventListener("click", () => this.close());
+      container.appendChild(closeButton);
+      container.appendChild(this.elem);
+      this.elem.removeAttribute("wfu-modal-state");
+      return container;
+    }
     init() {
       let debug = new Sa5Debug("sa5-modal");
       debug.debug("Modal initialized.", this.config);
+      document.body.appendChild(this.modalContainer);
     }
     trigger() {
+      const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
+      const overlay = document.createElement("div");
+      overlay.id = overlayId;
+      overlay.style.position = "fixed";
+      overlay.style.top = "0";
+      overlay.style.left = "0";
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      overlay.style.zIndex = "9998";
+      overlay.addEventListener("click", () => this.close());
+      document.body.appendChild(overlay);
+      this.modalContainer.style.display = "block";
+      gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, y: "-50px" }, { opacity: 1, y: "0", duration: 0.5 });
+      this.modalContainer.dataset.overlayId = overlayId;
+    }
+    trigger12() {
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = "0";
+      overlay.style.left = "0";
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      overlay.style.zIndex = "9998";
+      overlay.addEventListener("click", () => this.close());
+      document.body.appendChild(overlay);
+      this.modalContainer.style.display = "block";
+      gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, y: "-50px" }, { opacity: 1, y: "0", duration: 0.5 });
+      this.modalContainer.dataset.overlayId = overlay.id;
+    }
+    clos2() {
+      const overlay = document.querySelector(`[data-overlay-id="${this.modalContainer.dataset.overlayId}"]`);
+      if (overlay) {
+        gsapWithCSS.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
+          this.modalContainer.style.display = "none";
+          document.body.removeChild(overlay);
+        } });
+        gsapWithCSS.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
+          document.body.removeChild(overlay);
+        } });
+      }
+    }
+    close1() {
+      const overlay = this.modalContainer.previousElementSibling;
+      if (overlay && overlay.parentElement) {
+        gsapWithCSS.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
+          this.modalContainer.style.display = "none";
+        } });
+        gsapWithCSS.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
+          overlay.parentElement.removeChild(overlay);
+        } });
+      }
+    }
+    close() {
+      const overlayId = this.modalContainer.dataset.overlayId;
+      const overlay = document.getElementById(overlayId);
+      if (overlay) {
+        gsapWithCSS.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
+          this.modalContainer.style.display = "none";
+        } });
+        gsapWithCSS.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
+          document.body.removeChild(overlay);
+        } });
+      }
+    }
+    trigger2() {
       console.log("triggered.");
       const overlay = document.createElement("div");
       overlay.style.position = "fixed";
