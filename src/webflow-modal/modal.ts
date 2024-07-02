@@ -44,8 +44,11 @@ interface Sa5ModalConfig {
 export class Sa5Modal {
 
     config: Sa5ModalConfig;
+    elem: HTMLElement; 
 
-    constructor(config: Partial<Sa5ModalConfig> = {}) {
+    constructor(elem: HTMLElement, config: Partial<Sa5ModalConfig> = {}) {
+
+        this.elem = elem; 
 
         const defaultConfig: Sa5ModalConfig = {
 
@@ -101,6 +104,8 @@ export class Sa5Modal {
     }
 
     trigger() {
+
+        console.log("triggered."); 
 
         // Create the modal elements
         const overlay: HTMLDivElement = document.createElement('div');

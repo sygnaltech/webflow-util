@@ -59,11 +59,14 @@
     Sa5Attribute3["ATTR_FORM_HANDLER"] = "wfu-form-handler";
     Sa5Attribute3["ATTR_FORM_MESSAGE"] = "wfu-form-message";
     Sa5Attribute3["ATTR_FORM_IPINFO"] = "wfu-form-ipinfo";
+    Sa5Attribute3["ATTR_DISMISS"] = "wfu-dismiss";
+    Sa5Attribute3["ATTR_DISMISS_TRIGGER"] = "wfu-dismiss-trigger";
+    Sa5Attribute3["ATTR_DISMISS_CLOSE"] = "wfu-dismiss-close";
+    Sa5Attribute3["ATTR_DISMISS_CLOSE_TYPE"] = "wfu-dismiss-close-type";
+    Sa5Attribute3["ATTR_DISMISS_DAYS"] = "wfu-dismiss-suppress-days";
     Sa5Attribute3["ATTR_MODAL"] = "wfu-modal";
-    Sa5Attribute3["ATTR_MODAL_TRIGGER"] = "wfu-modal-trigger";
-    Sa5Attribute3["ATTR_MODAL_CLOSE"] = "wfu-modal-close";
-    Sa5Attribute3["ATTR_MODAL_CLOSE_TYPE"] = "wfu-modal-close-type";
-    Sa5Attribute3["ATTR_MODAL_SUPPRESS_DAYS"] = "wfu-modal-suppress-days";
+    Sa5Attribute3["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
+    Sa5Attribute3["ATTR_MODAL_STATE"] = "wfu-modal-state";
     Sa5Attribute3["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute3["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute3["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -508,7 +511,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.0";
+  var VERSION = "5.4.1";
 
   // src/nocode/webflow-detect.ts
   (async () => {

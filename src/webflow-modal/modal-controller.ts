@@ -11,6 +11,7 @@
 import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5Modal } from './modal';
 
 /**
  * EVENTS
@@ -35,6 +36,7 @@ interface Sa5ModalControllerConfig {
 export class Sa5ModalController {
 
     config: Sa5ModalControllerConfig;
+    modals: Map<string, Sa5Modal>;
 
     // Type guard to check if a function is a UserInfoChangedCallback
     // private isLayoutsChangedCallback(func: Function): func is LayoutChangedCallback {
@@ -56,6 +58,7 @@ export class Sa5ModalController {
 
         // TODO: merge 
         this.config = config; 
+        this.modals = new Map<string, Sa5Modal>();
 
         let core: Sa5Core = Sa5Core.startup(); 
 
@@ -72,7 +75,7 @@ export class Sa5ModalController {
         debug.debug ("Modal initialized.", this.config);
     
         let modalElements = Array.from(
-            document.querySelectorAll(
+            document.querySelectorAll<HTMLElement>(
                 Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL) // '[wfu-modal]'
             ));
     
@@ -89,19 +92,36 @@ export class Sa5ModalController {
 
             // If Exit-intent-triggered, add timer trigger
 
+            let modal: Sa5Modal = new Sa5Modal(element);
+            modal.init(); 
+
+            // TODO: error if duplicate 
+            let modalKey = element.getAttribute(Sa5Attribute.ATTR_MODAL);
+            if (modalKey) {
+                this.modals.set(modalKey, modal);
+            } 
 
         });    
 
 
         let triggerElements = Array.from(
             document.querySelectorAll(
-                '[wfu-modal-trigger-click]' 
-//                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL) // '[wfu-modal]'
+                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL_TRIGGER_CLICK)
             ));
     
         triggerElements.forEach(element => { 
             
-            element.addEventListener('click', function() {
+            element.addEventListener('click', () => {
+
+                let modalKey = element.getAttribute(Sa5Attribute.ATTR_MODAL_TRIGGER_CLICK);
+                if (modalKey) {
+    // console.log("trigger click", modalKey);
+    // console.log(this.modals.get(modalKey)); 
+
+                    this.modals.get(modalKey).trigger();
+                } 
+    
+
             }); 
 
         });    

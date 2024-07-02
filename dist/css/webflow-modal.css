@@ -1,6 +1,14 @@
 /*
  * Webflow modal
  */
+/**
+ * SCSS Limit collection list items, at breakpoint levels
+ */
+[wfu-modal-state=hidden] {
+  display: none;
+}
+
+/* Do not apply the above rule if the element is directly within a parent with the attribute [wfu-modal-frame] */
 [wfu-modal-trigger] {
   display: none !important;
 }/*# sourceMappingURL=webflow-modal.css.map */

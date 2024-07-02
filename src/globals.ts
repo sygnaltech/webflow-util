@@ -113,12 +113,21 @@ export enum Sa5Attribute {
     ATTR_FORM_MESSAGE = 'wfu-form-message',
     ATTR_FORM_IPINFO = 'wfu-form-ipinfo',
 
+    // Dismiss
+    ATTR_DISMISS = 'wfu-dismiss', 
+    ATTR_DISMISS_TRIGGER = 'wfu-dismiss-trigger',
+    ATTR_DISMISS_CLOSE = 'wfu-dismiss-close',
+    ATTR_DISMISS_CLOSE_TYPE = 'wfu-dismiss-close-type',
+    ATTR_DISMISS_DAYS = 'wfu-dismiss-suppress-days',
+
     // Modals
     ATTR_MODAL = 'wfu-modal', 
-    ATTR_MODAL_TRIGGER = 'wfu-modal-trigger',
-    ATTR_MODAL_CLOSE = 'wfu-modal-close',
-    ATTR_MODAL_CLOSE_TYPE = 'wfu-modal-close-type',
-    ATTR_MODAL_SUPPRESS_DAYS = 'wfu-modal-suppress-days',
+    ATTR_MODAL_TRIGGER_CLICK = 'wfu-modal-trigger-click',
+    ATTR_MODAL_STATE = 'wfu-modal-state', // INTERNAL - hidden 
+    // ATTR_MODAL_TRIGGER = 'wfu-modal-trigger',
+    // ATTR_MODAL_CLOSE = 'wfu-modal-close',
+    // ATTR_MODAL_CLOSE_TYPE = 'wfu-modal-close-type',
+    // ATTR_MODAL_SUPPRESS_DAYS = 'wfu-modal-suppress-days',
 
     // Format
     ATTR_FORMAT = 'wfu-format',

@@ -59,11 +59,14 @@
     Sa5Attribute2["ATTR_FORM_HANDLER"] = "wfu-form-handler";
     Sa5Attribute2["ATTR_FORM_MESSAGE"] = "wfu-form-message";
     Sa5Attribute2["ATTR_FORM_IPINFO"] = "wfu-form-ipinfo";
+    Sa5Attribute2["ATTR_DISMISS"] = "wfu-dismiss";
+    Sa5Attribute2["ATTR_DISMISS_TRIGGER"] = "wfu-dismiss-trigger";
+    Sa5Attribute2["ATTR_DISMISS_CLOSE"] = "wfu-dismiss-close";
+    Sa5Attribute2["ATTR_DISMISS_CLOSE_TYPE"] = "wfu-dismiss-close-type";
+    Sa5Attribute2["ATTR_DISMISS_DAYS"] = "wfu-dismiss-suppress-days";
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
-    Sa5Attribute2["ATTR_MODAL_TRIGGER"] = "wfu-modal-trigger";
-    Sa5Attribute2["ATTR_MODAL_CLOSE"] = "wfu-modal-close";
-    Sa5Attribute2["ATTR_MODAL_CLOSE_TYPE"] = "wfu-modal-close-type";
-    Sa5Attribute2["ATTR_MODAL_SUPPRESS_DAYS"] = "wfu-modal-suppress-days";
+    Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
+    Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -4435,7 +4438,8 @@
 
   // src/webflow-modal/modal.ts
   var Sa5Modal = class {
-    constructor(config3 = {}) {
+    constructor(elem, config3 = {}) {
+      this.elem = elem;
       const defaultConfig = {
         mode: "popup" /* Popup */
       };
@@ -4466,6 +4470,7 @@
       debug.debug("Modal initialized.", this.config);
     }
     trigger() {
+      console.log("triggered.");
       const overlay = document.createElement("div");
       overlay.style.position = "fixed";
       overlay.style.top = "0";

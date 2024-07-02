@@ -11,10 +11,10 @@
 // import { renderRatingComponent } from "./modules/webflow-ui";
 // import * as Cookies from 'js-cookie';
 import { getCookie, removeCookie, setCookie } from 'typescript-cookie'
-import { Sa5Attribute } from './globals';
+import { Sa5Attribute } from '../globals';
 //import { Cookies } from 'js-cookie';
 
-export class Sa5Modal {
+export class Sa5Dismiss {
 
     private _element: HTMLElement;
     private _name: string; 
@@ -28,15 +28,15 @@ export class Sa5Modal {
     // Generates the unique key name for suppression tracking
     private getModalKeyName() { 
 
-        return `wfu-modal_${this._name}`; 
+        return `wfu-dismiss_${this._name}`; 
     }
 
     // Returns true if the item is flagged as suppressed
-    isSuppressed() { // name 
+    isDismissed() { // name 
       
 //        console.log("suppressed", this.getModalKeyName())
 
-        const suppressed = getCookie(
+        const dismissed = getCookie(
             this.getModalKeyName()
             );
 
@@ -48,11 +48,11 @@ export class Sa5Modal {
         //     this.getModalKeyName()  
         //     ); 
         
-        return suppressed;
+        return dismissed;
     }
 
     // Suppress the item
-    suppress(val, duration: number) {
+    dismiss(val, duration: number) {
       
         setCookie(
           this.getModalKeyName(), 
@@ -70,7 +70,7 @@ export class Sa5Modal {
     }
 
     // Un-suppress the item
-    unSuppress() {
+    unDismiss() {
       
         // We'll use session storage
         // suppression is temporary, to the current tab-session 
@@ -84,23 +84,23 @@ export class Sa5Modal {
     init() {
 
         this._name = this._element.getAttribute(
-            Sa5Attribute.ATTR_MODAL // "wfu-modal"
+            Sa5Attribute.ATTR_DISMISS // "wfu-modal"
             ) || "default";
 
-        if(this.isSuppressed()) {
+        if(this.isDismissed()) {
             this._element.remove(); 
             return; // nothing else to do 
         }
 
         // Un-hide the item, if not suppressed
         this._element.removeAttribute(
-            Sa5Attribute.ATTR_MODAL_TRIGGER // "wfu-modal-trigger"
+            Sa5Attribute.ATTR_DISMISS_TRIGGER // "wfu-modal-trigger"
             );
 
         // Detect close button clicks,
         // and then suppress the targeted element 
         document.querySelectorAll(
-            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL_CLOSE) // "[wfu-modal-close]"
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS_CLOSE) // "[wfu-modal-close]"
             ).forEach((element) => {
             
           // Detect close button clicks,
@@ -110,20 +110,20 @@ export class Sa5Modal {
               // Get modal
               const modalClose = element; 
               const modal = modalClose.closest(
-                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL)// "[wfu-modal]"
+                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS)// "[wfu-modal]"
                 ) as HTMLElement; 
               const modalCloseVal = modalClose.getAttribute(
-                Sa5Attribute.ATTR_MODAL_CLOSE // "wfu-modal-close"
+                Sa5Attribute.ATTR_DISMISS_CLOSE // "wfu-modal-close"
                 ) || "true";
               const modalCloseType = modal.getAttribute(
-                Sa5Attribute.ATTR_MODAL_CLOSE_TYPE // "wfu-modal-close-type"
+                Sa5Attribute.ATTR_DISMISS_CLOSE_TYPE // "wfu-modal-close-type"
                 ) || "auto";
               const modalSuppressDuration = parseFloat(modal.getAttribute(
-                Sa5Attribute.ATTR_MODAL_SUPPRESS_DAYS // "wfu-modal-suppress-days"
+                Sa5Attribute.ATTR_DISMISS_DAYS // "wfu-modal-suppress-days"
                 )) || 9999;
               
               // Set cookie suppression 
-              this.suppress(
+              this.dismiss(
                   modalCloseVal, 
                   modalSuppressDuration // days
               );

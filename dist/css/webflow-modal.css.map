@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":["../../src/css/webflow-modal.scss"],"names":[],"mappings":"AACA;AAAA;AAAA;AAOA;EAEI","file":"webflow-modal.css"}
+{"version":3,"sourceRoot":"","sources":["../../src/css/webflow-modal.scss","../../src/webflow-modal/modal.scss"],"names":[],"mappings":"AACA;AAAA;AAAA;ACCA;AAAA;AAAA;AAIA;EACE;;;AAGF;ADAA;EAEI","file":"webflow-modal.css"}

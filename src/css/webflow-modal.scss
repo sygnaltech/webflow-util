@@ -3,6 +3,8 @@
  * Webflow modal
  */
 
+ @use '../webflow-modal/modal';
+
 // override editor warning on small screen 
 // also Search engine results warning
 // "Unsupported Page"
@@ -11,3 +13,4 @@
     display: none !important;
 }
 
+ 

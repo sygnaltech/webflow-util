@@ -14,8 +14,9 @@ import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Attribute } from '../globals';
 
-import { Sa5Modal } from '../webflow-modal'; 
+import { Sa5Dismiss } from '../webflow-modal/dismiss'; 
 import { VERSION } from '../version';
+import { Sa5ModalController } from '../webflow-modal/modal-controller';
 
 const init = () => { 
 
@@ -25,15 +26,19 @@ const init = () => {
     let debug = new Sa5Debug("sa5-modal");
     debug.debug (`Initializing ${VERSION}`);
 
+    // Handle modals
+    const controller: Sa5ModalController = new Sa5ModalController();
+    controller.init(); 
 
-    // Remove any elements that are cookie-suppressed
+
+    // Dismiss any elements that are cookie-suppressed
     document.querySelectorAll(
-        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL) // "[wfu-modal]"
-        ).forEach((element) => {
+        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS) 
+    ).forEach((element) => {
 
-        const modalElem = element as HTMLElement;
+        const dismissElem = element as HTMLElement;
 
-        let modal: Sa5Modal = new Sa5Modal(modalElem);
+        let modal: Sa5Dismiss = new Sa5Dismiss(dismissElem);
         modal.init(); 
 
     });
