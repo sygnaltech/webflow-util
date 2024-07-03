@@ -37,9 +37,6 @@ interface Sa5ModalConfig {
 
 }
 
-// CodePen test 
-// https://codepen.io/memetican/pen/QWRMPqp/d706c319a86940074517ad92345da43a
-
 
 export class Sa5Modal {
 
@@ -121,6 +118,7 @@ export class Sa5Modal {
         closeButton.style.fontWeight = 'bold';
         closeButton.style.color = '#333';
         closeButton.style.zIndex = '1'; // Ensure it's above the content body 
+
         closeButton.addEventListener('click', () => this.close());
 
         container.appendChild(closeButton);
@@ -157,7 +155,7 @@ export class Sa5Modal {
 
     }
 
-    show() { 
+    display() { 
 
         const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
         const overlay = document.createElement('div');
@@ -181,64 +179,6 @@ export class Sa5Modal {
         this.modalContainer.dataset.overlayId = overlayId;
     }
 
-    trigger12() {
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        overlay.style.zIndex = '9998';
-        overlay.addEventListener('click', () => this.close());
-
-        document.body.appendChild(overlay);
-        this.modalContainer.style.display = 'block';
-//        this.elem.setAttribute('wfu-modal-state', 'visible'); 
-
-        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-        gsap.fromTo(this.modalContainer, { opacity: 0, y: '-50px' }, { opacity: 1, y: '0', duration: 0.5 });
-
-        this.modalContainer.dataset.overlayId = overlay.id;
-    }
-
-//     close() {
-//         const overlay = document.querySelector(`[data-overlay-id="${this.modalContainer.dataset.overlayId}"]`);
-//         if (overlay) {
-//             gsap.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
-//                 this.modalContainer.style.display = 'none'; 
-// //                this.elem.setAttribute('wfu-modal-state', 'hidden');
-//                 document.body.removeChild(overlay);
-//             }});
-//             gsap.to(overlay, { opacity: 0, duration: 0.5 });
-//         }
-//     } 
-
-    clos2() {
-        const overlay = document.querySelector(`[data-overlay-id="${this.modalContainer.dataset.overlayId}"]`);
-        if (overlay) {
-            gsap.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
-                this.modalContainer.style.display = 'none';
-                document.body.removeChild(overlay);
-            }});
-            gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
-                document.body.removeChild(overlay);
-            }});
-        }
-    }
-
-    close1() {
-        const overlay = this.modalContainer.previousElementSibling; // Assumes overlay is immediately before modalContainer in DOM
-        if (overlay && overlay.parentElement) {
-            gsap.to(this.modalContainer, { opacity: 0, duration: 0.5, onComplete: () => {
-                this.modalContainer.style.display = 'none';
-            }});
-            gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
-                overlay.parentElement.removeChild(overlay);
-            }});
-        }
-    }
-
     close() {
         const overlayId = this.modalContainer.dataset.overlayId;
         const overlay = document.getElementById(overlayId);
@@ -251,78 +191,6 @@ export class Sa5Modal {
             }});
         }
     }
-
-    trigger2() {
-
-        console.log("triggered."); 
-
-        // Create the modal elements
-        const overlay: HTMLDivElement = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        overlay.style.zIndex = '9998';
-    
-        const modal: HTMLDivElement = document.createElement('div');
-        modal.style.position = 'fixed';
-        modal.style.top = '50%';
-        modal.style.left = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.minWidth = '380px';
-        modal.style.width = '80%';
-        modal.style.maxWidth = '80%';
-        modal.style.backgroundColor = '#fff';
-        modal.style.padding = '20px';
-        modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.25)';
-        modal.style.zIndex = '9999';
-    
-        const closeButton: SVGSVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        closeButton.setAttribute('width', '24');
-        closeButton.setAttribute('height', '24');
-        closeButton.setAttribute('viewBox', '0 0 24 24');
-        closeButton.setAttribute('fill', 'none');
-        closeButton.setAttribute('stroke', 'currentColor');
-        closeButton.setAttribute('stroke-width', '2');
-        closeButton.setAttribute('stroke-linecap', 'round');
-        closeButton.setAttribute('stroke-linejoin', 'round');
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
-    
-        // Function to close the modal
-        function closeModal(): void {
-            gsap.to(modal, { opacity: 0, duration: 0.5, onComplete: () => document.body.removeChild(modal) });
-            gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => document.body.removeChild(overlay) });
-        }
-    
-        // Close the modal when the close button is clicked
-        closeButton.addEventListener('click', closeModal);
-    
-        // Close the modal when the overlay is clicked
-        overlay.addEventListener('click', closeModal);
-    
-        const iframe: HTMLIFrameElement = document.createElement('iframe');
-        iframe.src = 'https://www.google.com';
-        iframe.style.width = '100%';
-        iframe.style.height = '400px';
-        iframe.style.border = 'none';
-    
-        modal.appendChild(closeButton);
-        modal.appendChild(iframe);
-        document.body.appendChild(overlay);
-        document.body.appendChild(modal);
-    
-        // Animate the modal and overlay using GSAP
-        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-        gsap.fromTo(modal, { opacity: 0, y: '-50px' }, { opacity: 1, y: '0', duration: 0.5 });
-
-    }
-
 
 }
 
