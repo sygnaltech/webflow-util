@@ -4472,7 +4472,6 @@
       container.style.top = "50%";
       container.style.left = "50%";
       container.style.transform = "translate(-50%, -50%)";
-      container.style.backgroundColor = "#fff";
       container.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.25)";
       container.style.zIndex = "9999";
       container.style.display = "none";
@@ -4488,9 +4487,15 @@
       closeButton.style.lineHeight = "24px";
       closeButton.style.fontWeight = "bold";
       closeButton.style.color = "#333";
+      closeButton.style.zIndex = "1";
       closeButton.addEventListener("click", () => this.close());
       container.appendChild(closeButton);
       container.appendChild(this.elem);
+      this.elem.style.display = "block";
+      this.elem.style.marginTop = "0";
+      this.elem.style.marginBottom = "0";
+      this.elem.style.marginLeft = "0";
+      this.elem.style.marginRight = "0";
       this.elem.removeAttribute("wfu-modal-state");
       return container;
     }
@@ -4499,7 +4504,7 @@
       debug.debug("Modal initialized.", this.config);
       document.body.appendChild(this.modalContainer);
     }
-    trigger() {
+    show() {
       const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
       const overlay = document.createElement("div");
       overlay.id = overlayId;
@@ -4656,7 +4661,7 @@
         element.addEventListener("click", () => {
           let modalKey = element.getAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */);
           if (modalKey) {
-            this.modals.get(modalKey).trigger();
+            this.modals.get(modalKey).show();
           }
         });
       });

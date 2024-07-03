@@ -118,7 +118,7 @@ export class Sa5ModalController {
     // console.log("trigger click", modalKey);
     // console.log(this.modals.get(modalKey)); 
 
-                    this.modals.get(modalKey).trigger();
+                    this.modals.get(modalKey).show();
                 } 
     
 

@@ -64,7 +64,7 @@ export class Sa5Modal {
         }; 
 //        this.config = { ...defaultConfig, ...config };
 
-this.modalContainer = this.createModalContainer();
+        this.modalContainer = this.createModalContainer();
 
         let core: Sa5Core = Sa5Core.startup(); 
 
@@ -88,13 +88,15 @@ this.modalContainer = this.createModalContainer();
         }
     }
 
-    private createModalContainer(): HTMLDivElement {
+    private createModalContainer(): HTMLDivElement { 
+
         const container = document.createElement('div');
+
         container.style.position = 'fixed';
         container.style.top = '50%';
         container.style.left = '50%';
         container.style.transform = 'translate(-50%, -50%)';
-        container.style.backgroundColor = '#fff';
+//        container.style.backgroundColor = '#fff';
         container.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.25)';
         container.style.zIndex = '9999';
         container.style.display = 'none'; // Initially hidden
@@ -118,12 +120,20 @@ this.modalContainer = this.createModalContainer();
         closeButton.style.lineHeight = '24px';
         closeButton.style.fontWeight = 'bold';
         closeButton.style.color = '#333';
+        closeButton.style.zIndex = '1'; // Ensure it's above the content body 
         closeButton.addEventListener('click', () => this.close());
 
         container.appendChild(closeButton);
-        container.appendChild(this.elem); // Wrap the provided element
 
-this.elem.removeAttribute("wfu-modal-state"); 
+        // Move modal inside of container 
+        container.appendChild(this.elem); 
+        this.elem.style.display = 'block'; // make it visible, as it is likely display: none in the designer 
+        this.elem.style.marginTop = '0';
+        this.elem.style.marginBottom = '0';
+        this.elem.style.marginLeft = '0';
+        this.elem.style.marginRight = '0';
+
+        this.elem.removeAttribute("wfu-modal-state"); 
 
         return container;
     }
@@ -133,7 +143,8 @@ this.elem.removeAttribute("wfu-modal-state");
         // Initialize debugging
         let debug = new Sa5Debug("sa5-modal");
         debug.debug ("Modal initialized.", this.config);
-            document.body.appendChild(this.modalContainer);
+
+        document.body.appendChild(this.modalContainer);
 
     //     // Notify any config-specified handler
     //     if(this.config.layoutChangedCallback) {
@@ -145,7 +156,9 @@ this.elem.removeAttribute("wfu-modal-state");
     //     }
 
     }
-    trigger() {
+
+    show() { 
+
         const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
         const overlay = document.createElement('div');
         overlay.id = overlayId;
@@ -156,6 +169,7 @@ this.elem.removeAttribute("wfu-modal-state");
         overlay.style.height = '100%';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
         overlay.style.zIndex = '9998';
+
         overlay.addEventListener('click', () => this.close());
     
         document.body.appendChild(overlay);
@@ -166,6 +180,7 @@ this.elem.removeAttribute("wfu-modal-state");
     
         this.modalContainer.dataset.overlayId = overlayId;
     }
+
     trigger12() {
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -198,6 +213,7 @@ this.elem.removeAttribute("wfu-modal-state");
 //             gsap.to(overlay, { opacity: 0, duration: 0.5 });
 //         }
 //     } 
+
     clos2() {
         const overlay = document.querySelector(`[data-overlay-id="${this.modalContainer.dataset.overlayId}"]`);
         if (overlay) {
@@ -210,6 +226,7 @@ this.elem.removeAttribute("wfu-modal-state");
             }});
         }
     }
+
     close1() {
         const overlay = this.modalContainer.previousElementSibling; // Assumes overlay is immediately before modalContainer in DOM
         if (overlay && overlay.parentElement) {
@@ -221,6 +238,7 @@ this.elem.removeAttribute("wfu-modal-state");
             }});
         }
     }
+
     close() {
         const overlayId = this.modalContainer.dataset.overlayId;
         const overlay = document.getElementById(overlayId);
