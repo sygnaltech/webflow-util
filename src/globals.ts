@@ -112,6 +112,10 @@ export enum Sa5Attribute {
     ATTR_FORM_HANDLER = 'wfu-form-handler',
     ATTR_FORM_MESSAGE = 'wfu-form-message',
     ATTR_FORM_IPINFO = 'wfu-form-ipinfo',
+    
+    ATTR_FORM_SELECT = 'wfu-form-select',
+    ATTR_FORM_SELECT_MODE = 'wfu-form-select-mode',
+    ATTR_FORM_SELECT_THEME = 'wfu-form-select-theme',
 
     // Dismiss
     ATTR_DISMISS = 'wfu-dismiss', 

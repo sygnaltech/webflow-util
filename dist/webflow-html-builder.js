@@ -71,6 +71,9 @@
     Sa5Attribute2["ATTR_FORM_HANDLER"] = "wfu-form-handler";
     Sa5Attribute2["ATTR_FORM_MESSAGE"] = "wfu-form-message";
     Sa5Attribute2["ATTR_FORM_IPINFO"] = "wfu-form-ipinfo";
+    Sa5Attribute2["ATTR_FORM_SELECT"] = "wfu-form-select";
+    Sa5Attribute2["ATTR_FORM_SELECT_MODE"] = "wfu-form-select-mode";
+    Sa5Attribute2["ATTR_FORM_SELECT_THEME"] = "wfu-form-select-theme";
     Sa5Attribute2["ATTR_DISMISS"] = "wfu-dismiss";
     Sa5Attribute2["ATTR_DISMISS_TRIGGER"] = "wfu-dismiss-trigger";
     Sa5Attribute2["ATTR_DISMISS_CLOSE"] = "wfu-dismiss-close";

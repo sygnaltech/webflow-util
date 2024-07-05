@@ -1,0 +1,41 @@
+
+/* Style the select element */
+// select[multiple] {
+//     width: 200px;
+//     height: 150px;
+//     padding: 5px;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+//     font-family: Arial, sans-serif;
+// }
+
+/* Style the options */
+select[multiple] {
+
+
+    &[wfu-form-select-theme=blue] {
+        
+        option {
+            &:checked {
+                background-color: #1967D2; 
+                color: white; 
+            }
+        }
+
+    }
+
+    &[wfu-form-select-theme=blue-padded] {
+        
+        option {
+            padding: 5px 10px;
+            color: black;
+
+            &:checked {
+                background-color: #1967D2;
+                color: white;
+            }
+        }
+
+    }
+
+}

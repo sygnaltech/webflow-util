@@ -15,6 +15,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Form } from '../webflow-form';
+import { Sa5FormSelect } from '../webflow-form/form-select';
 import { WfuFormHandler } from '../webflow-form/handler/form-handler'; 
 import { WfuFormHandlerFactory } from '../webflow-form/handler/form-handler-factory'; 
 import { Sa5FormIPInfo } from '../webflow-form/ip-info';
@@ -48,9 +49,6 @@ let core: Sa5Core = Sa5Core.startup();
 debug.debug("Checking for forms", Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER));
 
 
-console.log("forms", document.querySelectorAll("form"));
-
-console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
 
     // Catch any submits on forms
     const formsHandled = document.querySelectorAll(
@@ -60,17 +58,12 @@ console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
 
         console.log(formsHandled);
 
-      formsHandled.forEach((element: HTMLElement) => {
-
- console.log("installing form handler 1."); 
-
-
+        formsHandled.forEach((element: HTMLElement) => {
 
         debug.debug("Form detected, installing form handler.");
 
         WfuFormHandlerFactory.createFromElement(element)
             .init();
-
 
         // (new WfuFormIPInfo(element))
         //     .appendIPInfo();
@@ -83,29 +76,26 @@ console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
 
     });
 
-/* 
-    dataBindAllForms(db) {
 
-        // Create datalists from all data sources
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach
-        db.data.forEach((data, dataSourceName) => {
+    // Catch any submits on forms
+    const formSelects = document.querySelectorAll(
+        //        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // 
+        `select[${Sa5Attribute.ATTR_FORM_SELECT}]`
+//        `select[wfu-form-select]`
+        );
+        
+    console.log(formSelects);
 
-            // Create HTML datalists of all data sources
-            // for data binding
-            createHtmlDataList(
-                createDsnMoniker(dataSourceName), // creates a more unique name to avoid element ID conflicts
-                data
-            );
-        });
+    formSelects.forEach((element: HTMLSelectElement) => {
+        
+//        console.log("installing form handler 1."); 
+        
+//        debug.debug("Form detected, installing form handler.");
 
-        // Bind all SELECTS with [wfu-bind] specified
-        dataBindAllFormSelects(db);
+        const select: Sa5FormSelect = new Sa5FormSelect(element); 
+        select.init(); 
 
-        // Bind all INPUTS with [wfu-bind] specified
-        dataBindAllFormInputs(db);
-
-    }
-*/
+    });
 
 }
 

@@ -59,6 +59,9 @@
     Sa5Attribute2["ATTR_FORM_HANDLER"] = "wfu-form-handler";
     Sa5Attribute2["ATTR_FORM_MESSAGE"] = "wfu-form-message";
     Sa5Attribute2["ATTR_FORM_IPINFO"] = "wfu-form-ipinfo";
+    Sa5Attribute2["ATTR_FORM_SELECT"] = "wfu-form-select";
+    Sa5Attribute2["ATTR_FORM_SELECT_MODE"] = "wfu-form-select-mode";
+    Sa5Attribute2["ATTR_FORM_SELECT_THEME"] = "wfu-form-select-theme";
     Sa5Attribute2["ATTR_DISMISS"] = "wfu-dismiss";
     Sa5Attribute2["ATTR_DISMISS_TRIGGER"] = "wfu-dismiss-trigger";
     Sa5Attribute2["ATTR_DISMISS_CLOSE"] = "wfu-dismiss-close";
@@ -246,6 +249,55 @@
     }
   };
   Sa5Core.startup();
+
+  // src/webflow-form/form-select.ts
+  var Sa5FormSelectMode = /* @__PURE__ */ ((Sa5FormSelectMode2) => {
+    Sa5FormSelectMode2["Default"] = "default";
+    Sa5FormSelectMode2["Toggle"] = "toggle";
+    return Sa5FormSelectMode2;
+  })(Sa5FormSelectMode || {});
+  var Sa5FormSelect = class {
+    constructor(element) {
+      this._mode = "default" /* Default */;
+      this.valid = false;
+      this._element = element;
+    }
+    get element() {
+      return this._element;
+    }
+    init() {
+      if (!this._element.classList.contains("w-select")) {
+        console.error("sa5-core", "atteibute is not on a select element");
+        this.valid = false;
+        return;
+      }
+      const modeAttribute = this._element.getAttribute("wfu-form-select-mode" /* ATTR_FORM_SELECT_MODE */)?.toLowerCase();
+      if (!modeAttribute) {
+        this._mode = "default" /* Default */;
+      } else if (Object.values(Sa5FormSelectMode).includes(modeAttribute)) {
+        this._mode = modeAttribute;
+      } else {
+        this.valid = false;
+        throw new Error("Invalid select mode");
+      }
+      this.valid = true;
+      switch (this._mode) {
+        case "toggle" /* Toggle */:
+          this._element.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            const option = event.target;
+            if (option.tagName === "OPTION") {
+              option.selected = !option.selected;
+            }
+          });
+          break;
+        case "default" /* Default */:
+        default:
+          break;
+      }
+    }
+  };
+  Sa5Core.startup(Sa5FormSelect);
 
   // src/webflow-form.ts
   var Sa5Form = class {
@@ -620,16 +672,21 @@
       Sa5FormIPInfo.createFromElement(element).init();
     });
     debug.debug("Checking for forms", Sa5Attribute.getBracketed("wfu-form-handler" /* ATTR_FORM_HANDLER */));
-    console.log("forms", document.querySelectorAll("form"));
-    console.log("attrs", document.querySelectorAll("[wfu-form-handler]"));
     const formsHandled = document.querySelectorAll(
       `div[wfu-form-handler]`
     );
     console.log(formsHandled);
     formsHandled.forEach((element) => {
-      console.log("installing form handler 1.");
       debug.debug("Form detected, installing form handler.");
       WfuFormHandlerFactory.createFromElement(element).init();
+    });
+    const formSelects = document.querySelectorAll(
+      `select[${"wfu-form-select" /* ATTR_FORM_SELECT */}]`
+    );
+    console.log(formSelects);
+    formSelects.forEach((element) => {
+      const select = new Sa5FormSelect(element);
+      select.init();
     });
   };
   if (document.readyState !== "loading") {

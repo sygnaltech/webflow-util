@@ -247,133 +247,53 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-membership/login-routing.ts
-  var Sa5MembershipRouting = class {
-    constructor(config = {}) {
-      this.config = {
-        routeAfterFirstLogin: config.routeAfterFirstLogin ?? "/",
-        routeAfterLogin: config.routeAfterLogin ?? "/"
-      };
-      this.debug = new Sa5Debug("sa5-membership-routing");
-      this.debug.debug("Initializing");
+  // src/webflow-form/form-select.ts
+  var Sa5FormSelectMode = /* @__PURE__ */ ((Sa5FormSelectMode2) => {
+    Sa5FormSelectMode2["Default"] = "default";
+    Sa5FormSelectMode2["Toggle"] = "toggle";
+    return Sa5FormSelectMode2;
+  })(Sa5FormSelectMode || {});
+  var Sa5FormSelect = class {
+    constructor(element) {
+      this._mode = "default" /* Default */;
+      this.valid = false;
+      this._element = element;
+    }
+    get element() {
+      return this._element;
     }
     init() {
-      let core = Sa5Core.startup();
-      let configHandler = core.getHandler("getMembershipRoutingConfig");
-      if (!configHandler)
+      if (!this._element.classList.contains("w-select")) {
+        console.error("sa5-core", "atteibute is not on a select element");
+        this.valid = false;
         return;
-      if (configHandler) {
-        this.config = configHandler(
-          this.config
-        );
-        console.log("config handler", this.config);
-        this.routeUser();
       }
-    }
-    routeUser() {
-      if (this.routeAfterFirstLogin())
-        return;
-      this.routeAfterLogin();
-    }
-    routeAfterFirstLogin() {
-      if (window.location.pathname != "/" && window.location.pathname != "/log-in")
-        return false;
-      if (!this.config.routeAfterFirstLogin)
-        return false;
-      if (!document.referrer)
-        return false;
-      var urlReferrer = new URL(document.referrer);
-      if (urlReferrer.pathname != "/sign-up")
-        return false;
-      switch (window.location.pathname) {
-        case "/":
-          window.location.replace(this.config.routeAfterFirstLogin);
+      const modeAttribute = this._element.getAttribute("wfu-form-select-mode" /* ATTR_FORM_SELECT_MODE */)?.toLowerCase();
+      if (!modeAttribute) {
+        this._mode = "default" /* Default */;
+      } else if (Object.values(Sa5FormSelectMode).includes(modeAttribute)) {
+        this._mode = modeAttribute;
+      } else {
+        this.valid = false;
+        throw new Error("Invalid select mode");
+      }
+      this.valid = true;
+      switch (this._mode) {
+        case "toggle" /* Toggle */:
+          this._element.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            const option = event.target;
+            if (option.tagName === "OPTION") {
+              option.selected = !option.selected;
+            }
+          });
           break;
-        case "/log-in":
-          this.setLoginPageRedirect(this.config.routeAfterFirstLogin);
+        case "default" /* Default */:
+        default:
           break;
       }
-      return true;
-    }
-    routeAfterLogin() {
-      console.group(`wfu routeAfterLogin`);
-      if (!this.config.routeAfterLogin) {
-        console.debug("no routeafterlogin config set.");
-        console.groupEnd();
-        return false;
-      }
-      if (!document.querySelectorAll("form[data-wf-user-form-type='login']").length) {
-        console.debug("no login forms found.");
-        console.groupEnd();
-        return false;
-      }
-      var url = new URL(window.location.href);
-      console.debug(`url: ${url.href}`);
-      console.debug(`referrer: ${document.referrer}`);
-      var urlReferrer = void 0;
-      var urlReferrerPath = "";
-      if (document.referrer) {
-        urlReferrer = new URL(document.referrer);
-        urlReferrerPath = urlReferrer.pathname;
-      }
-      if (url.searchParams.has("usredir")) {
-        console.debug("specific redirection specified.");
-        console.groupEnd();
-        return false;
-      }
-      var routePath = this.config.routeAfterLogin;
-      console.debug(`default routePath: ${routePath}`);
-      if (routePath == ".") {
-        if (url.pathname == "/log-in") {
-          switch (urlReferrerPath) {
-            case "":
-            case "/log-in":
-            case "/sign-up":
-              routePath = "/";
-            default:
-              routePath = urlReferrerPath;
-          }
-        } else {
-          var routePath = url.pathname;
-        }
-      }
-      console.debug(`routePath: ${routePath}`);
-      this.setLoginPageRedirect(routePath);
-      console.groupEnd();
-      return true;
-    }
-    setLoginPageRedirect(url) {
-      document.querySelectorAll("form[data-wf-user-form-type='login']").forEach(function(form) {
-        form.setAttribute("data-wf-user-form-redirect", url);
-      });
-    }
-    logout() {
-      fetch("/.wf_graphql/csrf", {
-        method: "POST",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest"
-        }
-      }).then((response) => response.json()).then((data) => {
-        console.log("CSRF Response:", data);
-        let csrfToken = document.cookie.split("; ").find((row) => row.startsWith("wf-csrf=")).split("=")[1];
-        return fetch("/.wf_graphql/usys/apollo", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Wf-Csrf": csrfToken
-          },
-          body: JSON.stringify([{
-            "operationName": "UserLogoutRequest",
-            "variables": {},
-            "query": "mutation UserLogoutRequest {\n  usysDestroySession {\n    ok\n    __typename\n  }\n}\n"
-          }])
-        });
-      }).then((response) => response.json()).then((data) => {
-        console.log("Apollo Response:", data);
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
     }
   };
+  Sa5Core.startup(Sa5FormSelect);
 })();
-//# sourceMappingURL=login-routing.js.map
+//# sourceMappingURL=form-select.js.map
