@@ -4653,12 +4653,12 @@
       closeButton.innerHTML = "&times;";
       closeButton.style.position = "absolute";
       closeButton.style.top = "10px";
-      closeButton.style.right = "10px";
+      closeButton.style.right = "18px";
       closeButton.style.cursor = "pointer";
       closeButton.style.background = "none";
       closeButton.style.border = "none";
-      closeButton.style.fontSize = "24px";
-      closeButton.style.lineHeight = "24px";
+      closeButton.style.fontSize = "36px";
+      closeButton.style.lineHeight = "36px";
       closeButton.style.fontWeight = "bold";
       closeButton.style.color = "#333";
       closeButton.style.zIndex = "1";
@@ -4693,7 +4693,7 @@
       document.body.appendChild(overlay);
       this.modalContainer.style.display = "block";
       gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, y: "-50px" }, { opacity: 1, y: "0", duration: 0.5 });
+      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, y: "-50px" }, { opacity: 1, y: "-50px", duration: 0.5 });
       this.modalContainer.dataset.overlayId = overlayId;
     }
     close() {
