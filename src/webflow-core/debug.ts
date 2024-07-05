@@ -83,6 +83,24 @@ export class Sa5Debug {
             
     }
 
+    /**
+     * Returns the HTML style string
+     * @param elem The element to return the string for 
+     * @returns 
+     */
+    static getStyleString(elem: HTMLElement): string {
+
+        let styleString = '';
+    
+        for (let i = 0; i < elem.style.length; i++) {
+            const property = elem.style[i];
+            const value = elem.style.getPropertyValue(property);
+            styleString += `${property}: ${value}; `;
+        }
+    
+        return styleString; 
+    }
+
 }
 
 

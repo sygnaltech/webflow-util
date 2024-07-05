@@ -237,6 +237,15 @@
       if (this.enabled)
         console.debug(this._label, ...args);
     }
+    static getStyleString(elem) {
+      let styleString = "";
+      for (let i2 = 0; i2 < elem.style.length; i2++) {
+        const property = elem.style[i2];
+        const value = elem.style.getPropertyValue(property);
+        styleString += `${property}: ${value}; `;
+      }
+      return styleString;
+    }
   };
 
   // src/webflow-core/designer.ts

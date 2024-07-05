@@ -150,6 +150,15 @@
       if (this.enabled)
         console.debug(this._label, ...args);
     }
+    static getStyleString(elem) {
+      let styleString = "";
+      for (let i = 0; i < elem.style.length; i++) {
+        const property = elem.style[i];
+        const value = elem.style.getPropertyValue(property);
+        styleString += `${property}: ${value}; `;
+      }
+      return styleString;
+    }
   };
 
   // src/webflow-core/designer.ts

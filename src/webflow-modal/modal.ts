@@ -98,20 +98,7 @@ export class Sa5Modal {
         container.style.zIndex = '9999';
         container.style.display = 'none'; // Initially hidden
 
-console.log("container style", container.style)
-
-if (container) {
-    let styleString = '';
-  
-    for (let i = 0; i < container.style.length; i++) {
-      const property = container.style[i];
-      const value = container.style.getPropertyValue(property);
-      styleString += `${property}: ${value}; `;
-    }
-  
-    console.log("container style:", styleString);
-  }
-  
+// console.log("container style", container.style)
 
         // const closeButton = document.createElement('button');
         // closeButton.innerText = 'Close';
@@ -169,7 +156,7 @@ if (container) {
     //     }
 
     }
-    
+
     display() { 
 
         const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
