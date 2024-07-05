@@ -4706,24 +4706,6 @@
       gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, transform: "translate(-50%, -50%)" }, { opacity: 1, transform: "translate(-50%, -50%)", duration: 0.5 });
       this.modalContainer.dataset.overlayId = overlayId;
     }
-    display2() {
-      const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
-      const overlay = document.createElement("div");
-      overlay.id = overlayId;
-      overlay.style.position = "fixed";
-      overlay.style.top = "0";
-      overlay.style.left = "0";
-      overlay.style.width = "100%";
-      overlay.style.height = "100%";
-      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-      overlay.style.zIndex = "9998";
-      overlay.addEventListener("click", () => this.close());
-      document.body.appendChild(overlay);
-      this.modalContainer.style.display = "block";
-      gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, y: "-50px" }, { opacity: 1, y: "-50px", duration: 0.5 });
-      this.modalContainer.dataset.overlayId = overlayId;
-    }
     close() {
       const overlayId = this.modalContainer.dataset.overlayId;
       const overlay = document.getElementById(overlayId);
