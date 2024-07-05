@@ -169,8 +169,30 @@ if (container) {
     //     }
 
     }
-
     display() { 
+        const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
+        const overlay = document.createElement('div');
+        overlay.id = overlayId;
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.zIndex = '9998';
+    
+        overlay.addEventListener('click', () => this.close());
+    
+        document.body.appendChild(overlay);
+        this.modalContainer.style.display = 'block';
+    
+        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+        gsap.fromTo(this.modalContainer, { opacity: 0, transform: 'translate(-50%, -50%)' }, { opacity: 1, transform: 'translate(-50%, -50%)', duration: 0.5 });
+    
+        this.modalContainer.dataset.overlayId = overlayId;
+    }
+    
+    display2() { 
 
         const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
         const overlay = document.createElement('div');
