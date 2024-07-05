@@ -98,6 +98,21 @@ export class Sa5Modal {
         container.style.zIndex = '9999';
         container.style.display = 'none'; // Initially hidden
 
+console.log("container style", container.style)
+
+if (container) {
+    let styleString = '';
+  
+    for (let i = 0; i < container.style.length; i++) {
+      const property = container.style[i];
+      const value = container.style.getPropertyValue(property);
+      styleString += `${property}: ${value}; `;
+    }
+  
+    console.log("container style:", styleString);
+  }
+  
+
         // const closeButton = document.createElement('button');
         // closeButton.innerText = 'Close';
         // closeButton.style.position = 'absolute';

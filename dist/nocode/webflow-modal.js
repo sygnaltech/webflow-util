@@ -4649,6 +4649,16 @@
       container.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.25)";
       container.style.zIndex = "9999";
       container.style.display = "none";
+      console.log("container style", container.style);
+      if (container) {
+        let styleString = "";
+        for (let i = 0; i < container.style.length; i++) {
+          const property = container.style[i];
+          const value = container.style.getPropertyValue(property);
+          styleString += `${property}: ${value}; `;
+        }
+        console.log("container style:", styleString);
+      }
       const closeButton = document.createElement("button");
       closeButton.innerHTML = "&times;";
       closeButton.style.position = "absolute";
