@@ -44,7 +44,7 @@ import { VERSION } from '../version';
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-detect");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     /**
      * Get IP Info, GeoLocation 

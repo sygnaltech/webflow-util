@@ -23,7 +23,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-effects");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     (new Sa5EffectsController()).init();
 

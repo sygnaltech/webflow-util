@@ -109,7 +109,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -665,7 +665,7 @@
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-form");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-form-ipinfo" /* ATTR_FORM_IPINFO */)
     ).forEach((element) => {

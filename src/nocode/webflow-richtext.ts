@@ -23,7 +23,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-richtext");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
 
     const gitHubGist = new GitHubGist();

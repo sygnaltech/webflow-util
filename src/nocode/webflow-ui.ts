@@ -19,7 +19,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-ui");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     // Find all rating components
     document.querySelectorAll('div[wfu-ui="rating"]')

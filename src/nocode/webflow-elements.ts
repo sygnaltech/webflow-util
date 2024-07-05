@@ -32,7 +32,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-elements");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
     
     // [wfu-tab-default]
 

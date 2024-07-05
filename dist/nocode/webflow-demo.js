@@ -267,13 +267,13 @@
   Sa5Core.startup(WebflowInfo);
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-demo.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("wfu-demo");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const webflowInfo = new WebflowInfo();
     const elements = document.querySelectorAll(
       `a[${"wfu-demo-link" /* ATTR_DEMO_LINK */}]`

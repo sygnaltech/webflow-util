@@ -128,7 +128,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -1349,7 +1349,7 @@
     let membership = new Sa5UserAccounts();
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-user-accounts");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;");
     document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-show-logged-in" /* ATTR_SHOW_LOGGED_IN */)

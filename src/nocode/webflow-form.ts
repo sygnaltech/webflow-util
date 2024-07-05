@@ -27,7 +27,7 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-form");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
 
     // const sa5Hotkeys = new Sa5Hotkeys();

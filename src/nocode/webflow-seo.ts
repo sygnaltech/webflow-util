@@ -31,7 +31,7 @@ const init = () => {
 
   // Initialize debugging
   let debug = new Sa5Debug("sa5-seo");
-  debug.debug (`Initializing ${VERSION}`);
+  debug.debug (`Initializing v${VERSION}`);
 
 
 //  const seo = new Sa5SEO(); 

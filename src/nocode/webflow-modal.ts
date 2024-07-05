@@ -24,7 +24,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-modal");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     // Handle modals
     const controller: Sa5ModalController = new Sa5ModalController();

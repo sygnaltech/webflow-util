@@ -21,7 +21,7 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-format");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
 
     const webflowFormat = new WebflowFormat();

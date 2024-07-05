@@ -1,6 +1,6 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -301,7 +301,7 @@
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-ui");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     document.querySelectorAll('div[wfu-ui="rating"]').forEach((element) => {
       new Sa5Rating(element).init();
     });

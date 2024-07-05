@@ -46,7 +46,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-user-accounts");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
 
     console.debug(`isLoggedIn = %c${membership.isLoggedIn()}`, "color: #ff0000;"); 

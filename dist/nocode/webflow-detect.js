@@ -514,14 +514,14 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-detect.ts
   (async () => {
     console.log("DETECT");
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-detect");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     let detect = new Sa5Detect();
     let routingRules = window["sa5-route" /* GLOBAL_ROUTE */];
     if (routingRules)

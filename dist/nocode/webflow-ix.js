@@ -248,13 +248,13 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-ix.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-ix");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const links = document.querySelectorAll('a[href^="##"]');
     links.forEach((link) => {
       const value = link.getAttribute("href")?.substring(2);

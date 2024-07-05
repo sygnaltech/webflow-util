@@ -1,6 +1,6 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -355,7 +355,7 @@
   var initAsync = async () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-embed");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const embedSelectors = [
       'script[type^="sygnal/embed"]'
     ];

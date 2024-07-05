@@ -972,13 +972,13 @@
   Sa5Core.startup(WebflowFormat);
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-format.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-format");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const webflowFormat = new WebflowFormat();
     const elements = document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-format" /* ATTR_FORMAT */)

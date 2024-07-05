@@ -19697,13 +19697,13 @@ void main() {
   };
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-effects.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-effects");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     new Sa5EffectsController().init();
   };
   if (document.readyState !== "loading") {

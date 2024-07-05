@@ -19,7 +19,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -1494,7 +1494,7 @@
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-data");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     var ds = new Sa5Datastore();
     ds.init();
     let binder = new WfuDataBinder(ds).bindAll();

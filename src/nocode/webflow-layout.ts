@@ -22,7 +22,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-layout");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
 
     /**

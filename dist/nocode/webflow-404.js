@@ -109,7 +109,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -254,7 +254,7 @@
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-404");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     set404SearchInputValue();
   };
   function set404SearchInputValue() {

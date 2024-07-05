@@ -578,7 +578,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.1";
+      VERSION = "5.4.3";
     }
   });
 
@@ -596,7 +596,7 @@
       var init = () => {
         let core = Sa5Core.startup();
         let debug = new Sa5Debug("sa5-html");
-        debug.debug(`Initializing ${VERSION}`);
+        debug.debug(`Initializing v${VERSION}`);
         let obj = new Sa5Html({
           dynamicAttributes: true
         }).init();

@@ -31,7 +31,7 @@ const init = () => {
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-data");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     // Create datastore
     var ds: Sa5Datastore = new Sa5Datastore();

@@ -394,13 +394,13 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-richtext.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-richtext");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const gitHubGist = new GitHubGist();
     document.querySelectorAll(
       `.w-richtext[${"wfu-lists" /* ATTR_RICHTEXT_LISTS */}]`

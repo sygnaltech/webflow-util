@@ -775,13 +775,13 @@
   Sa5Core.startup(Sa5Hotkeys);
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-hotkeys.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-hotkeys");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const sa5Hotkeys = new Sa5Hotkeys();
     sa5Hotkeys.init();
   };

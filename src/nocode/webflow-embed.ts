@@ -33,7 +33,7 @@ const initAsync = async() => {
     
     // Initialize debugging
     let debug = new Sa5Debug("sa5-embed");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     // Init embeds
     

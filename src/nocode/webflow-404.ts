@@ -20,7 +20,7 @@ let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-404");
-    debug.debug (`Initializing ${VERSION}`);
+    debug.debug (`Initializing v${VERSION}`);
 
     // parse url, put into search field
     // [wfu-404-search]

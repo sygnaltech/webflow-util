@@ -416,7 +416,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // node_modules/gsap/gsap-core.js
   function _assertThisInitialized(self) {
@@ -4753,7 +4753,7 @@
   var init5 = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-modal");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     const controller = new Sa5ModalController();
     controller.init();
     document.querySelectorAll(

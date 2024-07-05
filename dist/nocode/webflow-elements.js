@@ -1003,13 +1003,13 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.4.1";
+  var VERSION = "5.4.3";
 
   // src/nocode/webflow-elements.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-elements");
-    debug.debug(`Initializing ${VERSION}`);
+    debug.debug(`Initializing v${VERSION}`);
     let tabElements = document.querySelectorAll(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
     tabElements.forEach((element) => {
       var tabObj = new WebflowTabs(element);
