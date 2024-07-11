@@ -105,6 +105,9 @@ export enum Sa5Attribute {
     ATTR_HIDE = 'wfu-hide',
     ATTR_SUPPRESS = 'wfu-suppress',
 
+    // Encoded Emails
+    ATTR_EMAIL_ENCODED = 'wfu-email-encoded', 
+
     // 404
     ATTR_404_SEARCH = 'wfu-404-search',
 

@@ -17,6 +17,7 @@ import { Sa5CollectionList } from '../webflow-html/collection-list';
 // import { HtmlBuilder } from '../modules/webflow-html-builder';
 import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
+import { Sa5EncodedEmail } from '../webflow-html/encoded-email';
 //import { Sa5Designer } from '../webflow-core/designer';
 //import { Sa5Layouts } from '../webflow-html/layout';
 
@@ -248,6 +249,22 @@ const init = () => {
         }
 
     });
+
+    /**
+     * Handle encoded emails.
+     */
+
+    document.querySelectorAll<HTMLAnchorElement>(`[${Sa5Attribute.ATTR_EMAIL_ENCODED}]`)
+      .forEach((element: HTMLAnchorElement) => { 
+
+        if (!(element instanceof HTMLAnchorElement)) {
+            console.error("Email encoded attribute is not on a link element.");
+            return;
+        }
+
+        (new Sa5EncodedEmail(element)).init();
+
+    }); 
 
     /**
      * Remove any designer-only elements

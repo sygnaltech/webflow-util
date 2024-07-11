@@ -354,6 +354,10 @@
     display: none;
   }
 }
+[wfu-email-encoded] {
+  display: none;
+}
+
 [wfu-decode] {
   display: none;
 }

@@ -74,6 +74,7 @@
     Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
     Sa5Attribute2["ATTR_HIDE"] = "wfu-hide";
     Sa5Attribute2["ATTR_SUPPRESS"] = "wfu-suppress";
+    Sa5Attribute2["ATTR_EMAIL_ENCODED"] = "wfu-email-encoded";
     Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
     Sa5Attribute2["ATTR_FORM_HANDLER"] = "wfu-form-handler";
     Sa5Attribute2["ATTR_FORM_MESSAGE"] = "wfu-form-message";

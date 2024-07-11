@@ -65,6 +65,7 @@
         Sa5Attribute2["ATTR_FILTER_FUNC"] = "wfu-filter-func";
         Sa5Attribute2["ATTR_HIDE"] = "wfu-hide";
         Sa5Attribute2["ATTR_SUPPRESS"] = "wfu-suppress";
+        Sa5Attribute2["ATTR_EMAIL_ENCODED"] = "wfu-email-encoded";
         Sa5Attribute2["ATTR_404_SEARCH"] = "wfu-404-search";
         Sa5Attribute2["ATTR_FORM_HANDLER"] = "wfu-form-handler";
         Sa5Attribute2["ATTR_FORM_MESSAGE"] = "wfu-form-message";
@@ -591,6 +592,63 @@
     }
   });
 
+  // src/webflow-html/encoded-email.ts
+  var Sa5EncodedEmail;
+  var init_encoded_email = __esm({
+    "src/webflow-html/encoded-email.ts"() {
+      init_webflow_core();
+      init_debug();
+      Sa5EncodedEmail = class {
+        constructor(element2, config = {}) {
+          this.elem = element2;
+          this.config = {};
+          let core2 = Sa5Core.startup();
+        }
+        encodeEmail(email) {
+          const shift = 3;
+          return email.split("").map((char) => {
+            if (/[a-zA-Z]/.test(char)) {
+              const base = char <= "Z" ? 65 : 97;
+              return String.fromCharCode((char.charCodeAt(0) - base + shift) % 26 + base);
+            } else if (/[0-9]/.test(char)) {
+              return String.fromCharCode((char.charCodeAt(0) - 48 + shift) % 10 + 48);
+            } else {
+              return char;
+            }
+          }).join("");
+        }
+        decodeEmail(encodedEmail) {
+          const shift = 3;
+          return encodedEmail.split("").map((char) => {
+            if (/[a-zA-Z]/.test(char)) {
+              const base = char <= "Z" ? 65 : 97;
+              return String.fromCharCode((char.charCodeAt(0) - base - shift + 26) % 26 + base);
+            } else if (/[0-9]/.test(char)) {
+              return String.fromCharCode((char.charCodeAt(0) - 48 - shift + 10) % 10 + 48);
+            } else {
+              return char;
+            }
+          }).join("");
+        }
+        init() {
+          let debug2 = new Sa5Debug("sa5-html");
+          let mailtoHref = this.elem.getAttribute("href");
+          if (mailtoHref && mailtoHref.startsWith("mailto:")) {
+            let emailPart = mailtoHref.match(/^mailto:([^?]+)/)[1];
+            let queryString = mailtoHref.match(/\?.*$/);
+            let decodedEmail = this.decodeEmail(emailPart);
+            let newHref = "mailto:" + decodedEmail + (queryString ? queryString[0] : "");
+            this.elem.href = newHref;
+            if (this.elem.innerText === emailPart) {
+              this.elem.innerText = decodedEmail;
+            }
+            this.elem.removeAttribute("wfu-email-encoded");
+          }
+        }
+      };
+    }
+  });
+
   // src/nocode/webflow-html.ts
   var require_webflow_html = __commonJS({
     "src/nocode/webflow-html.ts"(exports, module) {
@@ -602,6 +660,7 @@
       init_collection_list();
       init_globals();
       init_version();
+      init_encoded_email();
       var init = () => {
         let core = Sa5Core.startup();
         let debug = new Sa5Debug("sa5-html");
@@ -694,6 +753,13 @@
               child.style.display = "none";
             }
           }
+        });
+        document.querySelectorAll(`[${"wfu-email-encoded" /* ATTR_EMAIL_ENCODED */}]`).forEach((element2) => {
+          if (!(element2 instanceof HTMLAnchorElement)) {
+            console.error("Email encoded attribute is not on a link element.");
+            return;
+          }
+          new Sa5EncodedEmail(element2).init();
         });
       };
       if (document.readyState !== "loading") {
