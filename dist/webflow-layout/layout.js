@@ -98,7 +98,8 @@
     Sa5Attribute2["ATTR_LAYOUT"] = "wfu-layout";
     Sa5Attribute2["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
     Sa5Attribute2["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
-    Sa5Attribute2["ATTR_LAYOUT_ZONE"] = "wfu-layout-zone";
+    Sa5Attribute2["ATTR_LAYOUT_NS"] = "wfu-layout-ns";
+    Sa5Attribute2["ATTR_LAYOUT_INIT"] = "wfu-layout-init";
     Sa5Attribute2["ATTR_ELEMENTGROUP_NAME"] = "wfu-element-name";
     Sa5Attribute2["ATTR_ELEMENTGROUP_GROUP"] = "wfu-element-display";
     Sa5Attribute2["ATTR_ELEMENTGROUP_DEFAULT"] = "wfu-element-default";
@@ -264,16 +265,16 @@
       this.debug = new Sa5Debug("sa5-layout-handler");
       this.debug.debug("Initializing");
       this.container = layoutContainer;
-      this.name = this.container.getAttribute("wfu-layout");
-      this.zone = this.container.getAttribute("wfu-layout-zone") || null;
+      this.name = this.container.getAttribute("wfu-layout" /* ATTR_LAYOUT */);
+      this.zone = this.container.getAttribute("wfu-layout-ns" /* ATTR_LAYOUT_NS */) || null;
     }
     layout() {
-      if (this.container.getAttribute("wfu-layout-init") === "clear") {
+      if (this.container.getAttribute("wfu-layout-init" /* ATTR_LAYOUT_INIT */) === "clear") {
         this.container.innerHTML = "";
       }
       let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
       if (this.zone)
-        selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
+        selector += `[${"wfu-layout-ns" /* ATTR_LAYOUT_NS */}='${this.zone}']`;
       const targetedElements = document.querySelectorAll(
         selector
       );
@@ -282,7 +283,7 @@
           this.container.appendChild(element);
         }
       });
-      this.container.removeAttribute("wfu-preload");
+      this.container.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
     }
   };
 
@@ -298,7 +299,7 @@
       this.tabContentClasses = firstTabContentItem ? firstTabContentItem.className : "";
     }
     layout() {
-      if (this.container.getAttribute("wfu-layout-init") === "clear") {
+      if (this.container.getAttribute("wfu-layout-init" /* ATTR_LAYOUT_INIT */) === "clear") {
         const tabMenu = this.container.querySelector(".w-tab-menu");
         const tabContent = this.container.querySelector(".w-tab-content");
         tabMenu.innerHTML = "";
@@ -306,7 +307,7 @@
       }
       let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
       if (this.zone)
-        selector += `[${"wfu-layout-zone" /* ATTR_LAYOUT_ZONE */}='${this.zone}']`;
+        selector += `[${"wfu-layout-ns" /* ATTR_LAYOUT_NS */}='${this.zone}']`;
       const targetedElements = document.querySelectorAll(
         selector
       );

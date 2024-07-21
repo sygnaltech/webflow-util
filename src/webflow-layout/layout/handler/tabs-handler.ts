@@ -35,7 +35,7 @@ export class Sa5LayoutHandlerTabs extends Sa5LayoutHandler {
          * Init container
          */
 
-        if (this.container.getAttribute('wfu-layout-init') === 'clear') {
+        if (this.container.getAttribute(Sa5Attribute.ATTR_LAYOUT_INIT) === 'clear') {
             // Clear existing tabs and content
             const tabMenu = this.container.querySelector('.w-tab-menu');
             const tabContent = this.container.querySelector('.w-tab-content');
@@ -50,7 +50,7 @@ export class Sa5LayoutHandlerTabs extends Sa5LayoutHandler {
         // Find all elements targeting this container
         let selector: string = `[${Sa5Attribute.ATTR_LAYOUT_TARGET}='${this.name}']`; // '[wfu-layout-target]'
         if(this.zone)
-            selector += `[${Sa5Attribute.ATTR_LAYOUT_ZONE}='${this.zone}']`;
+            selector += `[${Sa5Attribute.ATTR_LAYOUT_NS}='${this.zone}']`;
 
         const targetedElements = document.querySelectorAll(
             selector

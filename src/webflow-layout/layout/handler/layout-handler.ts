@@ -40,9 +40,9 @@ export class Sa5LayoutHandler {
 
         this.container = layoutContainer; 
 
-        this.name = this.container.getAttribute("wfu-layout"); 
+        this.name = this.container.getAttribute(Sa5Attribute.ATTR_LAYOUT); 
 
-        this.zone = this.container.getAttribute("wfu-layout-zone") || null; 
+        this.zone = this.container.getAttribute(Sa5Attribute.ATTR_LAYOUT_NS) || null; 
 
     }
 
@@ -52,7 +52,7 @@ export class Sa5LayoutHandler {
          * Init container
          */
 
-        if (this.container.getAttribute('wfu-layout-init') === 'clear') {
+        if (this.container.getAttribute(Sa5Attribute.ATTR_LAYOUT_INIT) === 'clear') {
             // Clear existing tabs and content
             // const tabMenu = this.container.querySelector('.w-tab-menu');
             // const tabContent = this.container.querySelector('.w-tab-content');
@@ -68,7 +68,7 @@ export class Sa5LayoutHandler {
         // Find all elements targeting this container
         let selector: string = `[${Sa5Attribute.ATTR_LAYOUT_TARGET}='${this.name}']`; // '[wfu-layout-target]'
         if(this.zone)
-            selector += `[${Sa5Attribute.ATTR_LAYOUT_ZONE}='${this.zone}']`;
+            selector += `[${Sa5Attribute.ATTR_LAYOUT_NS}='${this.zone}']`;
 
         const targetedElements = document.querySelectorAll(
             selector
@@ -93,7 +93,7 @@ export class Sa5LayoutHandler {
             //   if (targetElement) {
             //     targetElement.appendChild(element);
             //   }
-
+  
             if (this.container) {
                 this.container.appendChild(element);
             }
@@ -104,7 +104,7 @@ export class Sa5LayoutHandler {
          * Remove preloader
          */
         
-        this.container.removeAttribute('wfu-preload');
+        this.container.removeAttribute(Sa5Attribute.ATTR_PRELOAD);
 
     }
       

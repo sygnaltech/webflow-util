@@ -98,7 +98,8 @@
     Sa5Attribute2["ATTR_LAYOUT"] = "wfu-layout";
     Sa5Attribute2["ATTR_LAYOUT_HANDLER"] = "wfu-layout-handler";
     Sa5Attribute2["ATTR_LAYOUT_TARGET"] = "wfu-layout-target";
-    Sa5Attribute2["ATTR_LAYOUT_ZONE"] = "wfu-layout-zone";
+    Sa5Attribute2["ATTR_LAYOUT_NS"] = "wfu-layout-ns";
+    Sa5Attribute2["ATTR_LAYOUT_INIT"] = "wfu-layout-init";
     Sa5Attribute2["ATTR_ELEMENTGROUP_NAME"] = "wfu-element-name";
     Sa5Attribute2["ATTR_ELEMENTGROUP_GROUP"] = "wfu-element-display";
     Sa5Attribute2["ATTR_ELEMENTGROUP_DEFAULT"] = "wfu-element-default";
@@ -258,7 +259,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.3";
+  var VERSION = "5.4.4";
 
   // src/nocode/webflow-ix.ts
   var init = () => {

@@ -208,7 +208,8 @@ export enum Sa5Attribute {
     ATTR_LAYOUT = 'wfu-layout', 
     ATTR_LAYOUT_HANDLER = 'wfu-layout-handler',
     ATTR_LAYOUT_TARGET = 'wfu-layout-target',
-    ATTR_LAYOUT_ZONE = 'wfu-layout-zone',
+    ATTR_LAYOUT_NS = 'wfu-layout-ns',
+    ATTR_LAYOUT_INIT = 'wfu-layout-init',
 
     ATTR_ELEMENTGROUP_NAME = 'wfu-element-name',
     ATTR_ELEMENTGROUP_GROUP = 'wfu-element-display',
