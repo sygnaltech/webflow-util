@@ -19,7 +19,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.5";
+  var VERSION = "5.4.6";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -951,6 +951,7 @@
         this.config = configHandler(
           this.config
         );
+        console.debug("USER INFO CONFIG", this.config);
       }
       let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
       forms.forEach((form) => {

@@ -180,6 +180,7 @@ export class Sa5UserAccounts {
             this.config = configHandler(
                 this.config
             ); 
+            console.debug("USER INFO CONFIG", this.config); 
         }
 
         /**

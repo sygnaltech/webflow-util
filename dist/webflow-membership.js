@@ -914,6 +914,7 @@
         this.config = configHandler(
           this.config
         );
+        console.debug("USER INFO CONFIG", this.config);
       }
       let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
       forms.forEach((form) => {

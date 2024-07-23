@@ -130,7 +130,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.5";
+  var VERSION = "5.4.6";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -917,6 +917,7 @@
         this.config = configHandler(
           this.config
         );
+        console.debug("USER INFO CONFIG", this.config);
       }
       let forms = document.querySelectorAll("form[data-wf-user-form-type='login']");
       forms.forEach((form) => {
