@@ -394,7 +394,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.6";
+  var VERSION = "5.4.7";
 
   // src/nocode/webflow-layout.ts
   var init = () => {
