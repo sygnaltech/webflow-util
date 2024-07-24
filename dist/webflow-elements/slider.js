@@ -326,6 +326,26 @@
     init() {
       this._elementSliderMask = this._element.querySelector(".w-slider-mask");
       this._elementSliderNav = this._element.querySelector(".w-slider-nav");
+      this._elementSliderArrowLeft = this._element.querySelector(".w-slider-arrow-left");
+      this._elementSliderArrowRight = this._element.querySelector(".w-slider-arrow-right");
+      if (this._elementSliderArrowLeft) {
+        this._elementSliderArrowLeft.addEventListener("click", (event) => {
+          if (!this.onSlidePrevRequest(this.currentIndex)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          console.log("Left arrow clicked");
+        }, true);
+      }
+      if (this._elementSliderArrowRight) {
+        this._elementSliderArrowRight.addEventListener("click", (event) => {
+          if (!this.onSlideNextRequest(this.currentIndex)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          console.log("Right arrow clicked");
+        }, true);
+      }
       this._observer = new MutationObserver((mutationsList) => {
         for (const mutation of mutationsList) {
           if (mutation.type === "attributes" && mutation.attributeName === "class") {
@@ -405,6 +425,30 @@
       core.getHandlers("slideChanged" /* EVENT_SLIDE_CHANGED */).forEach((func) => {
         func(this, index);
       });
+    }
+    onSlideNextRequest(currentIndex) {
+      let core = Sa5Core.startup();
+      const handlers = core.getHandlers("slideNextRequest" /* EVENT_SLIDE_NEXT_REQUEST */);
+      let nextAllowed = true;
+      handlers.forEach((func) => {
+        const result = func(this, currentIndex);
+        if (!result) {
+          nextAllowed = false;
+        }
+      });
+      return nextAllowed;
+    }
+    onSlidePrevRequest(currentIndex) {
+      let core = Sa5Core.startup();
+      const handlers = core.getHandlers("slidePrevRequest" /* EVENT_SLIDE_PREV_REQUEST */);
+      let prevAllowed = true;
+      handlers.forEach((func) => {
+        const result = func(this, currentIndex);
+        if (!result) {
+          prevAllowed = false;
+        }
+      });
+      return prevAllowed;
     }
   };
   Sa5Core.startup(WebflowSlider);

@@ -8,6 +8,8 @@
     Sa5GlobalEvent2["EVENT_USER_CHANGED"] = "userInfoChanged";
     Sa5GlobalEvent2["EVENT_DATASTORE_LOADED"] = "datastoreLoaded";
     Sa5GlobalEvent2["EVENT_SLIDE_CHANGED"] = "slideChanged";
+    Sa5GlobalEvent2["EVENT_SLIDE_NEXT_REQUEST"] = "slideNextRequest";
+    Sa5GlobalEvent2["EVENT_SLIDE_PREV_REQUEST"] = "slidePrevRequest";
     Sa5GlobalEvent2["EVENT_TAB_CHANGED"] = "tabChanged";
     Sa5GlobalEvent2["EVENT_VIDEO_PLAYER_STATE_CHANGE"] = "playerStateChange";
     return Sa5GlobalEvent2;

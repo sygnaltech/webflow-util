@@ -81,6 +81,9 @@ import { Sa5Debug } from '../webflow-core/debug'
 
 type SlideChangedCallback = (slider: any, index: any) => void;
 
+type SlideCanChangedCallback = (slider: any, index: any) => void;
+
+
 // interface SliderConfig {
 // //    loadUserInfoCallback?: ((user: Sa5User) => void) | undefined; // Function callback 
 //     slideChangedCallback?: SlideChangedCallback; 
@@ -96,6 +99,8 @@ export class WebflowSlider implements IDeckNavigation {
     private _element: HTMLElement;
     private _elementSliderMask: HTMLElement;
     private _elementSliderNav: HTMLElement;
+    private _elementSliderArrowRight: HTMLElement;
+    private _elementSliderArrowLeft: HTMLElement;
 
     private _observer: MutationObserver; 
 
@@ -230,6 +235,30 @@ export class WebflowSlider implements IDeckNavigation {
         // Inventory parts
         this._elementSliderMask = this._element.querySelector('.w-slider-mask');
         this._elementSliderNav = this._element.querySelector('.w-slider-nav');
+        this._elementSliderArrowLeft = this._element.querySelector('.w-slider-arrow-left');
+        this._elementSliderArrowRight = this._element.querySelector('.w-slider-arrow-right');
+
+        if (this._elementSliderArrowLeft) {
+            this._elementSliderArrowLeft.addEventListener('click', (event: MouseEvent) => {
+
+                if(!this.onSlidePrevRequest(this.currentIndex)) {
+                    event.preventDefault(); 
+                    event.stopPropagation(); 
+                }
+                console.log('Left arrow clicked');
+            }, true);
+        }
+        
+        if (this._elementSliderArrowRight) {
+            this._elementSliderArrowRight.addEventListener('click', (event: MouseEvent) => {
+                if(!this.onSlideNextRequest(this.currentIndex)) {
+                    event.preventDefault(); 
+                    event.stopPropagation(); 
+                }
+                console.log('Right arrow clicked');
+            }, true);
+        }
+        
 
         // Setup mutation observer to detect slide changes
         this._observer = new MutationObserver((mutationsList) => {
@@ -392,6 +421,42 @@ export class WebflowSlider implements IDeckNavigation {
  //            }
           }); 
 
+    }
+
+    onSlideNextRequest(currentIndex: number): boolean {
+        let core: Sa5Core = Sa5Core.startup();
+
+        // Get any global handlers for the slide next request
+        const handlers = core.getHandlers(Sa5GlobalEvent.EVENT_SLIDE_NEXT_REQUEST);
+        let nextAllowed = true; // Default to true to allow slide change unless a handler returns false
+
+        handlers.forEach(func => {
+            // Assuming func returns a boolean indicating whether to proceed
+            const result = func(this, currentIndex);
+            if (!result) {
+                nextAllowed = false; // If any handler returns false, do not advance
+            }
+        });
+
+        return nextAllowed; // Return whether the slide should change
+    }
+
+    onSlidePrevRequest(currentIndex: number): boolean {
+        let core: Sa5Core = Sa5Core.startup();
+
+        // Get any global handlers for the slide next request
+        const handlers = core.getHandlers(Sa5GlobalEvent.EVENT_SLIDE_PREV_REQUEST);
+        let prevAllowed = true; // Default to true to allow slide change unless a handler returns false
+
+        handlers.forEach(func => {
+            // Assuming func returns a boolean indicating whether to proceed
+            const result = func(this, currentIndex);
+            if (!result) {
+                prevAllowed = false; // If any handler returns false, do not advance
+            }
+        });
+
+        return prevAllowed; // Return whether the slide should change
     }
 
     //#endregion
