@@ -139,7 +139,7 @@ export class Sa5Form {
 
 
 
-
+Sa5Core.startup(Sa5Form);
 
 
 

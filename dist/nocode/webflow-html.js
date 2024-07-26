@@ -589,7 +589,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.7";
+      VERSION = "5.4.8";
     }
   });
 

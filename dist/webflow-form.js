@@ -160,6 +160,104 @@
     }
   };
 
+  // src/webflow-core/designer.ts
+  var Sa5Designer = class {
+    constructor() {
+    }
+    init() {
+      this.removeDesignTimeElements();
+    }
+    removeDesignTimeElements() {
+      const elements = document.querySelectorAll(
+        Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
+      );
+      elements.forEach((element) => {
+        element.remove();
+      });
+    }
+  };
+
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+      new Sa5Designer().init();
+    }
+    getHandlers(name) {
+      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
+    }
+    getHandler(name) {
+      const item = this.handlers.find((item2) => item2[0] === name);
+      return item ? item[1] : void 0;
+    }
+    init() {
+      this.initDebugMode();
+      this.initAsync();
+    }
+    async initAsync() {
+      this.initScriptInjectionsAsync();
+    }
+    async initScriptInjectionsAsync() {
+      document.addEventListener("DOMContentLoaded", () => {
+        const loadSrcScripts = document.querySelectorAll(
+          `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
+        );
+        loadSrcScripts.forEach((script) => {
+          const loadSrcUrl = script.getAttribute("wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */);
+          if (loadSrcUrl) {
+            fetch(loadSrcUrl).then((response) => response.text()).then((jsContent) => {
+              const newScript = document.createElement("script");
+              newScript.textContent = jsContent;
+              script.replaceWith(newScript);
+            }).catch((error) => {
+              console.error("Error loading script:", error);
+            });
+          }
+        });
+      });
+    }
+    initDebugMode() {
+      const debugParamKey = "debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      let sa5instance = window["sa5"];
+      var core;
+      if (sa5instance?.constructor?.name == "Sa5Core") {
+        core = sa5instance;
+      } else {
+        core = new Sa5Core();
+        core.init();
+        if (Array.isArray(sa5instance))
+          core.handlers = sa5instance;
+        window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
+      }
+      if (module) {
+        window["sa5"][module.name] = module;
+      }
+      return core;
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
+
   // src/webflow-form.ts
   var WebflowFormMode = /* @__PURE__ */ ((WebflowFormMode2) => {
     WebflowFormMode2[WebflowFormMode2["Active"] = 0] = "Active";
@@ -231,5 +329,6 @@
       }
     }
   };
+  Sa5Core.startup(Sa5Form);
 })();
 //# sourceMappingURL=webflow-form.js.map

@@ -19708,7 +19708,7 @@ void main() {
   };
 
   // src/version.ts
-  var VERSION = "5.4.7";
+  var VERSION = "5.4.8";
 
   // src/nocode/webflow-effects.ts
   var init = () => {
