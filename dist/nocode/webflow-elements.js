@@ -110,46 +110,6 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
-  // src/webflow-elements/lightbox.ts
-  var Sa5Lightbox = class {
-    constructor(element, config = {}) {
-      this._element = element;
-    }
-    init() {
-      this.setCaptionToImageAlt();
-    }
-    setCaptionToImageAlt() {
-      let imgElement = this._element.querySelector("img");
-      let scriptElement = this._element.querySelector("script");
-      if (imgElement && scriptElement) {
-        const imageAltText = imgElement.getAttribute("alt");
-        const imageJSON = JSON.parse(scriptElement.innerHTML);
-        imageJSON.items[0].caption = imageAltText;
-        scriptElement.innerHTML = JSON.stringify(imageJSON);
-        imgElement.setAttribute("ref-key", imageJSON.items[0].url);
-      }
-    }
-  };
-
-  // src/utils.ts
-  function booleanValue(val) {
-    switch (val.toLowerCase()) {
-      case "false":
-      case "f":
-      case "":
-      case "0":
-      case "no":
-      case "off":
-      case void 0:
-      case "undefined":
-      case null:
-      case "null":
-        return false;
-      default:
-        return true;
-    }
-  }
-
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -297,6 +257,75 @@
     }
   };
   Sa5Core.startup();
+
+  // src/webflow-elements/lightbox.ts
+  var Sa5Lightbox = class {
+    constructor(element, config = {}) {
+      this._element = element;
+    }
+    init() {
+    }
+    setCaptionToImageAlt() {
+      let imgElement = this._element.querySelector("img");
+      let scriptElement = this._element.querySelector("script");
+      if (imgElement && scriptElement) {
+        const imageAltText = imgElement.getAttribute("alt");
+        const imageJSON = JSON.parse(scriptElement.innerHTML);
+        imageJSON.items[0].caption = imageAltText;
+        scriptElement.innerHTML = JSON.stringify(imageJSON);
+        imgElement.setAttribute("ref-key", imageJSON.items[0].url);
+      }
+    }
+    static createNew(container, thumbnailImage, group, items = []) {
+      if (items.length == 0) {
+        items.push({
+          _id: "66a47ce64421398ae9c33fea",
+          origFileName: "",
+          fileName: "",
+          fileSize: 0,
+          height: 1024,
+          width: 1024,
+          url: thumbnailImage,
+          type: "image"
+        });
+      }
+      const itemsJSON = JSON.stringify({ items, group });
+      const html = `
+            <a href="#" class="lightbox-link w-inline-block w-lightbox">
+                <img src="${thumbnailImage}" loading="lazy" alt="">
+                <script type="application/json" class="w-json">${itemsJSON}<\/script>
+            </a>
+        `;
+      const tempContainer = document.createElement("div");
+      tempContainer.innerHTML = html.trim();
+      const newElement = tempContainer.firstChild;
+      container.appendChild(newElement);
+      return new Sa5Lightbox(newElement);
+    }
+    static resetLightbox() {
+      window["Webflow"].require("lightbox").ready();
+    }
+  };
+  Sa5Core.startup(Sa5Lightbox);
+
+  // src/utils.ts
+  function booleanValue(val) {
+    switch (val.toLowerCase()) {
+      case "false":
+      case "f":
+      case "":
+      case "0":
+      case "no":
+      case "off":
+      case void 0:
+      case "undefined":
+      case null:
+      case "null":
+        return false;
+      default:
+        return true;
+    }
+  }
 
   // src/webflow-elements/button.ts
   var Sa5Button = class {
@@ -1058,7 +1087,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.4.8";
+  var VERSION = "5.4.10";
 
   // src/nocode/webflow-elements.ts
   var init = () => {
@@ -1096,7 +1125,7 @@
     );
     useLightboxCaptionHandler = elements.length > 0;
     elements.forEach((element) => {
-      const wfuLightbox = new Sa5Lightbox(element).init();
+      const wfuLightbox = new Sa5Lightbox(element).setCaptionToImageAlt();
     });
     if (useLightboxCaptionHandler) {
       new Sa5LightboxCaptionHandler().init();

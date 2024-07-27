@@ -125,7 +125,7 @@ const init = () => {
     elements.forEach((element) => { 
 
         // Do something with each element
-        const wfuLightbox = new Sa5Lightbox(element).init();
+        const wfuLightbox = new Sa5Lightbox(element).setCaptionToImageAlt();
 
     });
 
