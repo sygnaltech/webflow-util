@@ -27,6 +27,12 @@ enum ModalMode {
     Modal = 'modal'
 }
 
+enum ModalSuppressMode {
+    None = 'none',
+    Forever = 'forever',
+    Session = 'session',
+    Duration = 'duration',
+}
 
 interface Sa5ModalConfig {
 
@@ -43,6 +49,14 @@ export class Sa5Modal {
     config: Sa5ModalConfig;
     elem: HTMLElement; 
     modalContainer: HTMLDivElement; 
+    timer?: number; // ms
+    suppressMode: ModalSuppressMode = ModalSuppressMode.None;
+    suppressDuration: string; // SA5 duration 
+    name: string;
+
+    get key(): string {
+        return `sa5-modal_${this.name}`; 
+    }
 
     constructor(elem: HTMLElement, config: Partial<Sa5ModalConfig> = {}) {
 
@@ -144,7 +158,39 @@ export class Sa5Modal {
         let debug = new Sa5Debug("sa5-modal");
         debug.debug ("Modal initialized.", this.config);
 
+        // Name
+        if(this.elem.hasAttribute("wfu-modal")) {
+            this.name = this.elem.getAttribute("wfu-modal");
+        }
+
+        // Trigger: Timer
+        if(this.elem.hasAttribute("wfu-modal-trigger-timer")) {
+            this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
+        }
+
+        // Suppress
+        if(this.elem.hasAttribute("wfu-modal-suppress")) {
+
+            const suppressValue = this.elem.getAttribute('wfu-modal-suppress');
+
+            if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue as ModalSuppressMode)) {
+                this.suppressMode = suppressValue as ModalSuppressMode;
+            } else {
+                this.suppressMode = ModalSuppressMode.Duration;
+                this.suppressDuration = suppressValue || '';
+            }
+
+
+//            this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
+        }
+
         document.body.appendChild(this.modalContainer);
+
+        if(this.timer) {
+            setTimeout(() => {
+                this.display();
+            }, this.timer);
+        }
 
     //     // Notify any config-specified handler
     //     if(this.config.layoutChangedCallback) {
@@ -157,7 +203,12 @@ export class Sa5Modal {
 
     }
 
-    display() { 
+    display(force: boolean = false) { 
+
+        if(!force) {
+            if(this.isSuppressed())
+                return; // skip open, suppressed
+        }
 
         const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
         const overlay = document.createElement('div');
@@ -179,6 +230,25 @@ export class Sa5Modal {
         gsap.fromTo(this.modalContainer, { opacity: 0, transform: 'translate(-50%, -50%)' }, { opacity: 1, transform: 'translate(-50%, -50%)', duration: 0.5 });
     
         this.modalContainer.dataset.overlayId = overlayId;
+
+
+        // Suppress
+        switch (this.suppressMode) {
+            case ModalSuppressMode.Forever:
+                this.setCookie(this.key, 'true', Infinity);
+                break;
+            case ModalSuppressMode.Session:
+                sessionStorage.setItem(this.key, 'true');
+                break;
+            case ModalSuppressMode.Duration:
+                // Handle duration if needed
+                break;
+            default:
+            case ModalSuppressMode.None:
+                // Do nothing
+                break;
+        }
+                
     }
 
     close() {
@@ -192,6 +262,43 @@ export class Sa5Modal {
                 document.body.removeChild(overlay);
             }});
         }
+
+    }
+
+    isSuppressed(): boolean {
+        switch (this.suppressMode) {
+            case ModalSuppressMode.Forever:
+                return this.getCookie(this.key) === 'true';
+            case ModalSuppressMode.Session:
+                return sessionStorage.getItem(this.key) === 'true';
+            case ModalSuppressMode.Duration:
+                // Implement logic for duration if needed
+                return false;
+            default:
+            case ModalSuppressMode.None:
+                return false;
+        }
+    }
+
+    setCookie(name: string, value: string, days: number) {
+        let expires = '';
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = `; expires=${date.toUTCString()}`;
+        }
+        document.cookie = `${name}=${value || ''}${expires}; path=/`;
+    }
+
+    getCookie(name: string): string | null {
+        const nameEQ = `${name}=`;
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
     }
 
 }

@@ -4451,8 +4451,16 @@
   var TweenMaxWithCSS = gsapWithCSS.core.Tween;
 
   // src/webflow-modal/modal.ts
+  var ModalSuppressMode = /* @__PURE__ */ ((ModalSuppressMode2) => {
+    ModalSuppressMode2["None"] = "none";
+    ModalSuppressMode2["Forever"] = "forever";
+    ModalSuppressMode2["Session"] = "session";
+    ModalSuppressMode2["Duration"] = "duration";
+    return ModalSuppressMode2;
+  })(ModalSuppressMode || {});
   var Sa5Modal = class {
     constructor(elem, config3 = {}) {
+      this.suppressMode = "none" /* None */;
       this.elem = elem;
       const defaultConfig = {
         mode: "popup" /* Popup */
@@ -4463,6 +4471,9 @@
       };
       this.modalContainer = this.createModalContainer();
       let core = Sa5Core.startup();
+    }
+    get key() {
+      return `sa5-modal_${this.name}`;
     }
     normalizeConfig(config3) {
       if (config3.mode && typeof config3.mode === "string") {
@@ -4516,9 +4527,33 @@
     init() {
       let debug = new Sa5Debug("sa5-modal");
       debug.debug("Modal initialized.", this.config);
+      if (this.elem.hasAttribute("wfu-modal")) {
+        this.name = this.elem.getAttribute("wfu-modal");
+      }
+      if (this.elem.hasAttribute("wfu-modal-trigger-timer")) {
+        this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
+      }
+      if (this.elem.hasAttribute("wfu-modal-suppress")) {
+        const suppressValue = this.elem.getAttribute("wfu-modal-suppress");
+        if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue)) {
+          this.suppressMode = suppressValue;
+        } else {
+          this.suppressMode = "duration" /* Duration */;
+          this.suppressDuration = suppressValue || "";
+        }
+      }
       document.body.appendChild(this.modalContainer);
+      if (this.timer) {
+        setTimeout(() => {
+          this.display();
+        }, this.timer);
+      }
     }
-    display() {
+    display(force = false) {
+      if (!force) {
+        if (this.isSuppressed())
+          return;
+      }
       const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
       const overlay = document.createElement("div");
       overlay.id = overlayId;
@@ -4535,6 +4570,19 @@
       gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
       gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, transform: "translate(-50%, -50%)" }, { opacity: 1, transform: "translate(-50%, -50%)", duration: 0.5 });
       this.modalContainer.dataset.overlayId = overlayId;
+      switch (this.suppressMode) {
+        case "forever" /* Forever */:
+          this.setCookie(this.key, "true", Infinity);
+          break;
+        case "session" /* Session */:
+          sessionStorage.setItem(this.key, "true");
+          break;
+        case "duration" /* Duration */:
+          break;
+        default:
+        case "none" /* None */:
+          break;
+      }
     }
     close() {
       const overlayId = this.modalContainer.dataset.overlayId;
@@ -4547,6 +4595,40 @@
           document.body.removeChild(overlay);
         } });
       }
+    }
+    isSuppressed() {
+      switch (this.suppressMode) {
+        case "forever" /* Forever */:
+          return this.getCookie(this.key) === "true";
+        case "session" /* Session */:
+          return sessionStorage.getItem(this.key) === "true";
+        case "duration" /* Duration */:
+          return false;
+        default:
+        case "none" /* None */:
+          return false;
+      }
+    }
+    setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
+        expires = `; expires=${date.toUTCString()}`;
+      }
+      document.cookie = `${name}=${value || ""}${expires}; path=/`;
+    }
+    getCookie(name) {
+      const nameEQ = `${name}=`;
+      const ca = document.cookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ")
+          c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+          return c.substring(nameEQ.length, c.length);
+      }
+      return null;
     }
   };
 })();
