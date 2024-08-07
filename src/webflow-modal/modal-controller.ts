@@ -31,12 +31,16 @@ interface Sa5ModalControllerConfig {
 }
 
 
-
+export enum ModalRule {
+    Default = 'default',
+    None = 'none'
+}
 
 export class Sa5ModalController {
 
     config: Sa5ModalControllerConfig;
     modals: Map<string, Sa5Modal>;
+    modalRule: ModalRule = ModalRule.Default; 
 
     // Type guard to check if a function is a UserInfoChangedCallback
     // private isLayoutsChangedCallback(func: Function): func is LayoutChangedCallback {
@@ -74,6 +78,31 @@ export class Sa5ModalController {
         let debug = new Sa5Debug("sa5-modal-controller");
         debug.debug ("Modal initialized.", this.config);
     
+        //
+        // Get the Modal Rule
+        // Used for Page-specific suppression 
+        //
+
+        this.modalRule = ModalRule.Default; 
+
+        const modalRuleAttr = document.body.getAttribute('wfu-modal-rule');
+        if (modalRuleAttr) {
+            switch (modalRuleAttr) {
+                case ModalRule.None:
+                    this.modalRule = ModalRule.None;
+                    break;
+                default:
+                    this.modalRule = ModalRule.Default;
+                    break;
+            }
+        }
+
+        debug.debug("Modal rule", this.modalRule); 
+
+        //
+        // Process modal elements 
+        //
+
         let modalElements = Array.from(
             document.querySelectorAll<HTMLElement>(
                 Sa5Attribute.getBracketed(Sa5Attribute.ATTR_MODAL) // '[wfu-modal]'
@@ -92,7 +121,7 @@ export class Sa5ModalController {
 
             // If Exit-intent-triggered, add timer trigger
 
-            let modal: Sa5Modal = new Sa5Modal(element);
+            let modal: Sa5Modal = new Sa5Modal(element, this);
             modal.init(); 
 
             // TODO: error if duplicate 

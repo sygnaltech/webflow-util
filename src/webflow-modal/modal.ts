@@ -12,6 +12,7 @@ import { Sa5Attribute } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { gsap } from "gsap";
+import { Sa5ModalController, ModalRule } from './modal-controller';
 
 /**
  * EVENTS
@@ -46,6 +47,7 @@ interface Sa5ModalConfig {
 
 export class Sa5Modal {
 
+    controller: Sa5ModalController;
     config: Sa5ModalConfig;
     elem: HTMLElement; 
     modalContainer: HTMLDivElement; 
@@ -58,9 +60,10 @@ export class Sa5Modal {
         return `sa5-modal_${this.name}`; 
     }
 
-    constructor(elem: HTMLElement, config: Partial<Sa5ModalConfig> = {}) {
+    constructor(elem: HTMLElement, controller: Sa5ModalController, config: Partial<Sa5ModalConfig> = {}) {
 
         this.elem = elem; 
+        this.controller = controller; 
 
         const defaultConfig: Sa5ModalConfig = {
 
@@ -204,6 +207,13 @@ export class Sa5Modal {
     }
 
     display(force: boolean = false) { 
+
+        switch(this.controller.modalRule) {
+            case ModalRule.None:
+                return; // suppress all modals
+            case ModalRule.Default:
+                break; // do nothing
+        }
 
         if(!force) {
             if(this.isSuppressed())

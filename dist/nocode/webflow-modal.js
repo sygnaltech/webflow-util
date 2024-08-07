@@ -427,7 +427,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.11";
+  var VERSION = "5.4.12";
 
   // node_modules/gsap/gsap-core.js
   function _assertThisInitialized(self) {
@@ -4630,9 +4630,10 @@
     return ModalSuppressMode2;
   })(ModalSuppressMode || {});
   var Sa5Modal = class {
-    constructor(elem, config3 = {}) {
+    constructor(elem, controller, config3 = {}) {
       this.suppressMode = "none" /* None */;
       this.elem = elem;
+      this.controller = controller;
       const defaultConfig = {
         mode: "popup" /* Popup */
       };
@@ -4721,6 +4722,12 @@
       }
     }
     display(force = false) {
+      switch (this.controller.modalRule) {
+        case "none" /* None */:
+          return;
+        case "default" /* Default */:
+          break;
+      }
       if (!force) {
         if (this.isSuppressed())
           return;
@@ -4804,8 +4811,9 @@
   };
 
   // src/webflow-modal/modal-controller.ts
-  var Sa5ModalController = class {
+  var Sa5ModalController2 = class {
     constructor(config3 = {}) {
+      this.modalRule = "default" /* Default */;
       this.config = config3;
       this.modals = /* @__PURE__ */ new Map();
       let core = Sa5Core.startup();
@@ -4813,13 +4821,26 @@
     init() {
       let debug = new Sa5Debug("sa5-modal-controller");
       debug.debug("Modal initialized.", this.config);
+      this.modalRule = "default" /* Default */;
+      const modalRuleAttr = document.body.getAttribute("wfu-modal-rule");
+      if (modalRuleAttr) {
+        switch (modalRuleAttr) {
+          case "none" /* None */:
+            this.modalRule = "none" /* None */;
+            break;
+          default:
+            this.modalRule = "default" /* Default */;
+            break;
+        }
+      }
+      debug.debug("Modal rule", this.modalRule);
       let modalElements = Array.from(
         document.querySelectorAll(
           Sa5Attribute.getBracketed("wfu-modal" /* ATTR_MODAL */)
         )
       );
       modalElements.forEach((element) => {
-        let modal = new Sa5Modal(element);
+        let modal = new Sa5Modal(element, this);
         modal.init();
         let modalKey = element.getAttribute("wfu-modal" /* ATTR_MODAL */);
         if (modalKey) {
@@ -4847,7 +4868,7 @@
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-modal");
     debug.debug(`Initializing v${VERSION}`);
-    const controller = new Sa5ModalController();
+    const controller = new Sa5ModalController2();
     controller.init();
     document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-dismiss" /* ATTR_DISMISS */)

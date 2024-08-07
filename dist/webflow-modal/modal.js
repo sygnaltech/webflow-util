@@ -4459,9 +4459,10 @@
     return ModalSuppressMode2;
   })(ModalSuppressMode || {});
   var Sa5Modal = class {
-    constructor(elem, config3 = {}) {
+    constructor(elem, controller, config3 = {}) {
       this.suppressMode = "none" /* None */;
       this.elem = elem;
+      this.controller = controller;
       const defaultConfig = {
         mode: "popup" /* Popup */
       };
@@ -4550,6 +4551,12 @@
       }
     }
     display(force = false) {
+      switch (this.controller.modalRule) {
+        case "none" /* None */:
+          return;
+        case "default" /* Default */:
+          break;
+      }
       if (!force) {
         if (this.isSuppressed())
           return;
