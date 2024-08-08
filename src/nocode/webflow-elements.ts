@@ -22,6 +22,7 @@ import { Sa5Autocomplete } from '../webflow-elements/autocomplete';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { VERSION } from '../version';
+import { Sa5Accordion } from '../webflow-elements/accordion';
 
 
 const init = () => { 
@@ -61,6 +62,20 @@ const init = () => {
     sliderElements.forEach(element => {
 
         var sliderObj = new WebflowSlider(element as HTMLElement);
+
+    });
+
+    /**
+     * Accordion
+     */
+
+    // Accordion
+    // Auto-register class on named items? 
+    // [wfu-accordion=NAME]
+    let accordionElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_ACCORDION}]`);
+    accordionElements.forEach(element => {
+
+        var accordionObj = new Sa5Accordion(element as HTMLElement);
 
     });
 

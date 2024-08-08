@@ -5,126 +5,172 @@
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Accordion Utilities
+ * Accordion 
+ * 
  */
 
 import { Sa5Attribute } from "../globals";
 
 
-
-/*
- * Accordion.
- */
-
-
-
-
-/*
-
-
-    // container (holds set)
-    // - item (one item)
-    // - - header/title
-    // - - - indicator expanded/collapsed 
-    // - - content panel
-
-Similar to tabs element
-
-Events
-  tab change
-
-Select no tabs
-
-close all
-open all
-
-Querystring
-    Scroll and navigate to 
-
-.w--current
-[data-w-tab] weems to be the identifier 
-*/
-
-// [wfu-accordion=IDENTIFIER]
-
-// Separately, we...
-// 1. create this element for anything [wfu-tabs].w-tabs 
-// 1. install click handlers for [wfu-tabs=x] other elements
-//      anything? 
-// Have the internal handlers perform actions
-// wfu-tab-action=first|last|next|prev|clear ? 
-
-// Define the type for an element with the necessary properties
-interface AccordionElement extends HTMLElement {
-    // style: {
-    //     maxHeight: string | null;
-    // };
-    scrollHeight: number;
-    nextElementSibling: AccordionElement;
+export enum Sa5AccordionMode {
+    Default = "default", // default classes
+    Interactions = "ix", 
 }
 
-export class WebflowAccordion {
+// Define the type for an element with the necessary properties
+// interface AccordionElement extends HTMLElement {
+//     // style: {
+//     //     maxHeight: string | null;
+//     // };
+//     scrollHeight: number;
+//     nextElementSibling: AccordionElement;
+// }
+
+export class Sa5AccordionItem {
+
+    name: string;
+    elem: HTMLElement;
+    tab: HTMLElement;
+    content: HTMLElement;
+
+    triggerOpen: HTMLElement;
+    triggerClose: HTMLElement; 
+
+    controller: Sa5Accordion;
+
+    constructor(elem: HTMLElement, controller: Sa5Accordion) {
+        
+        this.elem = elem;
+        this.controller = controller; 
+
+        this.init(); 
+
+    }
+
+    init() {
+
+        // Set the name property if the attribute exists
+        const nameAttr = this.elem.getAttribute('wfu-accordion-item');
+        if (nameAttr) 
+            this.name = nameAttr;
+
+        // Identify the tab element
+        const tabElement = this.elem.querySelector<HTMLElement>('[wfu-accordion-item-tab]');
+        if (tabElement) {
+            this.tab = tabElement;
+        } else {
+            console.error('Tab element not found');
+        }
+
+        // Identify the content element
+        const contentElement = this.elem.querySelector<HTMLElement>('[wfu-accordion-item-content]');
+        if (contentElement) {
+            this.content = contentElement;
+        } else {
+            console.error('Content element not found');
+        }
+
+        // Interaction triggers 
+        const triggerOpen = this.elem.querySelector<HTMLElement>('[wfu-accordion-item-trigger="open"]');
+        if (triggerOpen) 
+            this.triggerOpen = triggerOpen;
+        const triggerClose = this.elem.querySelector<HTMLElement>('[wfu-accordion-item-trigger="close"]');
+        if (triggerClose) 
+            this.triggerClose = triggerClose;
+
+    }
+
+    get isOpen(): boolean {
+        return this === this.controller.items[this.controller.index];
+    }
+
+    open() {
+
+        // Skip, if already open
+        if(this.isOpen)
+            return;
+
+        switch(this.controller.mode) {
+            case Sa5AccordionMode.Interactions: 
+
+                this.triggerOpen.click();
+
+                break;
+            default:
+
+                this.elem.classList.add(this.controller.classOpen);
+                this.elem.classList.remove(this.controller.classClosed);
+                this.tab.classList.add(this.controller.classOpen);
+                this.tab.classList.remove(this.controller.classClosed);
+                this.content.classList.add(this.controller.classOpen);
+                this.content.classList.remove(this.controller.classClosed);   
+
+                break;
+        }
+
+
+
+    }
+
+    close() {
+
+        // Skip, if already closed
+        if(!this.isOpen)
+            return;
+
+        switch(this.controller.mode) {
+            case Sa5AccordionMode.Interactions: 
+
+                this.triggerClose.click();
+
+                break;
+            default:
+
+                this.elem.classList.add(this.controller.classClosed);
+                this.elem.classList.remove(this.controller.classOpen);
+                this.tab.classList.add(this.controller.classClosed);
+                this.tab.classList.remove(this.controller.classOpen); 
+                this.content.classList.add(this.controller.classClosed);
+                this.content.classList.remove(this.controller.classOpen);   
+
+                break;
+        }
+
+
+    }
+
+}
+
+export class Sa5Accordion { 
     
-    private _element: HTMLElement;
-    private _elementTabMenu: HTMLElement;
-    private _elementTabContent: HTMLElement;
+    name: string; 
+    elem: HTMLElement;
+    items: Array<Sa5AccordionItem> = [];
+
+    index: number = 0; // first
+
+    mode: Sa5AccordionMode = Sa5AccordionMode.Default; // "ix"; // ix | default
+
+    classOpen: string = 'is-open';
+    classClosed: string = 'is-closed';
 
     //#region PROPERTYS
 
     get element(): HTMLElement {
-        return this._element;
-    }
-    get elementTabMenu(): HTMLElement {
-        return this._elementTabMenu;
-    }
-    get elementTabContent(): HTMLElement {
-        return this._elementTabContent;
+        return this.elem;
     }
 
-    get tabIndex(): number | null {
-        //        let parentElement: HTMLElement; // Assume this is your parent element with class .w-tab-menu
+    set currentItem(item: Sa5AccordionItem) {
 
-        let currentIndex: number | null = null;
-        
-        // Find current tab
-        for (let i = 0; i < this._elementTabMenu.children.length; i++) {
-            if (this._elementTabMenu.children[i].classList.contains('w--current')) {
-                currentIndex = i;
-                break;
-            }
+        this.index = this.itemToIndex(item); 
+
+        for (let i = 0; i < this.items.length; i++) {
+            if(i == this.index)
+                this.items[i].open();
+            else
+                this.items[i].close();
         }
 
-        // if (currentIndex !== null) {
-        //   console.log(`The child with class 'w--current' is at index ${currentIndex}`);
-        // } else {
-        //   console.log("No child with class 'w--current' was found");
-        // }
-
-        return currentIndex; 
-    }
-    set tabIndex(index: number) {
-
-        // verify number in range
-        if (index < 0) 
-            return; 
-        if (index >= this.tabCount)
-            return;
-
-        let clickEvent = new MouseEvent('click', {
-            // Event properties
-            bubbles: true,
-            cancelable: true,
-            view: window,
-            // More properties can be added as needed
-            }); 
-
-        this.elementTab(index).dispatchEvent(clickEvent);
-
-//        this.elementTabMenu.children[index].click
-    }
-
-    get tabCount(): number {
-        return this._elementTabMenu.children.length;
     }
 
     //#endregion
@@ -133,157 +179,88 @@ export class WebflowAccordion {
 
     constructor(element: HTMLElement) {
 
+        this.elem = element; 
+
         // Initialize
-        this.init(element);
+        this.init();
 
     }
-
-
-
-    init(element: HTMLElement) {
-
-        // Find accordions
-        const accordionBtns = document.querySelectorAll(
-            `[${Sa5Attribute.ATTR_UI_ACCORDION}=header]` // "[wfu-ui-accordion=header]"
-            ) as NodeListOf<AccordionElement>;
-
-        accordionBtns.forEach((accordion: AccordionElement) => {
-
-          accordion.onclick = function () {
-            accordion.classList.toggle("is-open");
-        
-            let content = accordion.nextElementSibling;
-            console.log(content);
-        
-            if (content.style.maxHeight) {
-              //this is if the accordion is open
-              content.style.maxHeight = "auto";
-            } else {
-              //if the accordion is currently closed
-              content.style.maxHeight = content.scrollHeight + "px";
-              console.log(content.style.maxHeight);
-            }
-          };
-        });
-
-    }
-
-
 
     //#endregion
 
     //#region METHODS
 
-    // Initialize the class to the element
-    init2(element: HTMLElement) {
+    itemToIndex(accordionItem: Sa5AccordionItem): number {
 
-        // Verify it's a tabs element .w-tabs
-        if(!element.classList.contains("w-tabs")) {
-            console.error ("[wfu-tabs] is not on a tabs element");
-            return;
-        }
+        console.log("itemToIndex", accordionItem); 
 
-        console.log("init."); 
+        let i = 0;
+        this.items.forEach((item: Sa5AccordionItem) => {
 
-        // Inventory parts
-        this._element = element; 
-        this._elementTabMenu = element.querySelector('.w-tab-menu');
-        this._elementTabContent = element.querySelector('.w-tab-content');
-        //.w-tab-menu
+            if (accordionItem === item) {
+                this.index = i;
+                console.log("itemToIndex", this.index)
+                return i;
+            }
+            i++;
+        });
 
-        console.log("count", this.tabCount);
-        console.log("index", this.tabIndex); 
-        //.w-tab-content
-
+        return -1;
     }
 
-    // Get the tab element at the specified index
-    elementTab(index: number): HTMLElement { 
+    init() {
 
-        // verify number in range
-        if (index < 0) 
-            return; 
-        if (index >= this.tabCount)
-            return;
+        // Set the name property, if defined
+        const nameAttr = this.elem.getAttribute('wfu-accordion');
+        if (nameAttr) 
+            this.name = nameAttr;
 
-        return this._elementTabMenu.children[index] as HTMLElement;
-    }
-
-    // Goes to the identified tab 
-    // raises navigation events
-    goToTabIndex(index: number) {
-
-        // Eventing tab change (pre)
-        // from & to tabs
-
-        console.log(index);
+        const modeAttr = this.elem.getAttribute('wfu-accordion-mode');
         
-        this.tabIndex = index;
+        // Convert the enum to an array of values
+        const enumValues = Object.values(Sa5AccordionMode);
 
-        // Eventing tab change (post)
-        // from & to tabs
-    }
-
-    goToNextTab() {
-
-        // If no tab selected, select first
-        if(this.tabIndex == null) {
-            this.tabIndex = 0;
-            return;
+        // Check if the modeAttr exists in the enum values
+        if (modeAttr && enumValues.includes(modeAttr as Sa5AccordionMode)) {
+            this.mode = modeAttr as Sa5AccordionMode;
+        } else {
+            this.mode = Sa5AccordionMode.Default;
         }
 
-        // Determine new tab
-        var newTabIndex: number = this.tabIndex + 1;
-        if (newTabIndex >= this.tabCount)
-            newTabIndex = 0;
+        // Init items 
+        const accordionItemElems = document.querySelectorAll(
+            `[${Sa5Attribute.ATTR_ELEMENT_ACCORDION_ITEM}]` 
+            ) as NodeListOf<HTMLElement>;
 
-        this.goToTabIndex(newTabIndex);
+        accordionItemElems.forEach((item: HTMLElement) => { 
 
-    }
+            const accordionItem: Sa5AccordionItem = new Sa5AccordionItem(item, this); 
+            this.items.push(accordionItem); // add to stack 
 
-    goToPrevTab() {
+            accordionItem.tab?.addEventListener('click', () => {
 
-        // If no tab selected, select first
-        if(this.tabIndex == null) {
-            this.tabIndex = 0;
-            return;
-        }
+                accordionItem.open();
+                // this.itemToIndex(accordionItem);
 
-        // Determine new tab
-        var newTabIndex: number = this.tabIndex - 1;
-        if (newTabIndex < 0)
-            newTabIndex = this.tabCount - 1;
-        
-        this.goToTabIndex(newTabIndex);
+                // this.items.forEach((accordionItem: Sa5AccordionItem) => {
 
-    }
+                //     accordionItem.close(); 
 
-    goToFirstTab() {
-                
-        this.goToTabIndex(0);
+                //     if (accordionItem.elem === item) {
+                //         accordionItem.open();
+                //     }
+                // }); 
 
-    }
+            }); 
 
-    goToLastTab() {
+        });
 
-        var newTabIndex: number = this.tabCount - 1;
-
-        this.goToTabIndex(newTabIndex);
-
-    }
-
-    //#endregion
-
-    //#region EVENTS
-
-    onTabChanged() {
-        // Raise event
     }
 
     //#endregion
 
 }
 
-// window["WebflowAccordion"] = WebflowAccordion;
+window["Sa5Accordion"] = Sa5Accordion;
 
 

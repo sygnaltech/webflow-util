@@ -34,6 +34,12 @@
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION"] = "wfu-autocomplete-item-action";
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH"] = "wfu-autocomplete-item-match";
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT"] = "wfu-autocomplete-item-layout";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION"] = "wfu-accordion";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM"] = "wfu-accordion-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM_TAB"] = "wfu-accordion-item-tab";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM_CONTENT"] = "wfu-accordion-item-content";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_CLASS_OPEN"] = "wfu-accordion-class-open";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_CLASS_CLOSED"] = "wfu-accordion-class-closed";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -111,114 +117,136 @@
   })(Sa5Attribute || {});
 
   // src/webflow-elements/accordion.ts
-  var WebflowAccordion = class {
-    get element() {
-      return this._element;
+  var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
+    Sa5AccordionMode2["Default"] = "default";
+    Sa5AccordionMode2["Interactions"] = "ix";
+    return Sa5AccordionMode2;
+  })(Sa5AccordionMode || {});
+  var Sa5AccordionItem = class {
+    constructor(elem, controller) {
+      this.elem = elem;
+      this.controller = controller;
+      this.init();
     }
-    get elementTabMenu() {
-      return this._elementTabMenu;
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion-item");
+      if (nameAttr)
+        this.name = nameAttr;
+      const tabElement = this.elem.querySelector("[wfu-accordion-item-tab]");
+      if (tabElement) {
+        this.tab = tabElement;
+      } else {
+        console.error("Tab element not found");
+      }
+      const contentElement = this.elem.querySelector("[wfu-accordion-item-content]");
+      if (contentElement) {
+        this.content = contentElement;
+      } else {
+        console.error("Content element not found");
+      }
+      const triggerOpen = this.elem.querySelector('[wfu-accordion-item-trigger="open"]');
+      if (triggerOpen)
+        this.triggerOpen = triggerOpen;
+      const triggerClose = this.elem.querySelector('[wfu-accordion-item-trigger="close"]');
+      if (triggerClose)
+        this.triggerClose = triggerClose;
     }
-    get elementTabContent() {
-      return this._elementTabContent;
+    get isOpen() {
+      return this === this.controller.items[this.controller.index];
     }
-    get tabIndex() {
-      let currentIndex = null;
-      for (let i = 0; i < this._elementTabMenu.children.length; i++) {
-        if (this._elementTabMenu.children[i].classList.contains("w--current")) {
-          currentIndex = i;
+    open() {
+      if (this.isOpen)
+        return;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerOpen.click();
           break;
-        }
+        default:
+          this.elem.classList.add(this.controller.classOpen);
+          this.elem.classList.remove(this.controller.classClosed);
+          this.tab.classList.add(this.controller.classOpen);
+          this.tab.classList.remove(this.controller.classClosed);
+          this.content.classList.add(this.controller.classOpen);
+          this.content.classList.remove(this.controller.classClosed);
+          break;
       }
-      return currentIndex;
     }
-    set tabIndex(index) {
-      if (index < 0)
+    close() {
+      if (!this.isOpen)
         return;
-      if (index >= this.tabCount)
-        return;
-      let clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      this.elementTab(index).dispatchEvent(clickEvent);
-    }
-    get tabCount() {
-      return this._elementTabMenu.children.length;
-    }
-    constructor(element) {
-      this.init(element);
-    }
-    init(element) {
-      const accordionBtns = document.querySelectorAll(
-        `[${"wfu-ui-accordion" /* ATTR_UI_ACCORDION */}=header]`
-      );
-      accordionBtns.forEach((accordion) => {
-        accordion.onclick = function() {
-          accordion.classList.toggle("is-open");
-          let content = accordion.nextElementSibling;
-          console.log(content);
-          if (content.style.maxHeight) {
-            content.style.maxHeight = "auto";
-          } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            console.log(content.style.maxHeight);
-          }
-        };
-      });
-    }
-    init2(element) {
-      if (!element.classList.contains("w-tabs")) {
-        console.error("[wfu-tabs] is not on a tabs element");
-        return;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerClose.click();
+          break;
+        default:
+          this.elem.classList.add(this.controller.classClosed);
+          this.elem.classList.remove(this.controller.classOpen);
+          this.tab.classList.add(this.controller.classClosed);
+          this.tab.classList.remove(this.controller.classOpen);
+          this.content.classList.add(this.controller.classClosed);
+          this.content.classList.remove(this.controller.classOpen);
+          break;
       }
-      console.log("init.");
-      this._element = element;
-      this._elementTabMenu = element.querySelector(".w-tab-menu");
-      this._elementTabContent = element.querySelector(".w-tab-content");
-      console.log("count", this.tabCount);
-      console.log("index", this.tabIndex);
-    }
-    elementTab(index) {
-      if (index < 0)
-        return;
-      if (index >= this.tabCount)
-        return;
-      return this._elementTabMenu.children[index];
-    }
-    goToTabIndex(index) {
-      console.log(index);
-      this.tabIndex = index;
-    }
-    goToNextTab() {
-      if (this.tabIndex == null) {
-        this.tabIndex = 0;
-        return;
-      }
-      var newTabIndex = this.tabIndex + 1;
-      if (newTabIndex >= this.tabCount)
-        newTabIndex = 0;
-      this.goToTabIndex(newTabIndex);
-    }
-    goToPrevTab() {
-      if (this.tabIndex == null) {
-        this.tabIndex = 0;
-        return;
-      }
-      var newTabIndex = this.tabIndex - 1;
-      if (newTabIndex < 0)
-        newTabIndex = this.tabCount - 1;
-      this.goToTabIndex(newTabIndex);
-    }
-    goToFirstTab() {
-      this.goToTabIndex(0);
-    }
-    goToLastTab() {
-      var newTabIndex = this.tabCount - 1;
-      this.goToTabIndex(newTabIndex);
-    }
-    onTabChanged() {
     }
   };
+  var Sa5Accordion = class {
+    constructor(element) {
+      this.items = [];
+      this.index = 0;
+      this.mode = "default" /* Default */;
+      this.classOpen = "is-open";
+      this.classClosed = "is-closed";
+      this.elem = element;
+      this.init();
+    }
+    get element() {
+      return this.elem;
+    }
+    set currentItem(item) {
+      this.index = this.itemToIndex(item);
+      for (let i = 0; i < this.items.length; i++) {
+        if (i == this.index)
+          this.items[i].open();
+        else
+          this.items[i].close();
+      }
+    }
+    itemToIndex(accordionItem) {
+      console.log("itemToIndex", accordionItem);
+      let i = 0;
+      this.items.forEach((item) => {
+        if (accordionItem === item) {
+          this.index = i;
+          console.log("itemToIndex", this.index);
+          return i;
+        }
+        i++;
+      });
+      return -1;
+    }
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion");
+      if (nameAttr)
+        this.name = nameAttr;
+      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
+      const enumValues = Object.values(Sa5AccordionMode);
+      if (modeAttr && enumValues.includes(modeAttr)) {
+        this.mode = modeAttr;
+      } else {
+        this.mode = "default" /* Default */;
+      }
+      const accordionItemElems = document.querySelectorAll(
+        `[${"wfu-accordion-item" /* ATTR_ELEMENT_ACCORDION_ITEM */}]`
+      );
+      accordionItemElems.forEach((item) => {
+        const accordionItem = new Sa5AccordionItem(item, this);
+        this.items.push(accordionItem);
+        accordionItem.tab?.addEventListener("click", () => {
+          accordionItem.open();
+        });
+      });
+    }
+  };
+  window["Sa5Accordion"] = Sa5Accordion;
 })();
 //# sourceMappingURL=accordion.js.map

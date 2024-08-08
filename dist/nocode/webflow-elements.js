@@ -34,6 +34,12 @@
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION"] = "wfu-autocomplete-item-action";
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH"] = "wfu-autocomplete-item-match";
     Sa5Attribute2["ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT"] = "wfu-autocomplete-item-layout";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION"] = "wfu-accordion";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM"] = "wfu-accordion-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM_TAB"] = "wfu-accordion-item-tab";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_ITEM_CONTENT"] = "wfu-accordion-item-content";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_CLASS_OPEN"] = "wfu-accordion-class-open";
+    Sa5Attribute2["ATTR_ELEMENT_ACCORDION_CLASS_CLOSED"] = "wfu-accordion-class-closed";
     Sa5Attribute2["ATTR_DATA"] = "wfu-data";
     Sa5Attribute2["ATTR_DATA_TYPE"] = "wfu-data-type";
     Sa5Attribute2["ATTR_DATA_DSN"] = "wfu-data-dsn";
@@ -1089,6 +1095,139 @@
   // src/version.ts
   var VERSION = "5.4.12";
 
+  // src/webflow-elements/accordion.ts
+  var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
+    Sa5AccordionMode2["Default"] = "default";
+    Sa5AccordionMode2["Interactions"] = "ix";
+    return Sa5AccordionMode2;
+  })(Sa5AccordionMode || {});
+  var Sa5AccordionItem = class {
+    constructor(elem, controller) {
+      this.elem = elem;
+      this.controller = controller;
+      this.init();
+    }
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion-item");
+      if (nameAttr)
+        this.name = nameAttr;
+      const tabElement = this.elem.querySelector("[wfu-accordion-item-tab]");
+      if (tabElement) {
+        this.tab = tabElement;
+      } else {
+        console.error("Tab element not found");
+      }
+      const contentElement = this.elem.querySelector("[wfu-accordion-item-content]");
+      if (contentElement) {
+        this.content = contentElement;
+      } else {
+        console.error("Content element not found");
+      }
+      const triggerOpen = this.elem.querySelector('[wfu-accordion-item-trigger="open"]');
+      if (triggerOpen)
+        this.triggerOpen = triggerOpen;
+      const triggerClose = this.elem.querySelector('[wfu-accordion-item-trigger="close"]');
+      if (triggerClose)
+        this.triggerClose = triggerClose;
+    }
+    get isOpen() {
+      return this === this.controller.items[this.controller.index];
+    }
+    open() {
+      if (this.isOpen)
+        return;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerOpen.click();
+          break;
+        default:
+          this.elem.classList.add(this.controller.classOpen);
+          this.elem.classList.remove(this.controller.classClosed);
+          this.tab.classList.add(this.controller.classOpen);
+          this.tab.classList.remove(this.controller.classClosed);
+          this.content.classList.add(this.controller.classOpen);
+          this.content.classList.remove(this.controller.classClosed);
+          break;
+      }
+    }
+    close() {
+      if (!this.isOpen)
+        return;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerClose.click();
+          break;
+        default:
+          this.elem.classList.add(this.controller.classClosed);
+          this.elem.classList.remove(this.controller.classOpen);
+          this.tab.classList.add(this.controller.classClosed);
+          this.tab.classList.remove(this.controller.classOpen);
+          this.content.classList.add(this.controller.classClosed);
+          this.content.classList.remove(this.controller.classOpen);
+          break;
+      }
+    }
+  };
+  var Sa5Accordion = class {
+    constructor(element) {
+      this.items = [];
+      this.index = 0;
+      this.mode = "default" /* Default */;
+      this.classOpen = "is-open";
+      this.classClosed = "is-closed";
+      this.elem = element;
+      this.init();
+    }
+    get element() {
+      return this.elem;
+    }
+    set currentItem(item) {
+      this.index = this.itemToIndex(item);
+      for (let i = 0; i < this.items.length; i++) {
+        if (i == this.index)
+          this.items[i].open();
+        else
+          this.items[i].close();
+      }
+    }
+    itemToIndex(accordionItem) {
+      console.log("itemToIndex", accordionItem);
+      let i = 0;
+      this.items.forEach((item) => {
+        if (accordionItem === item) {
+          this.index = i;
+          console.log("itemToIndex", this.index);
+          return i;
+        }
+        i++;
+      });
+      return -1;
+    }
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion");
+      if (nameAttr)
+        this.name = nameAttr;
+      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
+      const enumValues = Object.values(Sa5AccordionMode);
+      if (modeAttr && enumValues.includes(modeAttr)) {
+        this.mode = modeAttr;
+      } else {
+        this.mode = "default" /* Default */;
+      }
+      const accordionItemElems = document.querySelectorAll(
+        `[${"wfu-accordion-item" /* ATTR_ELEMENT_ACCORDION_ITEM */}]`
+      );
+      accordionItemElems.forEach((item) => {
+        const accordionItem = new Sa5AccordionItem(item, this);
+        this.items.push(accordionItem);
+        accordionItem.tab?.addEventListener("click", () => {
+          accordionItem.open();
+        });
+      });
+    }
+  };
+  window["Sa5Accordion"] = Sa5Accordion;
+
   // src/nocode/webflow-elements.ts
   var init = () => {
     let core = Sa5Core.startup();
@@ -1101,6 +1240,10 @@
     let sliderElements = document.querySelectorAll(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}]`);
     sliderElements.forEach((element) => {
       var sliderObj = new WebflowSlider(element);
+    });
+    let accordionElements = document.querySelectorAll(`[${"wfu-accordion" /* ATTR_ELEMENT_ACCORDION */}]`);
+    accordionElements.forEach((element) => {
+      var accordionObj = new Sa5Accordion(element);
     });
     let deckControllerElements = document.querySelectorAll(`[${"wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */}]`);
     deckControllerElements.forEach((element) => {

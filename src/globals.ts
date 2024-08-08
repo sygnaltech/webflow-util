@@ -70,7 +70,14 @@ export enum Sa5Attribute {
         ATTR_ELEMENT_AUTOCOMPLETE_ITEM_ACTION = 'wfu-autocomplete-item-action',
         ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH = 'wfu-autocomplete-item-match',
         ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT = 'wfu-autocomplete-item-layout',
+    ATTR_ELEMENT_ACCORDION = 'wfu-accordion',
+        ATTR_ELEMENT_ACCORDION_ITEM = 'wfu-accordion-item',
+        ATTR_ELEMENT_ACCORDION_ITEM_TAB = 'wfu-accordion-item-tab',
+        ATTR_ELEMENT_ACCORDION_ITEM_CONTENT = 'wfu-accordion-item-content',
+        ATTR_ELEMENT_ACCORDION_CLASS_OPEN = 'wfu-accordion-class-open',
+        ATTR_ELEMENT_ACCORDION_CLASS_CLOSED = 'wfu-accordion-class-closed',
     
+
 
     // Data
     ATTR_DATA = 'wfu-data',
