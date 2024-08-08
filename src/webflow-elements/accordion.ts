@@ -10,6 +10,7 @@
  */
 
 import { Sa5Attribute } from "../globals";
+import { Sa5Debug } from "../webflow-core/debug";
 
 
 export enum Sa5AccordionMode {
@@ -81,7 +82,7 @@ export class Sa5AccordionItem {
     }
 
     get isOpen(): boolean {
-        return this === this.controller.items[this.controller.index];
+        return this === this.controller.items[this.controller.currentIndex];
     }
 
     open() {
@@ -141,31 +142,41 @@ export class Sa5AccordionItem {
 
 }
 
-export class Sa5Accordion { 
+export class Sa5Accordion implements IDeckNavigation { 
     
     name: string; 
-    elem: HTMLElement;
+    _element: HTMLElement;
     items: Array<Sa5AccordionItem> = [];
 
-    index: number = 0; // first
+    currentIndex: number = 0; // first
+
+    get count(): number {
+        return this.items.length;
+    }
+
+    get currentNum(): number {
+        return this.currentIndex + 1; 
+    }
 
     mode: Sa5AccordionMode = Sa5AccordionMode.Default; // "ix"; // ix | default
 
     classOpen: string = 'is-open';
     classClosed: string = 'is-closed';
 
+    private debug: Sa5Debug; 
+
     //#region PROPERTYS
 
     get element(): HTMLElement {
-        return this.elem;
+        return this._element;
     }
 
     set currentItem(item: Sa5AccordionItem) {
 
-        this.index = this.itemToIndex(item); 
+        this.currentIndex = this.itemToIndex(item); 
 
         for (let i = 0; i < this.items.length; i++) {
-            if(i == this.index)
+            if(i == this.currentIndex)
                 this.items[i].open();
             else
                 this.items[i].close();
@@ -179,7 +190,10 @@ export class Sa5Accordion {
 
     constructor(element: HTMLElement) {
 
-        this.elem = element; 
+        this.debug = new Sa5Debug("sa5-webflow-accordion");
+        this.debug.enabled = true;
+
+        this._element = element; 
 
         // Initialize
         this.init();
@@ -198,8 +212,8 @@ export class Sa5Accordion {
         this.items.forEach((item: Sa5AccordionItem) => {
 
             if (accordionItem === item) {
-                this.index = i;
-                console.log("itemToIndex", this.index)
+                this.currentIndex = i;
+                console.log("itemToIndex", this.currentIndex)
                 return i;
             }
             i++;
@@ -211,11 +225,11 @@ export class Sa5Accordion {
     init() {
 
         // Set the name property, if defined
-        const nameAttr = this.elem.getAttribute('wfu-accordion');
+        const nameAttr = this._element.getAttribute('wfu-accordion');
         if (nameAttr) 
             this.name = nameAttr;
 
-        const modeAttr = this.elem.getAttribute('wfu-accordion-mode');
+        const modeAttr = this._element.getAttribute('wfu-accordion-mode');
         
         // Convert the enum to an array of values
         const enumValues = Object.values(Sa5AccordionMode);
@@ -255,6 +269,36 @@ export class Sa5Accordion {
 
         });
 
+    }
+
+    goTo(index: number): void {
+        this.currentIndex = index;
+    }
+
+    goToName(name: string): void {
+        console.error("Accordion.goToName not yet implemented")
+    }
+
+    goToNext(): void {
+        if(this.currentIndex == this.items.length - 1)
+            this.goToFirst();
+        else
+            this.goTo(this.currentIndex++); 
+    }
+
+    goToPrev(): void {
+        if(this.currentIndex == 0) 
+            this.goToLast();
+        else
+            this.goTo(this.currentIndex--);
+    }
+
+    goToFirst(): void {
+        this.goTo(0); 
+    }
+
+    goToLast(): void {
+        this.goTo(this.items.length - 1);
     }
 
     //#endregion

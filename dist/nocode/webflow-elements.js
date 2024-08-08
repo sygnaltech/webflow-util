@@ -1131,7 +1131,7 @@
         this.triggerClose = triggerClose;
     }
     get isOpen() {
-      return this === this.controller.items[this.controller.index];
+      return this === this.controller.items[this.controller.currentIndex];
     }
     open() {
       if (this.isOpen)
@@ -1171,20 +1171,28 @@
   var Sa5Accordion = class {
     constructor(element) {
       this.items = [];
-      this.index = 0;
+      this.currentIndex = 0;
       this.mode = "default" /* Default */;
       this.classOpen = "is-open";
       this.classClosed = "is-closed";
-      this.elem = element;
+      this.debug = new Sa5Debug("sa5-webflow-accordion");
+      this.debug.enabled = true;
+      this._element = element;
       this.init();
     }
+    get count() {
+      return this.items.length;
+    }
+    get currentNum() {
+      return this.currentIndex + 1;
+    }
     get element() {
-      return this.elem;
+      return this._element;
     }
     set currentItem(item) {
-      this.index = this.itemToIndex(item);
+      this.currentIndex = this.itemToIndex(item);
       for (let i = 0; i < this.items.length; i++) {
-        if (i == this.index)
+        if (i == this.currentIndex)
           this.items[i].open();
         else
           this.items[i].close();
@@ -1195,8 +1203,8 @@
       let i = 0;
       this.items.forEach((item) => {
         if (accordionItem === item) {
-          this.index = i;
-          console.log("itemToIndex", this.index);
+          this.currentIndex = i;
+          console.log("itemToIndex", this.currentIndex);
           return i;
         }
         i++;
@@ -1204,10 +1212,10 @@
       return -1;
     }
     init() {
-      const nameAttr = this.elem.getAttribute("wfu-accordion");
+      const nameAttr = this._element.getAttribute("wfu-accordion");
       if (nameAttr)
         this.name = nameAttr;
-      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
+      const modeAttr = this._element.getAttribute("wfu-accordion-mode");
       const enumValues = Object.values(Sa5AccordionMode);
       if (modeAttr && enumValues.includes(modeAttr)) {
         this.mode = modeAttr;
@@ -1224,6 +1232,30 @@
           accordionItem.open();
         });
       });
+    }
+    goTo(index) {
+      this.currentIndex = index;
+    }
+    goToName(name) {
+      console.error("Accordion.goToName not yet implemented");
+    }
+    goToNext() {
+      if (this.currentIndex == this.items.length - 1)
+        this.goToFirst();
+      else
+        this.goTo(this.currentIndex++);
+    }
+    goToPrev() {
+      if (this.currentIndex == 0)
+        this.goToLast();
+      else
+        this.goTo(this.currentIndex--);
+    }
+    goToFirst() {
+      this.goTo(0);
+    }
+    goToLast() {
+      this.goTo(this.items.length - 1);
     }
   };
   window["Sa5Accordion"] = Sa5Accordion;
