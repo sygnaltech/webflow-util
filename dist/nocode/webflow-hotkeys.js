@@ -792,7 +792,7 @@
   Sa5Core.startup(Sa5Hotkeys);
 
   // src/version.ts
-  var VERSION = "5.4.12";
+  var VERSION = "5.4.13";
 
   // src/nocode/webflow-hotkeys.ts
   var init = () => {

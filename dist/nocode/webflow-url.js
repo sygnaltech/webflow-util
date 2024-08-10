@@ -1,6 +1,6 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.4.12";
+  var VERSION = "5.4.13";
 
   // src/globals.ts
   var Sa5Attribute;

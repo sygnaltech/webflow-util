@@ -27,6 +27,8 @@ export enum Sa5AccordionMode {
 //     nextElementSibling: AccordionElement;
 // }
 
+// #region Sa5AccordionItem
+
 export class Sa5AccordionItem {
 
     name: string;
@@ -79,6 +81,20 @@ export class Sa5AccordionItem {
         if (triggerClose) 
             this.triggerClose = triggerClose;
 
+        // Mode setup
+        switch(this.controller.mode) {
+            case Sa5AccordionMode.Interactions: 
+
+                // this.elem.classList.remove(this.controller.classClosed);
+                // this.tab.classList.remove(this.controller.classClosed);
+                // this.content.classList.remove(this.controller.classClosed);   
+                // this.elem.classList.remove(this.controller.classOpen);
+                // this.tab.classList.remove(this.controller.classOpen);
+                // this.content.classList.remove(this.controller.classOpen);   
+                
+                break;
+        }
+
     }
 
     get isOpen(): boolean {
@@ -88,8 +104,8 @@ export class Sa5AccordionItem {
     open() {
 
         // Skip, if already open
-        if(this.isOpen)
-            return;
+        // if(this.isOpen)
+        //     return;
 
         switch(this.controller.mode) {
             case Sa5AccordionMode.Interactions: 
@@ -111,13 +127,14 @@ export class Sa5AccordionItem {
 
 
 
+
     }
 
     close() {
 
         // Skip, if already closed
-        if(!this.isOpen)
-            return;
+        // if(!this.isOpen)
+        //     return;
 
         switch(this.controller.mode) {
             case Sa5AccordionMode.Interactions: 
@@ -142,6 +159,8 @@ export class Sa5AccordionItem {
 
 }
 
+// #endregion
+
 export class Sa5Accordion implements IDeckNavigation { 
     
     name: string; 
@@ -158,8 +177,8 @@ export class Sa5Accordion implements IDeckNavigation {
         return this.currentIndex + 1; 
     }
 
-    mode: Sa5AccordionMode = Sa5AccordionMode.Default; // "ix"; // ix | default
-
+    mode: Sa5AccordionMode = Sa5AccordionMode.Default; 
+    
     classOpen: string = 'is-open';
     classClosed: string = 'is-closed';
 
@@ -171,15 +190,23 @@ export class Sa5Accordion implements IDeckNavigation {
         return this._element;
     }
 
+    get currentItem(): Sa5AccordionItem {
+        return this.items[this.currentIndex];  
+    }
     set currentItem(item: Sa5AccordionItem) {
 
         this.currentIndex = this.itemToIndex(item); 
 
+        console.log("setting current item index to", this.currentIndex)
+
         for (let i = 0; i < this.items.length; i++) {
-            if(i == this.currentIndex)
+            if(i == this.currentIndex) { 
+                console.log("opening item", i)
                 this.items[i].open();
-            else
+            } else { 
+                console.log("closing item", i)
                 this.items[i].close();
+            }
         }
 
     }
@@ -206,20 +233,27 @@ export class Sa5Accordion implements IDeckNavigation {
 
     itemToIndex(accordionItem: Sa5AccordionItem): number {
 
-        console.log("itemToIndex", accordionItem); 
+        console.log("itemToIndex elem", accordionItem); 
 
         let i = 0;
+        let itemIndex = -1;
         this.items.forEach((item: Sa5AccordionItem) => {
 
-            if (accordionItem === item) {
-                this.currentIndex = i;
-                console.log("itemToIndex", this.currentIndex)
-                return i;
+            console.log("comparing", accordionItem, item)
+
+            if (accordionItem == item) {
+                console.log("itemToIndex index", this.currentIndex); 
+                itemIndex = i;
+                return;
             }
             i++;
         });
 
-        return -1;
+        if (itemIndex < 0) {  
+            console.error("Accordion itemtoindex item not recognized.")
+        }
+
+        return itemIndex;
     }
 
     init() {
@@ -252,18 +286,8 @@ export class Sa5Accordion implements IDeckNavigation {
             this.items.push(accordionItem); // add to stack 
 
             accordionItem.tab?.addEventListener('click', () => {
-
-                accordionItem.open();
-                // this.itemToIndex(accordionItem);
-
-                // this.items.forEach((accordionItem: Sa5AccordionItem) => {
-
-                //     accordionItem.close(); 
-
-                //     if (accordionItem.elem === item) {
-                //         accordionItem.open();
-                //     }
-                // }); 
+console.log("click")
+                this.currentItem = accordionItem;
 
             }); 
 
@@ -304,6 +328,8 @@ export class Sa5Accordion implements IDeckNavigation {
     //#endregion
 
 }
+
+
 
 window["Sa5Accordion"] = Sa5Accordion;
 

@@ -1093,7 +1093,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.4.12";
+  var VERSION = "5.4.13";
 
   // src/webflow-elements/accordion.ts
   var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
@@ -1129,13 +1129,15 @@
       const triggerClose = this.elem.querySelector('[wfu-accordion-item-trigger="close"]');
       if (triggerClose)
         this.triggerClose = triggerClose;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          break;
+      }
     }
     get isOpen() {
       return this === this.controller.items[this.controller.currentIndex];
     }
     open() {
-      if (this.isOpen)
-        return;
       switch (this.controller.mode) {
         case "ix" /* Interactions */:
           this.triggerOpen.click();
@@ -1151,8 +1153,6 @@
       }
     }
     close() {
-      if (!this.isOpen)
-        return;
       switch (this.controller.mode) {
         case "ix" /* Interactions */:
           this.triggerClose.click();
@@ -1189,27 +1189,39 @@
     get element() {
       return this._element;
     }
+    get currentItem() {
+      return this.items[this.currentIndex];
+    }
     set currentItem(item) {
       this.currentIndex = this.itemToIndex(item);
+      console.log("setting current item index to", this.currentIndex);
       for (let i = 0; i < this.items.length; i++) {
-        if (i == this.currentIndex)
+        if (i == this.currentIndex) {
+          console.log("opening item", i);
           this.items[i].open();
-        else
+        } else {
+          console.log("closing item", i);
           this.items[i].close();
+        }
       }
     }
     itemToIndex(accordionItem) {
-      console.log("itemToIndex", accordionItem);
+      console.log("itemToIndex elem", accordionItem);
       let i = 0;
+      let itemIndex = -1;
       this.items.forEach((item) => {
-        if (accordionItem === item) {
-          this.currentIndex = i;
-          console.log("itemToIndex", this.currentIndex);
-          return i;
+        console.log("comparing", accordionItem, item);
+        if (accordionItem == item) {
+          console.log("itemToIndex index", this.currentIndex);
+          itemIndex = i;
+          return;
         }
         i++;
       });
-      return -1;
+      if (itemIndex < 0) {
+        console.error("Accordion itemtoindex item not recognized.");
+      }
+      return itemIndex;
     }
     init() {
       const nameAttr = this._element.getAttribute("wfu-accordion");
@@ -1229,7 +1241,8 @@
         const accordionItem = new Sa5AccordionItem(item, this);
         this.items.push(accordionItem);
         accordionItem.tab?.addEventListener("click", () => {
-          accordionItem.open();
+          console.log("click");
+          this.currentItem = accordionItem;
         });
       });
     }
