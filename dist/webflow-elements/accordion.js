@@ -166,6 +166,104 @@
     }
   };
 
+  // src/webflow-core/designer.ts
+  var Sa5Designer = class {
+    constructor() {
+    }
+    init() {
+      this.removeDesignTimeElements();
+    }
+    removeDesignTimeElements() {
+      const elements = document.querySelectorAll(
+        Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
+      );
+      elements.forEach((element) => {
+        element.remove();
+      });
+    }
+  };
+
+  // src/webflow-core.ts
+  var Sa5Core = class {
+    constructor() {
+      this.handlers = [];
+      new Sa5Designer().init();
+    }
+    getHandlers(name) {
+      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
+    }
+    getHandler(name) {
+      const item = this.handlers.find((item2) => item2[0] === name);
+      return item ? item[1] : void 0;
+    }
+    init() {
+      this.initDebugMode();
+      this.initAsync();
+    }
+    async initAsync() {
+      this.initScriptInjectionsAsync();
+    }
+    async initScriptInjectionsAsync() {
+      document.addEventListener("DOMContentLoaded", () => {
+        const loadSrcScripts = document.querySelectorAll(
+          `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
+        );
+        loadSrcScripts.forEach((script) => {
+          const loadSrcUrl = script.getAttribute("wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */);
+          if (loadSrcUrl) {
+            fetch(loadSrcUrl).then((response) => response.text()).then((jsContent) => {
+              const newScript = document.createElement("script");
+              newScript.textContent = jsContent;
+              script.replaceWith(newScript);
+            }).catch((error) => {
+              console.error("Error loading script:", error);
+            });
+          }
+        });
+      });
+    }
+    initDebugMode() {
+      const debugParamKey = "debug";
+      let params = new URLSearchParams(window.location.search);
+      let hasDebug = params.has(debugParamKey);
+      if (hasDebug) {
+        let wfuDebug = new Sa5Debug(`sa5 init`);
+        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
+      }
+    }
+    stringToBoolean(str) {
+      const truthyValues = ["1", "true", "yes"];
+      const falsyValues = ["0", "false", "no"];
+      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static startup(module = null) {
+      let sa5instance = window["sa5"];
+      var core;
+      if (sa5instance?.constructor?.name == "Sa5Core") {
+        core = sa5instance;
+      } else {
+        core = new Sa5Core();
+        core.init();
+        if (Array.isArray(sa5instance))
+          core.handlers = sa5instance;
+        window["sa5"] = core;
+        window["Sa5"] = window["sa5"];
+      }
+      if (module) {
+        window["sa5"][module.name] = module;
+      }
+      return core;
+    }
+    push(o) {
+      this.handlers.push(o);
+    }
+  };
+  Sa5Core.startup();
+
   // src/webflow-elements/accordion.ts
   var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
     Sa5AccordionMode2["Default"] = "default";
@@ -173,6 +271,9 @@
     return Sa5AccordionMode2;
   })(Sa5AccordionMode || {});
   var Sa5AccordionItem = class {
+    get index() {
+      return this.controller.itemToIndex(this);
+    }
     constructor(elem, controller) {
       this.elem = elem;
       this.controller = controller;
@@ -212,6 +313,7 @@
       switch (this.controller.mode) {
         case "ix" /* Interactions */:
           this.triggerOpen.click();
+          this.controller.onItemChanged(this.index);
           break;
         default:
           this.elem.classList.add(this.controller.classOpen);
@@ -220,6 +322,7 @@
           this.tab.classList.remove(this.controller.classClosed);
           this.content.classList.add(this.controller.classOpen);
           this.content.classList.remove(this.controller.classClosed);
+          this.controller.onItemChanged(this.index);
           break;
       }
     }
@@ -242,32 +345,23 @@
   var Sa5Accordion = class {
     constructor(element) {
       this.items = [];
-      this.currentIndex = 0;
+      this._currentIndex = 0;
       this.mode = "default" /* Default */;
       this.classOpen = "is-open";
       this.classClosed = "is-closed";
       this.debug = new Sa5Debug("sa5-webflow-accordion");
       this.debug.enabled = true;
-      this._element = element;
+      this.elem = element;
       this.init();
     }
-    get count() {
-      return this.items.length;
+    get currentIndex() {
+      return this._currentIndex;
     }
-    get currentNum() {
-      return this.currentIndex + 1;
-    }
-    get element() {
-      return this._element;
-    }
-    get currentItem() {
-      return this.items[this.currentIndex];
-    }
-    set currentItem(item) {
-      this.currentIndex = this.itemToIndex(item);
-      console.log("setting current item index to", this.currentIndex);
+    set currentIndex(index) {
+      console.log("setting current item index to", this.currentIndex, this.items.length);
+      this._currentIndex = index;
       for (let i = 0; i < this.items.length; i++) {
-        if (i == this.currentIndex) {
+        if (i == this._currentIndex) {
           console.log("opening item", i);
           this.items[i].open();
         } else {
@@ -276,14 +370,29 @@
         }
       }
     }
+    get count() {
+      return this.items.length;
+    }
+    get currentNum() {
+      return this.currentIndex + 1;
+    }
+    set currentNum(num) {
+      this.currentIndex = num - 1;
+    }
+    get element() {
+      return this.elem;
+    }
+    get currentItem() {
+      return this.items[this.currentIndex];
+    }
+    set currentItem(item) {
+      this.currentIndex = this.itemToIndex(item);
+    }
     itemToIndex(accordionItem) {
-      console.log("itemToIndex elem", accordionItem);
       let i = 0;
       let itemIndex = -1;
       this.items.forEach((item) => {
-        console.log("comparing", accordionItem, item);
         if (accordionItem == item) {
-          console.log("itemToIndex index", this.currentIndex);
           itemIndex = i;
           return;
         }
@@ -295,10 +404,11 @@
       return itemIndex;
     }
     init() {
-      const nameAttr = this._element.getAttribute("wfu-accordion");
+      const nameAttr = this.elem.getAttribute("wfu-accordion");
       if (nameAttr)
         this.name = nameAttr;
-      const modeAttr = this._element.getAttribute("wfu-accordion-mode");
+      console.log("creating accordion", this.name);
+      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
       const enumValues = Object.values(Sa5AccordionMode);
       if (modeAttr && enumValues.includes(modeAttr)) {
         this.mode = modeAttr;
@@ -341,7 +451,13 @@
     goToLast() {
       this.goTo(this.items.length - 1);
     }
+    onItemChanged(index) {
+      let core = Sa5Core.startup();
+      core.getHandlers("accordionChanged" /* EVENT_ACCORDION_CHANGED */).forEach((func) => {
+        func(this, index);
+      });
+    }
   };
-  window["Sa5Accordion"] = Sa5Accordion;
+  Sa5Core.startup(Sa5Accordion);
 })();
 //# sourceMappingURL=accordion.js.map

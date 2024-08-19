@@ -1093,7 +1093,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.4.13";
+  var VERSION = "5.4.14";
 
   // src/webflow-elements/accordion.ts
   var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
@@ -1102,6 +1102,9 @@
     return Sa5AccordionMode2;
   })(Sa5AccordionMode || {});
   var Sa5AccordionItem = class {
+    get index() {
+      return this.controller.itemToIndex(this);
+    }
     constructor(elem, controller) {
       this.elem = elem;
       this.controller = controller;
@@ -1141,6 +1144,7 @@
       switch (this.controller.mode) {
         case "ix" /* Interactions */:
           this.triggerOpen.click();
+          this.controller.onItemChanged(this.index);
           break;
         default:
           this.elem.classList.add(this.controller.classOpen);
@@ -1149,6 +1153,7 @@
           this.tab.classList.remove(this.controller.classClosed);
           this.content.classList.add(this.controller.classOpen);
           this.content.classList.remove(this.controller.classClosed);
+          this.controller.onItemChanged(this.index);
           break;
       }
     }
@@ -1171,32 +1176,23 @@
   var Sa5Accordion = class {
     constructor(element) {
       this.items = [];
-      this.currentIndex = 0;
+      this._currentIndex = 0;
       this.mode = "default" /* Default */;
       this.classOpen = "is-open";
       this.classClosed = "is-closed";
       this.debug = new Sa5Debug("sa5-webflow-accordion");
       this.debug.enabled = true;
-      this._element = element;
+      this.elem = element;
       this.init();
     }
-    get count() {
-      return this.items.length;
+    get currentIndex() {
+      return this._currentIndex;
     }
-    get currentNum() {
-      return this.currentIndex + 1;
-    }
-    get element() {
-      return this._element;
-    }
-    get currentItem() {
-      return this.items[this.currentIndex];
-    }
-    set currentItem(item) {
-      this.currentIndex = this.itemToIndex(item);
-      console.log("setting current item index to", this.currentIndex);
+    set currentIndex(index) {
+      console.log("setting current item index to", this.currentIndex, this.items.length);
+      this._currentIndex = index;
       for (let i = 0; i < this.items.length; i++) {
-        if (i == this.currentIndex) {
+        if (i == this._currentIndex) {
           console.log("opening item", i);
           this.items[i].open();
         } else {
@@ -1205,14 +1201,29 @@
         }
       }
     }
+    get count() {
+      return this.items.length;
+    }
+    get currentNum() {
+      return this.currentIndex + 1;
+    }
+    set currentNum(num) {
+      this.currentIndex = num - 1;
+    }
+    get element() {
+      return this.elem;
+    }
+    get currentItem() {
+      return this.items[this.currentIndex];
+    }
+    set currentItem(item) {
+      this.currentIndex = this.itemToIndex(item);
+    }
     itemToIndex(accordionItem) {
-      console.log("itemToIndex elem", accordionItem);
       let i = 0;
       let itemIndex = -1;
       this.items.forEach((item) => {
-        console.log("comparing", accordionItem, item);
         if (accordionItem == item) {
-          console.log("itemToIndex index", this.currentIndex);
           itemIndex = i;
           return;
         }
@@ -1224,10 +1235,11 @@
       return itemIndex;
     }
     init() {
-      const nameAttr = this._element.getAttribute("wfu-accordion");
+      const nameAttr = this.elem.getAttribute("wfu-accordion");
       if (nameAttr)
         this.name = nameAttr;
-      const modeAttr = this._element.getAttribute("wfu-accordion-mode");
+      console.log("creating accordion", this.name);
+      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
       const enumValues = Object.values(Sa5AccordionMode);
       if (modeAttr && enumValues.includes(modeAttr)) {
         this.mode = modeAttr;
@@ -1270,8 +1282,14 @@
     goToLast() {
       this.goTo(this.items.length - 1);
     }
+    onItemChanged(index) {
+      let core = Sa5Core.startup();
+      core.getHandlers("accordionChanged" /* EVENT_ACCORDION_CHANGED */).forEach((func) => {
+        func(this, index);
+      });
+    }
   };
-  window["Sa5Accordion"] = Sa5Accordion;
+  Sa5Core.startup(Sa5Accordion);
 
   // src/nocode/webflow-elements.ts
   var init = () => {

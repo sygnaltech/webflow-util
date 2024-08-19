@@ -18,6 +18,7 @@ export enum Sa5GlobalEvent {
     EVENT_SLIDE_NEXT_REQUEST = 'slideNextRequest', 
     EVENT_SLIDE_PREV_REQUEST = 'slidePrevRequest', 
     EVENT_TAB_CHANGED = 'tabChanged', 
+    EVENT_ACCORDION_CHANGED = 'accordionChanged', 
     EVENT_VIDEO_PLAYER_STATE_CHANGE = 'playerStateChange', 
     
 }

@@ -11,6 +11,7 @@
     Sa5GlobalEvent2["EVENT_SLIDE_NEXT_REQUEST"] = "slideNextRequest";
     Sa5GlobalEvent2["EVENT_SLIDE_PREV_REQUEST"] = "slidePrevRequest";
     Sa5GlobalEvent2["EVENT_TAB_CHANGED"] = "tabChanged";
+    Sa5GlobalEvent2["EVENT_ACCORDION_CHANGED"] = "accordionChanged";
     Sa5GlobalEvent2["EVENT_VIDEO_PLAYER_STATE_CHANGE"] = "playerStateChange";
     return Sa5GlobalEvent2;
   })(Sa5GlobalEvent || {});

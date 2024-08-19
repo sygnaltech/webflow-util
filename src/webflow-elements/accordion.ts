@@ -9,7 +9,8 @@
  * 
  */
 
-import { Sa5Attribute } from "../globals";
+import { Sa5Attribute, Sa5GlobalEvent } from "../globals";
+import { Sa5Core } from "../webflow-core";
 import { Sa5Debug } from "../webflow-core/debug";
 
 
@@ -40,6 +41,10 @@ export class Sa5AccordionItem {
     triggerClose: HTMLElement; 
 
     controller: Sa5Accordion;
+
+    get index(): number {
+        return this.controller.itemToIndex(this);
+    }
 
     constructor(elem: HTMLElement, controller: Sa5Accordion) {
         
@@ -112,6 +117,8 @@ export class Sa5AccordionItem {
 
                 this.triggerOpen.click();
 
+                this.controller.onItemChanged(this.index);
+
                 break;
             default:
 
@@ -121,6 +128,8 @@ export class Sa5AccordionItem {
                 this.tab.classList.remove(this.controller.classClosed);
                 this.content.classList.add(this.controller.classOpen);
                 this.content.classList.remove(this.controller.classClosed);   
+
+                this.controller.onItemChanged(this.index);
 
                 break;
         }
@@ -161,13 +170,36 @@ export class Sa5AccordionItem {
 
 // #endregion
 
+type ItemChangedCallback = (accordion: any, index: any) => void;
+
 export class Sa5Accordion implements IDeckNavigation { 
     
     name: string; 
-    _element: HTMLElement;
+    elem: HTMLElement;
     items: Array<Sa5AccordionItem> = [];
 
-    currentIndex: number = 0; // first
+    _currentIndex: number = 0; // first
+
+
+    get currentIndex(): number {
+        return this._currentIndex; 
+    }
+    set currentIndex(index: number) {
+        console.log("setting current item index to", this.currentIndex, this.items.length); 
+
+        this._currentIndex = index; 
+
+        for (let i = 0; i < this.items.length; i++) {
+            if(i == this._currentIndex) { 
+                console.log("opening item", i)
+                this.items[i].open();
+            } else { 
+                console.log("closing item", i)
+                this.items[i].close();
+            }
+        }
+
+    }
 
     get count(): number {
         return this.items.length;
@@ -175,6 +207,9 @@ export class Sa5Accordion implements IDeckNavigation {
 
     get currentNum(): number {
         return this.currentIndex + 1; 
+    }
+    set currentNum(num: number) {
+        this.currentIndex = num - 1; 
     }
 
     mode: Sa5AccordionMode = Sa5AccordionMode.Default; 
@@ -187,7 +222,7 @@ export class Sa5Accordion implements IDeckNavigation {
     //#region PROPERTYS
 
     get element(): HTMLElement {
-        return this._element;
+        return this.elem;
     }
 
     get currentItem(): Sa5AccordionItem {
@@ -197,17 +232,6 @@ export class Sa5Accordion implements IDeckNavigation {
 
         this.currentIndex = this.itemToIndex(item); 
 
-        console.log("setting current item index to", this.currentIndex)
-
-        for (let i = 0; i < this.items.length; i++) {
-            if(i == this.currentIndex) { 
-                console.log("opening item", i)
-                this.items[i].open();
-            } else { 
-                console.log("closing item", i)
-                this.items[i].close();
-            }
-        }
 
     }
 
@@ -220,7 +244,7 @@ export class Sa5Accordion implements IDeckNavigation {
         this.debug = new Sa5Debug("sa5-webflow-accordion");
         this.debug.enabled = true;
 
-        this._element = element; 
+        this.elem = element; 
 
         // Initialize
         this.init();
@@ -233,16 +257,16 @@ export class Sa5Accordion implements IDeckNavigation {
 
     itemToIndex(accordionItem: Sa5AccordionItem): number {
 
-        console.log("itemToIndex elem", accordionItem); 
+//        console.log("itemToIndex elem", accordionItem); 
 
         let i = 0;
         let itemIndex = -1;
         this.items.forEach((item: Sa5AccordionItem) => {
 
-            console.log("comparing", accordionItem, item)
+//            console.log("comparing", accordionItem, item)
 
             if (accordionItem == item) {
-                console.log("itemToIndex index", this.currentIndex); 
+  //              console.log("itemToIndex index", this.currentIndex); 
                 itemIndex = i;
                 return;
             }
@@ -259,11 +283,13 @@ export class Sa5Accordion implements IDeckNavigation {
     init() {
 
         // Set the name property, if defined
-        const nameAttr = this._element.getAttribute('wfu-accordion');
+        const nameAttr = this.elem.getAttribute('wfu-accordion');
         if (nameAttr) 
             this.name = nameAttr;
 
-        const modeAttr = this._element.getAttribute('wfu-accordion-mode');
+console.log("creating accordion", this.name); 
+
+        const modeAttr = this.elem.getAttribute('wfu-accordion-mode');
         
         // Convert the enum to an array of values
         const enumValues = Object.values(Sa5AccordionMode);
@@ -326,11 +352,30 @@ console.log("click")
     }
 
     //#endregion
+    onItemChanged(index: number) {
+        // Raise event
 
+        let core: Sa5Core = Sa5Core.startup();
+
+        // Get any global handlers
+        core.getHandlers(Sa5GlobalEvent.EVENT_ACCORDION_CHANGED)
+          .forEach(func => {
+
+//            console.log('onSlideChanged func', index)
+
+//            if (this.isSlideChangedCallback(func)) {
+//                console.log('onSlideChanged func OK', index)
+
+            func(this, index); 
+    
+ //            }
+          }); 
+
+    }
 }
 
 
-
-window["Sa5Accordion"] = Sa5Accordion;
+Sa5Core.startup(Sa5Accordion);
+//window["Sa5Accordion"] = Sa5Accordion;
 
 
