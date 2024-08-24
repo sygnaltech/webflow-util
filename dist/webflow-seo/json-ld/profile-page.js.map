@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/webflow-seo/json-ld/profile-page.ts"],
+  "sourcesContent": ["\nexport class LdJsonProfilePage {\n\n    name: string;\n    \n    constructor(name = undefined) { \n        \n        this[\"@type\"] = \"ProfilePage\"; \n        this.name = name; \n    }\n    \n    toJSON() {\n        return {\n        \n            \"@content\": \"https://schema.org\",\n            \"@type\": this[\"@type\"],\n            \n            name: this.name,\n            \n        } \n    }\n\n  }\n  "],
+  "mappings": ";;AACO,MAAM,oBAAN,MAAwB;AAAA,IAI3B,YAAY,OAAO,QAAW;AAE1B,WAAK,WAAW;AAChB,WAAK,OAAO;AAAA,IAChB;AAAA,IAEA,SAAS;AACL,aAAO;AAAA,QAEH,YAAY;AAAA,QACZ,SAAS,KAAK;AAAA,QAEd,MAAM,KAAK;AAAA,MAEf;AAAA,IACJ;AAAA,EAEF;",
+  "names": []
+}

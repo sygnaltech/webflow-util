@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/webflow-seo/json-ld/organization.ts"],
+  "sourcesContent": ["import { LdJsonImageObject } from \"./image-object\";\n\nexport class LdJsonOrganization {\n\n    name: string;\n    logo: LdJsonImageObject;\n    \n    constructor(name = undefined) { \n        \n        this[\"@type\"] = \"Organization\"; \n        this.name = name; \n    }\n  \n  }\n  "],
+  "mappings": ";;AAEO,MAAM,qBAAN,MAAyB;AAAA,IAK5B,YAAY,OAAO,QAAW;AAE1B,WAAK,WAAW;AAChB,WAAK,OAAO;AAAA,IAChB;AAAA,EAEF;",
+  "names": []
+}

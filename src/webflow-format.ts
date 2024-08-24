@@ -78,9 +78,11 @@ export class WebflowFormat {
         const txt = elem.innerText; //$item.text();
         const val: number = parseFloat(txt);
 
-        var fn = elem.getAttribute(
+        var fn: string | null = elem.getAttribute(
             Sa5Attribute.ATTR_FORMAT // "wfu-format"
             ); // e.g. "usd";
+
+//        if(fn) return "";
 
         // Determine the number of decimal places
         // this is set in the Designer, as the formatting of the numeric item
@@ -89,12 +91,12 @@ export class WebflowFormat {
             decimals = txt.split('.')[1].length;
 
         // Get the base formatting rules
-        var f = fs.get(fn);
+        var f: any = fs.get(fn as string);
 
     //    console.log(fn);
     //    console.log(JSON.stringify(f));
 
-        var settings = {};
+        var settings: any = {};
         settings["style"] = f.style;
         settings["currency"] = f.currency;
         settings["minimumFractionDigits"] = decimals;
@@ -110,7 +112,7 @@ export class WebflowFormat {
 
     }
 
-    formatDate(element: HTMLElement) {
+    async formatDate(element: HTMLElement) {
 
 
         // Get the format string from the 'wfu-format-date' attribute
@@ -122,7 +124,7 @@ export class WebflowFormat {
         // Require moment 
         const formatHandler = element.getAttribute(
             Sa5Attribute.ATTR_FORMAT_HANDLER // "wfu-format-handler"
-            );
+            ) || "dayjs";
         if (!formatHandler) {
           console.error("SA5 format date is used, but no handler is specified.");
         }
@@ -130,8 +132,8 @@ export class WebflowFormat {
 //        handler: WfuDateHandler;
         const handler = WfuDateHandlerFactory.createFromElement(element);
 
-        const date: Date = new Date(element.textContent); 
-        const result: string = handler.formatDate(date);
+        const date: Date = new Date(element.textContent as string); 
+        const result: string = await handler.formatDate(date);
 
         element.textContent = result; 
 
@@ -154,9 +156,14 @@ export class WebflowFormat {
         // }
         
         // Remove the 'wfu-format-date' attribute
+        // TODO: Refactor
         element.removeAttribute(
-            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
+//            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
+            Sa5Attribute.ATTR_PRELOAD // "wfu-format-date"
             );
+
+
+
 
 // Luxon & ordinals
 

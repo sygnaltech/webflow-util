@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/webflow-seo/json-ld/image-object.ts"],
+  "sourcesContent": ["\nexport class LdJsonImageObject {\n\n    url;\n  \n    constructor(url = undefined) { \n        \n        this[\"@type\"] = \"ImageObject\";\n        this.url = url; \n    }\n  \n  }\n  \n  "],
+  "mappings": ";;AACO,MAAM,oBAAN,MAAwB;AAAA,IAI3B,YAAY,MAAM,QAAW;AAEzB,WAAK,WAAW;AAChB,WAAK,MAAM;AAAA,IACf;AAAA,EAEF;",
+  "names": []
+}

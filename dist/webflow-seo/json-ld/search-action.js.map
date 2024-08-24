@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/webflow-seo/json-ld/entry-point.ts", "../../../src/webflow-seo/json-ld/search-action.ts"],
+  "sourcesContent": ["\n\nexport class LdJsonEntryPoint {\n\n    urlTemplate;\n  \n    constructor(urlTemplate = undefined) { \n        this[\"@type\"] = \"EntryPoint\"; \n        this.urlTemplate = urlTemplate; \n    }\n  \n}\n\n", "\n\nimport { LdJsonEntryPoint } from \"./entry-point\";\n\nexport class LdJsonSearchAction {\n\n    queryInput;\n    target;\n  \n    constructor(queryInput = undefined) { \n        \n        this[\"@context\"] = \"https://schema.org\"; \n        this[\"@type\"] = \"SearchAction\"; \n        this.queryInput = queryInput; \n        this.target = new LdJsonEntryPoint(); \n    }\n  \n  }\n\n"],
+  "mappings": ";;AAEO,MAAM,mBAAN,MAAuB;AAAA,IAI1B,YAAY,cAAc,QAAW;AACjC,WAAK,WAAW;AAChB,WAAK,cAAc;AAAA,IACvB;AAAA,EAEJ;;;ACPO,MAAM,qBAAN,MAAyB;AAAA,IAK5B,YAAY,aAAa,QAAW;AAEhC,WAAK,cAAc;AACnB,WAAK,WAAW;AAChB,WAAK,aAAa;AAClB,WAAK,SAAS,IAAI,iBAAiB;AAAA,IACvC;AAAA,EAEF;",
+  "names": []
+}

@@ -17,8 +17,4 @@
 [wfu-csv] .w-dyn-item:not(:last-child) div::after,
 [wfu-csv] .w-dyn-item:not(:last-child) p::after {
   content: ", ";
-}
-
-[wfu-format-date] {
-  visibility: hidden;
 }/*# sourceMappingURL=webflow-format.css.map */

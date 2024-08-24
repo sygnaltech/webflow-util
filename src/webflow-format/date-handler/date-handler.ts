@@ -41,6 +41,7 @@ export class WfuDateHandler {
     formatString: string;
     mode: string = "date";
     suffix: boolean = true;
+    locale: string | undefined; // Undefined = no localization 
 
     constructor(config = {}) {
 
@@ -150,7 +151,7 @@ export class WfuDateHandler {
 
     }
 
-    formatDate(date: Date): string {
+    async formatDate(date: Date): Promise<string> {
 
         return null;
     }

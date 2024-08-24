@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/webflow-seo/json-ld/entry-point.ts"],
+  "sourcesContent": ["\n\nexport class LdJsonEntryPoint {\n\n    urlTemplate;\n  \n    constructor(urlTemplate = undefined) { \n        this[\"@type\"] = \"EntryPoint\"; \n        this.urlTemplate = urlTemplate; \n    }\n  \n}\n\n"],
+  "mappings": ";;AAEO,MAAM,mBAAN,MAAuB;AAAA,IAI1B,YAAY,cAAc,QAAW;AACjC,WAAK,WAAW;AAChB,WAAK,cAAc;AAAA,IACvB;AAAA,EAEJ;",
+  "names": []
+}

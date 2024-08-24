@@ -84,6 +84,7 @@
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
     Sa5Attribute2["ATTR_FORMAT_MODE"] = "wfu-format-mode";
+    Sa5Attribute2["ATTR_FORMAT_LOCALE"] = "wfu-format-locale";
     Sa5Attribute2["ATTR_FORMAT_SUFFIX"] = "wfu-format-suffix";
     Sa5Attribute2["ATTR_COUNTUP"] = "wfu-countup";
     Sa5Attribute2["ATTR_COUNTUP_TRIGGER"] = "wfu-countup-trigger";

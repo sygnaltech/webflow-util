@@ -151,6 +151,7 @@ export enum Sa5Attribute {
     ATTR_FORMAT_DATE = 'wfu-format-date',
     ATTR_FORMAT_HANDLER = 'wfu-format-handler', 
     ATTR_FORMAT_MODE = 'wfu-format-mode',
+    ATTR_FORMAT_LOCALE = 'wfu-format-locale', 
     ATTR_FORMAT_SUFFIX = 'wfu-format-suffix',
 
     // Countup
