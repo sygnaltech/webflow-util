@@ -358,6 +358,23 @@ export class WebflowTabs implements IDeckNavigation {
         // Determine new tab
         var newTabIndex: number = this.currentIndex + 1;
         if (newTabIndex >= this.count)
+            return; // do nothing 
+
+        this.goTo(newTabIndex);
+
+    }
+
+    goToNextLoop() {
+
+        // If no tab selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
+            return;
+        }
+
+        // Determine new tab
+        var newTabIndex: number = this.currentIndex + 1;
+        if (newTabIndex >= this.count)
             newTabIndex = 0;
 
         this.goTo(newTabIndex);
@@ -365,6 +382,23 @@ export class WebflowTabs implements IDeckNavigation {
     }
 
     goToPrev() {
+
+        // If no tab selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
+            return;
+        }
+
+        // Determine new tab
+        var newTabIndex: number = this.currentIndex - 1;
+        if (newTabIndex < 0)
+            return; // do nothing
+        
+        this.goTo(newTabIndex);
+
+    }
+
+    goToPrevLoop() {
 
         // If no tab selected, select first
         if(this.currentIndex == null) {

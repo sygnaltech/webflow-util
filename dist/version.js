@@ -1,5 +1,5 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.4.14";
+  var VERSION = "5.4.15";
 })();
 //# sourceMappingURL=version.js.map

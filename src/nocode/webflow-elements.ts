@@ -23,6 +23,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { VERSION } from '../version';
 import { Sa5Accordion } from '../webflow-elements/accordion';
+import { Sa5ActionController } from '../webflow-elements/action';
 
 
 const init = () => { 
@@ -83,13 +84,23 @@ const init = () => {
      * Deck Controllers
      */
 
+    // DEPRECATED
     let deckControllerElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_DECK_ACTION}]`);
     deckControllerElements.forEach(element => {
 
-        var deckControllerObj = new Sa5DeckController(element as HTMLElement);
-        deckControllerObj.init();
+        var deckController = new Sa5DeckController(element as HTMLElement);
+        deckController.init();
 
     });    
+    let actionTriggerElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_ACTION}]`);
+    actionTriggerElements.forEach(element => {
+
+        var actionController = new Sa5ActionController(element as HTMLElement);
+        actionController.init();
+
+    });    
+
+
 
     /**
      * Buttons

@@ -5,7 +5,9 @@ interface IDeckNavigation {
     goToFirst(): void;
     goToLast(): void;
     goToNext(): void;
+    goToNextLoop(): void;
     goToPrev(): void;
+    goToPrevLoop(): void;
     goTo(index: number): void;
     goToName(name: string): void;
 

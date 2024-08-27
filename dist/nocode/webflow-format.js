@@ -6184,6 +6184,7 @@
     Sa5Attribute2["ATTR_VIDEO_YOUTUBE_NOREL"] = "wfu-youtube-norel";
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
+    Sa5Attribute2["ATTR_ELEMENT"] = "wfu-element";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
     Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
@@ -6194,6 +6195,10 @@
     Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION"] = "wfu-action";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TARGET"] = "wfu-action-target";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_ITEM"] = "wfu-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TRIGGER"] = "wfu-action-trigger";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN"] = "wfu-dropdown";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
@@ -6790,7 +6795,7 @@
   Sa5Core.startup(WebflowFormat);
 
   // src/version.ts
-  var VERSION = "5.4.14";
+  var VERSION = "5.4.15";
 
   // src/nocode/webflow-format.ts
   var init = () => {

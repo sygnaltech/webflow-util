@@ -352,6 +352,23 @@ export class WebflowSlider implements IDeckNavigation {
         // Determine new slide
         var newSlideIndex: number = this.currentIndex + 1;
         if (newSlideIndex >= this.count)
+            return; // do nothing 
+
+        this.goTo(newSlideIndex);
+
+    }
+
+    goToNextLoop() {
+
+        // If no slide selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
+            return;
+        }
+
+        // Determine new slide
+        var newSlideIndex: number = this.currentIndex + 1;
+        if (newSlideIndex >= this.count)
             newSlideIndex = 0;
 
         this.goTo(newSlideIndex);
@@ -359,6 +376,23 @@ export class WebflowSlider implements IDeckNavigation {
     }
 
     goToPrev() {
+
+        // If no slide selected, select first
+        if(this.currentIndex == null) {
+            this.currentIndex = 0;
+            return;
+        }
+
+        // Determine new slide
+        var newSlideIndex: number = this.currentIndex - 1;
+        if (newSlideIndex < 0)
+            return; // do nothing 
+        
+        this.goTo(newSlideIndex);
+
+    }
+
+    goToPrevLoop() {
 
         // If no slide selected, select first
         if(this.currentIndex == null) {

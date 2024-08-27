@@ -50,6 +50,7 @@ export enum Sa5Attribute {
     ATTR_DESIGN = 'wfu-design',
 
     // Elements 
+    ATTR_ELEMENT = 'wfu-element',
     ATTR_ELEMENT_SLIDER = 'wfu-slider',
         ATTR_ELEMENT_SLIDE_NAME = 'wfu-slide-name',
     ATTR_ELEMENT_TABS = 'wfu-tabs',
@@ -60,6 +61,10 @@ export enum Sa5Attribute {
     ATTR_ELEMENT_DECK_TARGET = 'wfu-deck-target',
         ATTR_ELEMENT_DECK_ACTION = 'wfu-deck-action',
         ATTR_ELEMENT_DECK_ITEM = 'wfu-deck-action-item',
+    ATTR_ELEMENT_ACTION = 'wfu-action', 
+        ATTR_ELEMENT_ACTION_TARGET = 'wfu-action-target', 
+        ATTR_ELEMENT_ACTION_ITEM = 'wfu-action-item', 
+        ATTR_ELEMENT_ACTION_TRIGGER = 'wfu-action-trigger',  
     ATTR_ELEMENT_DROPDOWN = 'wfu-dropdown',
         ATTR_ELEMENT_DROPDOWN_NAME = 'wfu-dropdown-name',
         ATTR_ELEMENT_DROPDOWN_INIT = 'wfu-dropdown-init',

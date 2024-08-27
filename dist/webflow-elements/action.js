@@ -270,6 +270,210 @@
   };
   Sa5Core.startup();
 
+  // src/webflow-elements/accordion.ts
+  var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {
+    Sa5AccordionMode2["Default"] = "default";
+    Sa5AccordionMode2["Interactions"] = "ix";
+    return Sa5AccordionMode2;
+  })(Sa5AccordionMode || {});
+  var Sa5AccordionItem = class {
+    get index() {
+      return this.controller.itemToIndex(this);
+    }
+    constructor(elem, controller) {
+      this.elem = elem;
+      this.controller = controller;
+      this.init();
+    }
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion-item");
+      if (nameAttr)
+        this.name = nameAttr;
+      const tabElement = this.elem.querySelector("[wfu-accordion-item-tab]");
+      if (tabElement) {
+        this.tab = tabElement;
+      } else {
+        console.error("Tab element not found");
+      }
+      const contentElement = this.elem.querySelector("[wfu-accordion-item-content]");
+      if (contentElement) {
+        this.content = contentElement;
+      } else {
+        console.error("Content element not found");
+      }
+      const triggerOpen = this.elem.querySelector('[wfu-accordion-item-trigger="open"]');
+      if (triggerOpen)
+        this.triggerOpen = triggerOpen;
+      const triggerClose = this.elem.querySelector('[wfu-accordion-item-trigger="close"]');
+      if (triggerClose)
+        this.triggerClose = triggerClose;
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          break;
+      }
+    }
+    get isOpen() {
+      return this === this.controller.items[this.controller.currentIndex];
+    }
+    open() {
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerOpen.click();
+          this.controller.onItemChanged(this.index);
+          break;
+        default:
+          this.elem.classList.add(this.controller.classOpen);
+          this.elem.classList.remove(this.controller.classClosed);
+          this.tab.classList.add(this.controller.classOpen);
+          this.tab.classList.remove(this.controller.classClosed);
+          this.content.classList.add(this.controller.classOpen);
+          this.content.classList.remove(this.controller.classClosed);
+          this.controller.onItemChanged(this.index);
+          break;
+      }
+    }
+    close() {
+      switch (this.controller.mode) {
+        case "ix" /* Interactions */:
+          this.triggerClose.click();
+          break;
+        default:
+          this.elem.classList.add(this.controller.classClosed);
+          this.elem.classList.remove(this.controller.classOpen);
+          this.tab.classList.add(this.controller.classClosed);
+          this.tab.classList.remove(this.controller.classOpen);
+          this.content.classList.add(this.controller.classClosed);
+          this.content.classList.remove(this.controller.classOpen);
+          break;
+      }
+    }
+  };
+  var Sa5Accordion = class {
+    constructor(element) {
+      this.items = [];
+      this._currentIndex = 0;
+      this.mode = "default" /* Default */;
+      this.classOpen = "is-open";
+      this.classClosed = "is-closed";
+      this.debug = new Sa5Debug("sa5-webflow-accordion");
+      this.debug.enabled = true;
+      this.elem = element;
+      this.init();
+    }
+    get currentIndex() {
+      return this._currentIndex;
+    }
+    set currentIndex(index) {
+      console.log("setting current item index to", this.currentIndex, this.items.length);
+      this._currentIndex = index;
+      for (let i = 0; i < this.items.length; i++) {
+        if (i == this._currentIndex) {
+          console.log("opening item", i);
+          this.items[i].open();
+        } else {
+          console.log("closing item", i);
+          this.items[i].close();
+        }
+      }
+    }
+    get count() {
+      return this.items.length;
+    }
+    get currentNum() {
+      return this.currentIndex + 1;
+    }
+    set currentNum(num) {
+      this.currentIndex = num - 1;
+    }
+    get element() {
+      return this.elem;
+    }
+    get currentItem() {
+      return this.items[this.currentIndex];
+    }
+    set currentItem(item) {
+      this.currentIndex = this.itemToIndex(item);
+    }
+    itemToIndex(accordionItem) {
+      let i = 0;
+      let itemIndex = -1;
+      this.items.forEach((item) => {
+        if (accordionItem == item) {
+          itemIndex = i;
+          return;
+        }
+        i++;
+      });
+      if (itemIndex < 0) {
+        console.error("Accordion itemtoindex item not recognized.");
+      }
+      return itemIndex;
+    }
+    init() {
+      const nameAttr = this.elem.getAttribute("wfu-accordion");
+      if (nameAttr)
+        this.name = nameAttr;
+      console.log("creating accordion", this.name);
+      const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
+      const enumValues = Object.values(Sa5AccordionMode);
+      if (modeAttr && enumValues.includes(modeAttr)) {
+        this.mode = modeAttr;
+      } else {
+        this.mode = "default" /* Default */;
+      }
+      const accordionItemElems = document.querySelectorAll(
+        `[${"wfu-accordion-item" /* ATTR_ELEMENT_ACCORDION_ITEM */}]`
+      );
+      accordionItemElems.forEach((item) => {
+        const accordionItem = new Sa5AccordionItem(item, this);
+        this.items.push(accordionItem);
+        accordionItem.tab?.addEventListener("click", () => {
+          console.log("click");
+          this.currentItem = accordionItem;
+        });
+      });
+    }
+    goTo(index) {
+      this.currentIndex = index;
+    }
+    goToName(name) {
+      console.error("Accordion.goToName not yet implemented");
+    }
+    goToNext() {
+      if (this.currentIndex < this.items.length - 1)
+        this.goTo(this.currentIndex++);
+    }
+    goToNextLoop() {
+      if (this.currentIndex == this.items.length - 1)
+        this.goToFirst();
+      else
+        this.goTo(this.currentIndex++);
+    }
+    goToPrev() {
+      if (this.currentIndex > 0)
+        this.goTo(this.currentIndex--);
+    }
+    goToPrevLoop() {
+      if (this.currentIndex == 0)
+        this.goToLast();
+      else
+        this.goTo(this.currentIndex--);
+    }
+    goToFirst() {
+      this.goTo(0);
+    }
+    goToLast() {
+      this.goTo(this.items.length - 1);
+    }
+    onItemChanged(index) {
+      let core = Sa5Core.startup();
+      core.getHandlers("accordionChanged" /* EVENT_ACCORDION_CHANGED */).forEach((func) => {
+        func(this, index);
+      });
+    }
+  };
+  Sa5Core.startup(Sa5Accordion);
+
   // src/webflow-elements/slider.ts
   var WebflowSlider = class {
     constructor(element) {
@@ -698,55 +902,69 @@
   };
   Sa5Core.startup(WebflowTabs);
 
-  // src/webflow-elements/deck-controller.ts
+  // src/webflow-elements/action.ts
   var Action = /* @__PURE__ */ ((Action2) => {
     Action2["First"] = "first";
-    Action2["Prev"] = "prev";
-    Action2["Next"] = "next";
     Action2["Last"] = "last";
+    Action2["Prev"] = "prev";
+    Action2["PrevLoop"] = "prevloop";
+    Action2["Next"] = "next";
+    Action2["NextLoop"] = "nextloop";
     Action2["GoTo"] = "goto";
+    Action2["Hide"] = "hide";
+    Action2["Show"] = "show";
+    Action2["Toggle"] = "toggle";
+    Action2["Open"] = "open";
+    Action2["Close"] = "close";
     return Action2;
   })(Action || {});
-  var Sa5DeckController = class {
+  var Sa5ActionController = class {
     constructor(element) {
       this.element = element;
-      const actionValue = this.element.getAttribute("wfu-deck-action" /* ATTR_ELEMENT_DECK_ACTION */);
+      const actionValue = this.element.getAttribute("wfu-action" /* ATTR_ELEMENT_ACTION */);
       if (actionValue) {
-        this.action = Sa5DeckController.getActionEnum(actionValue);
+        this.action = Sa5ActionController.getActionEnum(actionValue);
         if (!this.action) {
-          console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+          console.error(`Invalid wfu-action value: ${actionValue}`);
         }
       }
-      const targetName = element.getAttribute("wfu-deck-target" /* ATTR_ELEMENT_DECK_TARGET */);
+      const targetName = element.getAttribute("wfu-action-target" /* ATTR_ELEMENT_ACTION_TARGET */);
       if (targetName) {
-        this.deckName = targetName;
-        const tabsElements = document.querySelectorAll(`[wfu-tabs="${targetName}"]`);
-        const sliderElements = document.querySelectorAll(`[wfu-slider="${targetName}"]`);
-        if (tabsElements.length + sliderElements.length > 1) {
+        this.targetName = targetName;
+        const selectorArray = [
+          `[${"wfu-element" /* ATTR_ELEMENT */}="${targetName}"]`,
+          `[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}="${targetName}"]`,
+          `[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}="${targetName}"]`,
+          `[${"wfu-accordion" /* ATTR_ELEMENT_ACCORDION */}="${targetName}"]`
+        ];
+        const targetElements = document.querySelectorAll(selectorArray.join(", "));
+        if (targetElements.length > 1) {
           console.error(`Multiple elements or conflicting elements found with the target name: ${targetName}`);
         }
-        if (tabsElements.length + sliderElements.length == 0) {
+        if (targetElements.length == 0) {
           console.error(`No elements found with the target name: ${targetName}`);
+          return;
         }
-        if (tabsElements.length === 1) {
-          this.tabsElement = tabsElements[0];
-          this.deck = new WebflowTabs(this.tabsElement);
-        } else if (sliderElements.length === 1) {
-          this.sliderElement = sliderElements[0];
-          this.deck = new WebflowSlider(this.sliderElement);
-        }
+        this.targetElement = targetElements[0];
       } else {
-        const tabsParent = this.element.closest(`[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`);
-        const sliderParent = this.element.closest(`[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}]`);
-        if (tabsParent) {
-          this.tabsElement = tabsParent;
-          this.deck = new WebflowTabs(this.tabsElement);
-        } else if (sliderParent) {
-          this.sliderElement = sliderParent;
-          this.deck = new WebflowSlider(this.sliderElement);
-        } else {
-          console.error(`No valid target element found for the wfu-deck-action element`);
-        }
+        const selectorArray = [
+          `[${"wfu-element" /* ATTR_ELEMENT */}]`,
+          `[${"wfu-tabs" /* ATTR_ELEMENT_TABS */}]`,
+          `[${"wfu-slider" /* ATTR_ELEMENT_SLIDER */}]`,
+          `[${"wfu-accordion" /* ATTR_ELEMENT_ACCORDION */}]`
+        ];
+        this.targetElement = this.element.closest(selectorArray.join(", "));
+      }
+      if (!this.targetElement) {
+        console.error("Unable to locate a target element for the action");
+        return;
+      }
+      if (this.targetElement.hasAttribute("wfu-tabs")) {
+        this.deck = new WebflowTabs(this.targetElement);
+      } else if (this.targetElement.hasAttribute("wfu-slider")) {
+        this.deck = new WebflowSlider(this.targetElement);
+      } else if (this.targetElement.hasAttribute("wfu-accordion")) {
+        this.deck = new Sa5Accordion(this.targetElement);
       }
       this.item = this.element.getAttribute("wfu-deck-action-item" /* ATTR_ELEMENT_DECK_ITEM */);
     }
@@ -755,18 +973,52 @@
         event.preventDefault();
         switch (this.action) {
           case "first" /* First */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
             this.deck.goToFirst();
             break;
           case "prev" /* Prev */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
             this.deck.goToPrev();
             break;
+          case "prevloop" /* PrevLoop */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
+            this.deck.goToPrevLoop();
+            break;
           case "next" /* Next */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
             this.deck.goToNext();
             break;
+          case "nextloop" /* NextLoop */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
+            this.deck.goToNextLoop();
+            break;
           case "last" /* Last */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
             this.deck.goToLast();
             break;
           case "goto" /* GoTo */:
+            if (!this.deck) {
+              console.error(`Invalid action '${this.action}' attempted on a non-deck element.`);
+              return;
+            }
             if (typeof this.item === "string" && !isNaN(Number(this.item))) {
               this.deck.goTo(Number(this.item) - 1);
             } else if (typeof this.item === "number") {
@@ -776,7 +1028,7 @@
             }
             break;
           default:
-            console.error(`Invalid wfu-deck-action value: ${this.action}`);
+            console.error(`Invalid wfu-action value: ${this.action}`);
             break;
         }
       });
@@ -786,11 +1038,11 @@
       if (Object.keys(Action).some((key) => Action[key] === lowerCaseValue)) {
         return lowerCaseValue;
       } else {
-        console.error(`Invalid wfu-deck-action value: ${actionValue}`);
+        console.error(`Invalid wfu-action value: ${actionValue}`);
         return null;
       }
     }
   };
-  Sa5Core.startup(Sa5DeckController);
+  Sa5Core.startup(Sa5ActionController);
 })();
-//# sourceMappingURL=deck-controller.js.map
+//# sourceMappingURL=action.js.map

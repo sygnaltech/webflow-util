@@ -330,6 +330,11 @@ console.log("click")
     }
 
     goToNext(): void {
+        if(this.currentIndex < this.items.length - 1)
+            this.goTo(this.currentIndex++); 
+    }
+
+    goToNextLoop(): void {
         if(this.currentIndex == this.items.length - 1)
             this.goToFirst();
         else
@@ -337,6 +342,11 @@ console.log("click")
     }
 
     goToPrev(): void {
+        if(this.currentIndex > 0) 
+            this.goTo(this.currentIndex--);
+    }
+
+    goToPrevLoop(): void {
         if(this.currentIndex == 0) 
             this.goToLast();
         else

@@ -13,6 +13,7 @@
     Sa5Attribute2["ATTR_VIDEO_YOUTUBE_NOREL"] = "wfu-youtube-norel";
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
+    Sa5Attribute2["ATTR_ELEMENT"] = "wfu-element";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
     Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
@@ -23,6 +24,10 @@
     Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION"] = "wfu-action";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TARGET"] = "wfu-action-target";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_ITEM"] = "wfu-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TRIGGER"] = "wfu-action-trigger";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN"] = "wfu-dropdown";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
@@ -435,12 +440,20 @@
       console.error("Accordion.goToName not yet implemented");
     }
     goToNext() {
+      if (this.currentIndex < this.items.length - 1)
+        this.goTo(this.currentIndex++);
+    }
+    goToNextLoop() {
       if (this.currentIndex == this.items.length - 1)
         this.goToFirst();
       else
         this.goTo(this.currentIndex++);
     }
     goToPrev() {
+      if (this.currentIndex > 0)
+        this.goTo(this.currentIndex--);
+    }
+    goToPrevLoop() {
       if (this.currentIndex == 0)
         this.goToLast();
       else
