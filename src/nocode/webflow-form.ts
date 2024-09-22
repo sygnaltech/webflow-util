@@ -22,17 +22,28 @@ import { Sa5FormIPInfo } from '../webflow-form/ip-info';
 
 const init = () => { 
 
-//    new Sa5Core().init();
-let core: Sa5Core = Sa5Core.startup();
+    //    new Sa5Core().init();
+    let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-form");
     debug.debug (`Initializing v${VERSION}`);
 
-
     // const sa5Hotkeys = new Sa5Hotkeys();
     // sa5Hotkeys.init();
 
+    // Find and process all forms  
+    // This part will handle features like pre-submit prep 
+
+    document.querySelectorAll("[wfu-form]").forEach((element: HTMLElement) => {
+
+        let form: Sa5Form = new Sa5Form(element); 
+        form.init();
+
+    });
+
+
+    // TODO: Move into Form class 
 
     // Prepare any tagged forms by appending IP Info
     document.querySelectorAll(
@@ -46,19 +57,17 @@ let core: Sa5Core = Sa5Core.startup();
 
     });
 
-debug.debug("Checking for forms", Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER));
-
-
+    debug.debug("Checking for forms", Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER));
 
     // Catch any submits on forms
     const formsHandled = document.querySelectorAll(
 //        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // 
         `div[wfu-form-handler]`
-        );
+    );
 
-        console.log(formsHandled);
+    console.log(formsHandled);
 
-        formsHandled.forEach((element: HTMLElement) => {
+    formsHandled.forEach((element: HTMLElement) => {
 
         debug.debug("Form detected, installing form handler.");
 
@@ -76,20 +85,18 @@ debug.debug("Checking for forms", Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FO
 
     });
 
-
     // Catch any submits on forms
     const formSelects = document.querySelectorAll(
         //        Sa5Attribute.getBracketed(Sa5Attribute.ATTR_FORM_HANDLER) // 
         `select[${Sa5Attribute.ATTR_FORM_SELECT}]`
 //        `select[wfu-form-select]`
-        );
+    );
         
     console.log(formSelects);
 
     formSelects.forEach((element: HTMLSelectElement) => {
         
 //        console.log("installing form handler 1."); 
-        
 //        debug.debug("Form detected, installing form handler.");
 
         const select: Sa5FormSelect = new Sa5FormSelect(element); 

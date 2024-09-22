@@ -270,6 +270,33 @@
   };
   Sa5Core.startup();
 
+  // src/webflow-form/checkbox.ts
+  var Sa5FormCheckbox = class {
+    constructor(elem, config = {}) {
+      this.checkbox = elem;
+      this.config = config;
+    }
+    init() {
+    }
+    process() {
+      if (!this.checkbox.checked && this.isCandidateForRemoval()) {
+        this.checkbox.parentNode?.removeChild(
+          this.checkbox
+        );
+      }
+    }
+    isCandidateForRemoval() {
+      let element = this.checkbox;
+      while (element) {
+        if (element.hasAttribute("wfu-form-checkbox") && element.getAttribute("wfu-form-checkbox") === "remove-unchecked") {
+          return true;
+        }
+        element = element.parentElement;
+      }
+      return false;
+    }
+  };
+
   // src/webflow-form.ts
   var Sa5Form = class {
     get redirect() {
@@ -286,6 +313,24 @@
       this.isValid = true;
     }
     init() {
+      console.log("init form");
+      this.formElement.addEventListener("submit", (event) => {
+        console.log("form submitted");
+        if (!this.formElement.checkValidity()) {
+          event.preventDefault();
+          this.formElement.reportValidity();
+          return;
+        }
+        console.log("form is valid");
+        this.preSubmit();
+      });
+    }
+    preSubmit() {
+      const checkboxes = this.formElement.querySelectorAll("input[type='checkbox']");
+      checkboxes.forEach((elem) => {
+        let checkbox = new Sa5FormCheckbox(elem);
+        checkbox.process();
+      });
     }
     submitButtonWaitMessage() {
       const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');

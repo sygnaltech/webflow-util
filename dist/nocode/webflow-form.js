@@ -123,7 +123,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.15";
+  var VERSION = "5.4.16";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -273,54 +273,32 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-form/form-select.ts
-  var Sa5FormSelectMode = /* @__PURE__ */ ((Sa5FormSelectMode2) => {
-    Sa5FormSelectMode2["Default"] = "default";
-    Sa5FormSelectMode2["Toggle"] = "toggle";
-    return Sa5FormSelectMode2;
-  })(Sa5FormSelectMode || {});
-  var Sa5FormSelect = class {
-    constructor(element) {
-      this._mode = "default" /* Default */;
-      this.valid = false;
-      this._element = element;
-    }
-    get element() {
-      return this._element;
+  // src/webflow-form/checkbox.ts
+  var Sa5FormCheckbox = class {
+    constructor(elem, config = {}) {
+      this.checkbox = elem;
+      this.config = config;
     }
     init() {
-      if (!this._element.classList.contains("w-select")) {
-        console.error("sa5-core", "atteibute is not on a select element");
-        this.valid = false;
-        return;
-      }
-      const modeAttribute = this._element.getAttribute("wfu-form-select-mode" /* ATTR_FORM_SELECT_MODE */)?.toLowerCase();
-      if (!modeAttribute) {
-        this._mode = "default" /* Default */;
-      } else if (Object.values(Sa5FormSelectMode).includes(modeAttribute)) {
-        this._mode = modeAttribute;
-      } else {
-        this.valid = false;
-        throw new Error("Invalid select mode");
-      }
-      this.valid = true;
-      switch (this._mode) {
-        case "toggle" /* Toggle */:
-          this._element.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            const option = event.target;
-            if (option.tagName === "OPTION") {
-              option.selected = !option.selected;
-            }
-          });
-          break;
-        case "default" /* Default */:
-        default:
-          break;
+    }
+    process() {
+      if (!this.checkbox.checked && this.isCandidateForRemoval()) {
+        this.checkbox.parentNode?.removeChild(
+          this.checkbox
+        );
       }
     }
+    isCandidateForRemoval() {
+      let element = this.checkbox;
+      while (element) {
+        if (element.hasAttribute("wfu-form-checkbox") && element.getAttribute("wfu-form-checkbox") === "remove-unchecked") {
+          return true;
+        }
+        element = element.parentElement;
+      }
+      return false;
+    }
   };
-  Sa5Core.startup(Sa5FormSelect);
 
   // src/webflow-form.ts
   var Sa5Form = class {
@@ -338,6 +316,24 @@
       this.isValid = true;
     }
     init() {
+      console.log("init form");
+      this.formElement.addEventListener("submit", (event) => {
+        console.log("form submitted");
+        if (!this.formElement.checkValidity()) {
+          event.preventDefault();
+          this.formElement.reportValidity();
+          return;
+        }
+        console.log("form is valid");
+        this.preSubmit();
+      });
+    }
+    preSubmit() {
+      const checkboxes = this.formElement.querySelectorAll("input[type='checkbox']");
+      checkboxes.forEach((elem) => {
+        let checkbox = new Sa5FormCheckbox(elem);
+        checkbox.process();
+      });
     }
     submitButtonWaitMessage() {
       const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
@@ -388,6 +384,55 @@
     }
   };
   Sa5Core.startup(Sa5Form);
+
+  // src/webflow-form/form-select.ts
+  var Sa5FormSelectMode = /* @__PURE__ */ ((Sa5FormSelectMode2) => {
+    Sa5FormSelectMode2["Default"] = "default";
+    Sa5FormSelectMode2["Toggle"] = "toggle";
+    return Sa5FormSelectMode2;
+  })(Sa5FormSelectMode || {});
+  var Sa5FormSelect = class {
+    constructor(element) {
+      this._mode = "default" /* Default */;
+      this.valid = false;
+      this._element = element;
+    }
+    get element() {
+      return this._element;
+    }
+    init() {
+      if (!this._element.classList.contains("w-select")) {
+        console.error("sa5-core", "atteibute is not on a select element");
+        this.valid = false;
+        return;
+      }
+      const modeAttribute = this._element.getAttribute("wfu-form-select-mode" /* ATTR_FORM_SELECT_MODE */)?.toLowerCase();
+      if (!modeAttribute) {
+        this._mode = "default" /* Default */;
+      } else if (Object.values(Sa5FormSelectMode).includes(modeAttribute)) {
+        this._mode = modeAttribute;
+      } else {
+        this.valid = false;
+        throw new Error("Invalid select mode");
+      }
+      this.valid = true;
+      switch (this._mode) {
+        case "toggle" /* Toggle */:
+          this._element.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            const option = event.target;
+            if (option.tagName === "OPTION") {
+              option.selected = !option.selected;
+            }
+          });
+          break;
+        case "default" /* Default */:
+        default:
+          break;
+      }
+    }
+  };
+  Sa5Core.startup(Sa5FormSelect);
 
   // src/webflow-form/handler/form-handler.ts
   var WfuFormHandler = class {
@@ -690,6 +735,10 @@
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-form");
     debug.debug(`Initializing v${VERSION}`);
+    document.querySelectorAll("[wfu-form]").forEach((element) => {
+      let form = new Sa5Form(element);
+      form.init();
+    });
     document.querySelectorAll(
       Sa5Attribute.getBracketed("wfu-form-ipinfo" /* ATTR_FORM_IPINFO */)
     ).forEach((element) => {

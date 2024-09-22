@@ -11,6 +11,8 @@
 import { Sa5Attribute } from './globals';
 import { Sa5Core } from './webflow-core';
 import { Sa5Debug } from './webflow-core/debug';
+import { Sa5FormCheckbox } from './webflow-form/checkbox';
+import { Sa5FormTextarea } from './webflow-form/textarea';
 
 
 
@@ -60,6 +62,57 @@ export class Sa5Form {
     }
 
     init() {
+
+console.log("init form")
+
+        this.formElement.addEventListener("submit", (event: Event) => {
+
+            console.log("form submitted")
+
+            // First, check if the form is valid using HTML5 validation
+            if (!this.formElement.checkValidity()) {
+              // If the form is invalid, show default validation messages
+              event.preventDefault(); // Prevent form submission
+              this.formElement.reportValidity();  // Display native validation messages
+              return;
+            }
+
+            console.log("form is valid")
+
+            // Form is valid, do pre-submit prep 
+            this.preSubmit(); 
+
+        }); 
+
+    }
+
+    /**
+     * Handle any data modifications immediately prior to valid 
+     * form submission. 
+     */
+    preSubmit(): void {
+
+
+      // Find all checkboxes within the form
+      const checkboxes = this.formElement.querySelectorAll<HTMLInputElement>("input[type='checkbox']");
+      checkboxes.forEach((elem: HTMLInputElement) => {
+
+        let checkbox: Sa5FormCheckbox = new Sa5FormCheckbox(elem);  
+        checkbox.process(); 
+
+      });
+
+
+    //   // Find all textAreas within the form
+    //   const textAreas = this.formElement.querySelectorAll<HTMLTextAreaElement>("textarea");
+    //   textAreas.forEach((elem: HTMLTextAreaElement) => {
+
+    //     let textarea: Sa5FormTextarea = new Sa5FormTextarea(elem);  
+    //     textarea.process(); 
+
+    //   });
+
+
     }
 
     submitButtonWaitMessage(): void {
