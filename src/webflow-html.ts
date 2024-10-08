@@ -70,7 +70,5 @@ export class Sa5Html {
   
 // Register
 Sa5Core.startup(Sa5Html);
-// window["sa5"] = window["sa5"] || []; // {};
-// window["sa5"]["Sa5Html"] = Sa5Html;
 
 

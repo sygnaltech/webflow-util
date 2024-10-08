@@ -1,0 +1,33 @@
+
+
+// Hide markdown elements pre-processing
+
+markdown {
+  display: none;
+}
+
+// Themes 
+
+[theme=default] {
+
+    /* Table formatting */ 
+    table {
+        //  border-collapse: separate;
+        border-spacing: 10px 10px; 
+        margin-bottom: 1rem; 
+    }
+
+    th {
+        padding: 2px 30px 2px 10px;
+        margin-bottom: 5px;
+        //  background-color: #188fd6;
+        //  color: white;
+        margin-right: 10px;
+    }
+
+    td {
+        padding: 2px 30px 2px 10px;
+        //  background-color: #eee;
+    }
+
+}

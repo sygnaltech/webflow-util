@@ -18,6 +18,7 @@ import { Sa5CollectionList } from '../webflow-html/collection-list';
 import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
 import { Sa5EncodedEmail } from '../webflow-html/encoded-email';
+import Showdown from 'showdown';
 //import { Sa5Designer } from '../webflow-core/designer';
 //import { Sa5Layouts } from '../webflow-html/layout';
 
@@ -34,6 +35,9 @@ const init = () => {
     // Dynamic Attributes
 //    applyDynamicAttributes();
 
+    /**
+     * Initialize core Sa5Html handler
+     */
 
     // Create Sa5Html
     let obj = new Sa5Html({
@@ -49,6 +53,8 @@ const init = () => {
      * Layout items
      */
 
+//#region experimental
+
 //    (new Sa5Layouts).init();
 
     // let layoutElements = Array.from(
@@ -61,6 +67,8 @@ const init = () => {
 
 
     // });    
+
+//#endregion    
 
     /**
      * Sequence items
@@ -79,6 +87,8 @@ const init = () => {
      * Unwrap tagged items
      */
 
+//#region experimental
+
     /*
 //    $("*[wfu-unwrap]").each(function (index) {
 
@@ -90,6 +100,8 @@ const init = () => {
   //          $(this).css("display", "block");
 //    });
     */
+
+//#endregion
 
     /** 
      * Decode html chunk
@@ -267,7 +279,32 @@ const init = () => {
     }); 
 
     /**
-     * Remove any designer-only elements
+     * Markdown
+     */
+
+    // https://github.com/showdownjs/showdown 
+
+    // Initialize markdown converter
+    let converter = new Showdown.Converter({
+        tables: true, // allow tables
+        noHeaderId: true,
+        headerLevelStart: 2,
+        literalMidWordUnderscores: true
+    });
+
+    document.querySelectorAll<HTMLElement>(`markdown`)
+      .forEach((element: HTMLElement) => { 
+
+        // Determine theme
+        const mdTheme = element.getAttribute("theme") || "default"; 
+
+        element.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(element.innerHTML) + `<div>`; 
+
+    }); 
+
+    /**
+     * Remove any designer-only elements 
+     * moved to core
      */
 
     // (new Sa5Designer).init();    

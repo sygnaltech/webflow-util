@@ -10,10 +10,11 @@
  * the imported file have to be accessed with a namespace based on the filename. 
  * This helps to prevent naming conflicts and makes the code easier to understand.
  */
-         
-
+           
+    
 @use '../webflow-html/limit-items';
 @use '../webflow-html/encoded-email';
+@use '../webflow-html/markdown';
 
  // Temporarily hide until decoded
 [wfu-decode] {
