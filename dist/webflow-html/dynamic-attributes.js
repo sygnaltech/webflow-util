@@ -79,7 +79,7 @@
       var allElements = document.querySelectorAll("*");
       allElements.forEach((element) => {
         Array.from(element.attributes).forEach((attr) => {
-          if (attr.name.startsWith("x-")) {
+          if (attr.name.startsWith("x-") || attr.name.startsWith("x:")) {
             const newAttrName = attr.name.slice(2);
             element.setAttribute(newAttrName, attr.value);
             switch (element.tagName.toLowerCase()) {
@@ -94,10 +94,12 @@
               case "input":
                 switch (element.getAttribute("type")) {
                   case "checkbox":
-                    if (booleanValue(attr.value))
-                      element.setAttribute("checked", "checked");
-                    else
-                      element.removeAttribute("checked");
+                    if (newAttrName == "checked") {
+                      if (booleanValue(attr.value))
+                        element.setAttribute("checked", "checked");
+                      else
+                        element.removeAttribute("checked");
+                    }
                     break;
                 }
                 break;

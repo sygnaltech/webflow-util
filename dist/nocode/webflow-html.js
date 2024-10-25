@@ -374,7 +374,7 @@
           var allElements = document.querySelectorAll("*");
           allElements.forEach((element2) => {
             Array.from(element2.attributes).forEach((attr) => {
-              if (attr.name.startsWith("x-")) {
+              if (attr.name.startsWith("x-") || attr.name.startsWith("x:")) {
                 const newAttrName = attr.name.slice(2);
                 element2.setAttribute(newAttrName, attr.value);
                 switch (element2.tagName.toLowerCase()) {
@@ -389,10 +389,12 @@
                   case "input":
                     switch (element2.getAttribute("type")) {
                       case "checkbox":
-                        if (booleanValue(attr.value))
-                          element2.setAttribute("checked", "checked");
-                        else
-                          element2.removeAttribute("checked");
+                        if (newAttrName == "checked") {
+                          if (booleanValue(attr.value))
+                            element2.setAttribute("checked", "checked");
+                          else
+                            element2.removeAttribute("checked");
+                        }
                         break;
                     }
                     break;
@@ -618,7 +620,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.17";
+      VERSION = "5.4.18";
     }
   });
 

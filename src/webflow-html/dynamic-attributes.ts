@@ -43,7 +43,7 @@ export class Sa5HtmlDynamicAttributes {
             // Iterate over all attributes of each element
             Array.from(element.attributes).forEach(attr => {
             // Check if attribute name starts with 'x-'
-            if (attr.name.startsWith('x-')) {
+            if (attr.name.startsWith('x-') || attr.name.startsWith('x:')) {
                 // Create a new attribute name by removing 'x-'
                 const newAttrName = attr.name.slice(2);
     
@@ -61,12 +61,18 @@ export class Sa5HtmlDynamicAttributes {
                             (element as HTMLSelectElement).value = attr.value;
                         break;
                     case "input":
-                        switch (element.getAttribute("type")) {
+                        switch (element.getAttribute("type")) {   
+
+                            // Special checkbox processing 
                             case "checkbox":
-                                if(booleanValue(attr.value))
-                                    element.setAttribute("checked", "checked");
-                                else
-                                    element.removeAttribute("checked");
+
+                                // Process checked specially as boolean
+                                if(newAttrName == "checked") {
+                                    if(booleanValue(attr.value))
+                                        element.setAttribute("checked", "checked");
+                                    else
+                                        element.removeAttribute("checked");
+                                } 
                                 break;
                         }
                         break;
