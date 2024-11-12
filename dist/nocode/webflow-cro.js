@@ -1,7 +1,4 @@
 (() => {
-  // src/version.ts
-  var VERSION = "5.4.19";
-
   // src/globals.ts
   var Sa5Attribute;
   ((Sa5Attribute2) => {
@@ -273,61 +270,237 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-ui.ts
-  var Sa5Rating = class {
-    set rating(rating) {
-      this._rating = rating;
-      this._element.setAttribute(
-        "wfu-rating" /* ATTR_RATING */,
-        this._rating.toString()
-      );
-      this.render();
-    }
-    get rating() {
-      return this._rating;
-    }
-    constructor(element) {
-      this._element = element;
-      this._rating = Number(element.getAttribute(
-        "wfu-rating" /* ATTR_RATING */
-      ));
+  // src/version.ts
+  var VERSION = "5.4.19";
+
+  // src/webflow-cro/source.ts
+  var Sa5Source = class {
+    constructor(storageType = "session") {
+      this.storageKey = "sa5_utm_data";
+      this.storage = storageType === "local" ? localStorage : sessionStorage;
+      this.data = this.load() || {};
     }
     init() {
-      this.render();
     }
-    render() {
-      let ratingValue = Number(this._element.getAttribute(
-        "wfu-rating" /* ATTR_RATING */
-      ));
-      let exclusionMaskPercent = 100 * (5 - ratingValue) / 5;
-      this._element.innerHTML = `
-        <div class="wfu-rating-stars">
-          <svg viewBox="0 0 576 512" width="100" title="star">
-            <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
-          </svg><svg viewBox="0 0 576 512" width="100" title="star">
-            <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
-          </svg><svg viewBox="0 0 576 512" width="100" title="star">
-            <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
-          </svg><svg viewBox="0 0 576 512" width="100" title="star">
-            <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
-          </svg><svg viewBox="0 0 576 512" width="100" title="star">
-            <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
-          </svg>
-
-          <div class="wfu-rating-stars-cover" style="width: ${exclusionMaskPercent}%;"></div>
-        </div>
-      `;
+    setUTMParam(key, value) {
+      this.data[key] = value;
+      this.save();
+    }
+    getUTMParam(key) {
+      return this.data[key];
+    }
+    save() {
+      this.storage.setItem(this.storageKey, JSON.stringify(this.data));
+    }
+    load() {
+      const storedData = this.storage.getItem(this.storageKey);
+      return storedData ? JSON.parse(storedData) : {};
+    }
+    exists() {
+      return this.storage.getItem(this.storageKey) !== null;
+    }
+    clear() {
+      this.storage.removeItem(this.storageKey);
+      this.data = {};
     }
   };
 
-  // src/nocode/webflow-ui.ts
+  // src/webflow-cro.ts
+  var referrerUTMMappings = [
+    { hostname: "www.google.com", utm_source: "google", utm_medium: "organic" },
+    { hostname: "www.google.co.nz", utm_source: "google", utm_medium: "organic" },
+    { hostname: "m.youtube.com", utm_source: "youtube", utm_medium: "social" },
+    { hostname: "www.bing.com", utm_source: "bing", utm_medium: "organic" },
+    { hostname: "bookings.gettimely.com", utm_source: "gettimely", utm_medium: "referral" },
+    { hostname: "leoload.com", utm_source: "leoload", utm_medium: "referral" },
+    { hostname: "www.facebook.com", utm_source: "facebook", utm_medium: "social" },
+    { hostname: "duckduckgo.com", utm_source: "duckduckgo", utm_medium: "organic" },
+    { hostname: "www.linkedin.com", utm_source: "linkedin", utm_medium: "social" }
+  ];
+  var Sa5Cro = class {
+    constructor(config, storageType = "session") {
+      this.config = config;
+      this.debug = new Sa5Debug("sa5-cro");
+      this.debug.enabled = this.config.debug;
+      this.dataHandler = new Sa5Source(storageType);
+    }
+    init() {
+      this.debug.debug("sa5-cro init.");
+      this.captureSource();
+      this.processConversionScripts();
+    }
+    captureSource() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const utmParams = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+      let hasUTM = false;
+      utmParams.forEach((param) => {
+        if (urlParams.has(param)) {
+          hasUTM = true;
+        }
+      });
+      if (hasUTM) {
+        this.debug.debug("UTM parameters detected, clearing existing data and capturing new UTM data.");
+        this.dataHandler.clear();
+        this.dataHandler.data.explicit = true;
+        utmParams.forEach((param) => {
+          const value = urlParams.get(param);
+          if (value) {
+            this.dataHandler.setUTMParam(param, value);
+            this.debug.debug(`Captured ${param}: ${value}`);
+          }
+        });
+      } else if (!this.dataHandler.exists()) {
+        this.debug.debug("No UTM parameters detected and no existing UTM data. Attempting to infer source.");
+        this.inferSourceFromReferrer();
+      } else {
+        this.debug.debug("No UTM parameters detected, but existing UTM data found in storage.");
+      }
+    }
+    inferSourceFromReferrer() {
+      const referrer = document.referrer;
+      this.applyUTMFromReferrer(referrer);
+    }
+    applyUTMFromReferrer(referrer) {
+      if (!referrer) {
+        this.debug.debug("No referrer detected. Unable to apply UTM data.");
+        return;
+      }
+      const url = new URL(referrer);
+      const hostname = url.hostname;
+      const exactMatch = referrerUTMMappings.find((mapping) => !mapping.hostname.includes("*") && mapping.hostname === hostname);
+      if (exactMatch) {
+        this.applyUTMMapping(exactMatch);
+        return;
+      }
+      const wildcardMatch = referrerUTMMappings.find((mapping) => {
+        if (mapping.hostname.includes("*")) {
+          const regexPattern = new RegExp(`^${mapping.hostname.replace(/\*/g, ".*")}$`);
+          return regexPattern.test(hostname);
+        }
+        return false;
+      });
+      if (wildcardMatch) {
+        this.applyUTMMapping(wildcardMatch);
+      } else {
+        this.debug.debug("No matching UTM data found for referrer.");
+      }
+    }
+    applyUTMMapping(utmMapping) {
+      this.dataHandler.setUTMParam("utm_source", utmMapping.utm_source);
+      this.dataHandler.setUTMParam("utm_medium", utmMapping.utm_medium);
+      if (utmMapping.utm_campaign !== void 0) {
+        this.dataHandler.setUTMParam("utm_campaign", utmMapping.utm_campaign);
+      }
+      if (utmMapping.utm_term !== void 0) {
+        this.dataHandler.setUTMParam("utm_term", utmMapping.utm_term);
+      }
+      if (utmMapping.utm_content !== void 0) {
+        this.dataHandler.setUTMParam("utm_content", utmMapping.utm_content);
+      }
+      this.debug.debug(`Applied UTM data from referrer: ${JSON.stringify(utmMapping)}`);
+    }
+    processConversionScripts() {
+      const scriptElements = document.querySelectorAll('script[type="application/sa5+json"]');
+      scriptElements.forEach((scriptElement) => {
+        try {
+          const scriptContent = JSON.parse(scriptElement.textContent || "{}");
+          if (scriptContent["@type"] === "ConversionEvent") {
+            const parentForm = scriptElement.closest("form");
+            if (parentForm) {
+              this.createHiddenInputs(parentForm, scriptContent);
+            } else {
+              this.triggerConversionEvent(scriptContent);
+            }
+          }
+        } catch (error) {
+          console.error("Error processing script:", scriptElement, error);
+        }
+      });
+    }
+    createHiddenInputs(formElement, scriptContent) {
+      const createHiddenInput = (name, value) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = `xtr_${name}`;
+        input.value = value;
+        return input;
+      };
+      const hiddenInputs = [];
+      if (scriptContent.type) {
+        hiddenInputs.push(createHiddenInput("type", scriptContent.type));
+      }
+      if (scriptContent.item) {
+        hiddenInputs.push(createHiddenInput("item", scriptContent.item));
+      }
+      const transactionId = this.getTransactionId(scriptContent);
+      if (transactionId !== void 0) {
+        hiddenInputs.push(createHiddenInput("transactionId", transactionId));
+      }
+      const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+      utmFields.forEach((utm) => {
+        if (scriptContent[utm]) {
+          hiddenInputs.push(createHiddenInput(utm, scriptContent[utm]));
+        }
+      });
+      hiddenInputs.forEach((input) => {
+        formElement.appendChild(input);
+      });
+    }
+    getTransactionId(scriptContent) {
+      const transactionIdType = scriptContent.transactionIdType || "literal";
+      switch (transactionIdType) {
+        case "query":
+          const params = new URLSearchParams(window.location.search);
+          const queryTransactionId = params.get(scriptContent.transactionId);
+          if (queryTransactionId) {
+            return queryTransactionId;
+          }
+          console.warn("Transaction ID not found in query string");
+          return void 0;
+        case "literal":
+          return scriptContent.transactionId;
+        case "none":
+          return void 0;
+        case "blank":
+          return "";
+        default:
+          console.warn(`Unknown transaction ID type: ${transactionIdType}`);
+          return void 0;
+      }
+    }
+    triggerConversionEvent(scriptContent) {
+      let url = new URL(scriptContent.url);
+      url.searchParams.append("type", scriptContent.type);
+      url.searchParams.append("item", scriptContent.item);
+      const transactionId = this.getTransactionId(scriptContent);
+      if (transactionId !== void 0) {
+        url.searchParams.append("transactionId", transactionId);
+      }
+      const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+      utmFields.forEach((utm) => {
+        if (scriptContent[utm]) {
+          url.searchParams.append(utm, scriptContent[utm]);
+        }
+      });
+      fetch(url.toString(), {
+        method: "GET",
+        mode: "no-cors"
+      }).then(() => {
+        this.debug.debug(`Conversion event triggered: ${url.toString()}`);
+      }).catch((error) => {
+        console.error("Error triggering conversion event:", error);
+      });
+    }
+  };
+  Sa5Core.startup(Sa5Cro);
+
+  // src/nocode/webflow-cro.ts
   var init = () => {
     let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-ui");
+    let debug = new Sa5Debug("sa5-cro");
+    debug.enabled = true;
     debug.debug(`Initializing v${VERSION}`);
-    document.querySelectorAll('div[wfu-ui="rating"]').forEach((element) => {
-      new Sa5Rating(element).init();
-    });
+    let obj = new Sa5Cro({}).init();
   };
   if (document.readyState !== "loading") {
     init();
@@ -335,4 +508,4 @@
     document.addEventListener("DOMContentLoaded", init);
   }
 })();
-//# sourceMappingURL=webflow-ui.js.map
+//# sourceMappingURL=webflow-cro.js.map
