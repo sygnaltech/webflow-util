@@ -32,7 +32,7 @@ interface ConversionEvent {
     "@version": string;
     url: string;
     transactionId: string;
-    transactionIdType?: "query" | "literal" | "none" | "blank";
+    transactionIdType?: "query" | "literal" | "none" | "auto";
     type: string;
     item: string;
     utm_source?: string;
@@ -43,12 +43,20 @@ interface ConversionEvent {
   }
 
 const referrerUTMMappings: UTMMapping[] = [
+
     { hostname: 'www.google.com', utm_source: 'google', utm_medium: 'organic' },
     { hostname: 'www.google.co.nz', utm_source: 'google', utm_medium: 'organic' },
-    { hostname: 'm.youtube.com', utm_source: 'youtube', utm_medium: 'social' },
+    { hostname: '*.google.*', utm_source: 'google', utm_medium: 'organic' },
+
+    { hostname: '*.youtube.com', utm_source: 'youtube', utm_medium: 'social' },
+    { hostname: 'youtube.com', utm_source: 'youtube', utm_medium: 'social' },
+
     { hostname: 'www.bing.com', utm_source: 'bing', utm_medium: 'organic' },
+
     { hostname: 'bookings.gettimely.com', utm_source: 'gettimely', utm_medium: 'referral' },
     { hostname: 'leoload.com', utm_source: 'leoload', utm_medium: 'referral' },
+    { hostname: 'www.healthpoint.co.nz', utm_source: 'healthpoint', utm_medium: 'referral' },
+
     { hostname: 'www.facebook.com', utm_source: 'facebook', utm_medium: 'social' },
     { hostname: 'duckduckgo.com', utm_source: 'duckduckgo', utm_medium: 'organic' },
     { hostname: 'www.linkedin.com', utm_source: 'linkedin', utm_medium: 'social' },
@@ -77,9 +85,11 @@ export class Sa5Cro {
         this.captureSource(); 
 
         // Look for any events s
-        this.processConversionScripts();
+        this.processConversionEventConfigs();
 
     }
+
+    //#region Capture Source
 
     captureSource() {
 
@@ -89,6 +99,8 @@ export class Sa5Cro {
         // Define the UTM parameters to look for
         const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
         
+
+
         // Check if any UTM parameters are present in the URL
         let hasUTM = false;
         utmParams.forEach(param => {
@@ -102,12 +114,13 @@ export class Sa5Cro {
             this.debug.debug("UTM parameters detected, clearing existing data and capturing new UTM data.");
             this.dataHandler.clear();
             this.dataHandler.data.explicit = true;
+            this.dataHandler.data.referer = document.referrer; 
 
             // Loop through each UTM parameter and save it if present in the URL
             utmParams.forEach(param => {
                 const value = urlParams.get(param);
                 if (value) {
-                    this.dataHandler.setUTMParam(param, value);
+                    this.dataHandler.setSourceParam(param, value);
                     this.debug.debug(`Captured ${param}: ${value}`);
                 }
             });
@@ -118,6 +131,9 @@ export class Sa5Cro {
         else if (!this.dataHandler.exists()) {
             this.debug.debug("No UTM parameters detected and no existing UTM data. Attempting to infer source.");
             this.inferSourceFromReferrer();
+
+            this.dataHandler.data.referer = document.referrer; 
+
         } else {
             this.debug.debug("No UTM parameters detected, but existing UTM data found in storage.");
         }
@@ -168,51 +184,52 @@ export class Sa5Cro {
     
     // Helper method to apply UTM parameters from a UTMMapping
     private applyUTMMapping(utmMapping: UTMMapping) {
-        this.dataHandler.setUTMParam('utm_source', utmMapping.utm_source);
-        this.dataHandler.setUTMParam('utm_medium', utmMapping.utm_medium);
+        this.dataHandler.setSourceParam('utm_source', utmMapping.utm_source);
+        this.dataHandler.setSourceParam('utm_medium', utmMapping.utm_medium);
         if (utmMapping.utm_campaign !== undefined) {
-            this.dataHandler.setUTMParam('utm_campaign', utmMapping.utm_campaign);
+            this.dataHandler.setSourceParam('utm_campaign', utmMapping.utm_campaign);
         }
         if (utmMapping.utm_term !== undefined) {
-            this.dataHandler.setUTMParam('utm_term', utmMapping.utm_term);
+            this.dataHandler.setSourceParam('utm_term', utmMapping.utm_term);
         }
         if (utmMapping.utm_content !== undefined) {
-            this.dataHandler.setUTMParam('utm_content', utmMapping.utm_content);
+            this.dataHandler.setSourceParam('utm_content', utmMapping.utm_content);
         }
 
         this.debug.debug(`Applied UTM data from referrer: ${JSON.stringify(utmMapping)}`);
     }
 
+    //#endregion 
 
     /**
      * FORMS HANDLERS 
      */
 
-    processConversionScripts() {
+    processConversionEventConfigs() {
 
         // Select all script elements of type "application/sa5+json"
-        const scriptElements = document.querySelectorAll<HTMLScriptElement>('script[type="application/sa5+json"]');
-        scriptElements.forEach((scriptElement) => {
+        const configElements = document.querySelectorAll<HTMLScriptElement>('script[type="application/sa5+json"]');
+        configElements.forEach((configElement) => {
           try {
             // Parse the script content to a JavaScript object
-            const scriptContent = JSON.parse(scriptElement.textContent || '{}') as ConversionEvent;
+            const configContent = JSON.parse(configElement.textContent || '{}') as ConversionEvent;
       
 // this.debug.debug("Found script", scriptContent)
 
             // Check if "@type" is "ConversionEvent"
-            if (scriptContent["@type"] === "ConversionEvent") {
-              const parentForm = scriptElement.closest('form');
+            if (configContent["@type"] === "ConversionEvent") {
+              const parentForm = configElement.closest('form');
 
               if (parentForm) {
                 // Scenario 1: Script is inside a form, create hidden inputs
-                this.createHiddenInputs(parentForm, scriptContent);
+                this.processFormConversionEventConfig(parentForm, configContent);
               } else {
                 // Scenario 2: Script is not inside a form, trigger GET request on page load
-                this.triggerConversionEvent(scriptContent);
+                this.triggerConversionEvent(configContent);
               }
             }
           } catch (error) {
-            console.error("Error processing script:", scriptElement, error);
+            console.error("Error processing config:", configElement, error);
           }
         });
     }
@@ -224,7 +241,7 @@ export class Sa5Cro {
      * @param scriptContent 
      */
 
-    createHiddenInputs(formElement: HTMLFormElement, scriptContent: ConversionEvent) {
+    processFormConversionEventConfig(formElement: HTMLFormElement, scriptContent: ConversionEvent) {
 
       // Helper function to create a hidden input with a prefixed name
       const createHiddenInput = (name: string, value: string) => {
@@ -250,15 +267,37 @@ export class Sa5Cro {
       const transactionId = this.getTransactionId(scriptContent);
       if (transactionId !== undefined) {
         hiddenInputs.push(createHiddenInput("transactionId", transactionId));
-      }
-    
-      // Add UTM parameters if they exist, using the prefix to avoid conflicts
-      const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
-      utmFields.forEach((utm) => {
-        if (scriptContent[utm as keyof ConversionEvent]) {
-          hiddenInputs.push(createHiddenInput(utm, scriptContent[utm as keyof ConversionEvent] as string));
+
+        // Check if formElement has a redirect attribute
+        const redirectPath = formElement.getAttribute("redirect");
+        if (redirectPath) {
+          // Convert relative redirect path to a full URL
+          const redirectUrl = new URL(redirectPath, window.location.origin);
+          
+          // Add transactionId as a query string parameter
+          redirectUrl.searchParams.append("transactionId", transactionId);
+          
+          // Update the form's redirect attribute with the new URL
+          formElement.setAttribute("redirect", redirectUrl.toString());
         }
-      });
+
+      }
+
+      if(this.dataHandler.exists) {
+
+        if (this.dataHandler.data.referrer) {
+          hiddenInputs.push(createHiddenInput("referrer", this.dataHandler.data.referrer));
+        }
+      
+        // Add UTM parameters if they exist, using the prefix to avoid conflicts
+        const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+        utmFields.forEach((utm) => {
+          if (this.dataHandler.data[utm]) {
+            hiddenInputs.push(createHiddenInput(utm, this.dataHandler.data[utm] as string));
+          }
+        });  
+
+      }
     
       // Append hidden inputs to the form
       hiddenInputs.forEach((input) => {
@@ -289,9 +328,12 @@ export class Sa5Cro {
             // Return undefined for no transaction ID
             return undefined;
 
-          case "blank":
+          case "auto": 
+
+            return crypto.randomUUID(); // Generate unique ID
+
             // Return an empty string if transaction ID type is blank
-            return "";
+//            return "";
 
           default:
             console.warn(`Unknown transaction ID type: ${transactionIdType}`);

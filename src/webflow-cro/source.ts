@@ -13,19 +13,22 @@
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 
-interface UTMData {
+interface SessionSourceData {
 
     transactionId?: string;
-    referrerCode?: string;
+    referralCode?: string; // Optional referral code
+
+    referrer?: string; // HTTP Referrer
 
     utm_source?: string;
     utm_medium?: string;
     utm_campaign?: string;
     utm_term?: string;
     utm_content?: string;
+    explicit?: boolean; // Indicates whether UTMs explicit or inferred 
+
     [key: string]: any; // Allows adding other dynamic properties
 
-    explicit?: boolean; 
 } 
 
 type StorageType = 'session' | 'local';
@@ -33,7 +36,7 @@ type StorageType = 'session' | 'local';
 export class Sa5Source {
 
     private storageKey = 'sa5_utm_data';
-    public data: UTMData;
+    public data: SessionSourceData;
     private storage: Storage; 
 
     constructor(storageType: StorageType = 'session') {
@@ -54,7 +57,7 @@ export class Sa5Source {
      * @param key The UTM parameter name.
      * @param value The UTM parameter value.
      */
-    setUTMParam(key: string, value: string): void {
+    setSourceParam(key: string, value: string): void {
         this.data[key] = value;
         this.save();
     }
@@ -64,7 +67,7 @@ export class Sa5Source {
      * @param key The UTM parameter name.
      * @returns The value of the UTM parameter, or undefined if not set.
      */
-    getUTMParam(key: string): string | undefined {
+    getSourceParam(key: string): string | undefined {
         return this.data[key];
     }
     
@@ -80,7 +83,7 @@ export class Sa5Source {
      * Load the UTM data from the selected storage.
      * @returns The UTM data object or an empty object if none exists.
      */
-    load(): UTMData {
+    load(): SessionSourceData {
         const storedData = this.storage.getItem(this.storageKey);
         return storedData ? JSON.parse(storedData) : {};
     }

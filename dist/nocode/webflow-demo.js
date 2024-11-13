@@ -290,7 +290,7 @@
   Sa5Core.startup(WebflowInfo);
 
   // src/version.ts
-  var VERSION = "5.4.19";
+  var VERSION = "5.4.20";
 
   // src/nocode/webflow-demo.ts
   var init = () => {

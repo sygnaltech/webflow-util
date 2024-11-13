@@ -8,11 +8,11 @@
     }
     init() {
     }
-    setUTMParam(key, value) {
+    setSourceParam(key, value) {
       this.data[key] = value;
       this.save();
     }
-    getUTMParam(key) {
+    getSourceParam(key) {
       return this.data[key];
     }
     save() {

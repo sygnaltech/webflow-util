@@ -279,11 +279,11 @@
     }
     init() {
     }
-    setUTMParam(key, value) {
+    setSourceParam(key, value) {
       this.data[key] = value;
       this.save();
     }
-    getUTMParam(key) {
+    getSourceParam(key) {
       return this.data[key];
     }
     save() {
@@ -306,10 +306,13 @@
   var referrerUTMMappings = [
     { hostname: "www.google.com", utm_source: "google", utm_medium: "organic" },
     { hostname: "www.google.co.nz", utm_source: "google", utm_medium: "organic" },
-    { hostname: "m.youtube.com", utm_source: "youtube", utm_medium: "social" },
+    { hostname: "*.google.*", utm_source: "google", utm_medium: "organic" },
+    { hostname: "*.youtube.com", utm_source: "youtube", utm_medium: "social" },
+    { hostname: "youtube.com", utm_source: "youtube", utm_medium: "social" },
     { hostname: "www.bing.com", utm_source: "bing", utm_medium: "organic" },
     { hostname: "bookings.gettimely.com", utm_source: "gettimely", utm_medium: "referral" },
     { hostname: "leoload.com", utm_source: "leoload", utm_medium: "referral" },
+    { hostname: "www.healthpoint.co.nz", utm_source: "healthpoint", utm_medium: "referral" },
     { hostname: "www.facebook.com", utm_source: "facebook", utm_medium: "social" },
     { hostname: "duckduckgo.com", utm_source: "duckduckgo", utm_medium: "organic" },
     { hostname: "www.linkedin.com", utm_source: "linkedin", utm_medium: "social" }
@@ -324,7 +327,7 @@
     init() {
       this.debug.debug("sa5-cro init.");
       this.captureSource();
-      this.processConversionScripts();
+      this.processConversionEventConfigs();
     }
     captureSource() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -339,16 +342,18 @@
         this.debug.debug("UTM parameters detected, clearing existing data and capturing new UTM data.");
         this.dataHandler.clear();
         this.dataHandler.data.explicit = true;
+        this.dataHandler.data.referer = document.referrer;
         utmParams.forEach((param) => {
           const value = urlParams.get(param);
           if (value) {
-            this.dataHandler.setUTMParam(param, value);
+            this.dataHandler.setSourceParam(param, value);
             this.debug.debug(`Captured ${param}: ${value}`);
           }
         });
       } else if (!this.dataHandler.exists()) {
         this.debug.debug("No UTM parameters detected and no existing UTM data. Attempting to infer source.");
         this.inferSourceFromReferrer();
+        this.dataHandler.data.referer = document.referrer;
       } else {
         this.debug.debug("No UTM parameters detected, but existing UTM data found in storage.");
       }
@@ -383,38 +388,38 @@
       }
     }
     applyUTMMapping(utmMapping) {
-      this.dataHandler.setUTMParam("utm_source", utmMapping.utm_source);
-      this.dataHandler.setUTMParam("utm_medium", utmMapping.utm_medium);
+      this.dataHandler.setSourceParam("utm_source", utmMapping.utm_source);
+      this.dataHandler.setSourceParam("utm_medium", utmMapping.utm_medium);
       if (utmMapping.utm_campaign !== void 0) {
-        this.dataHandler.setUTMParam("utm_campaign", utmMapping.utm_campaign);
+        this.dataHandler.setSourceParam("utm_campaign", utmMapping.utm_campaign);
       }
       if (utmMapping.utm_term !== void 0) {
-        this.dataHandler.setUTMParam("utm_term", utmMapping.utm_term);
+        this.dataHandler.setSourceParam("utm_term", utmMapping.utm_term);
       }
       if (utmMapping.utm_content !== void 0) {
-        this.dataHandler.setUTMParam("utm_content", utmMapping.utm_content);
+        this.dataHandler.setSourceParam("utm_content", utmMapping.utm_content);
       }
       this.debug.debug(`Applied UTM data from referrer: ${JSON.stringify(utmMapping)}`);
     }
-    processConversionScripts() {
-      const scriptElements = document.querySelectorAll('script[type="application/sa5+json"]');
-      scriptElements.forEach((scriptElement) => {
+    processConversionEventConfigs() {
+      const configElements = document.querySelectorAll('script[type="application/sa5+json"]');
+      configElements.forEach((configElement) => {
         try {
-          const scriptContent = JSON.parse(scriptElement.textContent || "{}");
-          if (scriptContent["@type"] === "ConversionEvent") {
-            const parentForm = scriptElement.closest("form");
+          const configContent = JSON.parse(configElement.textContent || "{}");
+          if (configContent["@type"] === "ConversionEvent") {
+            const parentForm = configElement.closest("form");
             if (parentForm) {
-              this.createHiddenInputs(parentForm, scriptContent);
+              this.processFormConversionEventConfig(parentForm, configContent);
             } else {
-              this.triggerConversionEvent(scriptContent);
+              this.triggerConversionEvent(configContent);
             }
           }
         } catch (error) {
-          console.error("Error processing script:", scriptElement, error);
+          console.error("Error processing config:", configElement, error);
         }
       });
     }
-    createHiddenInputs(formElement, scriptContent) {
+    processFormConversionEventConfig(formElement, scriptContent) {
       const createHiddenInput = (name, value) => {
         const input = document.createElement("input");
         input.type = "hidden";
@@ -432,13 +437,24 @@
       const transactionId = this.getTransactionId(scriptContent);
       if (transactionId !== void 0) {
         hiddenInputs.push(createHiddenInput("transactionId", transactionId));
-      }
-      const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
-      utmFields.forEach((utm) => {
-        if (scriptContent[utm]) {
-          hiddenInputs.push(createHiddenInput(utm, scriptContent[utm]));
+        const redirectPath = formElement.getAttribute("redirect");
+        if (redirectPath) {
+          const redirectUrl = new URL(redirectPath, window.location.origin);
+          redirectUrl.searchParams.append("transactionId", transactionId);
+          formElement.setAttribute("redirect", redirectUrl.toString());
         }
-      });
+      }
+      if (this.dataHandler.exists) {
+        if (this.dataHandler.data.referrer) {
+          hiddenInputs.push(createHiddenInput("referrer", this.dataHandler.data.referrer));
+        }
+        const utmFields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+        utmFields.forEach((utm) => {
+          if (this.dataHandler.data[utm]) {
+            hiddenInputs.push(createHiddenInput(utm, this.dataHandler.data[utm]));
+          }
+        });
+      }
       hiddenInputs.forEach((input) => {
         formElement.appendChild(input);
       });
@@ -458,8 +474,8 @@
           return scriptContent.transactionId;
         case "none":
           return void 0;
-        case "blank":
-          return "";
+        case "auto":
+          return crypto.randomUUID();
         default:
           console.warn(`Unknown transaction ID type: ${transactionIdType}`);
           return void 0;
