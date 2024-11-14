@@ -123,7 +123,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.20";
+  var VERSION = "5.4.21";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {

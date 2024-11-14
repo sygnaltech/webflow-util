@@ -35,7 +35,7 @@ type StorageType = 'session' | 'local';
 
 export class Sa5Source {
 
-    private storageKey = 'sa5_utm_data';
+    private storageKey = 'sa5-cro_data';
     public data: SessionSourceData;
     private storage: Storage; 
 
@@ -76,6 +76,7 @@ export class Sa5Source {
      * Save the UTM data to the selected storage (sessionStorage or localStorage).
      */
     save(): void {
+        console.log("save")
         this.storage.setItem(this.storageKey, JSON.stringify(this.data));
     }
 

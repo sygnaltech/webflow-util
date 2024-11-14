@@ -2,7 +2,7 @@
   // src/webflow-cro/source.ts
   var Sa5Source = class {
     constructor(storageType = "session") {
-      this.storageKey = "sa5_utm_data";
+      this.storageKey = "sa5-cro_data";
       this.storage = storageType === "local" ? localStorage : sessionStorage;
       this.data = this.load() || {};
     }
@@ -16,6 +16,7 @@
       return this.data[key];
     }
     save() {
+      console.log("save");
       this.storage.setItem(this.storageKey, JSON.stringify(this.data));
     }
     load() {

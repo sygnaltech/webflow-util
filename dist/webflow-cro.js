@@ -273,7 +273,7 @@
   // src/webflow-cro/source.ts
   var Sa5Source = class {
     constructor(storageType = "session") {
-      this.storageKey = "sa5_utm_data";
+      this.storageKey = "sa5-cro_data";
       this.storage = storageType === "local" ? localStorage : sessionStorage;
       this.data = this.load() || {};
     }
@@ -287,6 +287,7 @@
       return this.data[key];
     }
     save() {
+      console.log("save");
       this.storage.setItem(this.storageKey, JSON.stringify(this.data));
     }
     load() {
@@ -310,9 +311,6 @@
     { hostname: "*.youtube.com", utm_source: "youtube", utm_medium: "social" },
     { hostname: "youtube.com", utm_source: "youtube", utm_medium: "social" },
     { hostname: "www.bing.com", utm_source: "bing", utm_medium: "organic" },
-    { hostname: "bookings.gettimely.com", utm_source: "gettimely", utm_medium: "referral" },
-    { hostname: "leoload.com", utm_source: "leoload", utm_medium: "referral" },
-    { hostname: "www.healthpoint.co.nz", utm_source: "healthpoint", utm_medium: "referral" },
     { hostname: "www.facebook.com", utm_source: "facebook", utm_medium: "social" },
     { hostname: "duckduckgo.com", utm_source: "duckduckgo", utm_medium: "organic" },
     { hostname: "www.linkedin.com", utm_source: "linkedin", utm_medium: "social" }
@@ -327,6 +325,7 @@
     init() {
       this.debug.debug("sa5-cro init.");
       this.captureSource();
+      console.log("capturesource");
       this.processConversionEventConfigs();
     }
     captureSource() {
@@ -433,6 +432,9 @@
       }
       if (scriptContent.item) {
         hiddenInputs.push(createHiddenInput("item", scriptContent.item));
+      }
+      if (scriptContent.url) {
+        hiddenInputs.push(createHiddenInput("url", scriptContent.url));
       }
       const transactionId = this.getTransactionId(scriptContent);
       if (transactionId !== void 0) {

@@ -53,9 +53,9 @@ const referrerUTMMappings: UTMMapping[] = [
 
     { hostname: 'www.bing.com', utm_source: 'bing', utm_medium: 'organic' },
 
-    { hostname: 'bookings.gettimely.com', utm_source: 'gettimely', utm_medium: 'referral' },
-    { hostname: 'leoload.com', utm_source: 'leoload', utm_medium: 'referral' },
-    { hostname: 'www.healthpoint.co.nz', utm_source: 'healthpoint', utm_medium: 'referral' },
+    // { hostname: 'bookings.gettimely.com', utm_source: 'gettimely', utm_medium: 'referral' },
+    // { hostname: 'leoload.com', utm_source: 'leoload', utm_medium: 'referral' },
+    // { hostname: 'www.healthpoint.co.nz', utm_source: 'healthpoint', utm_medium: 'referral' },
 
     { hostname: 'www.facebook.com', utm_source: 'facebook', utm_medium: 'social' },
     { hostname: 'duckduckgo.com', utm_source: 'duckduckgo', utm_medium: 'organic' },
@@ -83,6 +83,8 @@ export class Sa5Cro {
 
         this.debug.debug ("sa5-cro init.");
         this.captureSource(); 
+        console.log("capturesource")
+
 
         // Look for any events s
         this.processConversionEventConfigs();
@@ -98,8 +100,6 @@ export class Sa5Cro {
         
         // Define the UTM parameters to look for
         const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-        
-
 
         // Check if any UTM parameters are present in the URL
         let hasUTM = false;
@@ -124,7 +124,6 @@ export class Sa5Cro {
                     this.debug.debug(`Captured ${param}: ${value}`);
                 }
             });
-
 
         } 
         // If no UTM parameters are found, check for existing data and attempt to infer source if none exists
@@ -254,13 +253,16 @@ export class Sa5Cro {
     
       // Create hidden input elements for type, item, transactionId, and UTM parameters
       const hiddenInputs = [];
-    
+
       // Add mandatory fields to hidden inputs with prefix
       if (scriptContent.type) {
         hiddenInputs.push(createHiddenInput("type", scriptContent.type));
       }
       if (scriptContent.item) {
         hiddenInputs.push(createHiddenInput("item", scriptContent.item));
+      }
+      if (scriptContent.url) {
+        hiddenInputs.push(createHiddenInput("url", scriptContent.url));
       }
 
       // Get the transaction ID using the reusable getTransactionId method
