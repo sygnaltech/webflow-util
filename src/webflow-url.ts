@@ -18,10 +18,6 @@ import { QueryPassthroughConfig, Sa5QueryPassthrough } from './webflow-url/query
 import { WfuRelativeLinkFixup } from './webflow-url/relativeLinkFixup';
 import { TargetExternalConfig, WfuTargetLinks } from './webflow-url/targetLinks';
 
-// import {} from './webflow-url/query'
-// import {} from './webflow-url/relativeLinkFixup'
-// import {} from './webflow-url/relativeLinkFixup'
-
 
 
 type GetConfigCallback = (Sa5UrlConfig) 
@@ -104,6 +100,8 @@ export class Sa5Url {
     init() {
 
         this.getConfig();
+
+        this.debug.debug(this.config); 
 
         /**
          * Process querystring params into tagged elements

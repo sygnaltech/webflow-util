@@ -288,31 +288,39 @@
       document.addEventListener("click", (event) => {
         const target = event.target;
         const anchor = target.closest("a");
-        if (anchor) {
-          event.preventDefault();
-          const currentPageParams = new URLSearchParams(window.location.search);
-          const anchorParams = new URLSearchParams(anchor.search);
-          const anchorUrl = new URL(anchor.href);
-          if (this.config.internalOnly) {
-            const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
-            if (!isRelativeOrSameHost) {
-              return;
-            }
+        if (!anchor)
+          return;
+        if (!anchor.hasAttribute("href"))
+          return;
+        if (anchor.href.startsWith("mailto:"))
+          return;
+        if (anchor.href.startsWith("tel:"))
+          return;
+        const currentPageParams = new URLSearchParams(window.location.search);
+        const anchorParams = new URLSearchParams(anchor.search);
+        const anchorUrl = new URL(anchor.href);
+        if (this.config.internalOnly) {
+          this.debug.debug("checking internalOnly");
+          const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
+          if (!isRelativeOrSameHost) {
+            this.debug.debug("Found external link, skipping");
+            return;
           }
-          event.preventDefault();
-          let newParams = new URLSearchParams();
-          for (const [key, value] of currentPageParams) {
-            if (this.shouldIgnoreKey(key))
-              continue;
-            if (anchorParams.has(key) && !this.config.overwriteExisting)
-              continue;
-            newParams.set(key, value);
-          }
-          let newUrl = anchorUrl.origin + anchorUrl.pathname;
-          if (newParams.size > 0)
-            newUrl += "?" + newParams.toString();
-          window.location.href = newUrl;
         }
+        event.preventDefault();
+        let newParams = new URLSearchParams(anchorUrl.searchParams);
+        this.debug.debug(newParams);
+        for (const [key, value] of currentPageParams) {
+          if (this.shouldIgnoreKey(key))
+            continue;
+          if (anchorParams.has(key) && !this.config.overwriteExisting)
+            continue;
+          newParams.set(key, value);
+        }
+        let newUrl = anchorUrl.origin + anchorUrl.pathname;
+        if (newParams.size > 0)
+          newUrl += "?" + newParams.toString();
+        window.location.href = newUrl;
       });
     }
     shouldIgnoreKey(key) {
@@ -423,6 +431,7 @@
     }
     init() {
       this.getConfig();
+      this.debug.debug(this.config);
       if (this.config.passthrough) {
         new Sa5QueryPassthrough(
           this.config.passthroughConfig

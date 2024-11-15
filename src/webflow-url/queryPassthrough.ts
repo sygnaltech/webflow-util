@@ -17,8 +17,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 
 export interface QueryPassthroughConfig {
     ignorePatterns: (string | RegExp)[];
-    // Overwrite existing params?
-    overwriteExisting: boolean;
+    overwriteExisting: boolean; // Overwrite existing params?
     internalOnly: boolean; // Only affect internal links
 }
 
@@ -30,10 +29,9 @@ export class Sa5QueryPassthrough {
 
     constructor(config: Partial<QueryPassthroughConfig> = {}) {
 
-
         this.config = {
             // Other params to ignore? user accounts login, redir params, etc.
-            // https://www.brojo.org/pub?b42d817d_page=2
+            // https://www.test.org/pub?b42d817d_page=2
             ignorePatterns: config.ignorePatterns ?? [
                 /_page$/, // Ignore pagination params
             ],
@@ -42,9 +40,6 @@ export class Sa5QueryPassthrough {
         }
 
         // Initialize debugging
-        // this.debug = new Sa5Debug("sa5-url");
-        // this.debug.debug ("Initializing");
-
         this.debug = new Sa5Debug("sa5-url-querypassthrough");
         this.debug.debug ("Initializing");
 
@@ -59,109 +54,82 @@ export class Sa5QueryPassthrough {
             const target = event.target as HTMLElement;
             const anchor = target.closest('a');
 
-            if (anchor) {
+            // No link found
+            if(!anchor)
+                return; // ignore
 
-//                console.log("link clicked"); 
+            // Ignore links with no href 
+            if(!anchor.hasAttribute("href"))
+                return; // ignore
+
+            // Ignore mailto: and tel: links 
+            if(anchor.href.startsWith("mailto:"))
+                return; // ignore
+            if(anchor.href.startsWith("tel:"))
+                return; // ignore 
+
+            const currentPageParams = new URLSearchParams(window.location.search);
+
+            // Get the parameters of the anchor URL
+            const anchorParams = new URLSearchParams(anchor.search);
+
+            // Parse the URL and query string
+            const anchorUrl = new URL(anchor.href);
+
+            // Check if the URL is relative or if the hostname matches the current hostname
+            if(this.config.internalOnly) {
                 
-                event.preventDefault();
+                this.debug.debug("checking internalOnly"); 
 
-                const currentPageParams = new URLSearchParams(window.location.search);
+                const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
 
-                // Get the parameters of the anchor URL
-                const anchorParams = new URLSearchParams(anchor.search);
+                if(!isRelativeOrSameHost) {
 
-                // Parse the URL and query string
-                const anchorUrl = new URL(anchor.href);
-
-                // console.log("old url", url.toString())
-                // const params = new URLSearchParams(url.search);
-
-                // Check if the URL is relative or if the hostname matches the current hostname
-                if(this.config.internalOnly) {
-
-                    const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
-
-                    if(!isRelativeOrSameHost) {
-//                        console.log("Not internal, skipping");
-                        return;
-                    }
+                    this.debug.debug("Found external link, skipping"); 
+                    
+                    return;
                 }
+            }
 
-                event.preventDefault();
+            // Process link click 
 
-                // Object to hold the new parameters
+            event.preventDefault();
+
+            // Object to hold the new parameters
 //                let newParams: { [key: string]: string } = {};
 
-                let newParams: URLSearchParams = new URLSearchParams();
+            // Get existing link params 
+            let newParams: URLSearchParams = new URLSearchParams(anchorUrl.searchParams);
 
-                /**
-                 * Identify the query param keys we want to preserve
-                 */
+            this.debug.debug(newParams)
 
-                // Iterate over existing parameters
-//                params.forEach((value, key) => {
-                for (const [key, value] of currentPageParams) {
+            /**
+             * Identify the query param keys we want to preserve
+             */
 
-                    // if (!this.shouldIgnoreKey(key) && !anchorParams.has(key)) {
-                    //     anchorParams.append(key, value);
+            // Iterate over page parameters
+            for (const [key, value] of currentPageParams) {
 
-//                    console.log(key, value); 
+                // Ignore specific keys
+                if (this.shouldIgnoreKey(key))
+                    continue; 
 
-                    if (this.shouldIgnoreKey(key))
-                        continue; 
+                // Optionally overwrite anchor params 
+                if (anchorParams.has(key) && !this.config.overwriteExisting)
+                    continue; 
+                    
+                newParams.set(key, value);
 
-                    if (anchorParams.has(key) && !this.config.overwriteExisting)
-                        continue; 
-
-//                    anchorParams[key] = value;
-                        
-                    // && !anchorParams.has(key)) {
-                    //     anchorParams.append(key, value);
-                    // }
-
-                    // // Ignore parameters ending in "_page" (pagination)
-                    // if (!key.endsWith('_page')) 
-                    //     continue;
-
-                    // Ignore redir Webflow params (user accounts)
-                    // TODO: 
-//                    console.log("adding", key, value);
-                    // Add this one
-//                    newParams[key] = value;
-                    newParams.set(key, value);
-
-//                    console.log(newParams)
-                }
-
-                // Add or override other parameters as needed
-                // Example: newParams['newParam'] = 'newValue';
-
-                // Clear existing parameters and set the new ones
-//                Array.from(params.keys()).forEach(key => params.delete(key));
-                // params.forEach((_, key) => params.delete(key));
-                // // Object.entries(newParams).forEach(([key, value]) => {
-                // //     params.set(key, value);
-                // // });
-                // for (let key in newParams) {
-                //     if (newParams.hasOwnProperty(key)) {
-                //         params.set(key, newParams[key]);
-                //     }
-                // }
-
-
-//                console.log("writing", newParams)
-
-
-                // Construct the new URL with the modified query string
-                let newUrl = anchorUrl.origin + anchorUrl.pathname;
-
-                if(newParams.size > 0)
-                    newUrl +=  '?' + newParams.toString();
-
-                // Navigate to the new URL
-//                console.log('Navigating to:', newUrl);
-                window.location.href = newUrl;
             }
+
+            // Construct the new URL with the modified query string
+            let newUrl = anchorUrl.origin + anchorUrl.pathname;
+
+            if(newParams.size > 0)
+                newUrl +=  '?' + newParams.toString();
+
+            // Navigate to the new URL
+            window.location.href = newUrl;
 
         });
 
@@ -169,23 +137,18 @@ export class Sa5QueryPassthrough {
 
     shouldIgnoreKey(key: string): boolean {
 
-//        console.log("checking", key, this.config.ignorePatterns)
-
         for (const pattern of this.config.ignorePatterns) {
             if (typeof pattern === 'string') {
                 if (pattern === key) {
-//                    console.log("ignoring", key);
                     return true;
                 }
             } else if (pattern instanceof RegExp) {
                 if (pattern.test(key)) {
-//                    console.log("ignoring", key);
                     return true;
                 }
             }
         }
 
-//        console.log("not ignoring", key);
         return false;
     }
 
