@@ -142,7 +142,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.4.22";
+  var VERSION = "5.4.23";
 
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
@@ -527,12 +527,14 @@
         email: false,
         account_info: false,
         custom_fields: false,
-        access_groups: false
+        access_groups: false,
+        direct: false
       };
       this.access_groups = [];
       this.data = {};
       this.meta = {};
       this.raw = {};
+      this.direct = {};
       this.isLoggedIn = function() {
         return getCookie("wf_loggedin") || false;
       };
@@ -936,7 +938,7 @@
         form.addEventListener("submit", (e) => {
           let emailInput = form.querySelector("#wf-log-in-email");
           let userEmail = emailInput.value;
-          let userKey = btoa(userEmail);
+          let userKey = UnicodeBase64.encode(userEmail);
           localStorage.setItem("StorageKeys.userKey", userKey);
         });
       });
@@ -986,7 +988,7 @@
       var userKey;
       const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
       if (userKeyEncoded) {
-        return atob(userKeyEncoded);
+        return UnicodeBase64.decode(userKeyEncoded);
       }
     }
     async loadUserInfoAsync() {
@@ -1004,6 +1006,7 @@
         this.loadUserInfoAsync_loginInfo();
         this.loadUserInfoAsync_accountInfo();
         this.loadUserInfoAsync_accessGroups();
+        this.loadUserInfoAsync_direct();
       }
       this.debug.groupEnd();
     }
@@ -1018,6 +1021,58 @@
       this.debug.debug("Caching user object [login].", user);
       this.saveUserInfoCache(user);
       this.debug.groupEnd();
+    }
+    async loadUserInfoAsync_direct() {
+      try {
+        const value = document.cookie;
+        const wfCsrfToken = value.match(/wf-csrf=([^;]+)/)[1];
+        fetch(
+          `https://${window.location.host}/.wf_graphql/usys/apollo`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authority: window.location.host,
+              path: "/.wf_graphql/usys/apollo",
+              "x-wf-csrf": wfCsrfToken,
+              scheme: "https",
+              referrer: `https://${window.location.host}/user-account`,
+              accept: "/, application/json",
+              "accept-encoding": "gzip, deflate, br",
+              "content-length": "9999999",
+              origin: `https://${window.location.host}`,
+              "sec-ch-ua": `"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"`
+            },
+            body: JSON.stringify({
+              query: `
+                query FetchUser {
+                    site {
+                        siteUser {
+                            id
+                        data {
+                            name: plainText(id: "name")
+                            email: email(id: "email")
+                        }
+                        createdOn
+                        __typename
+                        }
+                        __typename
+                    }
+                    }
+                `,
+              operationName: "FetchUser",
+              variables: {}
+            })
+          }
+        ).then((res) => res.json()).then((result) => {
+          var user = new Sa5User();
+          user.user_data_loaded.direct = true;
+          user.direct = result.data.site.siteUser;
+          user.user_id = result.data.site.siteUser.id;
+          this.saveUserInfoCache(user);
+        });
+      } catch {
+      }
     }
     async loadUserInfoAsync_loginInfo() {
       this.debug.group("loadUserInfoAsync_loginInfo");
@@ -1166,6 +1221,10 @@
         this.debug.debug("Merging user email.");
         userData.email = newUserData.email;
       }
+      if (newUserData.user_id) {
+        this.debug.debug("Merging user id.");
+        userData.user_id = newUserData.user_id;
+      }
       if (newUserData.user_data_loaded.account_info) {
         this.debug.debug("Merging user account_info.");
         userData.email = newUserData.email;
@@ -1188,7 +1247,7 @@
       this.debug.debug("merged", userData);
       sessionStorage.setItem(
         StorageKeys.user,
-        btoa(JSON.stringify(userData))
+        UnicodeBase64.encode(JSON.stringify(userData))
       );
       if (this.config.dataBind) {
         this.debug.debug("databinding", userData);
@@ -1219,7 +1278,7 @@
       this.debug.debug("getting user.");
       const user = new Sa5User();
       user.fromJSON(
-        JSON.parse(atob(userInfo))
+        JSON.parse(UnicodeBase64.decode(userInfo))
       );
       this.debug.groupEnd();
       return user;
@@ -1236,6 +1295,17 @@
           e.stopPropagation();
         });
       }
+    }
+  };
+  var UnicodeBase64 = class {
+    static encode(input) {
+      const utf8Bytes = encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+      return btoa(utf8Bytes);
+    }
+    static decode(base64) {
+      const binaryString = atob(base64);
+      const utf8String = binaryString.split("").map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`).join("");
+      return decodeURIComponent(utf8String);
     }
   };
 

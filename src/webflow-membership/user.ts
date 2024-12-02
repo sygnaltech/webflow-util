@@ -30,7 +30,8 @@ export class Sa5User {
         email: false,
         account_info: false,
         custom_fields: false,
-        access_groups: false
+        access_groups: false,
+        direct: false,
     };
 
     // Webflow data
@@ -85,6 +86,9 @@ export class Sa5User {
 
     // Raw data
     raw = {}; 
+
+    // Direct data 
+    direct = {}; 
 
     constructor() {
 

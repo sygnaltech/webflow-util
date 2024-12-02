@@ -203,7 +203,8 @@ export class Sa5UserAccounts {
                 let emailInput = form.querySelector("#wf-log-in-email") as HTMLInputElement;
                 let userEmail = emailInput.value;
 
-                let userKey = btoa(userEmail);
+                let userKey = // btoa(userEmail);
+                    UnicodeBase64.encode(userEmail);
                 localStorage.setItem('StorageKeys.userKey', userKey); 
             });
         });
@@ -317,7 +318,8 @@ export class Sa5UserAccounts {
         // Get cached version if possible
         const userKeyEncoded = localStorage.getItem(StorageKeys.userKey);
         if (userKeyEncoded) {
-            return atob(userKeyEncoded);
+            return UnicodeBase64.decode(userKeyEncoded);
+//            return atob(userKeyEncoded);
         }
 
     }
@@ -357,6 +359,7 @@ export class Sa5UserAccounts {
             this.loadUserInfoAsync_loginInfo(); // async
             this.loadUserInfoAsync_accountInfo(); // async
             this.loadUserInfoAsync_accessGroups(); // async
+            this.loadUserInfoAsync_direct(); // async 
         
         }
 
@@ -413,6 +416,76 @@ export class Sa5UserAccounts {
         //     this.config.userInfoUpdatedCallback(user); // async
 
         this.debug.groupEnd();
+    }
+
+    /**
+     * Experimental
+     * GraphQL direct request 
+     */
+
+    async loadUserInfoAsync_direct() { 
+
+        try {
+
+            // Get CSRF Token 
+            const value = document.cookie;
+            const wfCsrfToken = value.match(/wf-csrf=([^;]+)/)[1];
+
+            fetch(
+            `https://${window.location.host}/.wf_graphql/usys/apollo`,
+            {
+                method: "POST",
+                headers: {
+                "content-type": "application/json",
+                authority: window.location.host,
+                path: "/.wf_graphql/usys/apollo",
+                "x-wf-csrf": wfCsrfToken,
+                scheme: "https",
+                referrer: `https://${window.location.host}/user-account`,
+                accept: "/, application/json",
+                "accept-encoding": "gzip, deflate, br",
+                "content-length": "9999999",
+                origin: `https://${window.location.host}`,
+                "sec-ch-ua": `"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"`,
+                },
+                body: JSON.stringify({
+                query: `
+                query FetchUser {
+                    site {
+                        siteUser {
+                            id
+                        data {
+                            name: plainText(id: \"name\")
+                            email: email(id: "email")
+                        }
+                        createdOn
+                        __typename
+                        }
+                        __typename
+                    }
+                    }
+                `,
+                operationName: "FetchUser",
+                variables: {},
+                }),
+            }
+            )
+            .then((res) => res.json())
+            .then((result) => {
+                
+                var user = new Sa5User();
+                user.user_data_loaded.direct = true;
+
+                user.direct = result.data.site.siteUser; 
+                user.user_id = result.data.site.siteUser.id; 
+                this.saveUserInfoCache(user); 
+
+            }); 
+
+        } catch {
+            
+        }
+
     }
 
     // Get account info
@@ -673,6 +746,14 @@ export class Sa5UserAccounts {
 
     //#region USER CACHE
 
+    // private encodeUnicodeToBase64(str) {
+    //     return btoa(unescape(encodeURIComponent(str)));
+    // }
+    
+    // private decodeBase64ToUnicode(base64) {
+    //     return decodeURIComponent(escape(atob(base64)));
+    // }
+
     saveUserInfoCache(newUserData) {
         
         this.debug.group("saveUserInfoCache");
@@ -693,6 +774,10 @@ export class Sa5UserAccounts {
         if (newUserData.user_data_loaded.email) {
             this.debug.debug("Merging user email.");
             userData.email = newUserData.email;
+        }
+        if (newUserData.user_id) {
+            this.debug.debug("Merging user id.");
+            userData.user_id = newUserData.user_id;
         }
         if (newUserData.user_data_loaded.account_info) {
             this.debug.debug("Merging user account_info.");
@@ -720,7 +805,8 @@ export class Sa5UserAccounts {
         this.debug.debug("merged", userData); // Merged 
 
         sessionStorage.setItem(StorageKeys.user,
-            btoa(JSON.stringify(userData)) // , jsonMapReplacer))
+            UnicodeBase64.encode(JSON.stringify(userData))
+//            btoa(JSON.stringify(userData)) // , jsonMapReplacer))
             ); 
 
         // Databinding
@@ -773,7 +859,9 @@ export class Sa5UserAccounts {
         // De-serialize User 
         const user = new Sa5User();
         user.fromJSON(
-           JSON.parse(atob(userInfo)) //, jsonMapReviver)
+           JSON.parse(UnicodeBase64.decode(userInfo))
+  //      )
+//           JSON.parse(atob(userInfo)) //, jsonMapReviver)
         );
 
         this.debug.groupEnd();
@@ -846,3 +934,27 @@ function parseJwt (token) {
 */
 
 }
+
+/**
+ * Used to replace btoa() and atob() with unicode-compatible version. 
+ */
+class UnicodeBase64 {
+    // Encode Unicode string to Base64
+    static encode(input: string): string {
+      const utf8Bytes = encodeURIComponent(input)
+        .replace(/%([0-9A-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+      return btoa(utf8Bytes);
+    }
+  
+    // Decode Base64 string to Unicode
+    static decode(base64: string): string {
+      const binaryString = atob(base64);
+      const utf8String = binaryString
+        .split('')
+        .map(char => `%${char.charCodeAt(0).toString(16).padStart(2, '0')}`)
+        .join('');
+      return decodeURIComponent(utf8String);
+    }
+  }
+
+

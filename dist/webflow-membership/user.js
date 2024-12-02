@@ -201,12 +201,14 @@
         email: false,
         account_info: false,
         custom_fields: false,
-        access_groups: false
+        access_groups: false,
+        direct: false
       };
       this.access_groups = [];
       this.data = {};
       this.meta = {};
       this.raw = {};
+      this.direct = {};
       this.isLoggedIn = function() {
         return getCookie("wf_loggedin") || false;
       };
