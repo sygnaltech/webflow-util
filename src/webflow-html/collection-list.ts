@@ -45,16 +45,41 @@ export class Sa5CollectionList {
         const sortType = list.getAttribute(
             Sa5Attribute.ATTR_SORT_TYPE // "wfu-sort-type"
             ) || "string";
+        const sortLocaleConfig = list.getAttribute(
+            "wfu-sort-locale"
+            ) || "";
+    
+        var sortLocale: string = "en"; // default 
+        switch(sortLocaleConfig) {
+            case "none":
+            case "auto":
+            case "": 
+                // Get the locale from the HTML element if present
+                const htmlElement = document.documentElement;
+                const currentLocale = htmlElement.getAttribute("lang");
+                
+                // If a locale is specified, use it; otherwise, default to "en"
+                sortLocale = currentLocale ? currentLocale : "en";
+                break;
+            case "browser":
+                // Get the locale from the browser's navigator object
+                sortLocale = navigator.language || "en";
+                break;
+            default:
+                sortLocale = sortLocaleConfig; 
+                break; 
+        }
 
         const items = Array.from(list.children);
 
-        console.debug(`WFU sorting ${mode} ${sortType} ${dir} (${items.length} children)`);
+        console.debug(`WFU sorting ${mode} ${sortType} ${dir} ${sortLocale} (${items.length} children)`);
 
         console.debug({
             name: "WFU sorting", 
             mode: mode, 
             sortType: sortType, 
             dir: dir, 
+            sortLocale: sortLocale, 
             children: `${items.length} children`
         });
 
@@ -93,7 +118,9 @@ export class Sa5CollectionList {
                     case "string":
                     default:
 
-                        sortResult = key1.localeCompare(key2);
+                        sortResult = key1.localeCompare(key2, sortLocale, {
+                            sensitivity: 'variant' 
+                        });
                         console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
                         break;
                 }

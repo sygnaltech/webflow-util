@@ -142,13 +142,33 @@
       const sortType = list.getAttribute(
         "wfu-sort-type" /* ATTR_SORT_TYPE */
       ) || "string";
+      const sortLocaleConfig = list.getAttribute(
+        "wfu-sort-locale"
+      ) || "";
+      var sortLocale = "en";
+      switch (sortLocaleConfig) {
+        case "none":
+        case "auto":
+        case "":
+          const htmlElement = document.documentElement;
+          const currentLocale = htmlElement.getAttribute("lang");
+          sortLocale = currentLocale ? currentLocale : "en";
+          break;
+        case "browser":
+          sortLocale = navigator.language || "en";
+          break;
+        default:
+          sortLocale = sortLocaleConfig;
+          break;
+      }
       const items = Array.from(list.children);
-      console.debug(`WFU sorting ${mode} ${sortType} ${dir} (${items.length} children)`);
+      console.debug(`WFU sorting ${mode} ${sortType} ${dir} ${sortLocale} (${items.length} children)`);
       console.debug({
         name: "WFU sorting",
         mode,
         sortType,
         dir,
+        sortLocale,
         children: `${items.length} children`
       });
       if (dir == "random") {
@@ -171,7 +191,9 @@
               break;
             case "string":
             default:
-              sortResult = key1.localeCompare(key2);
+              sortResult = key1.localeCompare(key2, sortLocale, {
+                sensitivity: "variant"
+              });
               console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
               break;
           }
