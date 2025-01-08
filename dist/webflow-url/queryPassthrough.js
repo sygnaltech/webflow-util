@@ -67,17 +67,35 @@
       document.addEventListener("click", (event) => {
         const target = event.target;
         const anchor = target.closest("a");
+        this.debug.debug("Link clicked", anchor);
         if (!anchor)
           return;
-        if (!anchor.hasAttribute("href"))
+        if (!anchor.hasAttribute("href")) {
+          this.debug.debug("Link ignored - no href", anchor);
           return;
-        if (anchor.href.startsWith("mailto:"))
+        }
+        if (anchor.href.startsWith("mailto:")) {
+          this.debug.debug("Link ignored - mailto:", anchor);
           return;
-        if (anchor.href.startsWith("tel:"))
+        }
+        if (anchor.href.startsWith("tel:")) {
+          this.debug.debug("Link ignored - tel:", anchor);
           return;
+        }
+        if (anchor.getAttribute("wfu-url-passthrough") == "ignore") {
+          this.debug.debug("Link click ignored (explicit ignore setting).");
+          return;
+        }
         const currentPageParams = new URLSearchParams(window.location.search);
+        const currentPageHash = window.location.hash;
         const anchorParams = new URLSearchParams(anchor.search);
         const anchorUrl = new URL(anchor.href);
+        if (anchorUrl.hash) {
+          if (anchorUrl.pathname == window.location.pathname) {
+            this.debug.debug("Link click ignored (hash, same page).");
+            return;
+          }
+        }
         if (this.config.internalOnly) {
           this.debug.debug("checking internalOnly");
           const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
@@ -87,6 +105,7 @@
           }
         }
         event.preventDefault();
+        this.debug.debug("Overriding default link handling.");
         let newParams = new URLSearchParams(anchorUrl.searchParams);
         this.debug.debug(newParams);
         for (const [key, value] of currentPageParams) {
@@ -96,10 +115,15 @@
             continue;
           newParams.set(key, value);
         }
-        let newUrl = anchorUrl.origin + anchorUrl.pathname;
-        if (newParams.size > 0)
-          newUrl += "?" + newParams.toString();
-        window.location.href = newUrl;
+        let newUrl = new URL(anchorUrl);
+        if (newParams.size > 0) {
+          this.debug.debug("Appending querystring params to passthrough");
+          newParams.forEach((value, key) => {
+            newUrl.searchParams.set(key, value);
+          });
+        }
+        this.debug.debug("Final URL for navigation", newUrl.href);
+        window.location.href = newUrl.href;
       });
     }
     shouldIgnoreKey(key) {

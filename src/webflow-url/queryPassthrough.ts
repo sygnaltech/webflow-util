@@ -41,6 +41,7 @@ export class Sa5QueryPassthrough {
 
         // Initialize debugging
         this.debug = new Sa5Debug("sa5-url-querypassthrough");
+//        this.debug.enabled = true; 
         this.debug.debug ("Initializing");
 
         this.debug.debug ("Config:", this.config);
@@ -54,27 +55,58 @@ export class Sa5QueryPassthrough {
             const target = event.target as HTMLElement;
             const anchor = target.closest('a');
 
+            this.debug.debug("Link clicked", anchor)
+
             // No link found
             if(!anchor)
                 return; // ignore
 
             // Ignore links with no href 
-            if(!anchor.hasAttribute("href"))
+            if(!anchor.hasAttribute("href")) {
+                this.debug.debug("Link ignored - no href", anchor)
                 return; // ignore
+            }
 
             // Ignore mailto: and tel: links 
-            if(anchor.href.startsWith("mailto:"))
+            if(anchor.href.startsWith("mailto:")) {
+                this.debug.debug("Link ignored - mailto:", anchor)
                 return; // ignore
-            if(anchor.href.startsWith("tel:"))
+            }
+                
+            if(anchor.href.startsWith("tel:")) {
+                this.debug.debug("Link ignored - tel:", anchor)
                 return; // ignore 
+            }
+
+            // Ignore explicitly ignored links 
+            if(anchor.getAttribute("wfu-url-passthrough") == "ignore") {
+                this.debug.debug("Link click ignored (explicit ignore setting).")
+                return;
+            }
 
             const currentPageParams = new URLSearchParams(window.location.search);
+
+            const currentPageHash = window.location.hash; 
 
             // Get the parameters of the anchor URL
             const anchorParams = new URLSearchParams(anchor.search);
 
             // Parse the URL and query string
             const anchorUrl = new URL(anchor.href);
+
+            // Hash handling 
+            // If this page
+            if(anchorUrl.hash) {
+                
+                if (anchorUrl.pathname == window.location.pathname) { 
+                    this.debug.debug("Link click ignored (hash, same page).")
+                    return;
+                }
+
+            }
+
+// event.preventDefault();
+// return;
 
             // Check if the URL is relative or if the hostname matches the current hostname
             if(this.config.internalOnly) {
@@ -91,9 +123,11 @@ export class Sa5QueryPassthrough {
                 }
             }
 
-            // Process link click 
-
+            // Process link click ourselves
+            // Suppress default handling 
             event.preventDefault();
+
+            this.debug.debug("Overriding default link handling.")
 
             // Object to hold the new parameters
 //                let newParams: { [key: string]: string } = {};
@@ -123,13 +157,28 @@ export class Sa5QueryPassthrough {
             }
 
             // Construct the new URL with the modified query string
-            let newUrl = anchorUrl.origin + anchorUrl.pathname;
+//            let newUrl = anchorUrl.origin + anchorUrl.pathname;
 
-            if(newParams.size > 0)
-                newUrl +=  '?' + newParams.toString();
+            let newUrl: URL = new URL(anchorUrl);
+
+            if(newParams.size > 0) {
+                this.debug.debug("Appending querystring params to passthrough"); 
+
+                // Iterate through newParams and set them on the new URL's searchParams
+                newParams.forEach((value, key) => {
+                    newUrl.searchParams.set(key, value); // Overwrite existing parameters by the same name
+                });
+//                newUrl +=  '?' + newParams.toString();
+            }
+
+            // if (anchorUrl.hash) { 
+            //     this.debug.debug("Appending hash"); 
+            //     newUrl += '#' + anchorUrl.hash; 
+            // }
 
             // Navigate to the new URL
-            window.location.href = newUrl;
+            this.debug.debug("Final URL for navigation", newUrl.href); 
+            window.location.href = newUrl.href;
 
         });
 
