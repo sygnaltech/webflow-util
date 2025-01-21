@@ -30,4 +30,10 @@ markdown {
         //  background-color: #eee;
     }
 
+    /* Marker highlighting */ 
+    mark {
+        background-color: #ffffbb;
+        padding: 0 0.15rem;
+        margin: 0 -0.15rem;
+    }
 }

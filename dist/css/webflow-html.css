@@ -364,6 +364,7 @@ markdown {
 
 [theme=default] {
   /* Table formatting */
+  /* Marker highlighting */
 }
 [theme=default] table {
   border-spacing: 10px 10px;
@@ -376,6 +377,11 @@ markdown {
 }
 [theme=default] td {
   padding: 2px 30px 2px 10px;
+}
+[theme=default] mark {
+  background-color: #ffffbb;
+  padding: 0 0.15rem;
+  margin: 0 -0.15rem;
 }
 
 [wfu-decode] {

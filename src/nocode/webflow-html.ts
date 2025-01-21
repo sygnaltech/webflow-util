@@ -18,7 +18,7 @@ import { Sa5CollectionList } from '../webflow-html/collection-list';
 import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
 import { Sa5EncodedEmail } from '../webflow-html/encoded-email';
-import Showdown from 'showdown';
+// import Showdown from 'showdown';
 //import { Sa5Designer } from '../webflow-core/designer';
 //import { Sa5Layouts } from '../webflow-html/layout';
 
@@ -282,25 +282,25 @@ const init = () => {
      * Markdown
      */
 
-    // https://github.com/showdownjs/showdown 
+    // // https://github.com/showdownjs/showdown 
 
-    // Initialize markdown converter
-    let converter = new Showdown.Converter({
-        tables: true, // allow tables
-        noHeaderId: true,
-        headerLevelStart: 2,
-        literalMidWordUnderscores: true
-    });
+    // // Initialize markdown converter
+    // let converter = new Showdown.Converter({
+    //     tables: true, // allow tables
+    //     noHeaderId: true,
+    //     headerLevelStart: 2,
+    //     literalMidWordUnderscores: true
+    // });
 
-    document.querySelectorAll<HTMLElement>(`markdown`)
-      .forEach((element: HTMLElement) => { 
+    // document.querySelectorAll<HTMLElement>(`markdown`)
+    //   .forEach((element: HTMLElement) => { 
 
-        // Determine theme
-        const mdTheme = element.getAttribute("theme") || "default"; 
+    //     // Determine theme
+    //     const mdTheme = element.getAttribute("theme") || "default"; 
 
-        element.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(element.innerHTML) + `<div>`; 
+    //     element.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(element.innerHTML) + `<div>`; 
 
-    }); 
+    // }); 
 
     /**
      * Remove any designer-only elements 

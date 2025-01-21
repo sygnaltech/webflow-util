@@ -6795,7 +6795,7 @@
   Sa5Core.startup(WebflowFormat);
 
   // src/version.ts
-  var VERSION = "5.4.25";
+  var VERSION = "5.4.26";
 
   // src/nocode/webflow-format.ts
   var init = () => {

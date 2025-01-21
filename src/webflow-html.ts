@@ -11,6 +11,7 @@ import { Sa5Core } from './webflow-core'
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 import { Sa5Breakpoints } from './webflow-html/breakpoints'
+import { Sa5Markdown } from './webflow-html/markdown';
 
 interface Sa5HtmlConfig {
 
@@ -42,7 +43,10 @@ export class Sa5Html {
 
         this.debug.debug ("sa5-html init.");
 
-        // Init breakpoints
+        /**
+         * Breakpoints
+         */
+
         let breakpoints = new Sa5Breakpoints({
             breakpointChangedCallback: (breakpointName: string, e: MediaQueryListEvent) => {
 
@@ -58,11 +62,27 @@ export class Sa5Html {
         });
         breakpoints.init();
 
-        // Init dynamic attributes
+        /**
+         * Dynamic attributes
+         */
+
         if(this.config.dynamicAttributes) {
             let obj = new Sa5HtmlDynamicAttributes({});
             obj.init();
         }
+
+        /**
+         * Markdown
+         */
+
+        document.querySelectorAll<HTMLElement>(`markdown, md, [wfu-markdown]`)
+        .forEach((element: HTMLElement) => { 
+
+            let md: Sa5Markdown = new Sa5Markdown(element); 
+            md.init(); 
+  
+        }); 
+  
 
     }
 
