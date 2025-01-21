@@ -4150,6 +4150,45 @@
     }
   });
 
+  // src/webflow-html/lazyload.ts
+  var Sa5LazyLoad;
+  var init_lazyload = __esm({
+    "src/webflow-html/lazyload.ts"() {
+      init_webflow_core();
+      Sa5LazyLoad = class {
+        constructor(element2, config = {}) {
+          this.elem = element2;
+          this.config = {};
+          let core2 = Sa5Core.startup();
+        }
+        setupTemplateRendering() {
+          const observer = new IntersectionObserver((entries, observer2) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const wrapper2 = entry.target;
+                const template = wrapper2.querySelector("template");
+                if (template) {
+                  const content = template.content.cloneNode(true);
+                  wrapper2.appendChild(content);
+                  template.remove();
+                }
+                observer2.unobserve(wrapper2);
+              }
+            });
+          });
+          const wrapper = document.createElement("div");
+          this.elem.parentNode?.insertBefore(wrapper, this.elem);
+          wrapper.appendChild(this.elem);
+          console.log(wrapper);
+          observer.observe(wrapper);
+        }
+        init() {
+          this.setupTemplateRendering();
+        }
+      };
+    }
+  });
+
   // src/webflow-html.ts
   var Sa5Html;
   var init_webflow_html = __esm({
@@ -4159,6 +4198,7 @@
       init_dynamic_attributes();
       init_breakpoints();
       init_markdown();
+      init_lazyload();
       Sa5Html = class {
         constructor(config) {
           this.config = config;
@@ -4184,6 +4224,10 @@
           document.querySelectorAll(`markdown, md, [wfu-markdown]`).forEach((element2) => {
             let md = new Sa5Markdown(element2);
             md.init();
+          });
+          document.querySelectorAll(`template[wfu-lazyload]`).forEach((element2) => {
+            let module = new Sa5LazyLoad(element2);
+            module.init();
           });
         }
       };
@@ -4324,7 +4368,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.27";
+      VERSION = "5.4.28";
     }
   });
 

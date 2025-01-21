@@ -4082,6 +4082,39 @@
     }
   };
 
+  // src/webflow-html/lazyload.ts
+  var Sa5LazyLoad = class {
+    constructor(element, config = {}) {
+      this.elem = element;
+      this.config = {};
+      let core = Sa5Core.startup();
+    }
+    setupTemplateRendering() {
+      const observer = new IntersectionObserver((entries, observer2) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const wrapper2 = entry.target;
+            const template = wrapper2.querySelector("template");
+            if (template) {
+              const content = template.content.cloneNode(true);
+              wrapper2.appendChild(content);
+              template.remove();
+            }
+            observer2.unobserve(wrapper2);
+          }
+        });
+      });
+      const wrapper = document.createElement("div");
+      this.elem.parentNode?.insertBefore(wrapper, this.elem);
+      wrapper.appendChild(this.elem);
+      console.log(wrapper);
+      observer.observe(wrapper);
+    }
+    init() {
+      this.setupTemplateRendering();
+    }
+  };
+
   // src/webflow-html.ts
   var Sa5Html = class {
     constructor(config) {
@@ -4108,6 +4141,10 @@
       document.querySelectorAll(`markdown, md, [wfu-markdown]`).forEach((element) => {
         let md = new Sa5Markdown(element);
         md.init();
+      });
+      document.querySelectorAll(`template[wfu-lazyload]`).forEach((element) => {
+        let module = new Sa5LazyLoad(element);
+        module.init();
       });
     }
   };

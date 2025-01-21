@@ -270,45 +270,37 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-demo.ts
-  var WebflowInfo = class {
-    constructor() {
-      this.siteId = document.documentElement.getAttribute("data-wf-site");
-      this.pageId = document.documentElement.getAttribute("data-wf-page");
+  // src/webflow-html/lazyload.ts
+  var Sa5LazyLoad = class {
+    constructor(element, config = {}) {
+      this.elem = element;
+      this.config = {};
+      let core = Sa5Core.startup();
     }
-    getWebflowPreviewLink(url) {
-      const parsedUrl = new URL(url);
-      parsedUrl.searchParams.set("pageId", this.pageId ?? "");
-      return parsedUrl.href;
+    setupTemplateRendering() {
+      const observer = new IntersectionObserver((entries, observer2) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const wrapper2 = entry.target;
+            const template = wrapper2.querySelector("template");
+            if (template) {
+              const content = template.content.cloneNode(true);
+              wrapper2.appendChild(content);
+              template.remove();
+            }
+            observer2.unobserve(wrapper2);
+          }
+        });
+      });
+      const wrapper = document.createElement("div");
+      this.elem.parentNode?.insertBefore(wrapper, this.elem);
+      wrapper.appendChild(this.elem);
+      console.log(wrapper);
+      observer.observe(wrapper);
     }
-    updateHrefToWebflowPreviewLink(linkElem) {
-      var parsedUrl = linkElem.href;
-      var modifiedUrl = this.getWebflowPreviewLink(parsedUrl ?? "");
-      linkElem.href = modifiedUrl;
+    init() {
+      this.setupTemplateRendering();
     }
   };
-  Sa5Core.startup(WebflowInfo);
-
-  // src/version.ts
-  var VERSION = "5.4.28";
-
-  // src/nocode/webflow-demo.ts
-  var init = () => {
-    let core = Sa5Core.startup();
-    let debug = new Sa5Debug("wfu-demo");
-    debug.debug(`Initializing v${VERSION}`);
-    const webflowInfo = new WebflowInfo();
-    const elements = document.querySelectorAll(
-      `a[${"wfu-demo-link" /* ATTR_DEMO_LINK */}]`
-    );
-    elements.forEach((element) => {
-      webflowInfo.updateHrefToWebflowPreviewLink(element);
-    });
-  };
-  if (document.readyState !== "loading") {
-    init();
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
 })();
-//# sourceMappingURL=webflow-demo.js.map
+//# sourceMappingURL=lazyload.js.map

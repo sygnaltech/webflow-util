@@ -12,6 +12,7 @@ import { Sa5Debug } from './webflow-core/debug'
 import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 import { Sa5Breakpoints } from './webflow-html/breakpoints'
 import { Sa5Markdown } from './webflow-html/markdown';
+import { Sa5LazyLoad } from './webflow-html/lazyload';
 
 interface Sa5HtmlConfig {
 
@@ -83,6 +84,17 @@ export class Sa5Html {
   
         }); 
   
+        /**
+         * Lazy Load 
+         */
+
+        document.querySelectorAll<HTMLElement>(`template[wfu-lazyload]`)
+        .forEach((element: HTMLTemplateElement) => { 
+
+            let module: Sa5LazyLoad = new Sa5LazyLoad(element); 
+            module.init(); 
+  
+        }); 
 
     }
 
