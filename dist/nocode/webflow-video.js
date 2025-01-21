@@ -2707,7 +2707,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.28";
+  var VERSION = "5.4.29";
 
   // src/nocode/webflow-video.ts
   var init = () => {

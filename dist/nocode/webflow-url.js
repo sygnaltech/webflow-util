@@ -1,6 +1,6 @@
 (() => {
   // src/version.ts
-  var VERSION = "5.4.28";
+  var VERSION = "5.4.29";
 
   // src/globals.ts
   var Sa5Attribute;
@@ -347,7 +347,10 @@
           });
         }
         this.debug.debug("Final URL for navigation", newUrl.href);
-        window.location.href = newUrl.href;
+        if (anchor.target)
+          window.open(newUrl.href, anchor.target);
+        else
+          window.location.href = newUrl.href;
       });
     }
     shouldIgnoreKey(key) {

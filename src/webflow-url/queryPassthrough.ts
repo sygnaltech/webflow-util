@@ -178,7 +178,13 @@ export class Sa5QueryPassthrough {
 
             // Navigate to the new URL
             this.debug.debug("Final URL for navigation", newUrl.href); 
-            window.location.href = newUrl.href;
+
+            // Depending on the target, 
+            // Open in a new tab, or in the same window 
+            if(anchor.target) 
+                window.open(newUrl.href, anchor.target);
+            else
+                window.location.href = newUrl.href;
 
         });
 
