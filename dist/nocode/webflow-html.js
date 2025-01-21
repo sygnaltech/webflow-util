@@ -4129,13 +4129,22 @@
           import_showdown.default.extension("highlight", highlightExtension);
           let converter = new import_showdown.default.Converter({
             tables: true,
+            strikethrough: true,
             noHeaderId: true,
             headerLevelStart: 2,
             literalMidWordUnderscores: true,
             extensions: ["highlight"]
           });
           const mdTheme = this.elem.getAttribute("theme") || "default";
-          this.elem.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`;
+          switch (this.elem.tagName) {
+            case "markdown":
+            case "md":
+              this.elem.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`;
+              break;
+            default:
+              this.elem.innerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`;
+              break;
+          }
         }
       };
     }
@@ -4315,7 +4324,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.26";
+      VERSION = "5.4.27";
     }
   });
 

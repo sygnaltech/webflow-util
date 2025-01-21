@@ -68,6 +68,7 @@ export class Sa5Markdown {
         // Initialize markdown converter
         let converter = new Showdown.Converter({
             tables: true, // allow tables
+            strikethrough: true, // allow strikethrough 
             noHeaderId: true,
             headerLevelStart: 2,
             literalMidWordUnderscores: true,
@@ -78,7 +79,15 @@ export class Sa5Markdown {
         const mdTheme = this.elem.getAttribute("theme") || "default"; 
 
         // Write Markdown element 
-        this.elem.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`; 
+        switch(this.elem.tagName) {
+            case "markdown":
+            case "md":
+                this.elem.outerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`; 
+                break;
+            default:
+                this.elem.innerHTML = `<div theme="${mdTheme}">` + converter.makeHtml(this.elem.innerHTML) + `<div>`; 
+                break;
+        }
 
     }
 
