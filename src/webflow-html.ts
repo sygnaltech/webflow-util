@@ -13,6 +13,7 @@ import { Sa5HtmlDynamicAttributes } from './webflow-html/dynamic-attributes'
 import { Sa5Breakpoints } from './webflow-html/breakpoints'
 import { Sa5Markdown } from './webflow-html/markdown';
 import { Sa5LazyLoad } from './webflow-html/lazyload';
+import { Sa5Switch } from './webflow-html/switch';
 
 interface Sa5HtmlConfig {
 
@@ -43,6 +44,15 @@ export class Sa5Html {
     init() {
 
         this.debug.debug ("sa5-html init.");
+
+
+        /**
+         * Switch
+         */
+
+        console.log("LOADING SWITCH 1")
+        let s = new Sa5Switch();
+        s.init();
 
         /**
          * Breakpoints

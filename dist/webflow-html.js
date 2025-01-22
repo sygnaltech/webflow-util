@@ -4116,6 +4116,51 @@
     }
   };
 
+  // src/webflow-html/switch.ts
+  var Sa5Switch = class {
+    constructor(config = {}) {
+      this.switchCaseItems = [];
+      this.config = {};
+      let core = Sa5Core.startup();
+    }
+    init() {
+      const switchCaseElements = Array.from(
+        document.querySelectorAll("[wfu-switch-case]")
+      );
+      switchCaseElements.forEach((element) => {
+        const caseName = element.getAttribute("wfu-switch-case");
+        let switchName = element.getAttribute("wfu-switch");
+        if (!switchName) {
+          let parent = element.parentElement;
+          while (parent && !switchName) {
+            switchName = parent.getAttribute("wfu-switch");
+            parent = parent.parentElement;
+          }
+        }
+        if (switchName && caseName) {
+          this.switchCaseItems.push({
+            element,
+            switchName,
+            caseName
+          });
+        }
+      });
+    }
+    switchCase(switchName, caseName) {
+      this.switchCaseItems.forEach((item) => {
+        if (item.switchName === switchName) {
+          if (item.caseName === caseName) {
+            item.element.style.display = "";
+          } else {
+            item.element.style.display = "none";
+          }
+        }
+      });
+    }
+  };
+  console.log("INSTALLING SA5SWITCH");
+  Sa5Core.startup(Sa5Switch);
+
   // src/webflow-html.ts
   var Sa5Html = class {
     constructor(config) {
@@ -4125,6 +4170,9 @@
     }
     init() {
       this.debug.debug("sa5-html init.");
+      console.log("LOADING SWITCH 1");
+      let s = new Sa5Switch();
+      s.init();
       let breakpoints = new Sa5Breakpoints({
         breakpointChangedCallback: (breakpointName, e) => {
           window["sa5"] = window["sa5"] || {};
