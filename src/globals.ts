@@ -20,6 +20,8 @@ export enum Sa5GlobalEvent {
     EVENT_TAB_CHANGED = 'tabChanged', 
     EVENT_ACCORDION_CHANGED = 'accordionChanged', 
     EVENT_VIDEO_PLAYER_STATE_CHANGE = 'playerStateChange', 
+    EVENT_FORM_SUBMIT_SUCCESS = 'formSubmitSuccess',
+    EVENT_FORM_SUBMIT_FAIL = 'formSubmitFail',
     
 }
 

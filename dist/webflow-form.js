@@ -196,6 +196,7 @@
       new Sa5Designer().init();
     }
     getHandlers(name) {
+      console.log("HANDLERS", this.handlers);
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
@@ -308,7 +309,12 @@
     get redirect() {
       return this.formElement.getAttribute("redirect");
     }
-    constructor(element) {
+    constructor(element, config = {}) {
+      this.config = {
+        formSubmitSuccessCallback: config.formSubmitSuccessCallback,
+        formSubmitFailCallback: config.formSubmitFailCallback,
+        debug: config.debug ?? false
+      };
       this.debug = new Sa5Debug("sa5-form");
       this.debug.debug("Initializing");
       if (element.tagName == "FORM")
@@ -317,17 +323,33 @@
         this.formBlockElement = element;
       this.formElement = this.formBlockElement.querySelector("form");
       this.isValid = true;
+      const submitButton = this.formElement.querySelector('input[type="submit"]');
+      this.submitButtonReadyMessage = submitButton?.getAttribute("value");
+      this.submitButtonWaitMessage = submitButton?.getAttribute("data-wait");
+    }
+    onFormSubmitSuccess(data) {
+      let core = Sa5Core.startup();
+      const formSubmitSuccess = core.getHandlers("formSubmitSuccess" /* EVENT_FORM_SUBMIT_SUCCESS */);
+      formSubmitSuccess.forEach((f) => {
+        f(this, data);
+      });
+    }
+    onFormSubmitFail(data) {
+      let core = Sa5Core.startup();
+      const formSubmitFail = core.getHandlers("formSubmitFail" /* EVENT_FORM_SUBMIT_FAIL */);
+      formSubmitFail.forEach((f) => {
+        f(this, data);
+      });
     }
     init() {
-      console.log("init form");
+      console.log("INIT FORM");
+      let core = Sa5Core.startup();
       this.formElement.addEventListener("submit", (event) => {
-        console.log("form submitted");
         if (!this.formElement.checkValidity()) {
           event.preventDefault();
           this.formElement.reportValidity();
           return;
         }
-        console.log("form is valid");
         this.preSubmit();
       });
     }
@@ -338,12 +360,23 @@
         checkbox.process();
       });
     }
-    submitButtonWaitMessage() {
+    setSubmitButtonWaitMessage() {
+      console.log("wait message");
       const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
       submitButtons.forEach((button) => {
-        const waitMessage = button.getAttribute("data-wait");
-        if (waitMessage) {
-          button.value = waitMessage;
+        const message = this.submitButtonWaitMessage;
+        if (message) {
+          button.value = message;
+        }
+      });
+    }
+    setSubmitButtonReadyMessage() {
+      console.log("ready message");
+      const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
+      submitButtons.forEach((button) => {
+        const message = this.submitButtonReadyMessage;
+        if (message) {
+          button.value = message;
         }
       });
     }
@@ -356,15 +389,16 @@
           this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "none";
+          this.setSubmitButtonReadyMessage();
           break;
         case 1 /* Success */:
           if (this.redirect) {
-            console.log("redirecting");
-            this.submitButtonWaitMessage();
+            this.debug.debug("Redirecting to " + this.redirect);
+            this.setSubmitButtonReadyMessage();
             window.location.href = this.redirect;
             return;
           }
-          let successMessage = error.querySelector(
+          let successMessage = success.querySelector(
             Sa5Attribute.getBracketed("wfu-form-message" /* ATTR_FORM_MESSAGE */)
           );
           if (successMessage)
@@ -372,6 +406,7 @@
           this.formElement.style.display = "none";
           success.style.display = "block";
           error.style.display = "none";
+          this.setSubmitButtonReadyMessage();
           break;
         case 2 /* Error */:
           let errorMessage = error.querySelector(
@@ -379,9 +414,10 @@
           );
           if (errorMessage)
             errorMessage.innerHTML = message;
-          this.formElement.style.display = "none";
+          this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "block";
+          this.setSubmitButtonReadyMessage();
           break;
       }
     }

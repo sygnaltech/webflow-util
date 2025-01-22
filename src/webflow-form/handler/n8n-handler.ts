@@ -12,23 +12,38 @@ export class WfuFormHandlerN8N extends WfuFormHandler {
         super(form, config); // call the super class constructor and pass in the name parameter
     }
 
-    handleResponseJSON(data, status, response) {
+//     handleResponseJSON(data, requestStatus, response) {
 
-        // How to access the correct `this` inside a callback 
-        // https://stackoverflow.com/a/20279485
-        this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-        this.debug.debug(`Webhook response status: ${status}`);
-        this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
+//         // requestStatus is 'success' any time the webhook
+//         // successfully responded ( low-level )
 
-        if (response.status >= 200 && response.status < 300) { 
-            this.form.setMode(WebflowFormMode.Success, 
-                response.responseJSON?.message);
-        } else {
-            this.form.setMode(WebflowFormMode.Error, 
-                response.responseJSON?.message);
-        }
+//         // How to access the correct `this` inside a callback 
+//         // https://stackoverflow.com/a/20279485
+//         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
+//         this.debug.debug(`Webhook response status: ${requestStatus}`);
+//         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
-    }
+// //        const responseJSON: any = JSON.stringify(data);
+// //console.log("N8N response", responseJSON)
+
+// console.log("DATA", data);
+// console.log("MESSAGE", data?.message);
+
+//         if (response.status >= 200 && response.status < 300) { 
+//             this.form.setMode(WebflowFormMode.Success, 
+//                 data?.message);
+
+//             this.form.onFormSubmitSuccess(data);
+
+//         } else {
+//             this.form.setMode(WebflowFormMode.Error, 
+//                 data?.message);
+
+//             this.form.onFormSubmitFail(data);
+
+//         }
+
+//     }
 
     handleFailResponse(jqxhr, settings, ex) {
 

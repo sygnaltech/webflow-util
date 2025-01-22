@@ -13,6 +13,8 @@
     Sa5GlobalEvent2["EVENT_TAB_CHANGED"] = "tabChanged";
     Sa5GlobalEvent2["EVENT_ACCORDION_CHANGED"] = "accordionChanged";
     Sa5GlobalEvent2["EVENT_VIDEO_PLAYER_STATE_CHANGE"] = "playerStateChange";
+    Sa5GlobalEvent2["EVENT_FORM_SUBMIT_SUCCESS"] = "formSubmitSuccess";
+    Sa5GlobalEvent2["EVENT_FORM_SUBMIT_FAIL"] = "formSubmitFail";
     return Sa5GlobalEvent2;
   })(Sa5GlobalEvent || {});
   var Sa5ScriptType = /* @__PURE__ */ ((Sa5ScriptType2) => {

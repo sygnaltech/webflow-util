@@ -196,6 +196,7 @@
       new Sa5Designer().init();
     }
     getHandlers(name) {
+      console.log("HANDLERS", this.handlers);
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
@@ -439,7 +440,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.29";
+  var VERSION = "5.4.30";
 
   // node_modules/gsap/gsap-core.js
   function _assertThisInitialized(self) {

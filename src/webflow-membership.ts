@@ -141,7 +141,7 @@ export class Sa5UserAccounts {
     onUserInfoChanged(user: Sa5User) {
 
         let core: Sa5Core = Sa5Core.startup();
-        console.log(core);
+//        console.log(core);
         
         const userInfoChanged = core.getHandlers(Sa5GlobalEvent.EVENT_USER_CHANGED); 
         userInfoChanged.forEach((f) => {

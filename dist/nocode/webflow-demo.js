@@ -196,6 +196,7 @@
       new Sa5Designer().init();
     }
     getHandlers(name) {
+      console.log("HANDLERS", this.handlers);
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
@@ -290,7 +291,7 @@
   Sa5Core.startup(WebflowInfo);
 
   // src/version.ts
-  var VERSION = "5.4.29";
+  var VERSION = "5.4.30";
 
   // src/nocode/webflow-demo.ts
   var init = () => {

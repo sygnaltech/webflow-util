@@ -31,6 +31,8 @@ export class Sa5Core {
     // Returns all handlers found by the specified name
     getHandlers(name: string): Function[] {
 
+console.log("HANDLERS", this.handlers)
+
         return this.handlers.filter(item => item[0] === name)
             .map(item => item[1]);
     }

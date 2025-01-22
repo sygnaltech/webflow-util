@@ -196,6 +196,7 @@
       new Sa5Designer().init();
     }
     getHandlers(name) {
+      console.log("HANDLERS", this.handlers);
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {

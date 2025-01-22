@@ -34,12 +34,17 @@ export class WfuFormHandlerMake extends WfuFormHandler {
         this.debug.debug(`Webhook response status: ${status}`);
         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
+        const responseJSON: any = JSON.stringify(data);
+
         if (response.status >= 200 && response.status < 300) { 
             this.form.setMode(WebflowFormMode.Success, 
-                response.responseJSON?.message);
+//                response.
+                responseJSON?.message
+            );
         } else {
             this.form.setMode(WebflowFormMode.Error, 
-                response.responseJSON?.message);
+//                response.
+                responseJSON?.message);
         }
 
     }

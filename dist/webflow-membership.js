@@ -279,6 +279,7 @@
       new Sa5Designer().init();
     }
     getHandlers(name) {
+      console.log("HANDLERS", this.handlers);
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
     }
     getHandler(name) {
@@ -910,7 +911,6 @@
     }
     onUserInfoChanged(user) {
       let core = Sa5Core.startup();
-      console.log(core);
       const userInfoChanged = core.getHandlers("userInfoChanged" /* EVENT_USER_CHANGED */);
       userInfoChanged.forEach((f) => {
         if (this.isUserInfoChangedCallback(f)) {

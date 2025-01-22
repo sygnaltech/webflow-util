@@ -36,35 +36,68 @@ export class WfuFormHandler {
         // Get the Webflow wait message
         let waitMessage = this.form.formElement.querySelector("input[type=submit]")
             .getAttribute("data-wait");
-        this.debug.debug(`waitMessage: ${waitMessage}`);
 
     }
 
-    handleResponseJSON(data, status, response) {
+    handleResponseJSON(data, requestStatus, response) {
 
+        // requestStatus is 'success' any time the webhook
+        // successfully responded ( low-level )
+
+        // How to access the correct `this` inside a callback 
+        // https://stackoverflow.com/a/20279485
         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-        this.debug.debug(`Webhook response status: ${status}`);
+        this.debug.debug(`Webhook response execution status: ${requestStatus}`);
         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
+        // if (response.status >= 200 && response.status < 300) { 
+        //     this.form.setMode(WebflowFormMode.Success);
+        // } else {
+        //     this.form.setMode(WebflowFormMode.Error);
+        // }
+
         if (response.status >= 200 && response.status < 300) { 
-            this.form.setMode(WebflowFormMode.Success);
+            this.form.setMode(WebflowFormMode.Success, 
+                data?.message);
+
+            this.form.onFormSubmitSuccess(data);
+
         } else {
-            this.form.setMode(WebflowFormMode.Error);
+
+            this.form.setMode(WebflowFormMode.Error, 
+                data?.message);
+
+            this.form.onFormSubmitFail(data);
+
         }
 
     }
 
-    handleResponseText(data, status, response) {
+    handleResponseText(data, requestStatus, response) {
 
         this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-        this.debug.debug(`Webhook response status: ${status}`);
+        this.debug.debug(`Webhook response status: ${requestStatus}`);
         this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
 
+        // if (response.status >= 200 && response.status < 300) { 
+        //     this.form.setMode(WebflowFormMode.Success);
+        // } else {
+        //     this.form.setMode(WebflowFormMode.Error);
+        // }
+
         if (response.status >= 200 && response.status < 300) { 
-            this.form.setMode(WebflowFormMode.Success);
+            this.form.setMode(WebflowFormMode.Success, 
+                data?.message);
+
+            this.form.onFormSubmitSuccess(data);
+
         } else {
-            this.form.setMode(WebflowFormMode.Error);
-        }
+            this.form.setMode(WebflowFormMode.Error, 
+                data?.message);
+
+            this.form.onFormSubmitFail(data);
+
+        } 
 
     }
 
@@ -98,6 +131,14 @@ export class WfuFormHandler {
         this.form.formElement.addEventListener('submit', async (e) => {
 
             e.preventDefault();
+
+            // Display "Please Wait" message  
+            this.form.setSubmitButtonWaitMessage();
+
+
+
+
+
 
             this.debug.debug("Posting data.");
             this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
