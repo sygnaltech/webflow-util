@@ -271,155 +271,91 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-layout/layout/handler/layout-handler.ts
-  var Sa5LayoutHandler = class {
-    constructor(layoutContainer, config = {}) {
-      this.zone = null;
-      this.debug = new Sa5Debug("sa5-layout-handler");
-      this.debug.debug("Initializing");
-      this.container = layoutContainer;
-      this.name = this.container.getAttribute("wfu-layout" /* ATTR_LAYOUT */);
-      this.zone = this.container.getAttribute("wfu-layout-ns" /* ATTR_LAYOUT_NS */) || null;
+  // src/webflow-kiosk.ts
+  var defaultConfig = {
+    homePath: "/kiosk",
+    userAgent: "KioskApp/1.0",
+    inactivityTimer: 180
+  };
+  var Sa5Kiosk = class {
+    constructor() {
+      this.inactivityTimerId = null;
     }
-    layout() {
-      if (this.container.getAttribute("wfu-layout-init" /* ATTR_LAYOUT_INIT */) === "clear") {
-        this.container.innerHTML = "";
-      }
-      let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
-      if (this.zone)
-        selector += `[${"wfu-layout-ns" /* ATTR_LAYOUT_NS */}='${this.zone}']`;
-      const targetedElements = document.querySelectorAll(
-        selector
+    loadConfig() {
+      const scripts = document.querySelectorAll('script[type="application/sa5+json"]');
+      const kioskConfigScript = Array.from(scripts).find(
+        (script) => script.textContent?.includes('"@type": "KioskConfig"')
       );
-      targetedElements.forEach((element) => {
-        if (this.container) {
-          this.container.appendChild(element);
+      if (kioskConfigScript) {
+        console.log("Found the specific KioskConfig script:", kioskConfigScript);
+        try {
+          const configData = JSON.parse(kioskConfigScript.textContent || "");
+          console.log("Parsed configuration:", configData);
+          if (isKioskConfig(configData)) {
+            console.log("Validated KioskConfig:", configData);
+            const mergedConfig = { ...defaultConfig, ...configData };
+            console.log("Merged configuration:", mergedConfig);
+            this.kioskConfig = mergedConfig;
+          } else {
+            console.error("Invalid KioskConfig format:", configData);
+          }
+        } catch (error) {
+          console.error("Failed to parse JSON content:", error);
         }
-      });
-      this.container.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
-    }
-  };
-
-  // src/webflow-layout/layout/handler/tabs-handler.ts
-  var Sa5LayoutHandlerTabs = class extends Sa5LayoutHandler {
-    constructor(elem, config) {
-      super(elem, config);
-      this.tabMenu = this.container.querySelector(".w-tab-menu");
-      this.tabContent = this.container.querySelector(".w-tab-content");
-      const firstTabMenuItem = this.tabMenu.children[0];
-      this.tabMenuClasses = firstTabMenuItem ? firstTabMenuItem.className : "";
-      const firstTabContentItem = this.tabContent.children[0];
-      this.tabContentClasses = firstTabContentItem ? firstTabContentItem.className : "";
-    }
-    layout() {
-      if (this.container.getAttribute("wfu-layout-init" /* ATTR_LAYOUT_INIT */) === "clear") {
-        const tabMenu = this.container.querySelector(".w-tab-menu");
-        const tabContent = this.container.querySelector(".w-tab-content");
-        tabMenu.innerHTML = "";
-        tabContent.innerHTML = "";
+      } else {
+        console.error("KioskConfig script element not found.");
       }
-      let selector = `[${"wfu-layout-target" /* ATTR_LAYOUT_TARGET */}='${this.name}']`;
-      if (this.zone)
-        selector += `[${"wfu-layout-ns" /* ATTR_LAYOUT_NS */}='${this.zone}']`;
-      const targetedElements = document.querySelectorAll(
-        selector
-      );
-      targetedElements.forEach((element) => {
-        const tabName = element.getAttribute("wfu-layout-item-name");
-        const newTab = document.createElement("a");
-        newTab.className = `w-inline-block w-tab-link ${this.tabMenuClasses}`;
-        newTab.dataset.wTab = tabName;
-        newTab.innerHTML = `<div>${tabName}</div>`;
-        this.container.querySelector(".w-tab-menu").appendChild(newTab);
-        const contentPane = document.createElement("div");
-        contentPane.className = `w-tab-pane ${this.tabContentClasses}`;
-        contentPane.dataset.wTab = tabName;
-        contentPane.appendChild(element);
-        this.container.querySelector(".w-tab-content").appendChild(contentPane);
-      });
-      const firstTab = this.container.querySelector(".w-tab-menu .w-tab-link");
-      const firstTabContent = this.container.querySelector(".w-tab-content .w-tab-pane");
-      if (firstTab && firstTabContent) {
+      function isKioskConfig(obj) {
+        return typeof obj === "object" && obj !== null && "homePath" in obj && typeof obj.homePath === "string" && "userAgent" in obj && typeof obj.userAgent === "string";
       }
-      this.container.removeAttribute("wfu-preload");
-    }
-  };
-
-  // src/webflow-layout/layout/handler/layout-handler-factory.ts
-  var Sa5LayoutHandlerFactory = class {
-    constructor(layoutContainer, config = {}) {
-    }
-    static createFromElement(layoutContainer, config = {}) {
-      var handler;
-      let type = layoutContainer.getAttribute(
-        "wfu-layout-handler" /* ATTR_LAYOUT_HANDLER */
-      ) || "auto";
-      if (type == "auto") {
-        if (layoutContainer.classList.contains("w-tabs")) {
-          type = "tabs";
-        } else {
-          type = "default";
-        }
-      }
-      switch (type) {
-        case "tabs":
-          handler = new Sa5LayoutHandlerTabs(layoutContainer, config);
-          break;
-        case "default":
-          handler = new Sa5LayoutHandler(layoutContainer, config);
-          break;
-        default:
-          console.error(`Unknown wfu-layout-handler - ${type}`);
-          break;
-      }
-      return handler;
-    }
-  };
-
-  // src/webflow-layout/layout.ts
-  var Sa5Layouts = class {
-    isLayoutsChangedCallback(func) {
-      if (!func)
-        return false;
-      return func.length === 1;
-    }
-    constructor(config = {}) {
-      this.config = {
-        layoutChangedCallback: config.layoutChangedCallback
-      };
-      let core = Sa5Core.startup();
-      const layoutChanged = core.getHandler("layoutChanged");
-      this.config.layoutChangedCallback = layoutChanged;
+      this.kioskConfig = defaultConfig;
     }
     init() {
-      let debug = new Sa5Debug("sa5-html");
-      debug.debug("Layouts initialized.", this.config);
-      let layoutElements = Array.from(
-        document.querySelectorAll(
-          Sa5Attribute.getBracketed("wfu-layout" /* ATTR_LAYOUT */)
-        )
-      );
-      layoutElements.forEach((element) => {
-        let handler = Sa5LayoutHandlerFactory.createFromElement(element);
-        handler.layout();
+      let core = Sa5Core.startup();
+      this.loadConfig();
+      if (this.kioskConfig.inactivityTimer)
+        this.initializeInactivityTimer();
+    }
+    initializeInactivityTimer() {
+      if (!this.isKioskMode()) {
+        console.log("Not in kiosk mode.");
+        return;
+      }
+      if (window.location.pathname === this.kioskConfig.homePath) {
+        console.log(`Already on the home path: ${this.kioskConfig.homePath}`);
+        return;
+      }
+      console.log("Initializing kiosk inactivity timer.");
+      this.setupEventListeners();
+      this.resetInactivityTimer();
+    }
+    isKioskMode() {
+      return new RegExp("kiosk", "i").test(this.kioskConfig.userAgent);
+    }
+    resetInactivityTimer() {
+      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180, 10) * 1e3;
+      if (this.inactivityTimerId !== null) {
+        clearTimeout(this.inactivityTimerId);
+      }
+      this.inactivityTimerId = setTimeout(() => {
+        console.log(`Inactivity timer triggered. Redirecting to ${this.kioskConfig.homePath}.`);
+        window.location.href = this.kioskConfig.homePath;
+      }, timeoutDuration);
+    }
+    setupEventListeners() {
+      const events = [
+        "mousemove",
+        "mousedown",
+        "touchstart",
+        "touchmove",
+        "keydown",
+        "scroll"
+      ];
+      events.forEach((event) => {
+        window.addEventListener(event, () => this.resetInactivityTimer(), { passive: true });
       });
     }
   };
-
-  // src/version.ts
-  var VERSION = "5.4.31";
-
-  // src/nocode/webflow-layout.ts
-  var init = () => {
-    let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-layout");
-    debug.debug(`Initializing v${VERSION}`);
-    new Sa5Layouts().init();
-  };
-  if (document.readyState !== "loading") {
-    init();
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
+  Sa5Core.startup(Sa5Kiosk);
 })();
-//# sourceMappingURL=webflow-layout.js.map
+//# sourceMappingURL=webflow-kiosk.js.map

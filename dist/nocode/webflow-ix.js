@@ -272,7 +272,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.30";
+  var VERSION = "5.4.31";
 
   // src/nocode/webflow-ix.ts
   var init = () => {
