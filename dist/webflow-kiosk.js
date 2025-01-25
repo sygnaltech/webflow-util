@@ -280,6 +280,8 @@
   var Sa5Kiosk = class {
     constructor() {
       this.inactivityTimerId = null;
+      this.debug = new Sa5Debug("sa5-kiosk");
+      this.debug.debug("Initializing");
     }
     loadConfig() {
       const scripts = document.querySelectorAll('script[type="application/sa5+json"]');
@@ -287,14 +289,13 @@
         (script) => script.textContent?.includes('"@type": "KioskConfig"')
       );
       if (kioskConfigScript) {
-        console.log("Found the specific KioskConfig script:", kioskConfigScript);
+        this.debug.debug("Found the specific KioskConfig script:", kioskConfigScript);
         try {
           const configData = JSON.parse(kioskConfigScript.textContent || "");
-          console.log("Parsed configuration:", configData);
+          this.debug.debug("Parsed configuration:", configData);
           if (isKioskConfig(configData)) {
-            console.log("Validated KioskConfig:", configData);
             const mergedConfig = { ...defaultConfig, ...configData };
-            console.log("Merged configuration:", mergedConfig);
+            this.debug.debug("Merged configuration:", mergedConfig);
             this.kioskConfig = mergedConfig;
           } else {
             console.error("Invalid KioskConfig format:", configData);
@@ -306,7 +307,7 @@
         console.error("KioskConfig script element not found.");
       }
       function isKioskConfig(obj) {
-        return typeof obj === "object" && obj !== null && "homePath" in obj && typeof obj.homePath === "string" && "userAgent" in obj && typeof obj.userAgent === "string";
+        return typeof obj === "object" && obj !== null && ("homePath" in obj ? typeof obj.homePath === "string" : true) && ("userAgent" in obj ? typeof obj.userAgent === "string" : true) && ("inactivityTimer" in obj ? typeof obj.inactivityTimer === "string" : true);
       }
       this.kioskConfig = defaultConfig;
     }
@@ -318,11 +319,11 @@
     }
     initializeInactivityTimer() {
       if (!this.isKioskMode()) {
-        console.log("Not in kiosk mode.");
+        this.debug.debug("Inactivity timer not needed. Not in kiosk mode.");
         return;
       }
       if (window.location.pathname === this.kioskConfig.homePath) {
-        console.log(`Already on the home path: ${this.kioskConfig.homePath}`);
+        this.debug.debug(`Inactivity timer not needed. Already on the home path: ${this.kioskConfig.homePath}`);
         return;
       }
       console.log("Initializing kiosk inactivity timer.");
@@ -330,7 +331,8 @@
       this.resetInactivityTimer();
     }
     isKioskMode() {
-      return new RegExp("kiosk", "i").test(this.kioskConfig.userAgent);
+      const currentUserAgent = navigator.userAgent;
+      return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
     }
     resetInactivityTimer() {
       const timeoutDuration = (this.kioskConfig.inactivityTimer || 180, 10) * 1e3;
