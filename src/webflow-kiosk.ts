@@ -34,7 +34,7 @@ interface KioskConfig {
 const defaultConfig: KioskConfig = {
   homePath: '/kiosk',
   userAgent: 'KioskApp/1.0',
-  inactivityTimer: 180, // Default to 5 minutes
+  inactivityTimer: 180, // 3 minutes 
 };
 
 // <script type="application/sa5+json">
@@ -194,7 +194,7 @@ export class Sa5Kiosk {
      * Resets the inactivity timer.
      */
     private resetInactivityTimer(): void {
-      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180, 10) * 1000; // Default to 180 seconds (3 minutes)
+      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180) * 1000; // Default to 180 seconds (3 minutes)
 
       // Clear the existing timer if it exists
       if (this.inactivityTimerId !== null) {

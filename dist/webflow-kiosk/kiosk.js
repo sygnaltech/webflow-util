@@ -1,7 +1,4 @@
 (() => {
-  // src/version.ts
-  var VERSION = "5.4.33";
-
   // src/globals.ts
   var Sa5Attribute;
   ((Sa5Attribute2) => {
@@ -274,123 +271,15 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-embed.ts
-  var Sa5Embed = class {
-    constructor() {
-      this.debug = new Sa5Debug("sa5-embed");
-    }
-    static getGoogleDocId(url) {
-      var prefix = "https://docs.google.com/document/d/";
-      if (url.startsWith(prefix)) {
-        url = url.substring(prefix.length);
-        const id = url.split("/")[0];
-        console.log("id", id);
-        return id;
-      }
-      console.error(`Unknown google docs URL format - ${url}`);
-    }
-    static async createFromScriptElementAsync(e) {
-      let sa5embed = new Sa5Embed();
-      sa5embed.placeholderElement = e;
-      let config = {};
-      let embedType = "";
-      let embedVersion = "1";
-      embedType = e.getAttribute("wfu-embed-type");
-      embedVersion = e.getAttribute("wfu-embed-version") ?? "1";
-      switch (e.type) {
-        case "sygnal/embed":
-          config = JSON.parse(e.textContent || "");
-          break;
-        case "sygnal/embed+hson":
-          console.error("HSON not yet supported.");
-          return;
-        default:
-          console.error("Unknown Sygnal embed type.");
-          return;
-      }
-      const id = Sa5Embed.getGoogleDocId(config.src);
-      let src = "";
-      switch (embedType) {
-        case "googledoc":
-          src = `https://docs.google.com/document/d/${id}/export?format=html`;
-          break;
-        default:
-          console.warn(`Unknown load type ${embedType}`);
-          return;
-      }
-      let wfEmbed = e.parentElement;
-      const tempId = "id-" + Sa5Embed.generateRandomString(10);
-      wfEmbed.id = tempId;
-      if (!config.index)
-        config.index = 0;
-      const tableHtml = await Sa5Embed.fetchHtmlAsync(src, "table", config.index);
-      wfEmbed = document.getElementById(tempId);
-      wfEmbed.innerHTML = tableHtml;
-      if (config.theme) {
-        wfEmbed.setAttribute("wfu-theme", config.theme);
-      }
-      if (config.adminLink) {
-        const adminLinkDiv = document.createElement("div");
-        const adminLink = document.createElement("a");
-        adminLink.setAttribute("href", config.src);
-        adminLink.setAttribute("target", "_blank");
-        adminLink.setAttribute("class", "wfu-admin-link");
-        adminLink.textContent = "Source";
-        adminLinkDiv.appendChild(adminLink);
-        wfEmbed.after(adminLinkDiv);
-      }
-      return null;
+  // src/webflow-kiosk/kiosk.ts
+  var Sa5Kiosk = class {
+    constructor(element, config = {}) {
+      this.elem = element;
+      this.config = {};
+      let core = Sa5Core.startup();
     }
     init() {
     }
-    static generateRandomString(length) {
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let result = "";
-      for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-      }
-      return result;
-    }
-    static async fetchHtmlAsync(src, selector, index = 0) {
-      try {
-        const response = await fetch(src);
-        const html = await response.text();
-        console.log("fetch", html);
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const elems = doc.querySelectorAll(selector);
-        console.log("elems", elems);
-        if (elems.length > index) {
-          const e = elems[index];
-          console.log("e", e);
-          return e.outerHTML;
-        } else {
-          return null;
-        }
-      } catch (error) {
-        console.error("Error fetching HTML:", error);
-        return null;
-      }
-    }
   };
-  Sa5Core.startup(Sa5Embed);
-
-  // src/nocode/webflow-embed.ts
-  var initAsync = async () => {
-    let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-embed");
-    debug.debug(`Initializing v${VERSION}`);
-    const embedSelectors = [
-      'script[type^="sygnal/embed"]'
-    ];
-    document.querySelectorAll(embedSelectors.join(", ")).forEach(async (scriptElement) => {
-      const webflowEmbed = await Sa5Embed.createFromScriptElementAsync(scriptElement);
-    });
-  };
-  if (document.readyState !== "loading") {
-    initAsync();
-  } else {
-    document.addEventListener("DOMContentLoaded", initAsync);
-  }
 })();
-//# sourceMappingURL=webflow-embed.js.map
+//# sourceMappingURL=kiosk.js.map

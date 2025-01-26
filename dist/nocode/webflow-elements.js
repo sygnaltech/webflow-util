@@ -1140,7 +1140,7 @@
   Sa5Core.startup(Sa5Autocomplete);
 
   // src/version.ts
-  var VERSION = "5.4.32";
+  var VERSION = "5.4.33";
 
   // src/webflow-elements/accordion.ts
   var Sa5AccordionMode = /* @__PURE__ */ ((Sa5AccordionMode2) => {

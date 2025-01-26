@@ -1,8 +1,8 @@
 
 
 /*
- * webflow-html
- * Lazy Load 
+ * webflow-kiosk
+ * Activity detection 
  * 
  * Sygnal Technology Group
  * http://sygnal.com

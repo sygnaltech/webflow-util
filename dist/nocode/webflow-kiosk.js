@@ -272,7 +272,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.32";
+  var VERSION = "5.4.33";
 
   // src/webflow-kiosk.ts
   var defaultConfig = {
@@ -338,7 +338,7 @@
       return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
     }
     resetInactivityTimer() {
-      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180, 10) * 1e3;
+      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180) * 1e3;
       if (this.inactivityTimerId !== null) {
         clearTimeout(this.inactivityTimerId);
       }

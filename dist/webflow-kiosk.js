@@ -335,7 +335,7 @@
       return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
     }
     resetInactivityTimer() {
-      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180, 10) * 1e3;
+      const timeoutDuration = (this.kioskConfig.inactivityTimer || 180) * 1e3;
       if (this.inactivityTimerId !== null) {
         clearTimeout(this.inactivityTimerId);
       }
