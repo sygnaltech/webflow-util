@@ -122,9 +122,6 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
-  // src/version.ts
-  var VERSION = "5.4.35";
-
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -274,26 +271,107 @@
   };
   Sa5Core.startup();
 
-  // src/nocode/webflow-404.ts
+  // src/version.ts
+  var VERSION = "5.4.35";
+
+  // src/webflow-gallery/engine/simple-collage.ts
+  var Sa5GalleryEngineSimpleCollage = class {
+    constructor(gallery, config = {}) {
+      this.gallery = gallery;
+      this.debug = new Sa5Debug("sa5-gallery-engine-simple-collage");
+      this.debug.debug("Initializing");
+    }
+    layout() {
+      const layoutElement = this.gallery.elem;
+      const children = Array.from(layoutElement.children);
+      const totalColumns = 12;
+      const getRandomSpan = (remainingColumns, previousRowSpans2) => {
+        const possibleSpans = [4, 6, 8];
+        const validSpans = possibleSpans.filter((span) => span <= remainingColumns && !previousRowSpans2.includes(span));
+        return validSpans[Math.floor(Math.random() * validSpans.length)];
+      };
+      let currentRowColumns = 0;
+      let previousRowSpans = [];
+      let currentRowSpans = [];
+      children.forEach((child, index) => {
+        let colSpan;
+        if (index === children.length - 1 || currentRowColumns + 4 > totalColumns) {
+          colSpan = totalColumns - currentRowColumns;
+        } else {
+          colSpan = getRandomSpan(totalColumns - currentRowColumns, previousRowSpans);
+          if (!colSpan) {
+            colSpan = getRandomSpan(totalColumns - currentRowColumns, []);
+          }
+        }
+        child.style.gridColumn = `span ${colSpan}`;
+        currentRowColumns += colSpan;
+        currentRowSpans.push(colSpan);
+        if (currentRowColumns === totalColumns) {
+          currentRowColumns = 0;
+          previousRowSpans = [...currentRowSpans];
+          currentRowSpans = [];
+        }
+      });
+    }
+  };
+
+  // src/webflow-gallery.ts
+  var Sa5Gallery = class {
+    constructor(elem) {
+      this.debug = new Sa5Debug("sa5-gallery");
+      this.elem = elem;
+    }
+    loadConfig() {
+    }
+    init() {
+      let core = Sa5Core.startup();
+      console.log("Initializing gallery for:", this.elem);
+      const layoutEngine = this.elem.getAttribute("wfu-gallery-layout");
+      console.error(`Layout engine: ${layoutEngine}`);
+      if (layoutEngine) {
+        switch (layoutEngine) {
+          case "simple-collage": {
+            const engineInstance = new Sa5GalleryEngineSimpleCollage(this);
+            engineInstance.layout();
+            break;
+          }
+          default: {
+            console.error(`Unsupported layout engine: ${layoutEngine}`);
+            break;
+          }
+        }
+      }
+      this.elem.removeAttribute("wfu-preload");
+    }
+  };
+  var Sa5GalleryManager = class {
+    constructor() {
+      this.debug = new Sa5Debug("sa5-gallery-manager");
+      this.debug.debug("Initializing");
+    }
+    init() {
+      let core = Sa5Core.startup();
+      const galleryElements = document.querySelectorAll("[wfu-gallery]");
+      galleryElements.forEach((element) => {
+        const gallery = new Sa5Gallery(element);
+        gallery.init();
+      });
+    }
+  };
+  Sa5Core.startup(Sa5Gallery);
+
+  // src/nocode/webflow-gallery.ts
   var init = () => {
     let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-404");
+    let debug = new Sa5Debug("sa5-gallery");
     debug.debug(`Initializing v${VERSION}`);
-    set404SearchInputValue();
+    const sa5GalleryManager = new Sa5GalleryManager();
+    sa5GalleryManager.init();
   };
-  function set404SearchInputValue() {
-    const url = new URL(window.location.href);
-    const path = url.pathname;
-    const searchQuery = path.slice(1).split("/").map((segment) => segment.replace(/-/g, " ")).reverse().join(" ");
-    const inputElement = document.querySelector(`[${"wfu-404-search" /* ATTR_404_SEARCH */}]`);
-    if (inputElement) {
-      inputElement.value = searchQuery;
-    }
-  }
   if (document.readyState !== "loading") {
     init();
   } else {
     document.addEventListener("DOMContentLoaded", init);
   }
 })();
-//# sourceMappingURL=webflow-404.js.map
+//# sourceMappingURL=webflow-gallery.js.map
