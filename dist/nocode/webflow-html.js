@@ -372,38 +372,112 @@
         init() {
           let debug2 = new Sa5Debug("sa5-html");
           debug2.debug("Dynamic attributes initialized.", this.config);
-          var allElements = document.querySelectorAll("*");
-          allElements.forEach((element2) => {
-            Array.from(element2.attributes).forEach((attr) => {
-              if (attr.name.startsWith("x-") || attr.name.startsWith("x:")) {
+          document.querySelectorAll("*").forEach((el) => {
+            Array.from(el.attributes).forEach((attr) => {
+              if (attr.name.startsWith("x-")) {
                 const newAttrName = attr.name.slice(2);
-                element2.setAttribute(newAttrName, attr.value);
-                switch (element2.tagName.toLowerCase()) {
-                  case "textarea":
-                    if (newAttrName === "value")
-                      element2.value = attr.value;
-                    break;
-                  case "select":
-                    if (newAttrName === "value")
-                      element2.value = attr.value;
-                    break;
-                  case "input":
-                    switch (element2.getAttribute("type")) {
-                      case "checkbox":
-                        if (newAttrName == "checked") {
-                          if (booleanValue(attr.value))
-                            element2.setAttribute("checked", "checked");
-                          else
-                            element2.removeAttribute("checked");
-                        }
-                        break;
-                    }
-                    break;
-                }
-                debug2.debug(`Element: ${element2.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);
+                this.applyAttr(el, newAttrName, attr.value);
+                debug2.debug(`Element: ${el.tagName}, New Attribute: ${newAttrName}, Value: ${attr.value}`);
               }
             });
           });
+          document.querySelectorAll("*").forEach((el) => {
+            Array.from(el.attributes).forEach((attr) => {
+              if (attr.name.startsWith("x:")) {
+                if (!el.hasAttribute(attr.name))
+                  return;
+                const baseAttr = attr.name.split(":")[1];
+                const mainAttr = `x:${baseAttr}`;
+                const preAttr = `x:${baseAttr}:pre`;
+                const postAttr = `x:${baseAttr}:post`;
+                const existingValue = el.getAttribute(baseAttr) || "";
+                const mainValue = el.getAttribute(mainAttr) !== null ? el.getAttribute(mainAttr) : existingValue;
+                const preValue = el.getAttribute(preAttr) || "";
+                const postValue = el.getAttribute(postAttr) || "";
+                const finalValue = preValue + mainValue + postValue;
+                el.setAttribute(baseAttr, finalValue);
+                this.applyAttr(el, baseAttr, finalValue);
+                el.removeAttribute(mainAttr);
+                el.removeAttribute(preAttr);
+                el.removeAttribute(postAttr);
+              }
+            });
+          });
+          const scripts = document.querySelectorAll(
+            'script[type="application/sa5+json"][handler="DynamicAttribute"]'
+          );
+          const configs = [];
+          scripts.forEach((script) => {
+            try {
+              if (!script.textContent)
+                return;
+              const parsed = JSON.parse(script.textContent);
+              if (parsed["@type"] === "DynamicAttribute" && typeof parsed.name === "string") {
+                const config = {
+                  name: parsed.name,
+                  value: typeof parsed.value === "string" ? parsed.value : void 0,
+                  pre: typeof parsed.pre === "string" ? parsed.pre : void 0,
+                  post: typeof parsed.post === "string" ? parsed.post : void 0,
+                  target: typeof parsed.target === "string" ? parsed.target.toLowerCase() : "parent"
+                };
+                let targetElement = null;
+                targetElement = this.getElem(script, config.target);
+                if (targetElement) {
+                  const existingValue = targetElement.getAttribute(config.name);
+                  const mainValue = config.value !== null ? config.value : existingValue;
+                  const preValue = config.pre || "";
+                  const postValue = config.post || "";
+                  const finalValue = preValue + mainValue + postValue;
+                  targetElement.setAttribute(config.name, finalValue);
+                } else {
+                  console.warn(`No target element found for target "${config.target}".`);
+                }
+                configs.push(config);
+              }
+            } catch (error) {
+              console.warn("Invalid JSON in DynamicAttribute script block:", script, error);
+            }
+          });
+        }
+        getElem(element2, target) {
+          let targetElement = null;
+          switch (target) {
+            case "parent":
+              targetElement = element2.parentElement.parentElement;
+              break;
+            case "prev":
+              targetElement = element2.parentElement.previousElementSibling;
+              break;
+            case "next":
+              targetElement = element2.parentElement.nextElementSibling;
+              break;
+          }
+          return targetElement;
+        }
+        applyAttr(element2, newAttrName, newAttrValue) {
+          element2.setAttribute(newAttrName, newAttrValue);
+          switch (element2.tagName.toLowerCase()) {
+            case "textarea":
+              if (newAttrName === "value")
+                element2.value = newAttrValue;
+              break;
+            case "select":
+              if (newAttrName === "value")
+                element2.value = newAttrValue;
+              break;
+            case "input":
+              switch (element2.getAttribute("type")) {
+                case "checkbox":
+                  if (newAttrName == "checked") {
+                    if (booleanValue(newAttrValue))
+                      element2.setAttribute("checked", "checked");
+                    else
+                      element2.removeAttribute("checked");
+                  }
+                  break;
+              }
+              break;
+          }
         }
       };
     }
@@ -4424,7 +4498,7 @@
   var VERSION;
   var init_version = __esm({
     "src/version.ts"() {
-      VERSION = "5.4.35";
+      VERSION = "5.4.36";
     }
   });
 
