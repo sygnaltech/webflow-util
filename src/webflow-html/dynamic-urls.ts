@@ -2,13 +2,12 @@
 
 /*
  * webflow-html
- * Dynamic Attributes
+ * Dynamic URLs 
  * 
  * Sygnal Technology Group
  * http://sygnal.com
  * 
- * Applies all x: prefixed attributes to their elements without the prefix.
- * Designed to overcome limitations with Webflow's custom attributes reserved names. 
+ * Applies all xq: prefixed attributes to their elements without the prefix.
  * Best paired with the new CMS & component property databinding feature of Webflow's custom attributes. 
  */
 
@@ -21,7 +20,7 @@ import { Sa5Debug } from '../webflow-core/debug';
 interface Config {
 }
 
-interface DynamicAttributeConfig {
+interface DynamicUrlConfig {
     name: string;
     value?: string;
     pre?: string;
@@ -31,7 +30,7 @@ interface DynamicAttributeConfig {
 
 
 
-export class Sa5HtmlDynamicAttributes {
+export class Sa5HtmlDynamicUrls {
     config: Config;
 
     constructor(config: Config) {
@@ -42,7 +41,7 @@ export class Sa5HtmlDynamicAttributes {
 
         // Initialize debugging
         let debug = new Sa5Debug("sa5-html");
-        debug.debug ("Dynamic attributes initialized.", this.config);
+        debug.debug ("Dynamic URLs initialized.", this.config);
 
 
 
@@ -86,9 +85,9 @@ export class Sa5HtmlDynamicAttributes {
         });        
 
         // Transforms
-        // x:*
-        // x:*:pre
-        // x:*:post
+        // xq:*
+        // xq:*:pre
+        // xq:*:post
 
         document.querySelectorAll<HTMLElement>('*').forEach(el => {
             Array.from(el.attributes).forEach(attr => {
@@ -131,7 +130,7 @@ export class Sa5HtmlDynamicAttributes {
             'script[type="application/sa5+json"][handler="DynamicAttribute"]'
         );
     
-        const configs: DynamicAttributeConfig[] = [];
+        const configs: DynamicUrlConfig[] = [];
     
         scripts.forEach((script) => {
             try {
@@ -141,15 +140,13 @@ export class Sa5HtmlDynamicAttributes {
         
                 // Validate structure
                 if (parsed["@type"] === "DynamicAttribute" && typeof parsed.name === "string") {
-                    const config: DynamicAttributeConfig = {
+                    const config: DynamicUrlConfig = {
                         name: parsed.name,
                         value: typeof parsed.value === "string" ? parsed.value : undefined,
                         pre: typeof parsed.pre === "string" ? parsed.pre : undefined,
                         post: typeof parsed.post === "string" ? parsed.post : undefined,
                         target: typeof parsed.target === "string" ? parsed.target.toLowerCase() : "parent",
                     };
-
-// console.log(config); 
 
                     let targetElement: Element | null = null;
                     targetElement = this.getElem(script, config.target); 
