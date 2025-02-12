@@ -6608,24 +6608,18 @@
         case "to":
           formattedDate = date.toNow(!this.suffix);
           break;
-        case "relative":
-          formattedDate = "rel";
-          break;
         case "date":
         default:
           if (this.locale) {
-            console.log(`Current locale: ${import_dayjs2.default.locale()}`);
-            console.log("Loading locale for", this.locale, "with format", this.formatString);
-            console.log("date1", this.locale, this.formatString);
+            this.debug.debug(`Current locale is: ${import_dayjs2.default.locale()}`);
+            this.debug.debug("Loading locale for", this.locale, "with format", this.formatString);
             await this.loadLocale(this.locale);
-            console.log("current locale", import_dayjs2.default.locale());
-            console.log(`Locale after loading: ${import_dayjs2.default.locale()}`);
+          } else {
+            this.debug.debug("No current locale.");
           }
-          formattedDate = date.format(this.formatString);
-          console.log("Using format string:", this.formatString);
-          console.log("Final formatted date:", formattedDate);
-          formattedDate = date.format(this.formatString);
-          console.log(this.formatString, formattedDate);
+          formattedDate = (0, import_dayjs2.default)().format(this.formatString);
+          this.debug.debug("Using format string:", this.formatString);
+          this.debug.debug("Final formatted date:", formattedDate);
           break;
       }
       return formattedDate;
@@ -6634,7 +6628,7 @@
       try {
         const response = await fetch(`https://unpkg.com/dayjs/locale/${locale}.js`);
         const scriptText = await response.text();
-        console.log(scriptText);
+        this.debug.debug(scriptText);
         const scriptWrapper = new Function("require", "module", "exports", "define", "globalThis", scriptText);
         scriptWrapper(
           (mod) => mod === "dayjs" ? import_dayjs2.default : {},
@@ -6644,9 +6638,8 @@
           globalThis
         );
         import_dayjs2.default.locale(locale);
-        console.log("locale SET AS", locale);
       } catch (error) {
-        console.error(`Locale ${locale} could not be loaded, falling back to default.`);
+        console.error(`Locale ${locale} could not be loaded, falling back to English as default.`);
         import_dayjs2.default.locale("en");
       }
     }
@@ -6796,7 +6789,7 @@
   Sa5Core.startup(WebflowFormat);
 
   // src/version.ts
-  var VERSION = "5.4.36";
+  var VERSION = "5.4.37";
 
   // src/nocode/webflow-format.ts
   var init = () => {

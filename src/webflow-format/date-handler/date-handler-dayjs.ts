@@ -18,7 +18,8 @@ dayjs.extend(localeData);
 export class WfuDateHandler_DayJs extends WfuDateHandler {
 
     constructor(config: any) {
-        super(config); // call the super class constructor and pass in the name parameter
+        super(config); // call the super class constructor and pass in the name parameter 
+//        this.debug.enabled = true;  
     }
 
     calculateAge(date: Date): number {
@@ -130,33 +131,32 @@ export class WfuDateHandler_DayJs extends WfuDateHandler {
             case "to":
                 formattedDate = date.toNow(!this.suffix);
                 break;
-            case "relative":
-                formattedDate = "rel";
-                break;
+            // case "rel": // case "relative":
+            //     formattedDate = "rel";
+            //     break; 
             case "date":
             default:
 
                 // Pre-load locale context, if necessary 
                 if(this.locale) {
 
-                    console.log(`Current locale: ${dayjs.locale()}`);
-                    console.log("Loading locale for", this.locale, "with format", this.formatString);
+                    this.debug.debug(`Current locale is: ${dayjs.locale()}`);
+                    this.debug.debug("Loading locale for", this.locale, "with format", this.formatString);
             
                         // Get the locale from the <html> element's lang attribute
 //                    const locale = document.documentElement.lang || 'en'; // Default to 'en' if no lang attribute
-                    console.log("date1", this.locale, this.formatString)
                     // Load and set the locale dynamically
-                     await this.loadLocale(this.locale);
-                    console.log("current locale", dayjs.locale())
+                    await this.loadLocale(this.locale);
 
-                            // Check if locale is set correctly
-                    console.log(`Locale after loading: ${dayjs.locale()}`);
+                } else {
+                    this.debug.debug("No current locale."); 
                 }
                 
-                formattedDate = date.format(this.formatString);
-
-                console.log("Using format string:", this.formatString);
-                console.log("Final formatted date:", formattedDate);
+                formattedDate = dayjs().format(this.formatString); 
+//                formattedDate = date.format(this.formatString);
+                
+                this.debug.debug("Using format string:", this.formatString);
+                this.debug.debug("Final formatted date:", formattedDate);
 
                 // Test with various locale-sensitive formats
                 // console.log("Formatted with 'LL':", date.format('LL'));
@@ -164,9 +164,9 @@ export class WfuDateHandler_DayJs extends WfuDateHandler {
                 // console.log("Formatted with 'LLLL':", date.format('LLLL'));
                 // console.log("Formatted with custom format:", date.format(this.formatString));
     
-                formattedDate = date.format(this.formatString);
+//                formattedDate = date.format(this.formatString);
 
-                console.log(this.formatString, formattedDate);  
+//                console.log(this.formatString, formattedDate);  
 
                 break;
         }
@@ -232,7 +232,9 @@ export class WfuDateHandler_DayJs extends WfuDateHandler {
             
             const response = await fetch(`https://unpkg.com/dayjs/locale/${locale}.js`);
             const scriptText = await response.text();
-    console.log(scriptText)
+
+            this.debug.debug(scriptText); 
+
             // Manually execute the script, ensuring 'dayjs' is available globally
             const scriptWrapper = new Function('require', 'module', 'exports', 'define', 'globalThis', scriptText);
             scriptWrapper(
@@ -245,9 +247,9 @@ export class WfuDateHandler_DayJs extends WfuDateHandler {
     
             // Set the locale in Day.js
             dayjs.locale(locale); 
-            console.log("locale SET AS", locale)
+//            console.log("locale SET AS", locale)
         } catch (error) {
-            console.error(`Locale ${locale} could not be loaded, falling back to default.`);
+            console.error(`Locale ${locale} could not be loaded, falling back to English as default.`);
             dayjs.locale('en');
         }
       }

@@ -155,11 +155,9 @@ export class WebflowFormat {
         //         console.error(`SA5 format date is used, but handler ${formatHandler} is unknown`);
         // }
         
-        // Remove the 'wfu-format-date' attribute
-        // TODO: Refactor
+        // Remove the preloader, if it exists 
         element.removeAttribute(
-//            Sa5Attribute.ATTR_FORMAT_DATE // "wfu-format-date"
-            Sa5Attribute.ATTR_PRELOAD // "wfu-format-date"
+            Sa5Attribute.ATTR_PRELOAD 
             );
 
 

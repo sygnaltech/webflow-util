@@ -440,7 +440,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.36";
+  var VERSION = "5.4.37";
 
   // node_modules/gsap/gsap-core.js
   function _assertThisInitialized(self) {
