@@ -1,7 +1,4 @@
 (() => {
-  // src/version.ts
-  var VERSION = "5.4.38";
-
   // src/globals.ts
   var Sa5Attribute;
   ((Sa5Attribute2) => {
@@ -274,237 +271,107 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-url/queryPassthrough.ts
-  var Sa5QueryPassthrough = class {
-    constructor(config = {}) {
-      this.config = {
-        ignorePatterns: config.ignorePatterns ?? [
-          /_page$/
-        ],
-        overwriteExisting: config.overwriteExisting ?? false,
-        internalOnly: config.internalOnly ?? true
-      };
-      this.debug = new Sa5Debug("sa5-url-querypassthrough");
-      this.debug.debug("Initializing");
-      this.debug.debug("Config:", this.config);
+  // src/version.ts
+  var VERSION = "5.4.38";
+
+  // src/webflow-calc.ts
+  var defaultConfig = {
+    debug: false
+  };
+  var Sa5Calc = class {
+    constructor(el, customConfig = {}, debug) {
+      this.elem = el;
+      this.config = { ...defaultConfig, ...customConfig };
+      this.debug = debug;
+    }
+    setCalc(value) {
+      this.elem.innerText = value;
     }
     init() {
-      document.addEventListener("click", (event) => {
-        const target = event.target;
-        const anchor = target.closest("a");
-        this.debug.debug("Link clicked", anchor);
-        if (!anchor)
-          return;
-        if (!anchor.hasAttribute("href")) {
-          this.debug.debug("Link ignored - no href", anchor);
-          return;
-        }
-        if (anchor.href.startsWith("mailto:")) {
-          this.debug.debug("Link ignored - mailto:", anchor);
-          return;
-        }
-        if (anchor.href.startsWith("tel:")) {
-          this.debug.debug("Link ignored - tel:", anchor);
-          return;
-        }
-        if (anchor.getAttribute("wfu-url-passthrough") == "ignore") {
-          this.debug.debug("Link click ignored (explicit ignore setting).");
-          return;
-        }
-        const currentPageParams = new URLSearchParams(window.location.search);
-        const currentPageHash = window.location.hash;
-        const anchorParams = new URLSearchParams(anchor.search);
-        const anchorUrl = new URL(anchor.href);
-        if (anchorUrl.hash) {
-          if (anchorUrl.pathname == window.location.pathname) {
-            this.debug.debug("Link click ignored (hash, same page).");
-            return;
-          }
-        }
-        if (this.config.internalOnly) {
-          this.debug.debug("checking internalOnly");
-          const isRelativeOrSameHost = !anchorUrl.host || anchorUrl.host === window.location.host;
-          if (!isRelativeOrSameHost) {
-            this.debug.debug("Found external link, skipping");
-            return;
-          }
-        }
-        event.preventDefault();
-        this.debug.debug("Overriding default link handling.");
-        let newParams = new URLSearchParams(anchorUrl.searchParams);
-        this.debug.debug(newParams);
-        for (const [key, value] of currentPageParams) {
-          if (this.shouldIgnoreKey(key))
-            continue;
-          if (anchorParams.has(key) && !this.config.overwriteExisting)
-            continue;
-          newParams.set(key, value);
-        }
-        let newUrl = new URL(anchorUrl);
-        if (newParams.size > 0) {
-          this.debug.debug("Appending querystring params to passthrough");
-          newParams.forEach((value, key) => {
-            newUrl.searchParams.set(key, value);
-          });
-        }
-        this.debug.debug("Final URL for navigation", newUrl.href);
-        if (anchor.target)
-          window.open(newUrl.href, anchor.target);
-        else
-          window.location.href = newUrl.href;
-      });
-    }
-    shouldIgnoreKey(key) {
-      for (const pattern of this.config.ignorePatterns) {
-        if (typeof pattern === "string") {
-          if (pattern === key) {
-            return true;
-          }
-        } else if (pattern instanceof RegExp) {
-          if (pattern.test(key)) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-  };
-
-  // src/webflow-url/relativeLinkFixup.ts
-  var WfuRelativeLinkFixup = class {
-    constructor(element) {
-      this._element = element;
-    }
-    init() {
-      let elems = Array.from(
-        this._element.querySelectorAll(
-          "a[href^='http://.' i], a[href^='https://.' i], a[href^='http://?' i], a[href^='https://?' i]"
-        )
-      );
-      elems.forEach((elem) => {
-        let href = elem.getAttribute("href");
-        if (href) {
-          if (href.startsWith("http://."))
-            href = href.substring(8);
-          if (href.startsWith("https://."))
-            href = href.substring(9);
-          if (href.startsWith("http://?"))
-            href = href.substring(7);
-          if (href.startsWith("https://?"))
-            href = href.substring(8);
-          elem.setAttribute("href", href);
-        }
-      });
-      let elements = Array.from(
-        this._element.querySelectorAll("a[href*='//self/' i], a[href$='//self' i]")
-      );
-      elements.forEach((element) => {
-        let originalHref = element.getAttribute("href");
-        if (originalHref) {
-          const originalUrl = new URL(originalHref);
-          let relativeHref = originalUrl.pathname + originalUrl.search + originalUrl.hash;
-          element.setAttribute("href", relativeHref);
-        }
-      });
-    }
-  };
-
-  // src/webflow-url/targetLinks.ts
-  var WfuTargetLinks = class {
-    constructor(element) {
-      this._element = element;
-    }
-    init() {
-      let elements = Array.from(
-        document.querySelectorAll("a[href^='http://']:not([target]), a[href^='https://']:not([target])")
-      );
-      elements.forEach((element) => {
-        let href = element.getAttribute("href");
-        if (href) {
-          console.debug(`retargeting ${href}.`);
-          element.setAttribute("target", "_blank");
-        }
-      });
-    }
-  };
-
-  // src/webflow-url.ts
-  var Sa5Url = class {
-    constructor(config = {}) {
-      this.config = {
-        passthrough: config.passthrough ?? false,
-        passthroughConfig: config.passthroughConfig ?? {
-          ignorePatterns: [
-            /_page$/
-          ],
-          overwriteExisting: config.passthroughConfig?.overwriteExisting ?? false,
-          internalOnly: config.passthroughConfig?.internalOnly ?? true
-        },
-        fixupRelative: config.fixupRelative ?? true,
-        targetExternal: config.targetExternal ?? true,
-        targetExternalConfig: config.targetExternalConfig ?? {
-          allLinks: false
-        }
-      };
-      this.debug = new Sa5Debug("sa5-url");
-      this.debug.debug("Initializing");
-    }
-    getConfig() {
-      let core = Sa5Core.startup();
-      let configHandler = core.getHandler("urlConfig");
-      if (!configHandler)
+      const method = this.elem.getAttribute("wfu-calc");
+      const sourceType = this.elem.getAttribute("wfu-calc-source-type");
+      const source = this.elem.getAttribute("wfu-calc-source");
+      if (!source) {
+        console.error("Source attribute not found");
         return;
-      if (configHandler) {
-        this.config = configHandler(
-          this.config
-        );
       }
-    }
-    init() {
-      this.getConfig();
-      this.debug.debug(this.config);
-      if (this.config.passthrough) {
-        new Sa5QueryPassthrough(
-          this.config.passthroughConfig
-        ).init();
+      switch (sourceType) {
+        case "field":
+        case null:
+          break;
+        case "selector":
+          console.error("SourceType of selector is not yet supported");
+          return;
+        case "avg":
+          console.error("SourceType of sitemap is not yet supported");
+          return;
+        default:
+          console.error("Source Type unknown");
+          return;
       }
-      if (this.config.fixupRelative) {
-        let elements2 = Array.from(
-          document.querySelectorAll(
-            Sa5Attribute.getBracketed("wfu-relative-links" /* ATTR_URL_RELATIVE_LINKS */)
-          )
-        );
-        elements2.forEach((element) => {
-          new WfuRelativeLinkFixup(element).init();
-        });
-      }
-      if (this.config.targetExternal) {
-        var elements;
-        if (this.config.targetExternalConfig.allLinks)
-          elements = Array.from(
-            document.querySelectorAll("a")
-          );
-        else
-          elements = Array.from(
-            document.querySelectorAll(
-              Sa5Attribute.getBracketed("wfu-external-links" /* ATTR_URL_EXTERNAL_LINKS */)
-            )
-          );
-        elements.forEach((element) => {
-          new WfuTargetLinks(element).init();
-        });
+      const fieldElements = document.querySelectorAll(`[wfu-calc-field="${source}"]`);
+      const elements = Array.from(fieldElements).filter((el) => el instanceof HTMLElement);
+      switch (method) {
+        case "count":
+          this.setCalc(elements.length.toString());
+          console.log(`Count: ${elements.length}`);
+          break;
+        case "sum":
+          let sum = 0;
+          elements.forEach((el) => {
+            const value = parseFloat(el.innerText);
+            if (!isNaN(value)) {
+              sum += value;
+            }
+          });
+          this.setCalc(sum.toString());
+          console.log(`Sum: ${sum}`);
+          break;
+        case "avg":
+          let sumAvg = 0;
+          let countAvg = 0;
+          elements.forEach((el) => {
+            const value = parseFloat(el.innerText);
+            if (!isNaN(value)) {
+              sumAvg += value;
+              countAvg++;
+            }
+          });
+          const average = countAvg > 0 ? sumAvg / countAvg : 0;
+          this.setCalc(average.toString());
+          console.log(`Average: ${average}`);
+          break;
+        default:
+          console.error("Method unknown");
+          return;
       }
     }
   };
-  Sa5Core.startup(Sa5Url);
+  var Sa5CalcController = class {
+    constructor(customConfig = {}) {
+      this.config = { ...defaultConfig, ...customConfig };
+      this.debug = new Sa5Debug("sa5-calc");
+      this.debug.enabled = this.config.debug;
+    }
+    init() {
+      const calcElements = document.querySelectorAll("[wfu-calc]");
+      calcElements.forEach((el) => {
+        if (el instanceof HTMLElement) {
+          var calc = new Sa5Calc(el, this.config, this.debug);
+          calc.init();
+        }
+      });
+    }
+  };
+  Sa5Core.startup(Sa5CalcController);
 
-  // src/nocode/webflow-url.ts
+  // src/nocode/webflow-calc.ts
   var init = () => {
     let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-url");
+    let debug = new Sa5Debug("sa5-calc");
+    debug.enabled = true;
     debug.debug(`Initializing v${VERSION}`);
-    let handler = new Sa5Url();
-    handler.init();
+    let obj = new Sa5CalcController({}).init();
   };
   if (document.readyState !== "loading") {
     init();
@@ -512,4 +379,4 @@
     document.addEventListener("DOMContentLoaded", init);
   }
 })();
-//# sourceMappingURL=webflow-url.js.map
+//# sourceMappingURL=webflow-calc.js.map
