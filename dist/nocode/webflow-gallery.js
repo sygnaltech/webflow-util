@@ -272,7 +272,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.38";
+  var VERSION = "5.4.39";
 
   // src/webflow-gallery/engine/simple-collage.ts
   var Sa5GalleryEngineSimpleCollage = class {

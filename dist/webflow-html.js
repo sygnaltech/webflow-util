@@ -500,9 +500,9 @@
             throw new Error("obj does not seem to be an array or an iterable object");
           }
         };
-        showdown.helper.stdExtName = function(s) {
+        showdown.helper.stdExtName = function(s2) {
           "use strict";
-          return s.replace(/[_?*+\/\\.^-]/g, "").replace(/\s/g, "").toLowerCase();
+          return s2.replace(/[_?*+\/\\.^-]/g, "").replace(/\s/g, "").toLowerCase();
         };
         function escapeCharactersCallback(wholeMatch, m1) {
           "use strict";
@@ -526,21 +526,21 @@
         };
         var rgxFindMatchPos = function(str, left, right, flags) {
           "use strict";
-          var f = flags || "", g = f.indexOf("g") > -1, x = new RegExp(left + "|" + right, "g" + f.replace(/g/g, "")), l = new RegExp(left, f.replace(/g/g, "")), pos = [], t, s, m, start, end;
+          var f = flags || "", g = f.indexOf("g") > -1, x = new RegExp(left + "|" + right, "g" + f.replace(/g/g, "")), l = new RegExp(left, f.replace(/g/g, "")), pos = [], t, s2, m, start, end;
           do {
             t = 0;
             while (m = x.exec(str)) {
               if (l.test(m[0])) {
                 if (!t++) {
-                  s = x.lastIndex;
-                  start = s - m[0].length;
+                  s2 = x.lastIndex;
+                  start = s2 - m[0].length;
                 }
               } else if (t) {
                 if (!--t) {
                   end = m.index + m[0].length;
                   var obj = {
-                    left: { start, end: s },
-                    match: { start: s, end: m.index },
+                    left: { start, end: s2 },
+                    match: { start: s2, end: m.index },
                     right: { start: m.index, end },
                     wholeMatch: { start, end }
                   };
@@ -551,7 +551,7 @@
                 }
               }
             }
-          } while (t && (x.lastIndex = s));
+          } while (t && (x.lastIndex = s2));
           return pos;
         };
         showdown.helper.matchRecursiveRegExp = function(str, left, right, flags) {
@@ -3188,10 +3188,10 @@
               }
               tableLines[i] = showdown.subParser("codeSpans")(tableLines[i], options, globals);
             }
-            var rawHeaders = tableLines[0].split("|").map(function(s) {
-              return s.trim();
-            }), rawStyles = tableLines[1].split("|").map(function(s) {
-              return s.trim();
+            var rawHeaders = tableLines[0].split("|").map(function(s2) {
+              return s2.trim();
+            }), rawStyles = tableLines[1].split("|").map(function(s2) {
+              return s2.trim();
             }), rawCells = [], headers = [], styles = [], cells = [];
             tableLines.shift();
             tableLines.shift();
@@ -3200,8 +3200,8 @@
                 continue;
               }
               rawCells.push(
-                tableLines[i].split("|").map(function(s) {
-                  return s.trim();
+                tableLines[i].split("|").map(function(s2) {
+                  return s2.trim();
                 })
               );
             }
@@ -3833,8 +3833,8 @@
       const elements = document.querySelectorAll(
         Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
       );
-      elements.forEach((element) => {
-        element.remove();
+      elements.forEach((element2) => {
+        element2.remove();
       });
     }
   };
@@ -3939,6 +3939,23 @@
         return true;
     }
   }
+  function decodeHTML(text) {
+    let parser = new DOMParser();
+    let dom = parser.parseFromString(
+      `<!doctype html><body>${text}`,
+      "text/html"
+    );
+    return dom.body.textContent || "";
+  }
+  function sequence(groupElement) {
+    const groupName = groupElement.getAttribute("wfu-seq-group");
+    console.log("sequence group", groupName);
+    let i = 0;
+    const elements = groupElement.querySelectorAll(`[wfu-seq="${groupName}"]`);
+    elements.forEach((element2) => {
+      element2.innerHTML = (++i).toString();
+    });
+  }
 
   // src/webflow-html/dynamic-attributes.ts
   var Sa5HtmlDynamicAttributes = class {
@@ -4015,40 +4032,40 @@
         }
       });
     }
-    getElem(element, target) {
+    getElem(element2, target) {
       let targetElement = null;
       switch (target) {
         case "parent":
-          targetElement = element.parentElement.parentElement;
+          targetElement = element2.parentElement.parentElement;
           break;
         case "prev":
-          targetElement = element.parentElement.previousElementSibling;
+          targetElement = element2.parentElement.previousElementSibling;
           break;
         case "next":
-          targetElement = element.parentElement.nextElementSibling;
+          targetElement = element2.parentElement.nextElementSibling;
           break;
       }
       return targetElement;
     }
-    applyAttr(element, newAttrName, newAttrValue) {
-      element.setAttribute(newAttrName, newAttrValue);
-      switch (element.tagName.toLowerCase()) {
+    applyAttr(element2, newAttrName, newAttrValue) {
+      element2.setAttribute(newAttrName, newAttrValue);
+      switch (element2.tagName.toLowerCase()) {
         case "textarea":
           if (newAttrName === "value")
-            element.value = newAttrValue;
+            element2.value = newAttrValue;
           break;
         case "select":
           if (newAttrName === "value")
-            element.value = newAttrValue;
+            element2.value = newAttrValue;
           break;
         case "input":
-          switch (element.getAttribute("type")) {
+          switch (element2.getAttribute("type")) {
             case "checkbox":
               if (newAttrName == "checked") {
                 if (booleanValue(newAttrValue))
-                  element.setAttribute("checked", "checked");
+                  element2.setAttribute("checked", "checked");
                 else
-                  element.removeAttribute("checked");
+                  element2.removeAttribute("checked");
               }
               break;
           }
@@ -4118,8 +4135,8 @@
   // src/webflow-html/markdown.ts
   var import_showdown = __toESM(require_showdown());
   var Sa5Markdown = class {
-    constructor(element, config = {}) {
-      this.elem = element;
+    constructor(element2, config = {}) {
+      this.elem = element2;
       this.config = {};
       let core = Sa5Core.startup();
     }
@@ -4159,8 +4176,8 @@
 
   // src/webflow-html/lazyload.ts
   var Sa5LazyLoad = class {
-    constructor(element, config = {}) {
-      this.elem = element;
+    constructor(element2, config = {}) {
+      this.elem = element2;
       this.config = {};
       let core = Sa5Core.startup();
     }
@@ -4201,11 +4218,11 @@
       const switchCaseElements = Array.from(
         document.querySelectorAll("[wfu-switch-case]")
       );
-      switchCaseElements.forEach((element) => {
-        const caseName = element.getAttribute("wfu-switch-case");
-        let switchName = element.getAttribute("wfu-switch");
+      switchCaseElements.forEach((element2) => {
+        const caseName = element2.getAttribute("wfu-switch-case");
+        let switchName = element2.getAttribute("wfu-switch");
         if (!switchName) {
-          let parent = element.parentElement;
+          let parent = element2.parentElement;
           while (parent && !switchName) {
             switchName = parent.getAttribute("wfu-switch");
             parent = parent.parentElement;
@@ -4213,7 +4230,7 @@
         }
         if (switchName && caseName) {
           this.switchCaseItems.push({
-            element,
+            element: element2,
             switchName,
             caseName
           });
@@ -4234,6 +4251,166 @@
   };
   console.log("INSTALLING SA5SWITCH");
   Sa5Core.startup(Sa5Switch);
+
+  // src/webflow-core/webflow-editor.ts
+  var Sa5Editor = class {
+    get isEditorMode() {
+      return document.documentElement.getAttribute("data-wf-mode") === "editor";
+    }
+    detectEditorMode() {
+      if (document.title.startsWith("Editor:")) {
+        console.debug("Editor mode");
+        document.documentElement.setAttribute("data-wf-mode", "editor");
+      } else {
+        console.debug("NOT Editor mode");
+        document.documentElement.removeAttribute("data-wf-mode");
+      }
+    }
+    constructor(config = null) {
+      config = config || {};
+      this.config = config;
+      this.init();
+    }
+    init() {
+      let titleElement = document.getElementsByTagName("title")[0];
+      let observer = new MutationObserver((mutations) => {
+        this.detectEditorMode();
+      });
+      observer.observe(titleElement, { childList: true });
+    }
+  };
+
+  // src/webflow-html/collection-list.ts
+  var Sa5CollectionList = class {
+    constructor(elem, config = null) {
+      this.config = config;
+      this._element = elem;
+    }
+    init() {
+    }
+    sort(config) {
+      const list = this._element;
+      const mode = list.getAttribute(
+        "wfu-sort" /* ATTR_SORT */
+      ) || "default";
+      const dir = list.getAttribute(
+        "wfu-sort-dir" /* ATTR_SORT_DIR */
+      ) || "asc";
+      const sortType = list.getAttribute(
+        "wfu-sort-type" /* ATTR_SORT_TYPE */
+      ) || "string";
+      const sortLocaleConfig = list.getAttribute(
+        "wfu-sort-locale"
+      ) || "";
+      const sortStartWith = parseInt(list.getAttribute(
+        "wfu-sort-startwith"
+      ) || "1", 10) || 1;
+      var sortLocale = "en";
+      switch (sortLocaleConfig) {
+        case "none":
+        case "auto":
+        case "":
+          const htmlElement = document.documentElement;
+          const currentLocale = htmlElement.getAttribute("lang");
+          sortLocale = currentLocale ? currentLocale : "en";
+          break;
+        case "browser":
+          sortLocale = navigator.language || "en";
+          break;
+        default:
+          sortLocale = sortLocaleConfig;
+          break;
+      }
+      const items = Array.from(list.children);
+      if (sortStartWith) {
+        items.splice(0, sortStartWith - 1);
+      }
+      if (dir == "random") {
+        items.sort(() => Math.random() - 0.5);
+      } else {
+        items.sort((a, b) => {
+          const key1 = a.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || a.querySelector(Sa5Attribute.getBracketed("wfu-sort-key" /* ATTR_SORT_KEY */))?.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || "";
+          const key2 = b.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || b.querySelector(Sa5Attribute.getBracketed("wfu-sort-key" /* ATTR_SORT_KEY */))?.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || "";
+          let sortResult = 1;
+          switch (sortType) {
+            case "date":
+              sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
+              break;
+            case "number":
+              sortResult = Number(key1) < Number(key2) ? -1 : 1;
+              break;
+            case "semver":
+              break;
+            case "string":
+            default:
+              sortResult = key1.localeCompare(key2, sortLocale, {
+                sensitivity: "variant"
+              });
+              break;
+          }
+          if (dir != "asc") {
+            sortResult = sortResult * -1;
+          }
+          return sortResult;
+        });
+      }
+      while (list.lastChild && list.children.length > sortStartWith - 1) {
+        list.lastChild.remove();
+      }
+      items.forEach((item) => list.appendChild(item));
+      list.removeAttribute("wfu-sort" /* ATTR_SORT */);
+    }
+  };
+
+  // src/webflow-html/encoded-email.ts
+  var Sa5EncodedEmail = class {
+    constructor(element2, config = {}) {
+      this.elem = element2;
+      this.config = {};
+      let core = Sa5Core.startup();
+    }
+    encodeEmail(email) {
+      const shift = 3;
+      return email.split("").map((char) => {
+        if (/[a-zA-Z]/.test(char)) {
+          const base = char <= "Z" ? 65 : 97;
+          return String.fromCharCode((char.charCodeAt(0) - base + shift) % 26 + base);
+        } else if (/[0-9]/.test(char)) {
+          return String.fromCharCode((char.charCodeAt(0) - 48 + shift) % 10 + 48);
+        } else {
+          return char;
+        }
+      }).join("");
+    }
+    decodeEmail(encodedEmail) {
+      const shift = 3;
+      return encodedEmail.split("").map((char) => {
+        if (/[a-zA-Z]/.test(char)) {
+          const base = char <= "Z" ? 65 : 97;
+          return String.fromCharCode((char.charCodeAt(0) - base - shift + 26) % 26 + base);
+        } else if (/[0-9]/.test(char)) {
+          return String.fromCharCode((char.charCodeAt(0) - 48 - shift + 10) % 10 + 48);
+        } else {
+          return char;
+        }
+      }).join("");
+    }
+    init() {
+      let debug = new Sa5Debug("sa5-html");
+      let mailtoHref = this.elem.getAttribute("href");
+      if (mailtoHref && mailtoHref.startsWith("mailto:")) {
+        let emailPart = mailtoHref.match(/^mailto:([^?]+)/)[1];
+        let queryString = mailtoHref.match(/\?.*$/);
+        let decodedEmail = this.decodeEmail(emailPart);
+        let newHref = "mailto:" + decodedEmail + (queryString ? queryString[0] : "");
+        this.elem.href = newHref;
+        if (this.elem.innerText === emailPart) {
+          this.elem.innerText = decodedEmail;
+        }
+        this.elem.removeAttribute("wfu-email-encoded");
+      }
+    }
+  };
 
   // src/webflow-html.ts
   var Sa5Html = class {
@@ -4261,13 +4438,106 @@
         let obj = new Sa5HtmlDynamicAttributes({});
         obj.init();
       }
-      document.querySelectorAll(`markdown, md, [wfu-markdown]`).forEach((element) => {
-        let md = new Sa5Markdown(element);
+      document.querySelectorAll(`markdown, md, [wfu-markdown]`).forEach((element2) => {
+        let md = new Sa5Markdown(element2);
         md.init();
       });
-      document.querySelectorAll(`template[wfu-lazyload]`).forEach((element) => {
-        let module = new Sa5LazyLoad(element);
+      document.querySelectorAll(`template[wfu-lazyload]`).forEach((element2) => {
+        let module = new Sa5LazyLoad(element2);
         module.init();
+      });
+      const editor = new Sa5Editor();
+      let sequenceGroupElements = Array.from(
+        document.querySelectorAll("[wfu-seq-group]")
+      );
+      sequenceGroupElements.forEach((element2) => {
+        sequence(element2);
+      });
+      document.querySelectorAll(
+        Sa5Attribute.getBracketed("wfu-decode" /* ATTR_DECODE */)
+      ).forEach((element2) => {
+        element2.innerHTML = decodeHTML(element2.innerHTML);
+        element2.removeAttribute(
+          "wfu-decode" /* ATTR_DECODE */
+        );
+      });
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
+        new Sa5CollectionList(element2).sort();
+      });
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
+        new Sa5CollectionList(element2).sort();
+      });
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}]`).forEach((element2) => {
+        new Sa5CollectionList(element2).sort();
+      });
+      document.querySelectorAll(`[${"wfu-filter" /* ATTR_FILTER */}],[${"wfu-filter-eval" /* ATTR_FILTER_EVAL */}]`).forEach((element) => {
+        let filterEval = null;
+        if (element.hasAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */))
+          filterEval = element.getAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */);
+        else {
+          filterEval = element.getAttribute("wfu-filter" /* ATTR_FILTER */);
+          console.warn(`[${"wfu-filter" /* ATTR_FILTER */}] is deprecated, use [${"wfu-filter-eval" /* ATTR_FILTER_EVAL */}] instead.`);
+        }
+        let visible = eval(filterEval);
+        if (visible) {
+          element.removeAttribute("wfu-filter" /* ATTR_FILTER */);
+          element.removeAttribute("wfu-filter-eval" /* ATTR_FILTER_EVAL */);
+        }
+      });
+      document.querySelectorAll(`[${"wfu-filter-match" /* ATTR_FILTER_MATCH */}]`).forEach((element) => {
+        let filterEval = element.getAttribute("wfu-filter-match" /* ATTR_FILTER_MATCH */);
+        let filterMatches = eval(`\`${filterEval}\``);
+        let visible = element.matches(filterMatches);
+        if (visible) {
+          element.removeAttribute("wfu-filter-match" /* ATTR_FILTER_MATCH */);
+        }
+      });
+      document.querySelectorAll(`[${"wfu-filter-func" /* ATTR_FILTER_FUNC */}]`).forEach((element2) => {
+        let funcName = element2.getAttribute("wfu-filter-func" /* ATTR_FILTER_FUNC */);
+        let fqFuncName = `window.${funcName}`;
+        let f = new Function(fqFuncName);
+        let func = window[funcName];
+        if (typeof func === "function") {
+          let visible2 = func(element2);
+          if (visible2) {
+            element2.removeAttribute("wfu-filter-func" /* ATTR_FILTER_FUNC */);
+          }
+        }
+      });
+      document.querySelectorAll(`[${"wfu-suppress" /* ATTR_SUPPRESS */}=empty-lists]`).forEach((element2) => {
+        if (element2.querySelector(".w-dyn-items")) {
+          element2.removeAttribute("wfu-suppress" /* ATTR_SUPPRESS */);
+        }
+      });
+      document.querySelectorAll(
+        Sa5Attribute.getBracketed("wfu-limit-multiple" /* ATTR_LIMIT_MULTIPLE */)
+      ).forEach((element2) => {
+        var listElement = element2;
+        if (element2.classList.contains("w-dyn-list"))
+          listElement = element2.children[0];
+        const itemCount = listElement.children.length;
+        const itemMultipleCount = Number(element2.getAttribute(
+          "wfu-limit-multiple" /* ATTR_LIMIT_MULTIPLE */
+        ));
+        const itemMinimumCount = Number(element2.getAttribute(
+          "wfu-limit-multiple-min" /* ATTR_LIMIT_MULTIPLE_MIN */
+        ));
+        let lastItem = Math.floor(itemCount / itemMultipleCount) * itemMultipleCount;
+        if (lastItem < itemMinimumCount)
+          lastItem = itemMinimumCount;
+        for (let hideItem = 1; hideItem < itemMultipleCount; hideItem++) {
+          let child = listElement.querySelector(`:nth-child(${lastItem + hideItem})`);
+          if (child) {
+            child.style.display = "none";
+          }
+        }
+      });
+      document.querySelectorAll(`[${"wfu-email-encoded" /* ATTR_EMAIL_ENCODED */}]`).forEach((element2) => {
+        if (!(element2 instanceof HTMLAnchorElement)) {
+          console.error("Email encoded attribute is not on a link element.");
+          return;
+        }
+        new Sa5EncodedEmail(element2).init();
       });
     }
   };

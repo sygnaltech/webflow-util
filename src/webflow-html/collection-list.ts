@@ -10,6 +10,7 @@
 
 import { Sa5Attribute } from '../globals';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5Sort } from './sort';
 
 
 interface Config {
@@ -17,6 +18,18 @@ interface Config {
 }
 
 // Webflow breakpoints
+
+
+interface Sa5SortConfig {
+
+    // dynamicAttributes?: boolean | true;
+    // handleBreakpointChange?: ((breakpointName: string, e: MediaQueryListEvent) => void) | null;
+//    handleOrientationChange?: ((orientationName: string, e: MediaQueryListEvent) => void) | null; 
+    startWith?: number | 1; 
+
+    debug?: boolean | true;
+
+}
 
 
 export class Sa5CollectionList {
@@ -32,9 +45,12 @@ export class Sa5CollectionList {
 
     }
 
-    sort(): void {
-        console.group("SORT");
+    sort(config?: Sa5SortConfig): void {
+//        console.group("SORT");
 
+//        console.log(config); 
+
+        // General config
         const list = this._element;
         const mode = list.getAttribute(
             Sa5Attribute.ATTR_SORT // "wfu-sort"
@@ -48,7 +64,11 @@ export class Sa5CollectionList {
         const sortLocaleConfig = list.getAttribute(
             "wfu-sort-locale"
             ) || "";
-    
+        const sortStartWith: number = parseInt(list.getAttribute(
+            "wfu-sort-startwith"
+            ) || "1", 10) || 1;
+
+        // Locale config 
         var sortLocale: string = "en"; // default 
         switch(sortLocaleConfig) {
             case "none":
@@ -70,18 +90,27 @@ export class Sa5CollectionList {
                 break; 
         }
 
+
+
         const items = Array.from(list.children);
 
-        console.debug(`WFU sorting ${mode} ${sortType} ${dir} ${sortLocale} (${items.length} children)`);
+//        console.debug(`WFU sorting ${mode} ${sortType} ${dir} ${sortLocale} (${items.length} children)`);
 
-        console.debug({
-            name: "WFU sorting", 
-            mode: mode, 
-            sortType: sortType, 
-            dir: dir, 
-            sortLocale: sortLocale, 
-            children: `${items.length} children`
-        });
+        // console.debug({
+        //     name: "WFU sorting", 
+        //     mode: mode, 
+        //     sortType: sortType, 
+        //     dir: dir, 
+        //     sortLocale: sortLocale, 
+        //     children: `${items.length} children`
+        // });
+
+        // Start With  
+        if(sortStartWith) {
+            items.splice(0, sortStartWith - 1); // Remove (startWith - 1) items
+        }
+
+
 
 //        console.debug(list.children); 
 
@@ -106,11 +135,11 @@ export class Sa5CollectionList {
                 switch (sortType) {
                     case "date":
                         sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
-                        console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
+//                        console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
                         break;
                     case "number":
                         sortResult = Number(key1) < Number(key2) ? -1 : 1;
-                        console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
+//                        console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
                         break;
                     case "semver":
                         // Semver comparison logic here
@@ -121,7 +150,7 @@ export class Sa5CollectionList {
                         sortResult = key1.localeCompare(key2, sortLocale, {
                             sensitivity: 'variant' 
                         });
-                        console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
+//                        console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
                         break;
                 }
 
@@ -136,15 +165,20 @@ export class Sa5CollectionList {
         }
 
         // Write children back 
-        while (list.firstChild) {
-            list.firstChild.remove();
+
+        // Empty the list, except for any initial items that are specified with startWith 
+        while (list.lastChild && (list.children.length > sortStartWith - 1)) {
+            
+            list.lastChild.remove();
         }
+
+        // Write children back 
         items.forEach(item => list.appendChild(item));
 
         // Remove attribute to display 
         list.removeAttribute(Sa5Attribute.ATTR_SORT); // "wfu-sort" 
 
-        console.groupEnd();
+ //        console.groupEnd(); 
     }
 
 }

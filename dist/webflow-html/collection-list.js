@@ -130,8 +130,7 @@
     }
     init() {
     }
-    sort() {
-      console.group("SORT");
+    sort(config) {
       const list = this._element;
       const mode = list.getAttribute(
         "wfu-sort" /* ATTR_SORT */
@@ -145,6 +144,9 @@
       const sortLocaleConfig = list.getAttribute(
         "wfu-sort-locale"
       ) || "";
+      const sortStartWith = parseInt(list.getAttribute(
+        "wfu-sort-startwith"
+      ) || "1", 10) || 1;
       var sortLocale = "en";
       switch (sortLocaleConfig) {
         case "none":
@@ -162,15 +164,9 @@
           break;
       }
       const items = Array.from(list.children);
-      console.debug(`WFU sorting ${mode} ${sortType} ${dir} ${sortLocale} (${items.length} children)`);
-      console.debug({
-        name: "WFU sorting",
-        mode,
-        sortType,
-        dir,
-        sortLocale,
-        children: `${items.length} children`
-      });
+      if (sortStartWith) {
+        items.splice(0, sortStartWith - 1);
+      }
       if (dir == "random") {
         items.sort(() => Math.random() - 0.5);
       } else {
@@ -181,11 +177,9 @@
           switch (sortType) {
             case "date":
               sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
-              console.debug(`comparing dates ${key1} ${key2} = ${sortResult}`);
               break;
             case "number":
               sortResult = Number(key1) < Number(key2) ? -1 : 1;
-              console.debug(`comparing numbers ${key1} ${key2} = ${sortResult}`);
               break;
             case "semver":
               break;
@@ -194,7 +188,6 @@
               sortResult = key1.localeCompare(key2, sortLocale, {
                 sensitivity: "variant"
               });
-              console.debug(`comparing strings ${key1} ${key2} = ${sortResult}`);
               break;
           }
           if (dir != "asc") {
@@ -203,12 +196,11 @@
           return sortResult;
         });
       }
-      while (list.firstChild) {
-        list.firstChild.remove();
+      while (list.lastChild && list.children.length > sortStartWith - 1) {
+        list.lastChild.remove();
       }
       items.forEach((item) => list.appendChild(item));
       list.removeAttribute("wfu-sort" /* ATTR_SORT */);
-      console.groupEnd();
     }
   };
 })();

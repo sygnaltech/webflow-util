@@ -1,7 +1,4 @@
 (() => {
-  // src/version.ts
-  var VERSION = "5.4.39";
-
   // src/globals.ts
   var Sa5Attribute;
   ((Sa5Attribute2) => {
@@ -274,16 +271,108 @@
   };
   Sa5Core.startup();
 
-  // src/nocode/webflow-fixup.ts
-  var init = () => {
-    let core = Sa5Core.startup();
-    let debug = new Sa5Debug("sa5-fixup");
-    debug.debug(`Initializing v${VERSION}`);
+  // src/webflow-html/collection-list.ts
+  var Sa5CollectionList = class {
+    constructor(elem, config = null) {
+      this.config = config;
+      this._element = elem;
+    }
+    init() {
+    }
+    sort(config) {
+      const list = this._element;
+      const mode = list.getAttribute(
+        "wfu-sort" /* ATTR_SORT */
+      ) || "default";
+      const dir = list.getAttribute(
+        "wfu-sort-dir" /* ATTR_SORT_DIR */
+      ) || "asc";
+      const sortType = list.getAttribute(
+        "wfu-sort-type" /* ATTR_SORT_TYPE */
+      ) || "string";
+      const sortLocaleConfig = list.getAttribute(
+        "wfu-sort-locale"
+      ) || "";
+      const sortStartWith = parseInt(list.getAttribute(
+        "wfu-sort-startwith"
+      ) || "1", 10) || 1;
+      var sortLocale = "en";
+      switch (sortLocaleConfig) {
+        case "none":
+        case "auto":
+        case "":
+          const htmlElement = document.documentElement;
+          const currentLocale = htmlElement.getAttribute("lang");
+          sortLocale = currentLocale ? currentLocale : "en";
+          break;
+        case "browser":
+          sortLocale = navigator.language || "en";
+          break;
+        default:
+          sortLocale = sortLocaleConfig;
+          break;
+      }
+      const items = Array.from(list.children);
+      if (sortStartWith) {
+        items.splice(0, sortStartWith - 1);
+      }
+      if (dir == "random") {
+        items.sort(() => Math.random() - 0.5);
+      } else {
+        items.sort((a, b) => {
+          const key1 = a.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || a.querySelector(Sa5Attribute.getBracketed("wfu-sort-key" /* ATTR_SORT_KEY */))?.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || "";
+          const key2 = b.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || b.querySelector(Sa5Attribute.getBracketed("wfu-sort-key" /* ATTR_SORT_KEY */))?.getAttribute("wfu-sort-key" /* ATTR_SORT_KEY */) || "";
+          let sortResult = 1;
+          switch (sortType) {
+            case "date":
+              sortResult = new Date(key1) < new Date(key2) ? -1 : 1;
+              break;
+            case "number":
+              sortResult = Number(key1) < Number(key2) ? -1 : 1;
+              break;
+            case "semver":
+              break;
+            case "string":
+            default:
+              sortResult = key1.localeCompare(key2, sortLocale, {
+                sensitivity: "variant"
+              });
+              break;
+          }
+          if (dir != "asc") {
+            sortResult = sortResult * -1;
+          }
+          return sortResult;
+        });
+      }
+      while (list.lastChild && list.children.length > sortStartWith - 1) {
+        list.lastChild.remove();
+      }
+      items.forEach((item) => list.appendChild(item));
+      list.removeAttribute("wfu-sort" /* ATTR_SORT */);
+    }
   };
-  if (document.readyState !== "loading") {
-    init();
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
+
+  // src/webflow-html/sort.ts
+  var Sa5Sort = class {
+    constructor(element, config = {}) {
+      this.elem = element;
+      this.config = {};
+      let core = Sa5Core.startup();
+    }
+    init() {
+      let debug = new Sa5Debug("sa5-sort");
+      debug.enabled = true;
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element) => {
+        new Sa5CollectionList(element).sort();
+      });
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}] [${"wfu-sort" /* ATTR_SORT */}]`).forEach((element) => {
+        new Sa5CollectionList(element).sort();
+      });
+      document.querySelectorAll(`[${"wfu-sort" /* ATTR_SORT */}]`).forEach((element) => {
+        new Sa5CollectionList(element).sort();
+      });
+    }
+  };
 })();
-//# sourceMappingURL=webflow-fixup.js.map
+//# sourceMappingURL=sort.js.map
