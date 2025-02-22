@@ -26,7 +26,18 @@ import { Sa5Designer } from './webflow-core/designer';
 
 export class Sa5Core {
 
+    // Handler are user function handlers 
     public handlers = [];
+//    public controllers: any = {}; 
+    public controllers: Record<string, any> = {};    
+
+    // e.g. 'modals'
+    setController(name: string, controller: any) {
+
+        console.debug("SA5", `Adding controller - ${name}.`);         
+        this.controllers[name] = controller; 
+
+    }
 
     // Returns all handlers found by the specified name
     getHandlers(name: string): Function[] {
