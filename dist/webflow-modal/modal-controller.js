@@ -193,7 +193,12 @@
   var Sa5Core = class {
     constructor() {
       this.handlers = [];
+      this.controllers = {};
       new Sa5Designer().init();
+    }
+    setController(name, controller) {
+      console.debug("SA5", `Adding controller - ${name}.`);
+      this.controllers[name] = controller;
     }
     getHandlers(name) {
       console.log("HANDLERS", this.handlers);
@@ -4564,11 +4569,13 @@
       }
     }
     display(force = false) {
-      switch (this.controller.modalRule) {
-        case "none" /* None */:
-          return;
-        case "default" /* Default */:
-          break;
+      if (this.controller) {
+        switch (this.controller.modalRule) {
+          case "none" /* None */:
+            return;
+          case "default" /* Default */:
+            break;
+        }
       }
       if (!force) {
         if (this.isSuppressed())
@@ -4651,6 +4658,7 @@
       return null;
     }
   };
+  Sa5Core.startup(Sa5Modal);
 
   // src/webflow-modal/modal-controller.ts
   var ModalRule = /* @__PURE__ */ ((ModalRule2) => {
@@ -4664,6 +4672,7 @@
       this.config = config3;
       this.modals = /* @__PURE__ */ new Map();
       let core = Sa5Core.startup();
+      core.setController("modals", this);
     }
     init() {
       let debug = new Sa5Debug("sa5-modal-controller");
@@ -4702,11 +4711,37 @@
       triggerElements.forEach((element) => {
         element.addEventListener("click", () => {
           let modalKey = element.getAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */);
-          if (modalKey) {
-            this.modals.get(modalKey).display();
+          if (!modalKey) {
+            console.error("No modal key specified.");
+            return;
           }
+          let modal = this.modals.get(modalKey);
+          if (!modal) {
+            console.error(`Requested modal ${modalKey} not found.`);
+            return;
+          }
+          modal.display();
         });
       });
+    }
+    closeAll() {
+      this.modals.forEach((modal, key) => {
+        console.log(`Closing modal: ${key}`);
+        modal.close();
+      });
+    }
+    display(modalName, force = false) {
+      const modal = this.modals.get(modalName);
+      if (!modal) {
+        console.error(`Modal '${modalName}' not found.`);
+        return;
+      }
+      modal.display(force);
+    }
+    onModalOpenRequest(modalName) {
+      let core = Sa5Core.startup();
+      let allowed = true;
+      return allowed;
     }
   };
 })();

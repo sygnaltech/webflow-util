@@ -193,7 +193,12 @@
   var Sa5Core = class {
     constructor() {
       this.handlers = [];
+      this.controllers = {};
       new Sa5Designer().init();
+    }
+    setController(name, controller) {
+      console.debug("SA5", `Adding controller - ${name}.`);
+      this.controllers[name] = controller;
     }
     getHandlers(name) {
       console.log("HANDLERS", this.handlers);
@@ -4564,11 +4569,13 @@
       }
     }
     display(force = false) {
-      switch (this.controller.modalRule) {
-        case "none" /* None */:
-          return;
-        case "default" /* Default */:
-          break;
+      if (this.controller) {
+        switch (this.controller.modalRule) {
+          case "none" /* None */:
+            return;
+          case "default" /* Default */:
+            break;
+        }
       }
       if (!force) {
         if (this.isSuppressed())
@@ -4651,6 +4658,7 @@
       return null;
     }
   };
+  Sa5Core.startup(Sa5Modal);
 })();
 /*!
  * CSSPlugin 3.12.5

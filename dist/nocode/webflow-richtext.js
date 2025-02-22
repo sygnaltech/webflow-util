@@ -237,7 +237,12 @@
   var Sa5Core = class {
     constructor() {
       this.handlers = [];
+      this.controllers = {};
       new Sa5Designer().init();
+    }
+    setController(name, controller) {
+      console.debug("SA5", `Adding controller - ${name}.`);
+      this.controllers[name] = controller;
     }
     getHandlers(name) {
       console.log("HANDLERS", this.handlers);

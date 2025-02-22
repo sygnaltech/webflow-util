@@ -47,7 +47,7 @@ interface Sa5ModalConfig {
 
 export class Sa5Modal {
 
-    controller: Sa5ModalController;
+    controller?: Sa5ModalController;
     config: Sa5ModalConfig;
     elem: HTMLElement; 
     modalContainer: HTMLDivElement; 
@@ -60,7 +60,7 @@ export class Sa5Modal {
         return `sa5-modal_${this.name}`; 
     }
 
-    constructor(elem: HTMLElement, controller: Sa5ModalController, config: Partial<Sa5ModalConfig> = {}) {
+    constructor(elem: HTMLElement, controller?: Sa5ModalController, config: Partial<Sa5ModalConfig> = {}) {
 
         this.elem = elem; 
         this.controller = controller; 
@@ -206,13 +206,20 @@ export class Sa5Modal {
 
     }
 
+    /**
+     * Display the modal. 
+     * @param force If true, ignores cookie suppression state. 
+     * @returns 
+     */
     display(force: boolean = false) { 
 
-        switch(this.controller.modalRule) {
-            case ModalRule.None:
-                return; // suppress all modals
-            case ModalRule.Default:
-                break; // do nothing
+        if(this.controller) {
+            switch(this.controller.modalRule) {
+                case ModalRule.None:
+                    return; // suppress all modals
+                case ModalRule.Default:
+                    break; // do nothing
+            }
         }
 
         if(!force) {
@@ -314,5 +321,5 @@ export class Sa5Modal {
 }
 
 
-
+Sa5Core.startup(Sa5Modal);
 

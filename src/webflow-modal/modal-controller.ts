@@ -8,7 +8,7 @@
  * 
  */
 
-import { Sa5Attribute } from '../globals';
+import { Sa5Attribute, Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Modal } from './modal';
@@ -17,19 +17,31 @@ import { Sa5Modal } from './modal';
  * EVENTS
  */
 
-// type LayoutChangedCallback = (
-//     breakpointName: string, 
-//     e: MediaQueryListEvent
-//     ) => void; 
-
-
+type ModalOpenRequestCallback = (
+    modalName: string, 
+    ) => void; 
+type ModalOpenedCallback = (
+    modalName: string, 
+    ) => void; 
+type ModalCloseRequestCallback = (
+    modalName: string, 
+    ) => void; 
+type ModalClosedCallback = (
+    modalName: string, 
+    ) => void; 
+    
+/**
+ * CONFIG
+ */ 
 
 interface Sa5ModalControllerConfig {
 
-//    layoutChangedCallback?: LayoutChangedCallback; 
+    modalOpenRequestCallback?: ModalOpenRequestCallback; 
+    modalOpenedCallback?: ModalOpenedCallback; 
+    modalCloseRequestCallback?: ModalCloseRequestCallback; 
+    modalClosedCallback?: ModalClosedCallback; 
 
 }
-
 
 export enum ModalRule {
     Default = 'default',
@@ -65,6 +77,11 @@ export class Sa5ModalController {
         this.modals = new Map<string, Sa5Modal>();
 
         let core: Sa5Core = Sa5Core.startup(); 
+
+//         console.log("adding modals.")
+//        core["modules"]["modals"] = this; 
+        core.setController("modals", this); 
+//        core.controllers["modals"] = this; 
 
 //        const layoutChanged = core.getHandler('layoutChanged'); 
 
@@ -143,14 +160,19 @@ export class Sa5ModalController {
             element.addEventListener('click', () => {
 
                 let modalKey = element.getAttribute(Sa5Attribute.ATTR_MODAL_TRIGGER_CLICK);
-                if (modalKey) {
-    // console.log("trigger click", modalKey);
-    // console.log(this.modals.get(modalKey)); 
+                if (!modalKey) {
+                    console.error("No modal key specified."); 
+                    return; 
+                }
 
-                    this.modals.get(modalKey).display();
-                } 
+                let modal: Sa5Modal = this.modals.get(modalKey);
+                if (!modal) {
+                    console.error(`Requested modal ${modalKey} not found.`); 
+                    return; 
+                }
+
+                modal.display();
     
-
             }); 
 
         });    
@@ -164,8 +186,59 @@ export class Sa5ModalController {
     //         ); 
     //     }
 
+    } 
+
+    /**
+     * Close all modals 
+     */
+
+    closeAll() {
+
+        this.modals.forEach((modal, key) => {
+            console.log(`Closing modal: ${key}`);
+            modal.close();
+        });
+
     }
 
+    /**
+     * Display modal. 
+     * @param modalName Modal name
+     * @param force 
+     * @returns 
+     */
+    display(modalName: string, force: boolean = false): void {
+        
+// console.log("modals", this.modals); 
+
+        const modal: Sa5Modal = this.modals.get(modalName); 
+        if(!modal) {
+            console.error(`Modal '${modalName}' not found.`); 
+            return; 
+        }
+
+        modal.display(force); 
+
+    }
+
+
+    onModalOpenRequest(modalName: string): boolean {
+        let core: Sa5Core = Sa5Core.startup();
+
+        // Get any global handlers for the slide next request
+//        const handlers = core.getHandlers(Sa5GlobalEvent.EVENT_SLIDE_PREV_REQUEST);
+        let allowed = true; // Default to true to allow slide change unless a handler returns false 
+
+        // handlers.forEach(func => {
+        //     // Assuming func returns a boolean indicating whether to proceed
+        //     const result = func(this, modalName);
+        //     if (!result) {
+        //         allowed = false; // If any handler returns false, do not advance
+        //     }
+        // });
+
+        return allowed; // Return whether the slide should change
+    }
 
 }
 
