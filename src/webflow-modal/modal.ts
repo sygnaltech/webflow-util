@@ -13,6 +13,7 @@ import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { gsap } from "gsap";
 import { Sa5ModalController, ModalRule } from './modal-controller';
+import { Sa5ModalGateController } from './modal-gate-controller';
 
 /**
  * EVENTS
@@ -54,7 +55,9 @@ export class Sa5Modal {
     timer?: number; // ms
     suppressMode: ModalSuppressMode = ModalSuppressMode.None;
     suppressDuration: string; // SA5 duration 
-    name: string;
+    name: string;  
+
+    private closeResolver?: (result: boolean) => void; // Resolver for Promise    
 
     get key(): string {
         return `sa5-modal_${this.name}`; 
@@ -187,6 +190,28 @@ export class Sa5Modal {
 //            this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
         }
 
+
+        // // Setup gate buttons 
+        // let gateButtons: Array<HTMLElement> = Array.from(
+        //     document.querySelectorAll( 
+        //         Sa5Attribute.getBracketed(
+        //             Sa5Attribute.ATTR_MODAL_GATE_BUTTON // "wfu-modal-gate-button" 
+        //         )
+        //     ));
+
+        // gateButtons.forEach(element => { 
+        //     element.addEventListener("click", async (e) => { 
+
+        //         // Open the gate 
+        //         Sa5ModalGateController.openGate(this.name); 
+                
+        //     });
+        // }); 
+
+
+
+
+
         document.body.appendChild(this.modalContainer);
 
         if(this.timer) {
@@ -204,6 +229,13 @@ export class Sa5Modal {
     //         ); 
     //     }
 
+
+
+        // Install any Gate Actions 
+        const gateController: Sa5ModalGateController = new Sa5ModalGateController(this.controller); 
+        gateController.installModalGateActions(this); 
+
+
     }
 
     /**
@@ -211,7 +243,7 @@ export class Sa5Modal {
      * @param force If true, ignores cookie suppression state. 
      * @returns 
      */
-    display(force: boolean = false) { 
+    display(force: boolean = false): Promise<boolean> { 
 
         if(this.controller) {
             switch(this.controller.modalRule) {
@@ -227,48 +259,64 @@ export class Sa5Modal {
                 return; // skip open, suppressed
         }
 
-        const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
-        const overlay = document.createElement('div');
-        overlay.id = overlayId;
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        overlay.style.zIndex = '9998';
-    
-        overlay.addEventListener('click', () => this.close());
-    
-        document.body.appendChild(overlay);
-        this.modalContainer.style.display = 'block';
-    
-        gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-        gsap.fromTo(this.modalContainer, { opacity: 0, transform: 'translate(-50%, -50%)' }, { opacity: 1, transform: 'translate(-50%, -50%)', duration: 0.5 });
-    
-        this.modalContainer.dataset.overlayId = overlayId;
+        return new Promise<boolean>((resolve) => { 
+
+            this.closeResolver = resolve; // Store resolver for closing event        
+
+            const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`; // Generate a unique ID for the overlay
+            const overlay = document.createElement('div');
+            overlay.id = overlayId;
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            overlay.style.zIndex = '9998';
+        
+            overlay.addEventListener('click', () => this.close());
+        
+            document.body.appendChild(overlay);
+            this.modalContainer.style.display = 'block';
+        
+            gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+            gsap.fromTo(this.modalContainer, { opacity: 0, transform: 'translate(-50%, -50%)' }, { opacity: 1, transform: 'translate(-50%, -50%)', duration: 0.5 });
+        
+            this.modalContainer.dataset.overlayId = overlayId;
 
 
-        // Suppress
-        switch (this.suppressMode) {
-            case ModalSuppressMode.Forever:
-                this.setCookie(this.key, 'true', Infinity);
-                break;
-            case ModalSuppressMode.Session:
-                sessionStorage.setItem(this.key, 'true');
-                break;
-            case ModalSuppressMode.Duration:
-                // Handle duration if needed
-                break;
-            default:
-            case ModalSuppressMode.None:
-                // Do nothing
-                break;
-        }
-                
+            // Suppress
+            switch (this.suppressMode) {
+                case ModalSuppressMode.Forever:
+                    this.setCookie(this.key, 'true', Infinity);
+                    break;
+                case ModalSuppressMode.Session:
+                    sessionStorage.setItem(this.key, 'true');
+                    break;
+                case ModalSuppressMode.Duration:
+                    // Handle duration if needed
+                    break;
+                default:
+                case ModalSuppressMode.None:
+                    // Do nothing
+                    break;
+            }
+
+        });
+
     }
 
-    close() {
+    close(openGate: boolean = false) {
+
+        // If this modal is configured for view gate, 
+        // open the gate 
+//         if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_GATE_VIEW)) {
+
+// //            Sa5ModalGateController.openGate(this.name); 
+// //            const gateKey: string = Sa5ModalGateController.getGateKey(this.name);   
+
+//         }
+
         const overlayId = this.modalContainer.dataset.overlayId;
         const overlay = document.getElementById(overlayId);
         if (overlay) {
@@ -278,6 +326,15 @@ export class Sa5Modal {
             gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
                 document.body.removeChild(overlay);
             }});
+        }
+
+        // Resolve the stored Promise if `display()` was awaited
+        if (this.closeResolver) {
+            if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_GATE_VIEW))
+                this.closeResolver(true);
+            else
+                this.closeResolver(openGate);
+            this.closeResolver = undefined; // Prevent multiple calls
         }
 
     }

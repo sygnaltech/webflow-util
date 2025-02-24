@@ -82,6 +82,10 @@
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
     Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
     Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
+    Sa5Attribute2["ATTR_MODAL_GATE"] = "wfu-modal-gate";
+    Sa5Attribute2["ATTR_MODAL_GATE_VIEW"] = "wfu-modal-gate-view";
+    Sa5Attribute2["ATTR_MODAL_GATE_BUTTON"] = "wfu-modal-gate-button";
+    Sa5Attribute2["ATTR_MODAL_GATE_FORM"] = "wfu-modal-gate-form";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -445,7 +449,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.4.39";
+  var VERSION = "5.5.1";
 
   // node_modules/gsap/gsap-core.js
   function _assertThisInitialized(self) {
@@ -4639,6 +4643,131 @@
   var gsapWithCSS = gsap.registerPlugin(CSSPlugin) || gsap;
   var TweenMaxWithCSS = gsapWithCSS.core.Tween;
 
+  // src/webflow-modal/modal-gate-controller.ts
+  var Sa5ModalGateController = class {
+    constructor(controller, config3 = {}) {
+      this.suppressMode = "none" /* None */;
+      this.controller = controller;
+    }
+    static getGateKey(modalName) {
+      return `sa5-modal-gate_${modalName}`;
+    }
+    static isGateOpen(modalName) {
+      const gateOpen = localStorage.getItem(
+        Sa5ModalGateController.getGateKey(modalName)
+      );
+      return gateOpen !== null;
+    }
+    static openGate(modalName) {
+      localStorage.setItem(
+        Sa5ModalGateController.getGateKey(modalName),
+        "true"
+      );
+    }
+    static closeGate(modalName) {
+      localStorage.removeItem(
+        Sa5ModalGateController.getGateKey(modalName)
+      );
+    }
+    init() {
+      this.installModalGates();
+    }
+    installModalGates() {
+      let gateElements = Array.from(
+        document.querySelectorAll(
+          Sa5Attribute.getBracketed(
+            "wfu-modal-gate" /* ATTR_MODAL_GATE */
+          )
+        )
+      );
+      gateElements.forEach((element) => {
+        const gateID = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+        const gateKey = Sa5ModalGateController.getGateKey(gateID);
+        if (element.hasAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */)) {
+          console.log("Installing gated modal", gateID);
+          this.installModalGates_Modal(element);
+        } else if (element.tagName == "A") {
+          console.log("Installing gated link", gateID);
+          this.installModalGates_Link(element);
+        }
+      });
+    }
+    installModalGates_Modal(element) {
+      if (!element.hasAttribute("wfu-modal-trigger-click")) {
+        console.error("SA5 Modal gate is not on a modal click-trigger element. ");
+        return;
+      }
+      const modalName = element.getAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */);
+      const gateModalName = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+      const gateKey = Sa5ModalGateController.getGateKey(modalName);
+      console.log(modalName, gateKey);
+      element.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (Sa5ModalGateController.isGateOpen(gateModalName)) {
+          console.log("Gate open. Showing...", modalName);
+          this.controller.display(modalName, true);
+        } else {
+          console.log("Gate closed. Showing...", gateModalName);
+          const openGate = await this.controller.display(gateModalName, true);
+          console.log("gating modeal returned", openGate);
+          if (openGate) {
+            Sa5ModalGateController.openGate(gateModalName);
+            this.controller.display(modalName, true);
+          }
+        }
+      });
+    }
+    installModalGates_Link(element) {
+      const linkElement = element;
+      const gateModalName = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+      element.addEventListener("click", async (event) => {
+        event.preventDefault();
+        if (Sa5ModalGateController.isGateOpen(gateModalName)) {
+          this.navigateToLink(element);
+        } else {
+          console.log("Gate closed. Showing...", gateModalName);
+          const openGate = await this.controller.display(gateModalName, true);
+          console.log("gating modeal returned", openGate);
+          if (openGate) {
+            Sa5ModalGateController.openGate(gateModalName);
+            this.navigateToLink(element);
+          }
+        }
+      });
+    }
+    installModalGateActions(modal) {
+      let gateButtons = Array.from(
+        modal.elem.querySelectorAll(
+          Sa5Attribute.getBracketed(
+            "wfu-modal-gate-button" /* ATTR_MODAL_GATE_BUTTON */
+          )
+        )
+      );
+      gateButtons.forEach((element) => {
+        element.addEventListener("click", async (e) => {
+          modal.close(true);
+        });
+      });
+      let gateForms = Array.from(
+        modal.elem.querySelectorAll(
+          `form[${"wfu-modal-gate-form" /* ATTR_MODAL_GATE_FORM */}]`
+        )
+      );
+      gateForms.forEach((element) => {
+        element.addEventListener("submit", async (e) => {
+          modal.close(true);
+        });
+      });
+    }
+    navigateToLink(linkElement) {
+      if (linkElement.target && linkElement.target !== "_self") {
+        window.open(linkElement.href, linkElement.target);
+      } else {
+        window.location.href = linkElement.href;
+      }
+    }
+  };
+
   // src/webflow-modal/modal.ts
   var ModalSuppressMode = /* @__PURE__ */ ((ModalSuppressMode2) => {
     ModalSuppressMode2["None"] = "none";
@@ -4738,6 +4867,8 @@
           this.display();
         }, this.timer);
       }
+      const gateController = new Sa5ModalGateController(this.controller);
+      gateController.installModalGateActions(this);
     }
     display(force = false) {
       if (this.controller) {
@@ -4752,37 +4883,40 @@
         if (this.isSuppressed())
           return;
       }
-      const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
-      const overlay = document.createElement("div");
-      overlay.id = overlayId;
-      overlay.style.position = "fixed";
-      overlay.style.top = "0";
-      overlay.style.left = "0";
-      overlay.style.width = "100%";
-      overlay.style.height = "100%";
-      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-      overlay.style.zIndex = "9998";
-      overlay.addEventListener("click", () => this.close());
-      document.body.appendChild(overlay);
-      this.modalContainer.style.display = "block";
-      gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-      gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, transform: "translate(-50%, -50%)" }, { opacity: 1, transform: "translate(-50%, -50%)", duration: 0.5 });
-      this.modalContainer.dataset.overlayId = overlayId;
-      switch (this.suppressMode) {
-        case "forever" /* Forever */:
-          this.setCookie(this.key, "true", Infinity);
-          break;
-        case "session" /* Session */:
-          sessionStorage.setItem(this.key, "true");
-          break;
-        case "duration" /* Duration */:
-          break;
-        default:
-        case "none" /* None */:
-          break;
-      }
+      return new Promise((resolve) => {
+        this.closeResolver = resolve;
+        const overlayId = `overlay-${Math.random().toString(36).substr(2, 9)}`;
+        const overlay = document.createElement("div");
+        overlay.id = overlayId;
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        overlay.style.zIndex = "9998";
+        overlay.addEventListener("click", () => this.close());
+        document.body.appendChild(overlay);
+        this.modalContainer.style.display = "block";
+        gsapWithCSS.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+        gsapWithCSS.fromTo(this.modalContainer, { opacity: 0, transform: "translate(-50%, -50%)" }, { opacity: 1, transform: "translate(-50%, -50%)", duration: 0.5 });
+        this.modalContainer.dataset.overlayId = overlayId;
+        switch (this.suppressMode) {
+          case "forever" /* Forever */:
+            this.setCookie(this.key, "true", Infinity);
+            break;
+          case "session" /* Session */:
+            sessionStorage.setItem(this.key, "true");
+            break;
+          case "duration" /* Duration */:
+            break;
+          default:
+          case "none" /* None */:
+            break;
+        }
+      });
     }
-    close() {
+    close(openGate = false) {
       const overlayId = this.modalContainer.dataset.overlayId;
       const overlay = document.getElementById(overlayId);
       if (overlay) {
@@ -4792,6 +4926,13 @@
         gsapWithCSS.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => {
           document.body.removeChild(overlay);
         } });
+      }
+      if (this.closeResolver) {
+        if (this.elem.hasAttribute("wfu-modal-gate-view" /* ATTR_MODAL_GATE_VIEW */))
+          this.closeResolver(true);
+        else
+          this.closeResolver(openGate);
+        this.closeResolver = void 0;
       }
     }
     isSuppressed() {
@@ -4875,6 +5016,9 @@
         )
       );
       triggerElements.forEach((element) => {
+        if (element.hasAttribute("wfu-modal-gate")) {
+          return;
+        }
         element.addEventListener("click", () => {
           let modalKey = element.getAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */);
           if (!modalKey) {
@@ -4889,6 +5033,8 @@
           modal.display();
         });
       });
+      const gateController = new Sa5ModalGateController(this);
+      gateController.init();
     }
     closeAll() {
       this.modals.forEach((modal, key) => {
@@ -4896,13 +5042,13 @@
         modal.close();
       });
     }
-    display(modalName, force = false) {
+    async display(modalName, force = false) {
       const modal = this.modals.get(modalName);
       if (!modal) {
         console.error(`Modal '${modalName}' not found.`);
         return;
       }
-      modal.display(force);
+      return await modal.display(force);
     }
     onModalOpenRequest(modalName) {
       let core = Sa5Core.startup();

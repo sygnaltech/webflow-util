@@ -82,6 +82,10 @@
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
     Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
     Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
+    Sa5Attribute2["ATTR_MODAL_GATE"] = "wfu-modal-gate";
+    Sa5Attribute2["ATTR_MODAL_GATE_VIEW"] = "wfu-modal-gate-view";
+    Sa5Attribute2["ATTR_MODAL_GATE_BUTTON"] = "wfu-modal-gate-button";
+    Sa5Attribute2["ATTR_MODAL_GATE_FORM"] = "wfu-modal-gate-form";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -277,7 +281,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.4.39";
+  var VERSION = "5.5.1";
 
   // src/webflow-cro/source.ts
   var Sa5Source = class {

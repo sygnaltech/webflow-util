@@ -12,6 +12,7 @@ import { Sa5Attribute, Sa5GlobalEvent } from '../globals';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5Modal } from './modal';
+import { Sa5ModalGateController } from './modal-gate-controller';
 
 /**
  * EVENTS
@@ -78,13 +79,12 @@ export class Sa5ModalController {
 
         let core: Sa5Core = Sa5Core.startup(); 
 
-//         console.log("adding modals.")
-//        core["modules"]["modals"] = this; 
-        core.setController("modals", this); 
-//        core.controllers["modals"] = this; 
+        // Export the modals controller so that it can be accessed 
+        // as an SA5 JS API 
+        core.setController("modals", this);  
+
 
 //        const layoutChanged = core.getHandler('layoutChanged'); 
-
   //      this.config.layoutChangedCallback = layoutChanged as LayoutChangedCallback;
 
     }
@@ -116,9 +116,9 @@ export class Sa5ModalController {
 
         debug.debug("Modal rule", this.modalRule); 
 
-        //
-        // Process modal elements 
-        //
+        /**
+         * Process modal elements 
+         */
 
         let modalElements = Array.from(
             document.querySelectorAll<HTMLElement>(
@@ -149,6 +149,9 @@ export class Sa5ModalController {
 
         });    
 
+        /**
+         * Process modal triggers 
+         */
 
         let triggerElements = Array.from(
             document.querySelectorAll(
@@ -157,6 +160,13 @@ export class Sa5ModalController {
     
         triggerElements.forEach(element => { 
             
+            // Suppress gated triggers 
+            // we want the gate to trigger them 
+            if(element.hasAttribute("wfu-modal-gate")) {
+ //                console.log("trigger click suppressed ...") 
+                return;
+            }
+
             element.addEventListener('click', () => {
 
                 let modalKey = element.getAttribute(Sa5Attribute.ATTR_MODAL_TRIGGER_CLICK);
@@ -177,6 +187,19 @@ export class Sa5ModalController {
 
         });    
 
+
+
+        /**
+         * Process modal gates 
+         */
+
+        const gateController: Sa5ModalGateController = new Sa5ModalGateController(this);
+        gateController.init(); 
+
+
+
+
+
     //     // Notify any config-specified handler
     //     if(this.config.layoutChangedCallback) {
 
@@ -187,6 +210,7 @@ export class Sa5ModalController {
     //     }
 
     } 
+
 
     /**
      * Close all modals 
@@ -203,13 +227,11 @@ export class Sa5ModalController {
 
     /**
      * Display modal. 
-     * @param modalName Modal name
+     * @param modalName Modal name  
      * @param force 
      * @returns 
      */
-    display(modalName: string, force: boolean = false): void {
-        
-// console.log("modals", this.modals); 
+    async display(modalName: string, force: boolean = false): Promise<boolean> {
 
         const modal: Sa5Modal = this.modals.get(modalName); 
         if(!modal) {
@@ -217,7 +239,7 @@ export class Sa5ModalController {
             return; 
         }
 
-        modal.display(force); 
+        return await modal.display(force); 
 
     }
 

@@ -30,7 +30,6 @@ const init = () => {
     const controller: Sa5ModalController = new Sa5ModalController();
     controller.init(); 
 
-
     // Dismiss any elements that are cookie-suppressed
     document.querySelectorAll(
         Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS) 

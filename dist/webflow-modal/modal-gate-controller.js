@@ -126,244 +126,129 @@
     return Sa5Attribute2;
   })(Sa5Attribute || {});
 
-  // src/webflow-core/debug.ts
-  var Sa5Debug = class {
-    constructor(label) {
-      this.localStorageDebugFlag = "sa5-debug";
-      this._enabled = false;
-      this._label = label;
+  // src/webflow-modal/modal-gate-controller.ts
+  var Sa5ModalGateController = class {
+    constructor(controller, config = {}) {
+      this.suppressMode = "none" /* None */;
+      this.controller = controller;
     }
-    get persistentDebug() {
-      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+    static getGateKey(modalName) {
+      return `sa5-modal-gate_${modalName}`;
     }
-    set persistentDebug(active) {
-      if (active) {
-        localStorage.setItem(this.localStorageDebugFlag, "true");
-        console.debug(`sa5-core debug enabled (persistent).`);
-      } else {
-        localStorage.removeItem(this.localStorageDebugFlag);
-        console.debug(`sa5-core debug disabled (persistent).`);
-      }
+    static isGateOpen(modalName) {
+      const gateOpen = localStorage.getItem(
+        Sa5ModalGateController.getGateKey(modalName)
+      );
+      return gateOpen !== null;
     }
-    get enabled() {
-      var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
-      wfuDebugValue = wfuDebugValue || this._enabled;
-      return wfuDebugValue;
+    static openGate(modalName) {
+      localStorage.setItem(
+        Sa5ModalGateController.getGateKey(modalName),
+        "true"
+      );
     }
-    set enabled(active) {
-      this._enabled = active;
-    }
-    group(name) {
-      if (this.enabled)
-        console.group(name);
-    }
-    groupEnd() {
-      if (this.enabled)
-        console.groupEnd();
-    }
-    debug(...args) {
-      if (this.enabled)
-        console.debug(this._label, ...args);
-    }
-    static getStyleString(elem) {
-      let styleString = "";
-      for (let i = 0; i < elem.style.length; i++) {
-        const property = elem.style[i];
-        const value = elem.style.getPropertyValue(property);
-        styleString += `${property}: ${value}; `;
-      }
-      return styleString;
-    }
-  };
-
-  // src/webflow-core/designer.ts
-  var Sa5Designer = class {
-    constructor() {
+    static closeGate(modalName) {
+      localStorage.removeItem(
+        Sa5ModalGateController.getGateKey(modalName)
+      );
     }
     init() {
-      this.removeDesignTimeElements();
+      this.installModalGates();
     }
-    removeDesignTimeElements() {
-      const elements = document.querySelectorAll(
-        Sa5Attribute.getBracketed("wfu-design" /* ATTR_DESIGN */)
+    installModalGates() {
+      let gateElements = Array.from(
+        document.querySelectorAll(
+          Sa5Attribute.getBracketed(
+            "wfu-modal-gate" /* ATTR_MODAL_GATE */
+          )
+        )
       );
-      elements.forEach((element) => {
-        element.remove();
+      gateElements.forEach((element) => {
+        const gateID = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+        const gateKey = Sa5ModalGateController.getGateKey(gateID);
+        if (element.hasAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */)) {
+          console.log("Installing gated modal", gateID);
+          this.installModalGates_Modal(element);
+        } else if (element.tagName == "A") {
+          console.log("Installing gated link", gateID);
+          this.installModalGates_Link(element);
+        }
       });
     }
-  };
-
-  // src/webflow-core.ts
-  var Sa5Core = class {
-    constructor() {
-      this.handlers = [];
-      this.controllers = {};
-      new Sa5Designer().init();
-    }
-    setController(name, controller) {
-      console.debug("SA5", `Adding controller - ${name}.`);
-      this.controllers[name] = controller;
-    }
-    getHandlers(name) {
-      console.log("HANDLERS", this.handlers);
-      return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
-    }
-    getHandler(name) {
-      const item = this.handlers.find((item2) => item2[0] === name);
-      return item ? item[1] : void 0;
-    }
-    init() {
-      this.initDebugMode();
-      this.initAsync();
-    }
-    async initAsync() {
-      this.initScriptInjectionsAsync();
-    }
-    async initScriptInjectionsAsync() {
-      document.addEventListener("DOMContentLoaded", () => {
-        const loadSrcScripts = document.querySelectorAll(
-          `script[${"wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */}]`
-        );
-        loadSrcScripts.forEach((script) => {
-          const loadSrcUrl = script.getAttribute("wfu-script-load" /* ATTR_CORE_SCRIPT_INJECT */);
-          if (loadSrcUrl) {
-            fetch(loadSrcUrl).then((response) => response.text()).then((jsContent) => {
-              const newScript = document.createElement("script");
-              newScript.textContent = jsContent;
-              script.replaceWith(newScript);
-            }).catch((error) => {
-              console.error("Error loading script:", error);
-            });
+    installModalGates_Modal(element) {
+      if (!element.hasAttribute("wfu-modal-trigger-click")) {
+        console.error("SA5 Modal gate is not on a modal click-trigger element. ");
+        return;
+      }
+      const modalName = element.getAttribute("wfu-modal-trigger-click" /* ATTR_MODAL_TRIGGER_CLICK */);
+      const gateModalName = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+      const gateKey = Sa5ModalGateController.getGateKey(modalName);
+      console.log(modalName, gateKey);
+      element.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (Sa5ModalGateController.isGateOpen(gateModalName)) {
+          console.log("Gate open. Showing...", modalName);
+          this.controller.display(modalName, true);
+        } else {
+          console.log("Gate closed. Showing...", gateModalName);
+          const openGate = await this.controller.display(gateModalName, true);
+          console.log("gating modeal returned", openGate);
+          if (openGate) {
+            Sa5ModalGateController.openGate(gateModalName);
+            this.controller.display(modalName, true);
           }
+        }
+      });
+    }
+    installModalGates_Link(element) {
+      const linkElement = element;
+      const gateModalName = element.getAttribute("wfu-modal-gate" /* ATTR_MODAL_GATE */);
+      element.addEventListener("click", async (event) => {
+        event.preventDefault();
+        if (Sa5ModalGateController.isGateOpen(gateModalName)) {
+          this.navigateToLink(element);
+        } else {
+          console.log("Gate closed. Showing...", gateModalName);
+          const openGate = await this.controller.display(gateModalName, true);
+          console.log("gating modeal returned", openGate);
+          if (openGate) {
+            Sa5ModalGateController.openGate(gateModalName);
+            this.navigateToLink(element);
+          }
+        }
+      });
+    }
+    installModalGateActions(modal) {
+      let gateButtons = Array.from(
+        modal.elem.querySelectorAll(
+          Sa5Attribute.getBracketed(
+            "wfu-modal-gate-button" /* ATTR_MODAL_GATE_BUTTON */
+          )
+        )
+      );
+      gateButtons.forEach((element) => {
+        element.addEventListener("click", async (e) => {
+          modal.close(true);
+        });
+      });
+      let gateForms = Array.from(
+        modal.elem.querySelectorAll(
+          `form[${"wfu-modal-gate-form" /* ATTR_MODAL_GATE_FORM */}]`
+        )
+      );
+      gateForms.forEach((element) => {
+        element.addEventListener("submit", async (e) => {
+          modal.close(true);
         });
       });
     }
-    initDebugMode() {
-      const debugParamKey = "debug";
-      let params = new URLSearchParams(window.location.search);
-      let hasDebug = params.has(debugParamKey);
-      if (hasDebug) {
-        let wfuDebug = new Sa5Debug(`sa5 init`);
-        wfuDebug.persistentDebug = this.stringToBoolean(params.get(debugParamKey));
-      }
-    }
-    stringToBoolean(str) {
-      const truthyValues = ["1", "true", "yes"];
-      const falsyValues = ["0", "false", "no"];
-      if (truthyValues.indexOf(str.toLowerCase()) !== -1) {
-        return true;
+    navigateToLink(linkElement) {
+      if (linkElement.target && linkElement.target !== "_self") {
+        window.open(linkElement.href, linkElement.target);
       } else {
-        return false;
+        window.location.href = linkElement.href;
       }
     }
-    static startup(module = null) {
-      let sa5instance = window["sa5"];
-      var core;
-      if (sa5instance?.constructor?.name == "Sa5Core") {
-        core = sa5instance;
-      } else {
-        core = new Sa5Core();
-        core.init();
-        if (Array.isArray(sa5instance))
-          core.handlers = sa5instance;
-        window["sa5"] = core;
-        window["Sa5"] = window["sa5"];
-      }
-      if (module) {
-        window["sa5"][module.name] = module;
-      }
-      return core;
-    }
-    push(o) {
-      this.handlers.push(o);
-    }
   };
-  Sa5Core.startup();
-
-  // src/webflow-gallery/engine/simple-collage.ts
-  var Sa5GalleryEngineSimpleCollage = class {
-    constructor(gallery, config = {}) {
-      this.gallery = gallery;
-      this.debug = new Sa5Debug("sa5-gallery-engine-simple-collage");
-      this.debug.debug("Initializing");
-    }
-    layout() {
-      const layoutElement = this.gallery.elem;
-      const children = Array.from(layoutElement.children);
-      const totalColumns = 12;
-      const getRandomSpan = (remainingColumns, previousRowSpans2) => {
-        const possibleSpans = [4, 6, 8];
-        const validSpans = possibleSpans.filter((span) => span <= remainingColumns && !previousRowSpans2.includes(span));
-        return validSpans[Math.floor(Math.random() * validSpans.length)];
-      };
-      let currentRowColumns = 0;
-      let previousRowSpans = [];
-      let currentRowSpans = [];
-      children.forEach((child, index) => {
-        let colSpan;
-        if (index === children.length - 1 || currentRowColumns + 4 > totalColumns) {
-          colSpan = totalColumns - currentRowColumns;
-        } else {
-          colSpan = getRandomSpan(totalColumns - currentRowColumns, previousRowSpans);
-          if (!colSpan) {
-            colSpan = getRandomSpan(totalColumns - currentRowColumns, []);
-          }
-        }
-        child.style.gridColumn = `span ${colSpan}`;
-        currentRowColumns += colSpan;
-        currentRowSpans.push(colSpan);
-        if (currentRowColumns === totalColumns) {
-          currentRowColumns = 0;
-          previousRowSpans = [...currentRowSpans];
-          currentRowSpans = [];
-        }
-      });
-    }
-  };
-
-  // src/webflow-gallery.ts
-  var Sa5Gallery = class {
-    constructor(elem) {
-      this.debug = new Sa5Debug("sa5-gallery");
-      this.elem = elem;
-    }
-    loadConfig() {
-    }
-    init() {
-      let core = Sa5Core.startup();
-      console.log("Initializing gallery for:", this.elem);
-      const layoutEngine = this.elem.getAttribute("wfu-gallery-layout");
-      console.error(`Layout engine: ${layoutEngine}`);
-      if (layoutEngine) {
-        switch (layoutEngine) {
-          case "simple-collage": {
-            const engineInstance = new Sa5GalleryEngineSimpleCollage(this);
-            engineInstance.layout();
-            break;
-          }
-          default: {
-            console.error(`Unsupported layout engine: ${layoutEngine}`);
-            break;
-          }
-        }
-      }
-      this.elem.removeAttribute("wfu-preload");
-    }
-  };
-  var Sa5GalleryManager = class {
-    constructor() {
-      this.debug = new Sa5Debug("sa5-gallery-manager");
-      this.debug.debug("Initializing");
-    }
-    init() {
-      let core = Sa5Core.startup();
-      const galleryElements = document.querySelectorAll("[wfu-gallery]");
-      galleryElements.forEach((element) => {
-        const gallery = new Sa5Gallery(element);
-        gallery.init();
-      });
-    }
-  };
-  Sa5Core.startup(Sa5Gallery);
 })();
-//# sourceMappingURL=webflow-gallery.js.map
+//# sourceMappingURL=modal-gate-controller.js.map
