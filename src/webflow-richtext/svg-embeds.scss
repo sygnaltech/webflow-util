@@ -1,0 +1,19 @@
+
+/**
+ * SA5 SVG Embeds 
+ */
+
+
+[wfu-richtext-embed-svg] {
+
+    .w-embed:has(> svg) {
+        padding: 20px;
+        background-color: white;
+        }
+    .w-embed > svg {
+        width: 100%; 
+        height: auto;
+        }
+
+}
+

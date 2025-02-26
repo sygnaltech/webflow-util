@@ -281,7 +281,7 @@
   Sa5Core.startup();
 
   // src/version.ts
-  var VERSION = "5.5.1";
+  var VERSION = "5.5.2";
 
   // src/webflow-cro/source.ts
   var Sa5Source = class {

@@ -12,9 +12,10 @@
  */
            
     
-@use '../webflow-html/limit-items';
+@use '../webflow-html/limit-items'; 
 @use '../webflow-html/encoded-email';
 @use '../webflow-html/markdown';
+
 
  // Temporarily hide until decoded
 [wfu-decode] {
