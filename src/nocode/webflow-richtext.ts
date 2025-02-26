@@ -18,7 +18,7 @@ import { VERSION } from '../version';
 
 const init = () => { 
 
-    //    new Sa5Core().init();
+    //    new Sa5Core().init(); 
     let core: Sa5Core = Sa5Core.startup(); 
 
     // Initialize debugging
@@ -33,13 +33,10 @@ const init = () => {
     /** 
      * Process nested lists
      */
-//    console.log("richtext pre-processing lists");
 
     document.querySelectorAll(
         `.w-richtext[${Sa5Attribute.ATTR_RICHTEXT_LISTS}]` // '.w-richtext[wfu-lists]')
       ).forEach((rtfElem: HTMLElement) => {
-
-//        console.log("richtext processing lists");
 
         rtfElem.querySelectorAll(':scope > ul, :scope > ol')
           .forEach((list: HTMLElement) => {
@@ -56,7 +53,11 @@ const init = () => {
             Sa5Attribute.ATTR_RICHTEXT_LISTS // 'wfu-lists'
             );
 
-    });
+    }); 
+
+    /**
+     * Github gists 
+     */
 
     gitHubGist.init();
 
