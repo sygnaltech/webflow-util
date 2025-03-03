@@ -11,8 +11,8 @@
 import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsActionBase } from "../../webflow-core/actions/actionBase";
+import { Sa5Debug } from "../debug";
+import { Sa5EventsActionBase } from "./actionBase";
 
 
 
@@ -28,17 +28,16 @@ export class Sa5EventsActionClick extends Sa5EventsActionBase {
 
     init() {
 
-//console.log("init Sa5EventsActionClick")
-
         // Prepare click actions 
         const actionElems = document.querySelectorAll<HTMLElement>('[sa-action-click]');
         actionElems.forEach((elem: HTMLElement) => {
-            const eventName = elem.getAttribute('sa-action-click');
+
+            const eventName = this.getEventName(elem, 'sa-action-click'); 
+
             if (eventName) {
                 // Register the event action to trigger a click on the element
                 this.core.events.addEventHandler(eventName, () => { 
 
-//                    this.debug.debug("Action: click", elem); 
                     this.debugTrigger("🕑 click", eventName); 
 
                     elem.click();

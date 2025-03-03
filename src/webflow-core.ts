@@ -20,14 +20,16 @@ import { Sa5Attribute } from './globals';
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Designer } from './webflow-core/designer';
 import { Sa5EventRegistry } from './webflow-core/events';
-import { Sa5EventsTriggerClick } from './webflow-events/triggers/click';
-import { Sa5EventsActionClick } from './webflow-events/actions/click';
-import { Sa5EventsActionAlert } from './webflow-events/actions/alert';
-import { Sa5EventsTriggerScrollIntoView } from './webflow-events/triggers/scroll-into-view';
-import { Sa5EventsActionClass } from './webflow-events/actions/class';
-import { Sa5EventsTriggerTimer } from './webflow-events/triggers/timer';
+import { Sa5EventsTriggerClick } from './webflow-core/triggers/click';
+import { Sa5EventsActionClick } from './webflow-core/actions/click';
+import { Sa5EventsActionAlert } from './webflow-core/actions/alert';
+import { Sa5EventsTriggerScrollIntoView } from './webflow-core/triggers/scroll-into-view';
+import { Sa5EventsActionClass } from './webflow-core/actions/class';
+import { Sa5EventsTriggerTimer } from './webflow-core/triggers/timer';
 import { VERSION } from './version';
-import { Sa5EventsTriggerHover } from './webflow-events/triggers/hover';
+import { Sa5EventsTriggerHover } from './webflow-core/triggers/hover';
+import { Sa5EventsTriggerExitIntent } from './webflow-core/triggers/exit-intent';
+import { Sa5EventsActionVisibility } from './webflow-core/actions/visibility';
 
 /*
  * SA5 Core
@@ -82,10 +84,6 @@ export class Sa5Core {
 
     init() {
 
-        // Initialize debugging
-        let debug = new Sa5Debug("sa5-events");
-        debug.debug (`Initializing v${VERSION}`);
-
         this.initDebugMode();
         this.initAsync(); 
 
@@ -94,24 +92,7 @@ export class Sa5Core {
          */
 
         this.events = new Sa5EventRegistry(); 
-
-        // Prepare click trigger & action 
-        (new Sa5EventsTriggerClick(this, debug)).init();  
-        (new Sa5EventsActionClick(this, debug)).init(); 
-
-        // Prepare alert action
-        (new Sa5EventsActionAlert(this, debug)).init(); 
-
-        // Prepare Scroll-into-view trigger 
-        (new Sa5EventsTriggerScrollIntoView(this, debug)).init(); 
-
-        // Prepare Class adder action 
-        (new Sa5EventsActionClass(this, debug)).init(); 
-
-        // Prepare timer trigger  
-        (new Sa5EventsTriggerTimer(this, debug)).init();      
-        
-        (new Sa5EventsTriggerHover(this, debug)).init(); 
+        this.events.init(this);  
 
     }
 

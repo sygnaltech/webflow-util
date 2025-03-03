@@ -28,6 +28,19 @@ export class Sa5EventsTriggerBase {
 
     }
 
+    getEventName(elem: HTMLElement, attr: string): string {
+
+        // Get event name
+        let eventName: string = elem.getAttribute(attr);
+
+        // Get and prepend ns, if specified 
+        const eventNs: string = elem.getAttribute(attr + ':ns'); 
+        if(eventNs)
+            eventName = eventNs + '.' + eventName; 
+
+        return eventName;
+    }
+    
     debugTrigger(triggerName: string, eventName: string, ...args: any[]) {
 
         const TRIGGER_STYLE = "background-color: lightblue;"; 

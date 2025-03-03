@@ -11,8 +11,8 @@
 import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsTriggerBase } from "../../webflow-core/triggers/triggerBase";
+import { Sa5Debug } from "../debug";
+import { Sa5EventsTriggerBase } from "./triggerBase";
 
 
 
@@ -34,7 +34,7 @@ export class Sa5EventsTriggerHover extends Sa5EventsTriggerBase {
 
             if(elem.hasAttribute('sa-trigger-mouseenter')) { 
 
-                const eventName = elem.getAttribute('sa-trigger-mouseenter');
+                const eventName = this.getEventName(elem, 'sa-trigger-mouseenter'); 
                 if (eventName) {
                     elem.addEventListener('mouseenter', () => {
                         this.debugTrigger("↗ mouseenter", eventName); 
@@ -47,7 +47,7 @@ export class Sa5EventsTriggerHover extends Sa5EventsTriggerBase {
             // Handle hover-out event
             if (elem.hasAttribute('sa-trigger-mouseleave')) { 
 
-                const eventNameOut = elem.getAttribute('sa-trigger-mouseleave');
+                const eventNameOut = this.getEventName(elem, 'sa-trigger-mouseleave'); 
                 if (eventNameOut) {
                     elem.addEventListener('mouseleave', () => {
                         this.debugTrigger("↘ mouseleave", eventNameOut);

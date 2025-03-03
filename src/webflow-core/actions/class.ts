@@ -11,8 +11,8 @@
 import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsActionBase } from "../../webflow-core/actions/actionBase";
+import { Sa5Debug } from "../debug";
+import { Sa5EventsActionBase } from "./actionBase";
 
 
 
@@ -28,8 +28,6 @@ export class Sa5EventsActionClass extends Sa5EventsActionBase {
 
     init() {
 
-        //console.log("init Sa5EventsActionClick")
-        
         // Prepare click actions 
         const actionElems = document.querySelectorAll<HTMLElement>('[sa-action-class-add],[sa-action-class-remove],[sa-action-class-toggle]');
         actionElems.forEach((elem: HTMLElement) => {
@@ -38,12 +36,11 @@ export class Sa5EventsActionClass extends Sa5EventsActionBase {
 
             if(elem.hasAttribute('sa-action-class-add')) { 
 
-                const eventName = elem.getAttribute('sa-action-class-add');
+                const eventName = this.getEventName(elem, 'sa-action-class-add'); 
                 if (eventName) {
-                    // Register the event action to trigger a click on the element
+                    // Register the event action
                     this.core.events.addEventHandler(eventName, () => { 
     
-//                        this.debug.debug("Action: add class", elem); 
                         this.debugTrigger("🕑 add class", eventName); 
 
                         elem.classList.add(className); 
@@ -54,25 +51,27 @@ export class Sa5EventsActionClass extends Sa5EventsActionBase {
             
             if(elem.hasAttribute('sa-action-class-remove')) { 
 
-                const eventName = elem.getAttribute('sa-action-class-remove');
+                const eventName = this.getEventName(elem, 'sa-action-class-remove'); 
                 if (eventName) {
-                    // Register the event action to trigger a click on the element
+
+                    // Register the event action
                     this.core.events.addEventHandler(eventName, () => { 
     
-//                        this.debug.debug("Action: remove class", elem); 
                         this.debugTrigger("🕑 remove class", eventName); 
 
                         elem.classList.remove(className); 
                     });
+
                 }
 
             } 
             
             if(elem.hasAttribute('sa-action-class-toggle')) {
 
-                const eventName = elem.getAttribute('sa-action-class-toggle');
+                const eventName = this.getEventName(elem, 'sa-action-class-toggle'); 
                 if (eventName) {
-                    // Register the event action to trigger a click on the element
+
+                    // Register the event action
                     this.core.events.addEventHandler(eventName, () => { 
     
                         this.debug.debug("Action: toggle class", elem); 
@@ -81,7 +80,8 @@ export class Sa5EventsActionClass extends Sa5EventsActionBase {
                             elem.classList.remove(className); 
                         else
                             elem.classList.add(className); 
-                    });
+                    }); 
+                    
                 }
 
             }

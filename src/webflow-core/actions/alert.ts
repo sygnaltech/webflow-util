@@ -11,13 +11,14 @@
 import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsActionBase } from "../../webflow-core/actions/actionBase";
+import { Sa5Debug } from "../debug";
+import { Sa5EventsActionBase } from "./actionBase";
+import { Sa5EventsActionScriptBase } from "./actionScriptBase";
 
 
 
 
-export class Sa5EventsActionAlert extends Sa5EventsActionBase {
+export class Sa5EventsActionAlert extends Sa5EventsActionScriptBase {
 
     // Initialize
     constructor(core: Sa5Core, debug: Sa5Debug) {
@@ -28,13 +29,11 @@ export class Sa5EventsActionAlert extends Sa5EventsActionBase {
 
     init() {
 
-//console.log("init Sa5EventsActionClick")
-
         // Prepare click actions 
         const actionElems = document.querySelectorAll<HTMLScriptElement>('script[handler="action.alert"]');
         actionElems.forEach((elem: HTMLElement) => {
 
-            const eventName = elem.getAttribute("event"); 
+            const eventName = this.getEventName(elem); 
 
             try {
                 // Parse the JSON content inside the script tag
@@ -46,10 +45,9 @@ export class Sa5EventsActionAlert extends Sa5EventsActionBase {
                     return; 
                 }
 
-                // Register the event action to trigger a click on the element
+                // Register the event action 
                 this.core.events.addEventHandler(eventName, () => { 
 
-//                    this.debug.debug("Action: alert", elem); 
                     this.debugTrigger("🕑 alert", eventName); 
 
                     alert(jsonData.message); 

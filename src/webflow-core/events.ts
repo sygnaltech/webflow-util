@@ -11,6 +11,17 @@
  */
 
 import { VERSION } from "../version";
+import { Sa5Core } from "../webflow-core";
+import { Sa5EventsActionAlert } from "./actions/alert";
+import { Sa5EventsActionClass } from "./actions/class";
+import { Sa5EventsActionClick } from "./actions/click";
+import { Sa5EventsActionVisibility } from "./actions/visibility";
+import { Sa5Debug } from "./debug";
+import { Sa5EventsTriggerClick } from "./triggers/click";
+import { Sa5EventsTriggerExitIntent } from "./triggers/exit-intent";
+import { Sa5EventsTriggerHover } from "./triggers/hover";
+import { Sa5EventsTriggerScrollIntoView } from "./triggers/scroll-into-view";
+import { Sa5EventsTriggerTimer } from "./triggers/timer";
 
 
 
@@ -83,6 +94,40 @@ export class Sa5EventRegistry extends Map<string, Sa5Event> {
             }
         }
     }
+
+    init(core: Sa5Core) {
+        
+        // Initialize debugging
+        let debug = new Sa5Debug("sa5-events");
+        debug.debug (`Initializing v${VERSION}`);
+        
+        // Prepare click trigger & action 
+        (new Sa5EventsTriggerClick(core, debug)).init();  
+        (new Sa5EventsActionClick(core, debug)).init(); 
+
+        // Prepare alert action
+        (new Sa5EventsActionAlert(core, debug)).init(); 
+
+        // Prepare Scroll-into-view trigger 
+        (new Sa5EventsTriggerScrollIntoView(core, debug)).init(); 
+
+        // Prepare Class adder action 
+        (new Sa5EventsActionClass(core, debug)).init(); 
+
+        // Prepare timer trigger  
+        (new Sa5EventsTriggerTimer(core, debug)).init();      
+        
+        // Prepare mouseover triggers 
+        (new Sa5EventsTriggerHover(core, debug)).init(); 
+
+        // Prepare exit intent trigger 
+        (new Sa5EventsTriggerExitIntent(core, debug)).init(); 
+
+        // Prepare visibility actions 
+        (new Sa5EventsActionVisibility(core, debug)).init(); 
+
+    }
+
 }
 
 

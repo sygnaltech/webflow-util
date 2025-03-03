@@ -229,6 +229,369 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.6.0";
+
+  // src/webflow-core/actions/actionBase.ts
+  var Sa5EventsActionBase = class {
+    constructor(core, debug) {
+      this.core = core;
+      this.debug = debug;
+    }
+    getEventName(elem, attr) {
+      let eventName = elem.getAttribute(attr);
+      const eventNs = elem.getAttribute(attr + ":ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+    debugTrigger(actionName, eventName, ...args) {
+      const TRIGGER_STYLE = "background-color: lightblue;";
+      const ARROW_STYLE = "color: red;";
+      const ACTION_STYLE = "background-color: lightgreen;";
+      const EVENT_STYLE = "background-color: lightgrey;";
+      this.debug.debug(`%c ${eventName}`, EVENT_STYLE, "%c \u2794", ARROW_STYLE, `%c ${actionName}`, ACTION_STYLE, "", ...args);
+    }
+    init() {
+    }
+  };
+
+  // src/webflow-core/actions/actionScriptBase.ts
+  var Sa5EventsActionScriptBase = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    getEventName(elem) {
+      let eventName = elem.getAttribute("event");
+      const eventNs = elem.getAttribute("ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+  };
+
+  // src/webflow-core/actions/alert.ts
+  var Sa5EventsActionAlert = class extends Sa5EventsActionScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll('script[handler="action.alert"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        try {
+          const jsonData = JSON.parse(elem.textContent.trim());
+          if (!jsonData.message) {
+            console.error("No alert message defined:", elem);
+            return;
+          }
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} alert", eventName);
+            alert(jsonData.message);
+          });
+        } catch (error) {
+          console.error("Invalid JSON in script tag:", elem, error);
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/actions/class.ts
+  var Sa5EventsActionClass = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-class-add],[sa-action-class-remove],[sa-action-class-toggle]");
+      actionElems.forEach((elem) => {
+        const className = elem.getAttribute("sa-action-class-data");
+        if (elem.hasAttribute("sa-action-class-add")) {
+          const eventName = this.getEventName(elem, "sa-action-class-add");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} add class", eventName);
+              elem.classList.add(className);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-class-remove")) {
+          const eventName = this.getEventName(elem, "sa-action-class-remove");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} remove class", eventName);
+              elem.classList.remove(className);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-class-toggle")) {
+          const eventName = this.getEventName(elem, "sa-action-class-toggle");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debug.debug("Action: toggle class", elem);
+              if (elem.classList.contains(className))
+                elem.classList.remove(className);
+              else
+                elem.classList.add(className);
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/actions/click.ts
+  var Sa5EventsActionClick = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-click]");
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-action-click");
+        if (eventName) {
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} click", eventName);
+            elem.click();
+          });
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/actions/visibility.ts
+  var Sa5EventsActionVisibility = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-display-show],[sa-action-display-hide],[sa-action-display-toggle]");
+      actionElems.forEach((elem) => {
+        const displayMode = elem.getAttribute("sa-attribute-display:mode") || "block";
+        if (elem.hasAttribute("sa-action-display-show")) {
+          const eventName = this.getEventName(elem, "sa-action-display-show");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - show element", eventName);
+              elem.style.display = displayMode;
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-display-hide")) {
+          const eventName = this.getEventName(elem, "sa-action-display-hide");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - hide element", eventName);
+              elem.style.display = "none";
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-display-toggle")) {
+          const eventName = this.getEventName(elem, "sa-action-display-toggle");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - toggle element", eventName);
+              elem.style.display = elem.style.display === "none" ? displayMode : "none";
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/triggers/triggerBase.ts
+  var Sa5EventsTriggerBase = class {
+    constructor(core, debug) {
+      this.core = core;
+      this.debug = debug;
+    }
+    getEventName(elem, attr) {
+      let eventName = elem.getAttribute(attr);
+      const eventNs = elem.getAttribute(attr + ":ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+    debugTrigger(triggerName, eventName, ...args) {
+      const TRIGGER_STYLE = "background-color: lightblue;";
+      const ARROW_STYLE = "color: red;";
+      const ACTION_STYLE = "background-color: lightgreen;";
+      const EVENT_STYLE = "background-color: lightgrey;";
+      this.debug.debug(`%c ${triggerName}`, TRIGGER_STYLE, "%c \u2794", ARROW_STYLE, `%c ${eventName}`, EVENT_STYLE, "", ...args);
+    }
+    init() {
+    }
+  };
+
+  // src/webflow-core/triggers/click.ts
+  var Sa5EventsTriggerClick = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-click]");
+      elems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-trigger-click");
+        if (eventName) {
+          elem.addEventListener("click", () => {
+            this.debugTrigger("\u2197 click", eventName);
+            this.core.events.executeEvent(eventName);
+          });
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/triggers/triggerScriptBase.ts
+  var Sa5EventsTriggerScriptBase = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    getEventName(elem) {
+      let eventName = elem.getAttribute("event");
+      const eventNs = elem.getAttribute("ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+  };
+
+  // src/webflow-core/triggers/exit-intent.ts
+  var Sa5EventsTriggerExitIntent = class extends Sa5EventsTriggerScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+      this.exitTriggered = false;
+    }
+    init() {
+      this.setupExitIntentListener();
+      const actionElems = document.querySelectorAll('script[handler="trigger.exit-intent"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        try {
+          const jsonData = JSON.parse(elem.textContent.trim());
+          this.debugTrigger("\u{1F551} Exit Intent Registered", eventName);
+          this.core.events.executeEvent(eventName);
+        } catch (error) {
+          console.error("Invalid JSON in script tag:", elem, error);
+        }
+      });
+    }
+    setupExitIntentListener() {
+      document.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+      document.addEventListener("visibilitychange", this.onVisibilityChange.bind(this));
+    }
+    onMouseLeave(event) {
+      if (event.clientY <= 0) {
+        this.triggerExitIntent("mouse-exit");
+      }
+    }
+    onVisibilityChange() {
+      if (document.hidden) {
+        this.triggerExitIntent("tab-switch");
+      }
+    }
+    triggerExitIntent(source) {
+      if (this.exitTriggered)
+        return;
+      this.exitTriggered = true;
+      const eventName = "exit-intent";
+      this.debugTrigger(`\u{1F6AA} Exit intent detected via: ${source}`, eventName);
+      this.core.events.executeEvent(eventName);
+    }
+  };
+
+  // src/webflow-core/triggers/hover.ts
+  var Sa5EventsTriggerHover = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-mouseenter],[sa-trigger-mouseleave]");
+      elems.forEach((elem) => {
+        if (elem.hasAttribute("sa-trigger-mouseenter")) {
+          const eventName = this.getEventName(elem, "sa-trigger-mouseenter");
+          if (eventName) {
+            elem.addEventListener("mouseenter", () => {
+              this.debugTrigger("\u2197 mouseenter", eventName);
+              this.core.events.executeEvent(eventName);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-trigger-mouseleave")) {
+          const eventNameOut = this.getEventName(elem, "sa-trigger-mouseleave");
+          if (eventNameOut) {
+            elem.addEventListener("mouseleave", () => {
+              this.debugTrigger("\u2198 mouseleave", eventNameOut);
+              this.core.events.executeEvent(eventNameOut);
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/triggers/scroll-into-view.ts
+  var Sa5EventsTriggerScrollIntoView = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-scrollintoview]");
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5
+      };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elem = entry.target;
+            const eventName = this.getEventName(elem, "sa-trigger-scrollintoview");
+            if (eventName) {
+              this.debugTrigger("\u2198 scroll into view", eventName);
+              this.core.events.executeEvent(eventName);
+              observer.unobserve(elem);
+            }
+          }
+        });
+      }, observerOptions);
+      elems.forEach((elem) => observer.observe(elem));
+    }
+  };
+
+  // src/webflow-core/triggers/timer.ts
+  var Sa5EventsTriggerTimer = class extends Sa5EventsTriggerScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll('script[handler="trigger.timer"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        try {
+          const jsonData = JSON.parse(elem.textContent.trim());
+          if (!jsonData.timer) {
+            console.error("No timer defined:", elem);
+            return;
+          }
+          const timerDuration = jsonData.timer * 1e3;
+          const timerRepeat = jsonData.timerRepeat ? jsonData.timerRepeat * 1e3 : null;
+          setTimeout(() => {
+            this.debugTrigger("\u{1F551} timer", eventName, "(first)");
+            this.core.events.executeEvent(eventName);
+            if (timerRepeat) {
+              setInterval(() => {
+                this.debugTrigger("\u{1F551} timer", eventName, "(additional)");
+                this.core.events.executeEvent(eventName);
+              }, timerRepeat);
+            }
+          }, timerDuration);
+        } catch (error) {
+          console.error("Invalid JSON in script tag:", elem, error);
+        }
+      });
+    }
+  };
+
   // src/webflow-core/events.ts
   var Sa5Event = class {
     constructor(name) {
@@ -285,242 +648,18 @@
         }
       }
     }
-  };
-
-  // src/webflow-core/triggers/triggerBase.ts
-  var Sa5EventsTriggerBase = class {
-    constructor(core, debug) {
-      this.core = core;
-      this.debug = debug;
-    }
-    debugTrigger(triggerName, eventName, ...args) {
-      const TRIGGER_STYLE = "background-color: lightblue;";
-      const ARROW_STYLE = "color: red;";
-      const ACTION_STYLE = "background-color: lightgreen;";
-      const EVENT_STYLE = "background-color: lightgrey;";
-      this.debug.debug(`%c ${triggerName}`, TRIGGER_STYLE, "%c \u2794", ARROW_STYLE, `%c ${eventName}`, EVENT_STYLE, "", ...args);
-    }
-    init() {
-    }
-  };
-
-  // src/webflow-events/triggers/click.ts
-  var Sa5EventsTriggerClick = class extends Sa5EventsTriggerBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const elems = document.querySelectorAll("[sa-trigger-click]");
-      elems.forEach((elem) => {
-        const eventName = elem.getAttribute("sa-trigger-click");
-        if (eventName) {
-          elem.addEventListener("click", () => {
-            this.debugTrigger("\u2197 click", eventName);
-            this.core.events.executeEvent(eventName);
-          });
-        }
-      });
-    }
-  };
-
-  // src/webflow-core/actions/actionBase.ts
-  var Sa5EventsActionBase = class {
-    constructor(core, debug) {
-      this.core = core;
-      this.debug = debug;
-    }
-    debugTrigger(actionName, eventName, ...args) {
-      const TRIGGER_STYLE = "background-color: lightblue;";
-      const ARROW_STYLE = "color: red;";
-      const ACTION_STYLE = "background-color: lightgreen;";
-      const EVENT_STYLE = "background-color: lightgrey;";
-      this.debug.debug(`%c ${eventName}`, EVENT_STYLE, "%c \u2794", ARROW_STYLE, `%c ${actionName}`, ACTION_STYLE, "", ...args);
-    }
-    init() {
-    }
-  };
-
-  // src/webflow-events/actions/click.ts
-  var Sa5EventsActionClick = class extends Sa5EventsActionBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const actionElems = document.querySelectorAll("[sa-action-click]");
-      actionElems.forEach((elem) => {
-        const eventName = elem.getAttribute("sa-action-click");
-        if (eventName) {
-          this.core.events.addEventHandler(eventName, () => {
-            this.debugTrigger("\u{1F551} click", eventName);
-            elem.click();
-          });
-        }
-      });
-    }
-  };
-
-  // src/webflow-events/actions/alert.ts
-  var Sa5EventsActionAlert = class extends Sa5EventsActionBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const actionElems = document.querySelectorAll('script[handler="action.alert"]');
-      actionElems.forEach((elem) => {
-        const eventName = elem.getAttribute("event");
-        try {
-          const jsonData = JSON.parse(elem.textContent.trim());
-          if (!jsonData.message) {
-            console.error("No alert message defined:", elem);
-            return;
-          }
-          this.core.events.addEventHandler(eventName, () => {
-            this.debugTrigger("\u{1F551} alert", eventName);
-            alert(jsonData.message);
-          });
-        } catch (error) {
-          console.error("Invalid JSON in script tag:", elem, error);
-        }
-      });
-    }
-  };
-
-  // src/webflow-events/triggers/scroll-into-view.ts
-  var Sa5EventsTriggerScrollIntoView = class extends Sa5EventsTriggerBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const elems = document.querySelectorAll("[sa-trigger-scrollintoview]");
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.5
-      };
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const elem = entry.target;
-            const eventName = elem.getAttribute("sa-trigger-scrollintoview");
-            if (eventName) {
-              this.debug.debug("Trigger: scroll into view", elem);
-              this.core.events.executeEvent(eventName);
-              observer.unobserve(elem);
-            }
-          }
-        });
-      }, observerOptions);
-      elems.forEach((elem) => observer.observe(elem));
-    }
-  };
-
-  // src/webflow-events/actions/class.ts
-  var Sa5EventsActionClass = class extends Sa5EventsActionBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const actionElems = document.querySelectorAll("[sa-action-class-add],[sa-action-class-remove],[sa-action-class-toggle]");
-      actionElems.forEach((elem) => {
-        const className = elem.getAttribute("sa-action-class-data");
-        if (elem.hasAttribute("sa-action-class-add")) {
-          const eventName = elem.getAttribute("sa-action-class-add");
-          if (eventName) {
-            this.core.events.addEventHandler(eventName, () => {
-              this.debugTrigger("\u{1F551} add class", eventName);
-              elem.classList.add(className);
-            });
-          }
-        }
-        if (elem.hasAttribute("sa-action-class-remove")) {
-          const eventName = elem.getAttribute("sa-action-class-remove");
-          if (eventName) {
-            this.core.events.addEventHandler(eventName, () => {
-              this.debugTrigger("\u{1F551} remove class", eventName);
-              elem.classList.remove(className);
-            });
-          }
-        }
-        if (elem.hasAttribute("sa-action-class-toggle")) {
-          const eventName = elem.getAttribute("sa-action-class-toggle");
-          if (eventName) {
-            this.core.events.addEventHandler(eventName, () => {
-              this.debug.debug("Action: toggle class", elem);
-              if (elem.classList.contains(className))
-                elem.classList.remove(className);
-              else
-                elem.classList.add(className);
-            });
-          }
-        }
-      });
-    }
-  };
-
-  // src/webflow-events/triggers/timer.ts
-  var Sa5EventsTriggerTimer = class extends Sa5EventsTriggerBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const actionElems = document.querySelectorAll('script[handler="trigger.timer"]');
-      actionElems.forEach((elem) => {
-        const eventName = elem.getAttribute("event");
-        try {
-          const jsonData = JSON.parse(elem.textContent.trim());
-          if (!jsonData.timer) {
-            console.error("No timer defined:", elem);
-            return;
-          }
-          const timerDuration = jsonData.timer * 1e3;
-          const timerRepeat = jsonData.timerRepeat ? jsonData.timerRepeat * 1e3 : null;
-          setTimeout(() => {
-            this.debugTrigger("\u{1F551} timer", eventName, "(first)");
-            this.core.events.executeEvent(eventName);
-            if (timerRepeat) {
-              setInterval(() => {
-                this.debugTrigger("\u{1F551} timer", eventName, "(additional)");
-                this.core.events.executeEvent(eventName);
-              }, timerRepeat);
-            }
-          }, timerDuration);
-        } catch (error) {
-          console.error("Invalid JSON in script tag:", elem, error);
-        }
-      });
-    }
-  };
-
-  // src/version.ts
-  var VERSION = "5.6.0";
-
-  // src/webflow-events/triggers/hover.ts
-  var Sa5EventsTriggerHover = class extends Sa5EventsTriggerBase {
-    constructor(core, debug) {
-      super(core, debug);
-    }
-    init() {
-      const elems = document.querySelectorAll("[sa-trigger-mouseenter],[sa-trigger-mouseleave]");
-      elems.forEach((elem) => {
-        if (elem.hasAttribute("sa-trigger-mouseenter")) {
-          const eventName = elem.getAttribute("sa-trigger-mouseenter");
-          if (eventName) {
-            elem.addEventListener("mouseenter", () => {
-              this.debugTrigger("\u2197 mouseenter", eventName);
-              this.core.events.executeEvent(eventName);
-            });
-          }
-        }
-        if (elem.hasAttribute("sa-trigger-mouseleave")) {
-          const eventNameOut = elem.getAttribute("sa-trigger-mouseleave");
-          if (eventNameOut) {
-            elem.addEventListener("mouseleave", () => {
-              this.debugTrigger("\u2198 mouseleave", eventNameOut);
-              this.core.events.executeEvent(eventNameOut);
-            });
-          }
-        }
-      });
+    init(core) {
+      let debug = new Sa5Debug("sa5-events");
+      debug.debug(`Initializing v${VERSION}`);
+      new Sa5EventsTriggerClick(core, debug).init();
+      new Sa5EventsActionClick(core, debug).init();
+      new Sa5EventsActionAlert(core, debug).init();
+      new Sa5EventsTriggerScrollIntoView(core, debug).init();
+      new Sa5EventsActionClass(core, debug).init();
+      new Sa5EventsTriggerTimer(core, debug).init();
+      new Sa5EventsTriggerHover(core, debug).init();
+      new Sa5EventsTriggerExitIntent(core, debug).init();
+      new Sa5EventsActionVisibility(core, debug).init();
     }
   };
 
@@ -542,18 +681,10 @@
       return item ? item[1] : void 0;
     }
     init() {
-      let debug = new Sa5Debug("sa5-events");
-      debug.debug(`Initializing v${VERSION}`);
       this.initDebugMode();
       this.initAsync();
       this.events = new Sa5EventRegistry();
-      new Sa5EventsTriggerClick(this, debug).init();
-      new Sa5EventsActionClick(this, debug).init();
-      new Sa5EventsActionAlert(this, debug).init();
-      new Sa5EventsTriggerScrollIntoView(this, debug).init();
-      new Sa5EventsActionClass(this, debug).init();
-      new Sa5EventsTriggerTimer(this, debug).init();
-      new Sa5EventsTriggerHover(this, debug).init();
+      this.events.init(this);
     }
     async initAsync() {
       this.initScriptInjectionsAsync();

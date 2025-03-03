@@ -30,23 +30,25 @@ export class Sa5EventsActionModalOpen extends Sa5EventsActionBase {
 
     init() {
         
-        // Prepare click actions 
+        // Prepare actions 
         const actionElems = document.querySelectorAll<HTMLElement>('[sa-action-modal-open]');
         actionElems.forEach((elem: HTMLElement) => {
-            const eventName = elem.getAttribute('sa-action-modal-open');
+
+            const eventName = this.getEventName(elem, 'sa-action-modal-open');
             const modalName = elem.getAttribute('wfu-modal'); 
+            
             if (eventName) {
-                // Register the event action to trigger a click on the element
+
+                // Register the event action
                 this.core.events.addEventHandler(eventName, () => { 
 
-//                    this.debug.debug("Action: open modal", elem); 
                     this.debugTrigger("🕑 open modal", eventName); 
 
                     const modalController: Sa5ModalController = this.core.controllers["modals"]; 
                     modalController.display(modalName); 
 
-//                    elem.click();
                 });
+
             }
         });
 

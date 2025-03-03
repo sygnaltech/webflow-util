@@ -11,8 +11,8 @@
 import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsTriggerBase } from "../../webflow-core/triggers/triggerBase";
+import { Sa5Debug } from "../debug";
+import { Sa5EventsTriggerBase } from "./triggerBase";
 
 
 
@@ -39,12 +39,14 @@ export class Sa5EventsTriggerScrollIntoView  extends Sa5EventsTriggerBase {
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting) { 
+
                     const elem = entry.target as HTMLElement;
-                    const eventName = elem.getAttribute('sa-trigger-scrollintoview');
+                    const eventName = this.getEventName(elem, 'sa-trigger-scrollintoview'); 
                     
-                    if (eventName) {
-                        this.debug.debug("Trigger: scroll into view", elem); 
+                    if (eventName) { 
+                        this.debugTrigger("↘ scroll into view", eventName); 
+//                        this.debug.debug("Trigger: scroll into view", elem); 
                         this.core.events.executeEvent(eventName); 
                         
                         // Stop observing after triggering once
