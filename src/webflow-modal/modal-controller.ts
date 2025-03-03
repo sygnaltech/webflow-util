@@ -9,8 +9,10 @@
  */
 
 import { Sa5Attribute, Sa5GlobalEvent } from '../globals';
+import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
+import { Sa5EventsActionModalOpen } from './actions/modal-open';
 import { Sa5Modal } from './modal';
 import { Sa5ModalGateController } from './modal-gate-controller';
 
@@ -79,10 +81,24 @@ export class Sa5ModalController {
 
         let core: Sa5Core = Sa5Core.startup(); 
 
+        // Initialize debugging
+        let debug = new Sa5Debug("sa5-modals");
+        debug.debug (`Initializing v${VERSION}`);
+
+        /**
+         * Register Controller
+         */
+
         // Export the modals controller so that it can be accessed 
         // as an SA5 JS API 
         core.setController("modals", this);  
 
+        /**
+         * Register Events
+         */
+
+        // Prepare modals action handler 
+        (new Sa5EventsActionModalOpen(core, debug)).init(); 
 
 //        const layoutChanged = core.getHandler('layoutChanged'); 
   //      this.config.layoutChangedCallback = layoutChanged as LayoutChangedCallback;

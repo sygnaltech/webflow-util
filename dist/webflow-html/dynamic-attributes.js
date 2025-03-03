@@ -53,9 +53,26 @@
       if (this.enabled)
         console.groupEnd();
     }
-    debug(...args) {
+    debug2(...args) {
       if (this.enabled)
-        console.debug(this._label, ...args);
+        console.debug.apply(console, [this._label, ...args]);
+    }
+    debug(...args) {
+      if (this.enabled) {
+        let formattedMessage = "";
+        let styles = [];
+        for (let i = 0; i < args.length; i++) {
+          if (typeof args[i] === "string" && args[i].includes("%c") && typeof args[i + 1] === "string") {
+            formattedMessage += args[i] + " ";
+            styles.push(args[i + 1]);
+            i++;
+          } else {
+            formattedMessage += "%c" + args[i] + " ";
+            styles.push("");
+          }
+        }
+        console.debug(formattedMessage.trim(), ...styles);
+      }
     }
     static getStyleString(elem) {
       let styleString = "";

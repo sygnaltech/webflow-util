@@ -19,6 +19,15 @@
 import { Sa5Attribute } from './globals';
 import { Sa5Debug } from './webflow-core/debug'
 import { Sa5Designer } from './webflow-core/designer';
+import { Sa5EventRegistry } from './webflow-core/events';
+import { Sa5EventsTriggerClick } from './webflow-events/triggers/click';
+import { Sa5EventsActionClick } from './webflow-events/actions/click';
+import { Sa5EventsActionAlert } from './webflow-events/actions/alert';
+import { Sa5EventsTriggerScrollIntoView } from './webflow-events/triggers/scroll-into-view';
+import { Sa5EventsActionClass } from './webflow-events/actions/class';
+import { Sa5EventsTriggerTimer } from './webflow-events/triggers/timer';
+import { VERSION } from './version';
+import { Sa5EventsTriggerHover } from './webflow-events/triggers/hover';
 
 /*
  * SA5 Core
@@ -30,11 +39,12 @@ export class Sa5Core {
     public handlers = [];
 //    public controllers: any = {}; 
     public controllers: Record<string, any> = {};    
+    public events: Sa5EventRegistry; 
 
     // e.g. 'modals'
     setController(name: string, controller: any) {
 
-        console.debug("SA5", `Adding controller - ${name}.`);         
+//        console.debug("SA5", `Adding controller - ${name}.`);         
         this.controllers[name] = controller; 
 
     }
@@ -42,7 +52,7 @@ export class Sa5Core {
     // Returns all handlers found by the specified name
     getHandlers(name: string): Function[] {
 
-console.log("HANDLERS", this.handlers)
+//        console.log("HANDLERS", this.handlers)
 
         return this.handlers.filter(item => item[0] === name)
             .map(item => item[1]);
@@ -72,8 +82,37 @@ console.log("HANDLERS", this.handlers)
 
     init() {
 
+        // Initialize debugging
+        let debug = new Sa5Debug("sa5-events");
+        debug.debug (`Initializing v${VERSION}`);
+
         this.initDebugMode();
-        this.initAsync();
+        this.initAsync(); 
+
+        /**
+         * Events 
+         */
+
+        this.events = new Sa5EventRegistry(); 
+
+        // Prepare click trigger & action 
+        (new Sa5EventsTriggerClick(this, debug)).init();  
+        (new Sa5EventsActionClick(this, debug)).init(); 
+
+        // Prepare alert action
+        (new Sa5EventsActionAlert(this, debug)).init(); 
+
+        // Prepare Scroll-into-view trigger 
+        (new Sa5EventsTriggerScrollIntoView(this, debug)).init(); 
+
+        // Prepare Class adder action 
+        (new Sa5EventsActionClass(this, debug)).init(); 
+
+        // Prepare timer trigger  
+        (new Sa5EventsTriggerTimer(this, debug)).init();      
+        
+        (new Sa5EventsTriggerHover(this, debug)).init(); 
+
     }
 
     async initAsync() {

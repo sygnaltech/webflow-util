@@ -74,15 +74,37 @@ export class Sa5Debug {
     }
 
     // Log debug data to the console
-    debug(...args: any[]): void {
+    debug2(...args: any[]): void {
 
         if (this.enabled)
             // Unlimited arguments in a JavaScript function
             // https://stackoverflow.com/a/6396066
-            console.debug(this._label, ...args); 
-            
+            // console.debug(this._label, ...args); 
+            console.debug.apply(console, [this._label, ...args]);
     }
-
+    
+    debug(...args: any[]): void {
+        if (this.enabled) {
+            let formattedMessage = "";
+            let styles: string[] = [];
+    
+            for (let i = 0; i < args.length; i++) {
+                if (typeof args[i] === "string" && args[i].includes("%c") && typeof args[i + 1] === "string") {
+                    // Append styled text and store the corresponding style
+                    formattedMessage += args[i] + " ";
+                    styles.push(args[i + 1]);
+                    i++; // Skip the next item (style string)
+                } else {
+                    formattedMessage += "%c" + args[i] + " ";
+                    styles.push(""); // Ensure there is a corresponding style
+                }
+            }
+    
+            // Apply the formatted message and styles correctly
+            console.debug(formattedMessage.trim(), ...styles);
+        }
+    }
+    
     /**
      * Returns the HTML style string
      * @param elem The element to return the string for 
