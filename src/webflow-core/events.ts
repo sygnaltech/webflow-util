@@ -12,16 +12,16 @@
 
 import { VERSION } from "../version";
 import { Sa5Core } from "../webflow-core";
-import { Sa5EventsActionAlert } from "./actions/alert";
-import { Sa5EventsActionClass } from "./actions/class";
-import { Sa5EventsActionClick } from "./actions/click";
-import { Sa5EventsActionVisibility } from "./actions/visibility";
+import { Sa5EventsActionAlert } from "./events/actions/alert";
+import { Sa5EventsActionClass } from "./events/actions/class";
+import { Sa5EventsActionClick } from "./events/actions/click";
+import { Sa5EventsActionVisibility } from "./events/actions/visibility";
 import { Sa5Debug } from "./debug";
-import { Sa5EventsTriggerClick } from "./triggers/click";
-import { Sa5EventsTriggerExitIntent } from "./triggers/exit-intent";
-import { Sa5EventsTriggerHover } from "./triggers/hover";
-import { Sa5EventsTriggerScrollIntoView } from "./triggers/scroll-into-view";
-import { Sa5EventsTriggerTimer } from "./triggers/timer";
+import { Sa5EventsTriggerClick } from "./events/triggers/click";
+import { Sa5EventsTriggerExitIntent } from "./events/triggers/exit-intent";
+import { Sa5EventsTriggerHover } from "./events/triggers/hover";
+import { Sa5EventsTriggerScrollIntoView } from "./events/triggers/scroll-into-view";
+import { Sa5EventsTriggerTimer } from "./events/triggers/timer";
 
 
 

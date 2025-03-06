@@ -14,12 +14,12 @@ import { Sa5Debug } from '../webflow-core/debug';
 
 import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
-import { Sa5EventsTriggerClick } from '../webflow-core/triggers/click';
-import { Sa5EventsActionClick } from '../webflow-core/actions/click';
-import { Sa5EventsActionAlert } from '../webflow-core/actions/alert';
-import { Sa5EventsTriggerScrollIntoView } from '../webflow-core/triggers/scroll-into-view';
-import { Sa5EventsActionClass } from '../webflow-core/actions/class';
-import { Sa5EventsTriggerTimer } from '../webflow-core/triggers/timer';
+import { Sa5EventsTriggerClick } from '../webflow-core/events/triggers/click';
+import { Sa5EventsActionClick } from '../webflow-core/events/actions/click';
+import { Sa5EventsActionAlert } from '../webflow-core/events/actions/alert';
+import { Sa5EventsTriggerScrollIntoView } from '../webflow-core/events/triggers/scroll-into-view';
+import { Sa5EventsActionClass } from '../webflow-core/events/actions/class';
+import { Sa5EventsTriggerTimer } from '../webflow-core/events/triggers/timer';
 
 const init = () => { 
 

@@ -3863,7 +3863,7 @@
   // src/version.ts
   var VERSION = "5.6.0";
 
-  // src/webflow-core/actions/actionBase.ts
+  // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
     constructor(core, debug) {
       this.core = core;
@@ -3887,7 +3887,7 @@
     }
   };
 
-  // src/webflow-core/actions/actionScriptBase.ts
+  // src/webflow-core/events/actions/actionScriptBase.ts
   var Sa5EventsActionScriptBase = class extends Sa5EventsActionBase {
     constructor(core, debug) {
       super(core, debug);
@@ -3901,7 +3901,7 @@
     }
   };
 
-  // src/webflow-core/actions/alert.ts
+  // src/webflow-core/events/actions/alert.ts
   var Sa5EventsActionAlert = class extends Sa5EventsActionScriptBase {
     constructor(core, debug) {
       super(core, debug);
@@ -3927,7 +3927,7 @@
     }
   };
 
-  // src/webflow-core/actions/class.ts
+  // src/webflow-core/events/actions/class.ts
   var Sa5EventsActionClass = class extends Sa5EventsActionBase {
     constructor(core, debug) {
       super(core, debug);
@@ -3970,7 +3970,7 @@
     }
   };
 
-  // src/webflow-core/actions/click.ts
+  // src/webflow-core/events/actions/click.ts
   var Sa5EventsActionClick = class extends Sa5EventsActionBase {
     constructor(core, debug) {
       super(core, debug);
@@ -3989,7 +3989,7 @@
     }
   };
 
-  // src/webflow-core/actions/visibility.ts
+  // src/webflow-core/events/actions/visibility.ts
   var Sa5EventsActionVisibility = class extends Sa5EventsActionBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4029,7 +4029,7 @@
     }
   };
 
-  // src/webflow-core/triggers/triggerBase.ts
+  // src/webflow-core/events/triggers/triggerBase.ts
   var Sa5EventsTriggerBase = class {
     constructor(core, debug) {
       this.core = core;
@@ -4053,7 +4053,7 @@
     }
   };
 
-  // src/webflow-core/triggers/click.ts
+  // src/webflow-core/events/triggers/click.ts
   var Sa5EventsTriggerClick = class extends Sa5EventsTriggerBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4072,7 +4072,7 @@
     }
   };
 
-  // src/webflow-core/triggers/triggerScriptBase.ts
+  // src/webflow-core/events/triggers/triggerScriptBase.ts
   var Sa5EventsTriggerScriptBase = class extends Sa5EventsTriggerBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4086,7 +4086,7 @@
     }
   };
 
-  // src/webflow-core/triggers/exit-intent.ts
+  // src/webflow-core/events/triggers/exit-intent.ts
   var Sa5EventsTriggerExitIntent = class extends Sa5EventsTriggerScriptBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4130,7 +4130,7 @@
     }
   };
 
-  // src/webflow-core/triggers/hover.ts
+  // src/webflow-core/events/triggers/hover.ts
   var Sa5EventsTriggerHover = class extends Sa5EventsTriggerBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4160,7 +4160,7 @@
     }
   };
 
-  // src/webflow-core/triggers/scroll-into-view.ts
+  // src/webflow-core/events/triggers/scroll-into-view.ts
   var Sa5EventsTriggerScrollIntoView = class extends Sa5EventsTriggerBase {
     constructor(core, debug) {
       super(core, debug);
@@ -4189,7 +4189,7 @@
     }
   };
 
-  // src/webflow-core/triggers/timer.ts
+  // src/webflow-core/events/triggers/timer.ts
   var Sa5EventsTriggerTimer = class extends Sa5EventsTriggerScriptBase {
     constructor(core, debug) {
       super(core, debug);

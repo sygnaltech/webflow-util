@@ -13,7 +13,7 @@ import { Sa5Attribute } from "../../globals";
 import { booleanValue } from "../../utils";
 import { Sa5Core } from "../../webflow-core";
 import { Sa5Debug } from "../../webflow-core/debug";
-import { Sa5EventsActionBase } from "../../webflow-core/actions/actionBase";
+import { Sa5EventsActionBase } from "../../webflow-core/events/actions/actionBase";
 import { Sa5ModalController } from "../modal-controller";
 
 
