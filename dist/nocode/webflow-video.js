@@ -812,6 +812,26 @@
   };
   Sa5Core.startup(WebflowVideo);
 
+  // src/webflow-video/events/actions/video-play.ts
+  var Sa5EventsActionVideoPlay = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-video-play]");
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-action-modal-play");
+        const videoName = elem.getAttribute("wfu-video");
+        if (eventName) {
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} play video", eventName);
+            const videoController = this.core.controllers["videos"];
+          });
+        }
+      });
+    }
+  };
+
   // src/webflow-video/player.ts
   var Sa5VideoPlayerState = class {
     get progress() {
@@ -3167,15 +3187,35 @@
     }
   };
 
+  // src/webflow-video/video-controller.ts
+  var Sa5VideoController = class {
+    constructor(config = {}) {
+      let core = Sa5Core.startup();
+      this.debug = new Sa5Debug("sa5-video-controller");
+      this.debug.debug(`Initializing v${VERSION}`);
+      this.config = config;
+      core.setController("videos", this);
+      new Sa5EventsActionVideoPlay(core, this.debug).init();
+    }
+    init() {
+      let videos = document.querySelectorAll(`[${"wfu-video" /* ATTR_VIDEO */}]`);
+      videos.forEach((element) => {
+        Sa5VideoPlayerFactory.create(element).init();
+      });
+    }
+    pauseAll() {
+    }
+    muteAll() {
+    }
+  };
+
   // src/nocode/webflow-video.ts
   var init = () => {
     let core = Sa5Core.startup();
     let debug = new Sa5Debug("sa5-video");
     debug.debug(`Initializing v${VERSION}`);
-    let videos = document.querySelectorAll(`[${"wfu-video" /* ATTR_VIDEO */}]`);
-    videos.forEach((element) => {
-      Sa5VideoPlayerFactory.create(element).init();
-    });
+    const videoController = new Sa5VideoController();
+    videoController.init();
     const webflowVideo = new WebflowVideo();
     webflowVideo.processAllYouTubeNorel();
     webflowVideo.processAllDataPosterUrls();

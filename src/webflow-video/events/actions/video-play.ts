@@ -42,7 +42,7 @@ export class Sa5EventsActionVideoPlay extends Sa5EventsActionBase {
                 // Register the event action
                 this.core.events.addEventHandler(eventName, () => { 
 
-                    this.debugTrigger("🕑 open modal", eventName); 
+                    this.debugTrigger("🕑 play video", eventName); 
 
                     const videoController: Sa5VideoController = this.core.controllers["videos"]; 
 //                    videoController.display(videoName); 

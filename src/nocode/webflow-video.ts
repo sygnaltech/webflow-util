@@ -11,9 +11,10 @@
 import { WebflowVideo } from '../webflow-video';
 import { Sa5Core } from '../webflow-core'; 
 import { Sa5Debug } from '../webflow-core/debug';
-import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
-import { Sa5Attribute } from '../globals';
+// import { Sa5VideoPlayerFactory } from '../webflow-video/player-factory';
+// import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
+import { Sa5VideoController } from '../webflow-video/video-controller';
 
 // type VideoTimeUpdateCallback = (name: string, time: number, totalTime: number, percent: number) => void;
 
@@ -29,53 +30,37 @@ const init = () => {
 
 
 
+    // /**
+    //  * Initialize all [wfu-video] elements
+    //  */
+
+    // let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
+    // videos.forEach((element: HTMLElement) => {
+
+    //     Sa5VideoPlayerFactory.create(element).init();
+
+    // });
+    
     /**
-     * Initialize all [wfu-video] elements
+     * Init Video Controller and Events 
      */
 
-    let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
-    videos.forEach((element: HTMLElement) => {
+    const videoController = new Sa5VideoController();
+    videoController.init();
 
-        Sa5VideoPlayerFactory.create(element).init();
 
-    });
-    
 
+    /**
+     * General video enhancements 
+     */
 
     const webflowVideo = new WebflowVideo();
 
-
-    /**
-     * Initialize all [wfu-youtube-norel] elements
-     */    
-
-    // let youtube = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO_YOUTUBE_NOREL}]`);
-
-    // youtube.forEach((element: HTMLElement) => {
-
-//    console.log("Processing NOREL")
-
+    // Initialize all [wfu-youtube-norel] elements
     webflowVideo.processAllYouTubeNorel();
 
-//        Sa5VideoPlayerFactory.create(element).init();
-
-//    });
-
-    /**
-     * Handle background videos. 
-     */
-
-
+    // Handle background videos. 
     webflowVideo.processAllDataPosterUrls();
-
-    // // Find poster video overrides and apply them
-    // const elements = document.querySelectorAll(`div[wfu-data-poster-url]`) as NodeListOf<HTMLDivElement>; 
-    // elements.forEach((element) => { 
-
-    //   // Do something with each element
-    //   webflowInfo.updateHrefToWebflowPreviewLink(element);
-
-    // });
 
 }
   

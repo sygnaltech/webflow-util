@@ -13,6 +13,7 @@ import { VERSION } from '../version';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { Sa5EventsActionVideoPlay } from './events/actions/video-play';
+import { Sa5VideoPlayerFactory } from './player-factory';
 //import { Sa5EventsActionModalOpen } from './actions/modal-open';
 //import { Sa5Modal } from './modal';
 //import { Sa5ModalGateController } from './modal-gate-controller';
@@ -109,6 +110,20 @@ export class Sa5VideoController {
     }
 
     init() {
+
+
+        /**
+         * Initialize all [wfu-video] elements
+         */
+
+        let videos = document.querySelectorAll(`[${Sa5Attribute.ATTR_VIDEO}]`);
+        videos.forEach((element: HTMLElement) => {
+
+            Sa5VideoPlayerFactory.create(element).init();
+
+        });
+
+
 
 //         // Initialize debugging
 //         let debug = new Sa5Debug("sa5-modal-controller");
