@@ -6422,7 +6422,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.7.0";
+  var VERSION = "5.7.1";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
