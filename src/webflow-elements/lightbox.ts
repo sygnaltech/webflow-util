@@ -3,7 +3,7 @@
  * webflow-element-lightbox
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Extensions to Webflow's lightbox element. 
  */

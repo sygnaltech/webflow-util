@@ -3,7 +3,7 @@
  * webflow-countup
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Countup Utilities 
  * Wraps Inorganik's CountUp library for nocode & locode use in Webflow.

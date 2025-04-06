@@ -2,7 +2,7 @@
  * webflow-cro
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Conversion Rate Optimization (CRO) Utilities
  */

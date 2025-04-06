@@ -3,7 +3,7 @@
  * webflow-membership-routing
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Membership Routing Utilities
  * 

@@ -3,7 +3,7 @@
  * webflow-core
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Editor Utilities
  */
@@ -15,7 +15,7 @@
  * Sa5Editor
  *
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  *
  * Detects the current editor mode.
  */

@@ -3,7 +3,7 @@
  * webflow-form-ipinfo
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * For capturing sender IP info,
  * and appending to a form.

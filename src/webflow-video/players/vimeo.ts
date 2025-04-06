@@ -5,7 +5,7 @@
  * Handles Vimeo player.
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Video Utilities
  */

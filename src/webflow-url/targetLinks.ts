@@ -4,7 +4,7 @@
  * Fixues up //self/ relative links for CMS.
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Url Utilities
  */

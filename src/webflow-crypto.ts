@@ -3,7 +3,7 @@
  * webflow-crypto
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Hashing & Cryptographic Utilities
  */

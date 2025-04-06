@@ -3,7 +3,7 @@
  * webflow-video
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Webflow Video
  */

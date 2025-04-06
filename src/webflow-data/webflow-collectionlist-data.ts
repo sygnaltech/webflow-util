@@ -1,7 +1,7 @@
 
 /*
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Creates a data source from a Webflow Collection list.
  */

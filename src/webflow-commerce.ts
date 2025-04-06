@@ -4,7 +4,7 @@
  * webflow-commerce
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Adds simple capabilities to Webflow.
  */

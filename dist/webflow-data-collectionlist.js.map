@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/webflow-data-collectionlist.ts"],
-  "sourcesContent": ["\n/*\n * Sygnal Technology Group\n * http://sygnal.com\n * \n * Designed to aggregate JSON excerpts produced by a Webflow Collection List\n * into a single JSON datasource, for use in other places, such as Form Select data-binding.\n */\n\n// Amalgamates from internally tagged DIVs\nexport var getDataSource = function (name) {\n\n    // Aggregate JSON Data\n    let data = document.querySelectorAll('*[data=\"' + name + '\"]');\n\n    let items: string[] = [];  // place to store the pairs\n    data.forEach((elem) => { //loop over the keys\n        items.push(elem.textContent || \"\");\n    })\n\n    let json = '[' + items.join() + ']';\n\n    return JSON.parse(json);\n}\n\n"],
+  "sourcesContent": ["\n/*\n * Sygnal Technology Group\n * https://www.sygnal.com\n * \n * Designed to aggregate JSON excerpts produced by a Webflow Collection List\n * into a single JSON datasource, for use in other places, such as Form Select data-binding.\n */\n\n// Amalgamates from internally tagged DIVs\nexport var getDataSource = function (name) {\n\n    // Aggregate JSON Data\n    let data = document.querySelectorAll('*[data=\"' + name + '\"]');\n\n    let items: string[] = [];  // place to store the pairs\n    data.forEach((elem) => { //loop over the keys\n        items.push(elem.textContent || \"\");\n    })\n\n    let json = '[' + items.join() + ']';\n\n    return JSON.parse(json);\n}\n\n"],
   "mappings": ";;AAUO,MAAI,gBAAgB,SAAU,MAAM;AAGvC,QAAI,OAAO,SAAS,iBAAiB,aAAa,OAAO,IAAI;AAE7D,QAAI,QAAkB,CAAC;AACvB,SAAK,QAAQ,CAAC,SAAS;AACnB,YAAM,KAAK,KAAK,eAAe,EAAE;AAAA,IACrC,CAAC;AAED,QAAI,OAAO,MAAM,MAAM,KAAK,IAAI;AAEhC,WAAO,KAAK,MAAM,IAAI;AAAA,EAC1B;",
   "names": []
 }

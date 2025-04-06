@@ -2,7 +2,7 @@
  * webflow-embed
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Embed content such as tables, and more. 
  */

@@ -3,7 +3,7 @@
  * datasources-github
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Helps extract information from Github
  */

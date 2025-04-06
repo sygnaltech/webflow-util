@@ -4,7 +4,7 @@
  * webflow-finsweet | fs-load
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * For extensions to Finsweet's Load Attributes
  */

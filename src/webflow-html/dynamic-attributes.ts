@@ -5,7 +5,7 @@
  * Dynamic Attributes
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Applies all x: prefixed attributes to their elements without the prefix.
  * Designed to overcome limitations with Webflow's custom attributes reserved names. 

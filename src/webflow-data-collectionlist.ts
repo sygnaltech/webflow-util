@@ -1,7 +1,7 @@
 
 /*
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Designed to aggregate JSON excerpts produced by a Webflow Collection List
  * into a single JSON datasource, for use in other places, such as Form Select data-binding.

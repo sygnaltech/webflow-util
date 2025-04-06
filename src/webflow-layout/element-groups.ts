@@ -5,7 +5,7 @@
  * Element Groups
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * notes: https://codepen.io/memetican/pen/gOJYVao/55abe124d574a10a71d94f8a036f6dd9
  */

@@ -3,7 +3,7 @@
  * google-sheet-data
  *
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  *
  * Extracts information from Google Sheets, and returns as JSON
  */

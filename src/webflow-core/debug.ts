@@ -3,12 +3,14 @@
  * webflow-core
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Debug Utilities
  */
 
 import { VERSION } from "../version";
+import { StorageUtils } from "../storage-utils";
+
 
 
 
@@ -22,9 +24,13 @@ export class Sa5Debug {
     // Get or set WFU persistent debug state
     // which is stored in localStorage. 
     get persistentDebug(): boolean {
-        return Boolean(localStorage.getItem(this.localStorageDebugFlag)); 
+        return StorageUtils.localStorageAvailable
+            ? Boolean(localStorage.getItem(this.localStorageDebugFlag))
+            : false;
     }
     set persistentDebug(active: boolean) {
+        if (!StorageUtils.localStorageAvailable) return;
+
         if (active) {
             localStorage.setItem(this.localStorageDebugFlag, "true");
             console.debug (`sa5-core debug enabled (persistent).`);
@@ -36,6 +42,8 @@ export class Sa5Debug {
 
     // Enable/disable debugging 
     get enabled(): boolean {
+
+        if (!StorageUtils.localStorageAvailable) return false;
 
         // localStorage is checked for a debug flag, to enable remote debug enabling 
         // Any non-null string value will resolve to TRUE here, including the string "false" 

@@ -6,7 +6,7 @@
  * A special class for handling gating-related activities. 
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  */
 

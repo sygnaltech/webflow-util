@@ -3,7 +3,7 @@
  * webflow-format
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Data Formatting Utilities
  */

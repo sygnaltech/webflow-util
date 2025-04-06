@@ -3,7 +3,7 @@
  * webflow-form
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Adds capabilities to Webflow Forms and form elements.
  */

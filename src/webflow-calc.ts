@@ -4,7 +4,7 @@
  * Cache Utilities 
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Cache Utilities 
  * An advanced utility for retriving and caching values online, for maximum performance.

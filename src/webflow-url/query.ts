@@ -4,7 +4,7 @@
  * Adds querystring data to specific tagged elements.
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Url Utilities
  */

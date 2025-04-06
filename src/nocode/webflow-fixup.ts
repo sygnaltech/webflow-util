@@ -3,7 +3,7 @@
  * webflow-fixup
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * NO-CODE version, keys off of [wfu] attributes.
  */

@@ -5,7 +5,7 @@
  * EXPERIMENTAL
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * IX2 Utilities
  * This lib aggregates functionality relating to Webflow's IX2 interactions. 

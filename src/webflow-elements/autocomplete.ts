@@ -4,7 +4,7 @@
  * Autocomplete
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Elements 
  */

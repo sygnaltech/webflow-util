@@ -5,7 +5,7 @@
  * Dynamic URLs 
  * 
  * Sygnal Technology Group
- * http://sygnal.com
+ * https://www.sygnal.com
  * 
  * Applies all xq: prefixed attributes to their elements without the prefix.
  * Best paired with the new CMS & component property databinding feature of Webflow's custom attributes. 
