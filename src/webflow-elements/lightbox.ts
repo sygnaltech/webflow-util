@@ -55,33 +55,47 @@ export class Sa5Lightbox {
 
         let imgElement = this._element.querySelector("img");
         let scriptElement = this._element.querySelector("script");
-      
-        // Set the caption to the image alt text
+        
+        // Set the caption to the image alt text for all items
         if (imgElement && scriptElement) {
           const imageAltText = imgElement.getAttribute("alt");
           const imageJSON = JSON.parse(scriptElement.innerHTML);
-      
-          imageJSON.items[0].caption = imageAltText;
-          scriptElement.innerHTML = JSON.stringify(imageJSON);
-      
-          // Apply ref key for caption retrieval
-          imgElement.setAttribute("ref-key", imageJSON.items[0].url);
-        }
-
-        /* 
-        const imageAltText = $(lightboxElem).children("img").attr("alt");
-        const script = $(lightboxElem).children("script");
-        const imageJSON = JSON.parse(script.html());
-        imageJSON.items[0].caption = imageAltText;
-        script.html(JSON.stringify(imageJSON));  
         
-        // Apply ref key for caption retrieval
-        $(lightboxElem).children("img").attr("ref-key", imageJSON.items[0].url);
-*/
+          // Apply the alt text as the caption to each item 
+          imageJSON.items[0].caption = imageAltText;
+        //   imageJSON.items.forEach(item => {
+        //     item.caption = imageAltText;
+        //   });
+        
+          scriptElement.innerHTML = JSON.stringify(imageJSON);
+        
+          // Optionally apply ref-key to the first image URL
+          if (imageJSON.items.length > 0) {
+            imgElement.setAttribute("ref-key", imageJSON.items[0].url);
+          }
+        }
+        
+
+        // let imgElement = this._element.querySelector("img");
+        // let scriptElement = this._element.querySelector("script");
+      
+        // // Set the caption to the image alt text
+        // if (imgElement && scriptElement) {
+        //   const imageAltText = imgElement.getAttribute("alt");
+        //   const imageJSON = JSON.parse(scriptElement.innerHTML);
+      
+        //   imageJSON.items[0].caption = imageAltText;
+        //   scriptElement.innerHTML = JSON.stringify(imageJSON);
+      
+        //   // Apply ref key for caption retrieval
+        //   imgElement.setAttribute("ref-key", imageJSON.items[0].url);
+        // }
+
+
 
     }
 
-    static createNew (container: HTMLElement, thumbnailImage: string, group: string, items: LightboxItem[] = []): Sa5Lightbox {
+    static createNew(container: HTMLElement, thumbnailImage: string, group: string, items: LightboxItem[] = []): Sa5Lightbox {
 
 //        new Sa5Lightbox()
 

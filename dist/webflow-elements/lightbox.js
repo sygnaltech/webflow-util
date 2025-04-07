@@ -786,7 +786,9 @@
         const imageJSON = JSON.parse(scriptElement.innerHTML);
         imageJSON.items[0].caption = imageAltText;
         scriptElement.innerHTML = JSON.stringify(imageJSON);
-        imgElement.setAttribute("ref-key", imageJSON.items[0].url);
+        if (imageJSON.items.length > 0) {
+          imgElement.setAttribute("ref-key", imageJSON.items[0].url);
+        }
       }
     }
     static createNew(container, thumbnailImage, group, items = []) {
