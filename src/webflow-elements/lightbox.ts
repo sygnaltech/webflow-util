@@ -38,8 +38,22 @@ export class Sa5Lightbox {
     config; // Optional config
     _element: HTMLElement;
 
-    constructor(element: HTMLElement, config = {}) {
+    // get caption(): string {
 
+    //     // Attempt to get caption from SA5 attribute 
+    //     if(this._element.hasAttribute("wfu-lightbox-captions-text"))
+    //         return this._element.getAttribute("wfu-lightbox-captions-text");
+        
+    //     // Attempt to get caption from thumbnail image alt text 
+    //     let thumbnail = this._element.querySelector("img");
+    //     if(thumbnail) 
+    //         return thumbnail.getAttribute("alt");
+
+    //     return null; 
+    // }
+
+    constructor(element: HTMLElement, config = {}) {
+// console.log("installing lightbox"); 
         this._element = element;
 //        this.config = $.extend({}, defaultConfig, config);
     
@@ -56,8 +70,11 @@ export class Sa5Lightbox {
         let imgElement = this._element.querySelector("img");
         let scriptElement = this._element.querySelector("script");
         
+//console.log(this.caption); 
+
         // Set the caption to the image alt text for all items
         if (imgElement && scriptElement) {
+//        if (scriptElement) {
           const imageAltText = imgElement.getAttribute("alt");
           const imageJSON = JSON.parse(scriptElement.innerHTML);
         
