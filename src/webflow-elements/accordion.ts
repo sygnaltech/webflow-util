@@ -1,11 +1,10 @@
 
 /*
- * webflow-core
+ * SA5 Elements
+ * Accordion 
  * 
  * Sygnal Technology Group
  * https://www.sygnal.com
- * 
- * Accordion 
  * 
  */
 
@@ -172,6 +171,8 @@ export class Sa5AccordionItem {
 
 type ItemChangedCallback = (accordion: any, index: any) => void;
 
+// #region Sa5Accordion
+
 export class Sa5Accordion implements IDeckNavigation { 
     
     name: string; 
@@ -239,6 +240,10 @@ export class Sa5Accordion implements IDeckNavigation {
 
     //#region CONSTRUCTORS
 
+    /**
+     * Instantiates and inits an Accordion instance. 
+     * @param element The [wfu-accordion] element. 
+     */
     constructor(element: HTMLElement) {
 
         this.debug = new Sa5Debug("sa5-webflow-accordion");
@@ -280,6 +285,9 @@ export class Sa5Accordion implements IDeckNavigation {
         return itemIndex;
     }
 
+    /**
+     * Init Accordion. 
+     */
     init() {
 
         // Set the name property, if defined
@@ -287,7 +295,7 @@ export class Sa5Accordion implements IDeckNavigation {
         if (nameAttr) 
             this.name = nameAttr;
 
-console.log("creating accordion", this.name); 
+//  console.log("creating accordion", this.name); 
 
         const modeAttr = this.elem.getAttribute('wfu-accordion-mode');
         
@@ -302,22 +310,26 @@ console.log("creating accordion", this.name);
         }
 
         // Init items 
-        const accordionItemElems = document.querySelectorAll(
+        const accordionItemElems = this.elem.querySelectorAll(
             `[${Sa5Attribute.ATTR_ELEMENT_ACCORDION_ITEM}]` 
             ) as NodeListOf<HTMLElement>;
 
         accordionItemElems.forEach((item: HTMLElement) => { 
 
+// console.log("creating item.")
             const accordionItem: Sa5AccordionItem = new Sa5AccordionItem(item, this); 
             this.items.push(accordionItem); // add to stack 
 
             accordionItem.tab?.addEventListener('click', () => {
-console.log("click")
+// console.log("click")
                 this.currentItem = accordionItem;
 
             }); 
 
-        });
+        }); 
+
+        // Select first 
+        this.currentIndex = 0; 
 
     }
 
@@ -384,8 +396,37 @@ console.log("click")
     }
 }
 
+// #endregion
+
+
+//#region Sa5AccordionController 
+
+export class Sa5AccordionController {
+
+    constructor() {
+
+    }
+
+    init() {
+
+        let accordionElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_ACCORDION}]`);
+        accordionElements.forEach(element => {
+    
+console.log("Initializing accordion", element.getAttribute(Sa5Attribute.ATTR_ELEMENT_ACCORDION));
+
+            var accordionObj = new Sa5Accordion(element as HTMLElement); 
+    
+        });
+
+    }
+
+}
+
+// #endregion 
+
 
 Sa5Core.startup(Sa5Accordion);
+Sa5Core.startup(Sa5AccordionController);
 //window["Sa5Accordion"] = Sa5Accordion;
 
 

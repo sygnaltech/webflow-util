@@ -22,7 +22,7 @@ import { Sa5Autocomplete } from '../webflow-elements/autocomplete';
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
 import { VERSION } from '../version';
-import { Sa5Accordion } from '../webflow-elements/accordion';
+import { Sa5Accordion, Sa5AccordionController } from '../webflow-elements/accordion';
 import { Sa5ActionController } from '../webflow-elements/action';
 
 
@@ -72,13 +72,10 @@ const init = () => {
 
     // Accordion
     // Auto-register class on named items? 
-    // [wfu-accordion=NAME]
-    let accordionElements: NodeListOf<Element> = document.querySelectorAll(`[${Sa5Attribute.ATTR_ELEMENT_ACCORDION}]`);
-    accordionElements.forEach(element => {
+    // [wfu-accordion=NAME] 
+    const accordionController: Sa5AccordionController = new Sa5AccordionController();
+    accordionController.init(); 
 
-        var accordionObj = new Sa5Accordion(element as HTMLElement);
-
-    });
 
     /**
      * Deck Controllers

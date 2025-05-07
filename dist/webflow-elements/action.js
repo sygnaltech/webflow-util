@@ -251,7 +251,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.7.1";
+  var VERSION = "5.7.2";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -914,7 +914,6 @@
       const nameAttr = this.elem.getAttribute("wfu-accordion");
       if (nameAttr)
         this.name = nameAttr;
-      console.log("creating accordion", this.name);
       const modeAttr = this.elem.getAttribute("wfu-accordion-mode");
       const enumValues = Object.values(Sa5AccordionMode);
       if (modeAttr && enumValues.includes(modeAttr)) {
@@ -922,17 +921,17 @@
       } else {
         this.mode = "default" /* Default */;
       }
-      const accordionItemElems = document.querySelectorAll(
+      const accordionItemElems = this.elem.querySelectorAll(
         `[${"wfu-accordion-item" /* ATTR_ELEMENT_ACCORDION_ITEM */}]`
       );
       accordionItemElems.forEach((item) => {
         const accordionItem = new Sa5AccordionItem(item, this);
         this.items.push(accordionItem);
         accordionItem.tab?.addEventListener("click", () => {
-          console.log("click");
           this.currentItem = accordionItem;
         });
       });
+      this.currentIndex = 0;
     }
     goTo(index) {
       this.currentIndex = index;
@@ -973,7 +972,19 @@
       });
     }
   };
+  var Sa5AccordionController = class {
+    constructor() {
+    }
+    init() {
+      let accordionElements = document.querySelectorAll(`[${"wfu-accordion" /* ATTR_ELEMENT_ACCORDION */}]`);
+      accordionElements.forEach((element) => {
+        console.log("Initializing accordion", element.getAttribute("wfu-accordion" /* ATTR_ELEMENT_ACCORDION */));
+        var accordionObj = new Sa5Accordion(element);
+      });
+    }
+  };
   Sa5Core.startup(Sa5Accordion);
+  Sa5Core.startup(Sa5AccordionController);
 
   // src/webflow-elements/slider.ts
   var WebflowSlider = class {
