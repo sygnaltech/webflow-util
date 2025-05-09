@@ -8,10 +8,10 @@
  * Scripts Utilities
  */
 
-import { Sa5Attribute } from "../../globals";
-import { booleanValue } from "../../utils";
-import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../debug";
+import { Sa5Attribute } from "../../../globals";
+import { booleanValue } from "../../../utils";
+import { Sa5Core } from "../../../webflow-core";
+import { Sa5Debug } from "../../debug";
 import { Sa5EventsTriggerBase } from "./triggerBase";
 import { Sa5EventsTriggerScriptBase } from "./triggerScriptBase";
 
@@ -21,6 +21,7 @@ import { Sa5EventsTriggerScriptBase } from "./triggerScriptBase";
 export class Sa5EventsTriggerExitIntent extends Sa5EventsTriggerScriptBase {
 
     private exitTriggered: boolean = false; 
+    private eventNames: string[] = []; // Array to store event names
 
     // Initialize
     constructor(core: Sa5Core, debug: Sa5Debug) {
@@ -39,16 +40,20 @@ export class Sa5EventsTriggerExitIntent extends Sa5EventsTriggerScriptBase {
 
             const eventName = this.getEventName(elem); 
  
-            try {
-                // Parse the JSON content inside the script tag
-                const jsonData = JSON.parse(elem.textContent.trim());
-        
-//                this.debugTrigger("🕑 timer", eventName); 
-                this.debugTrigger("🕑 Exit Intent Registered", eventName);                
-                this.core.events.executeEvent(eventName);
+            if (eventName) {
+                // Store the event name in the array
+                this.eventNames.push(eventName);
 
-            } catch (error) {
-                console.error("Invalid JSON in script tag:", elem, error);
+                try {
+                    // Parse the JSON content inside the script tag
+                    const jsonData = JSON.parse(elem.textContent.trim());
+
+//                    this.core.events.executeEvent(eventName);
+
+                } catch (error) {
+                    console.error("Invalid JSON in script tag:", elem, error);
+                }
+
             }
 
         });
@@ -76,9 +81,15 @@ export class Sa5EventsTriggerExitIntent extends Sa5EventsTriggerScriptBase {
         if (this.exitTriggered) return; // Prevent multiple triggers
         this.exitTriggered = true;
 
-        const eventName = "exit-intent"; // Can be customized dynamically
-        this.debugTrigger(`🚪 Exit intent detected via: ${source}`, eventName);
-        this.core.events.executeEvent(eventName);
+        this.debugTrigger(`🚪 Exit intent detected via: ${source}`, source);
+
+        this.eventNames.forEach(eventName => {
+            console.log(`Processing event: ${eventName}`);
+            // Perform your custom action here
+            this.core.events.executeEvent(eventName);
+        });
+
+//        const eventName = "exit-intent"; // Can be customized dynamically
     }
 
 }

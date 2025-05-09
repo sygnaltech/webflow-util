@@ -8,11 +8,12 @@
  * Scripts Utilities
  */
 
-import { Sa5Attribute } from "../../globals";
-import { booleanValue } from "../../utils";
-import { Sa5Core } from "../../webflow-core";
-import { Sa5Debug } from "../debug";
+import { Sa5Attribute } from "../../../globals";
+import { booleanValue } from "../../../utils";
+import { Sa5Core } from "../../../webflow-core";
+import { Sa5Debug } from "../../debug";
 import { Sa5EventsTriggerBase } from "./triggerBase";
+
 
 
 

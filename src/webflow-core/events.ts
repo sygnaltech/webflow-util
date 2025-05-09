@@ -22,6 +22,7 @@ import { Sa5EventsTriggerExitIntent } from "./events/triggers/exit-intent";
 import { Sa5EventsTriggerHover } from "./events/triggers/hover";
 import { Sa5EventsTriggerScrollIntoView } from "./events/triggers/scroll-into-view";
 import { Sa5EventsTriggerTimer } from "./events/triggers/timer";
+import { Sa5EventsActionScrollIntoView } from "./events/actions/scroll-into-view";
 
 
 
@@ -110,6 +111,7 @@ export class Sa5EventRegistry extends Map<string, Sa5Event> {
 
         // Prepare Scroll-into-view trigger 
         (new Sa5EventsTriggerScrollIntoView(core, debug)).init(); 
+        (new Sa5EventsActionScrollIntoView(core, debug)).init(); 
 
         // Prepare Class adder action 
         (new Sa5EventsActionClass(core, debug)).init(); 

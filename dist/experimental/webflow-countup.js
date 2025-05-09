@@ -341,7 +341,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.7.2";
+  var VERSION = "5.8.0";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -571,18 +571,20 @@
     constructor(core, debug) {
       super(core, debug);
       this.exitTriggered = false;
+      this.eventNames = [];
     }
     init() {
       this.setupExitIntentListener();
       const actionElems = document.querySelectorAll('script[handler="trigger.exit-intent"]');
       actionElems.forEach((elem) => {
         const eventName = this.getEventName(elem);
-        try {
-          const jsonData = JSON.parse(elem.textContent.trim());
-          this.debugTrigger("\u{1F551} Exit Intent Registered", eventName);
-          this.core.events.executeEvent(eventName);
-        } catch (error) {
-          console.error("Invalid JSON in script tag:", elem, error);
+        if (eventName) {
+          this.eventNames.push(eventName);
+          try {
+            const jsonData = JSON.parse(elem.textContent.trim());
+          } catch (error) {
+            console.error("Invalid JSON in script tag:", elem, error);
+          }
         }
       });
     }
@@ -604,9 +606,11 @@
       if (this.exitTriggered)
         return;
       this.exitTriggered = true;
-      const eventName = "exit-intent";
-      this.debugTrigger(`\u{1F6AA} Exit intent detected via: ${source}`, eventName);
-      this.core.events.executeEvent(eventName);
+      this.debugTrigger(`\u{1F6AA} Exit intent detected via: ${source}`, source);
+      this.eventNames.forEach((eventName) => {
+        console.log(`Processing event: ${eventName}`);
+        this.core.events.executeEvent(eventName);
+      });
     }
   };
 
@@ -703,6 +707,32 @@
     }
   };
 
+  // src/webflow-core/events/actions/scroll-into-view.ts
+  var Sa5EventsActionScrollIntoView = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-scrollintoview]");
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-action-scrollintoview");
+        if (eventName) {
+          const behavior = elem.getAttribute("sa-action-scrollintoview:behavior") || "smooth";
+          const block = elem.getAttribute("sa-action-scrollintoview:block") || "center";
+          const inline = elem.getAttribute("sa-action-scrollintoview:inline") || "nearest";
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} scroll into view", eventName);
+            elem.scrollIntoView({
+              behavior,
+              block,
+              inline
+            });
+          });
+        }
+      });
+    }
+  };
+
   // src/webflow-core/events.ts
   var Sa5Event = class {
     constructor(name) {
@@ -766,6 +796,7 @@
       new Sa5EventsActionClick(core, debug).init();
       new Sa5EventsActionAlert(core, debug).init();
       new Sa5EventsTriggerScrollIntoView(core, debug).init();
+      new Sa5EventsActionScrollIntoView(core, debug).init();
       new Sa5EventsActionClass(core, debug).init();
       new Sa5EventsTriggerTimer(core, debug).init();
       new Sa5EventsTriggerHover(core, debug).init();

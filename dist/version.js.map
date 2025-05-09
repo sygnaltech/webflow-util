@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/version.ts"],
-  "sourcesContent": ["\nexport const VERSION = '5.7.2'; // Update this manually on each release\n\n\n"],
+  "sourcesContent": ["\nexport const VERSION = '5.8.0'; // Update this manually on each release\n\n\n"],
   "mappings": ";;AACO,MAAM,UAAU;",
   "names": []
 }
