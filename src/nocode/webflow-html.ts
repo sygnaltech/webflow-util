@@ -11,16 +11,12 @@
 import { Sa5Html } from '../webflow-html'
 import { Sa5Core } from '../webflow-core';
 import { Sa5Debug } from '../webflow-core/debug';
-import { Sa5Editor } from '../webflow-core/webflow-editor'; 
-import { sequence, decodeHTML } from '../utils';
-import { Sa5CollectionList } from '../webflow-html/collection-list';
-// import { HtmlBuilder } from '../modules/webflow-html-builder';
-import { Sa5Attribute } from '../globals';
+// import { Sa5Editor } from '../webflow-core/webflow-editor'; 
+// import { sequence, decodeHTML } from '../utils';
+// import { Sa5CollectionList } from '../webflow-html/collection-list';
+// import { Sa5Attribute } from '../globals';
 import { VERSION } from '../version';
-import { Sa5EncodedEmail } from '../webflow-html/encoded-email';
-// import Showdown from 'showdown';
-//import { Sa5Designer } from '../webflow-core/designer';
-//import { Sa5Layouts } from '../webflow-html/layout';
+// import { Sa5EncodedEmail } from '../webflow-html/encoded-email';
 
 const init = () => { 
 
@@ -32,14 +28,10 @@ const init = () => {
     let debug = new Sa5Debug("sa5-html");
     debug.debug (`Initializing v${VERSION}`);
 
-    // Dynamic Attributes
-//    applyDynamicAttributes();
-
     /**
      * Initialize core Sa5Html handler
-     */
+     */ 
 
-    // Create Sa5Html
     let lib = new Sa5Html({
         dynamicAttributes: true
     }).init();

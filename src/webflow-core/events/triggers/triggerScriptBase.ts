@@ -40,6 +40,29 @@ export class Sa5EventsTriggerScriptBase extends Sa5EventsTriggerBase {
         return eventName;
     }
 
+    // Deep merge configuration
+    protected mergeConfig(defaults: Record<string, any>, overrides: Record<string, any>): Record<string, any> {
+        const result = { ...defaults };
+        for (const key in overrides) {
+            if (overrides[key] !== undefined && overrides[key] !== null) {
+                result[key] = overrides[key];
+            }
+        }
+        return result;
+    }
+
+    // Coerce anything to boolean, except for: false, 0, "no", "off", blank, null, or undefined
+    protected coerceBoolean(value: any): boolean {
+        if (value == null || value === "" || value === false || value === 0) {
+            return false;
+        }
+        if (typeof value === 'string') {
+            const normalized = value.trim().toLowerCase();
+            return !(normalized === "no" || normalized === "off");
+        }
+        return true;
+    }
+
 }
 
 

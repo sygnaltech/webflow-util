@@ -3901,7 +3901,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.0";
+  var VERSION = "5.8.1";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -4123,6 +4123,25 @@
       if (eventNs)
         eventName = eventNs + "." + eventName;
       return eventName;
+    }
+    mergeConfig(defaults, overrides) {
+      const result = { ...defaults };
+      for (const key in overrides) {
+        if (overrides[key] !== void 0 && overrides[key] !== null) {
+          result[key] = overrides[key];
+        }
+      }
+      return result;
+    }
+    coerceBoolean(value) {
+      if (value == null || value === "" || value === false || value === 0) {
+        return false;
+      }
+      if (typeof value === "string") {
+        const normalized = value.trim().toLowerCase();
+        return !(normalized === "no" || normalized === "off");
+      }
+      return true;
     }
   };
 
@@ -4943,6 +4962,31 @@
     }
   };
 
+  // src/webflow-html/download-file.ts
+  var Sa5DownloadFile = class {
+    constructor(elem, config = {}) {
+      this.elem = elem;
+      this.filename = elem.getAttribute("wfu-download-file");
+      this.config = {};
+      let core = Sa5Core.startup();
+    }
+    init() {
+      const link = this.elem;
+      link.onclick = (e) => {
+        e.preventDefault();
+        fetch(link.href).then((r) => r.blob()).then((blob) => {
+          const a = Object.assign(document.createElement("a"), {
+            href: URL.createObjectURL(blob),
+            download: this.filename
+          });
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
+      };
+    }
+  };
+  Sa5Core.startup(Sa5DownloadFile);
+
   // src/webflow-html.ts
   var Sa5Html = class {
     constructor(config) {
@@ -4952,7 +4996,6 @@
     }
     init() {
       this.debug.debug("sa5-html init.");
-      console.log("LOADING SWITCH 1");
       let s = new Sa5Switch();
       s.init();
       let breakpoints = new Sa5Breakpoints({
@@ -4975,6 +5018,10 @@
       });
       document.querySelectorAll(`template[wfu-lazyload]`).forEach((element2) => {
         let module = new Sa5LazyLoad(element2);
+        module.init();
+      });
+      document.querySelectorAll(`a[wfu-download-file]`).forEach((element2) => {
+        let module = new Sa5DownloadFile(element2);
         module.init();
       });
       const editor = new Sa5Editor();

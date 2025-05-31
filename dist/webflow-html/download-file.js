@@ -821,270 +821,29 @@
   };
   Sa5Core.startup();
 
-  // src/webflow-cache.ts
-  var defaultConfig = {
-    id: "cache",
-    cacheKey: null,
-    prefix: "cache",
-    debug: false
-  };
-  var Sa5CacheController = class {
-    constructor(customConfig = {}) {
-      this.items = /* @__PURE__ */ new Map();
-      this.cacheItemKey = function(itemName) {
-        return `${this.config.prefix}_${itemName}`;
-      };
-      this.config = { ...defaultConfig, ...customConfig };
-      this.debug = new Sa5Debug("sa5-cache");
-      this.debug.enabled = this.config.debug;
-      if (this.config.cacheKey) {
-      }
+  // src/webflow-html/download-file.ts
+  var Sa5DownloadFile = class {
+    constructor(elem, config = {}) {
+      this.elem = elem;
+      this.filename = elem.getAttribute("wfu-download-file");
+      this.config = {};
+      let core = Sa5Core.startup();
     }
-    addItem(name, item) {
-      item.controller = this;
-      this.items.set(name, item);
-    }
-    getItem(name) {
-      return this.items.get(name);
-    }
-    clearCache() {
-    }
-  };
-  Sa5Core.startup(Sa5CacheController);
-
-  // src/webflow-cache/cache-item-typed.ts
-  var defaultConfig2 = {
-    name: void 0,
-    storageType: 0 /* sessionStorage */,
-    storageExpiry: null,
-    updateFnAsync: void 0,
-    debug: false
-  };
-  var Sa5CacheItemTyped = class {
-    constructor(customConfig = {}) {
-      this.debug = new Sa5Debug("sa5-cache-item");
-      this.config = { ...defaultConfig2, ...customConfig };
-      this.debug.enabled = this.config.debug;
-    }
-    getCookie(name) {
-      const encodedName = encodeURIComponent(name);
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${encodedName}=`);
-      if (parts.length === 2) {
-        const cookieValue = parts.pop().split(";").shift();
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-      }
-      return null;
-    }
-    setCookie(name, val) {
-      let cookieValue = `${encodeURIComponent(name)}=${encodeURIComponent(val)}`;
-      if (this.config.storageExpiry) {
-        cookieValue += `;expires=${this.config.storageExpiry.toUTCString()}`;
-      }
-      cookieValue += `;path=/`;
-      document.cookie = cookieValue;
-    }
-    async getAsync() {
-      let val = await this.getAsyncFromCache();
-      if (!val) {
-        val = await this.getAsyncFromSource();
-      }
-      return val;
-    }
-    async setAsync(val) {
-      this.setAsyncToCache(val);
-    }
-    async setAsyncToCache(val) {
-      switch (this.config.storageType) {
-        case 1 /* localStorage */:
-          localStorage.setItem(
-            this.controller.cacheItemKey(this.config.name),
-            JSON.stringify(val)
-          );
-          break;
-        case 0 /* sessionStorage */:
-          sessionStorage.setItem(
-            this.controller.cacheItemKey(this.config.name),
-            JSON.stringify(val)
-          );
-          break;
-        case 2 /* cookies */:
-          this.setCookie(
-            this.controller.cacheItemKey(this.config.name),
-            JSON.stringify(val)
-          );
-          this.config.storageExpiry;
-          break;
-      }
-    }
-    async getAsyncFromCache() {
-      let itemData = null;
-      switch (this.config.storageType) {
-        case 1 /* localStorage */:
-          itemData = localStorage.getItem(
-            this.controller.cacheItemKey(this.config.name)
-          );
-          break;
-        case 0 /* sessionStorage */:
-          itemData = sessionStorage.getItem(
-            this.controller.cacheItemKey(this.config.name)
-          );
-          this.debug.debug("cached? sessionStorage.getItem", itemData);
-          break;
-        case 2 /* cookies */:
-          itemData = this.getCookie(
-            this.controller.cacheItemKey(
-              this.config.name
-            )
-          );
-          break;
-      }
-      return JSON.parse(itemData);
-    }
-    async getAsyncFromSource() {
-      return await this.config.updateFnAsync().then((r) => {
-        this.setAsync(r);
-        this.debug.debug("sessionStorage.setItem", this.config.name, r);
-        this.debug.debug("calculated", r);
-        return r;
-      });
-    }
-  };
-
-  // src/webflow-detect/geo-handlers/geo-handler-base.ts
-  var GeoHandlerBase = class {
-    constructor(token = null) {
-      this.token = token;
-    }
-    get info() {
-      return {
-        ip: this.userInfoRaw.ip,
-        country: this.userInfoRaw.countryCode,
-        city: null,
-        region: null,
-        postal: null,
-        timezone: null
+    init() {
+      const link = this.elem;
+      link.onclick = (e) => {
+        e.preventDefault();
+        fetch(link.href).then((r) => r.blob()).then((blob) => {
+          const a = Object.assign(document.createElement("a"), {
+            href: URL.createObjectURL(blob),
+            download: this.filename
+          });
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
       };
     }
-    async getInfoAsync() {
-    }
   };
-
-  // src/webflow-detect/geo-handlers/ip-info.ts
-  var IPInfo = class extends GeoHandlerBase {
-    get info() {
-      return {
-        ip: this.userInfoRaw.ip,
-        country: this.userInfoRaw.countryCode,
-        city: null,
-        region: null,
-        postal: null,
-        timezone: null
-      };
-    }
-    constructor(token = null) {
-      super(token);
-    }
-    async getInfoAsync() {
-      const request = await fetch(`https://ipinfo.io/json?token=${this.token}`);
-      this.userInfoRaw = await request.json();
-      console.log(
-        this.userInfoRaw
-      );
-      return this.userInfoRaw;
-    }
-  };
-
-  // src/webflow-detect/routing-rules.ts
-  var Sa5RoutingRules = class {
-    constructor(detectController) {
-      this.detectController = detectController;
-    }
-    load(rules) {
-      this.rules = rules;
-      for (const rule of rules) {
-        switch (rule.type) {
-          case "geo-country": {
-            this.detectController.countries = new Map(
-              rule.route
-            );
-            break;
-          }
-        }
-      }
-    }
-  };
-
-  // src/webflow-detect.ts
-  var Sa5Detect = class {
-    constructor() {
-      this.countries = /* @__PURE__ */ new Map([]);
-      this.routingRules = new Sa5RoutingRules(this);
-      const expiry = new Date();
-      expiry.setDate(expiry.getDate() + 3);
-      this.cache = new Sa5CacheController({
-        id: "sa5-detect",
-        cacheKey: "af92b71b-d0cf-4ad5-a06c-97327215af8a",
-        prefix: "_sa5"
-      });
-      this.cache.addItem(
-        "userInfo",
-        new Sa5CacheItemTyped({
-          name: "userInfo",
-          storageType: 2 /* cookies */,
-          storageExpiry: expiry,
-          updateFnAsync: this.getUserInfoAsync
-        })
-      );
-    }
-    async userInfo() {
-      const info = await this.cache.getItem("userInfo").getAsync();
-      return info;
-    }
-    async getUserInfoAsync() {
-      const IP_INFO_TOKEN = "37cce46c605631";
-      const ipInfo = new IPInfo(IP_INFO_TOKEN);
-      let rawInfo = await ipInfo.getInfoAsync();
-      const info = {
-        ip: rawInfo.ip,
-        country: rawInfo.country,
-        city: rawInfo.city,
-        region: rawInfo.region,
-        postal: rawInfo.postal,
-        timezone: rawInfo.timezone
-      };
-      console.log(
-        info.ip,
-        info.country
-      );
-      return info;
-    }
-    detectGeographicZone() {
-    }
-    isCountryInList(countryCode) {
-      return this.countries.has(countryCode);
-    }
-    getPathForCountry(countryCode) {
-      console.log("getPathForCountry", countryCode);
-      console.log(this.countries);
-      return this.countries.get(countryCode);
-    }
-    async applyDetectContextAsync() {
-      let userInfo = await this.cache.getItem("userInfo").getAsync();
-      let path = this.getPathForCountry(userInfo.country);
-      for (const item of this.routingRules.rules) {
-        if (item.path === window.location.pathname) {
-          if (item.type === "geo-country") {
-            for (const [country, path2] of item.route) {
-              if (userInfo.country == country) {
-                if (window.location.pathname != path2)
-                  window.location.href = path2;
-              }
-            }
-          }
-        }
-      }
-    }
-  };
+  Sa5Core.startup(Sa5DownloadFile);
 })();
-//# sourceMappingURL=webflow-detect.js.map
+//# sourceMappingURL=download-file.js.map

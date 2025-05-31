@@ -127,7 +127,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.8.0";
+  var VERSION = "5.8.1";
 
   // src/storage-utils.ts
   var StorageUtils = class {
@@ -473,6 +473,25 @@
       if (eventNs)
         eventName = eventNs + "." + eventName;
       return eventName;
+    }
+    mergeConfig(defaults, overrides) {
+      const result = { ...defaults };
+      for (const key in overrides) {
+        if (overrides[key] !== void 0 && overrides[key] !== null) {
+          result[key] = overrides[key];
+        }
+      }
+      return result;
+    }
+    coerceBoolean(value) {
+      if (value == null || value === "" || value === false || value === 0) {
+        return false;
+      }
+      if (typeof value === "string") {
+        const normalized = value.trim().toLowerCase();
+        return !(normalized === "no" || normalized === "off");
+      }
+      return true;
     }
   };
 
