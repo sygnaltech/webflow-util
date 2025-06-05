@@ -84,7 +84,7 @@ export class Sa5Dismiss {
     init() {
 
         this._name = this._element.getAttribute(
-            Sa5Attribute.ATTR_DISMISS // "wfu-modal"
+            Sa5Attribute.ATTR_DISMISS // "wfu-dismiss"
             ) || "default";
 
         if(this.isDismissed()) {
@@ -94,13 +94,13 @@ export class Sa5Dismiss {
 
         // Un-hide the item, if not suppressed
         this._element.removeAttribute(
-            Sa5Attribute.ATTR_DISMISS_TRIGGER // "wfu-modal-trigger"
+            Sa5Attribute.ATTR_DISMISS_TRIGGER // "wfu-dismiss-trigger"
             );
 
         // Detect close button clicks,
         // and then suppress the targeted element 
         document.querySelectorAll(
-            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS_CLOSE) // "[wfu-modal-close]"
+            Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS_CLOSE) // "[wfu-dismiss-close]"
             ).forEach((element) => {
             
           // Detect close button clicks,
@@ -110,16 +110,16 @@ export class Sa5Dismiss {
               // Get modal
               const modalClose = element; 
               const modal = modalClose.closest(
-                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS)// "[wfu-modal]"
+                Sa5Attribute.getBracketed(Sa5Attribute.ATTR_DISMISS)// "[wfu-dismiss]"
                 ) as HTMLElement; 
               const modalCloseVal = modalClose.getAttribute(
-                Sa5Attribute.ATTR_DISMISS_CLOSE // "wfu-modal-close"
+                Sa5Attribute.ATTR_DISMISS_CLOSE // "wfu-dismiss-close"
                 ) || "true";
               const modalCloseType = modal.getAttribute(
-                Sa5Attribute.ATTR_DISMISS_CLOSE_TYPE // "wfu-modal-close-type"
+                Sa5Attribute.ATTR_DISMISS_CLOSE_TYPE // "wfu-dismiss-close-type"
                 ) || "auto";
               const modalSuppressDuration = parseFloat(modal.getAttribute(
-                Sa5Attribute.ATTR_DISMISS_DAYS // "wfu-modal-suppress-days"
+                Sa5Attribute.ATTR_DISMISS_DAYS // "wfu-dismiss-suppress-days"
                 )) || 9999;
               
               // Set cookie suppression 
