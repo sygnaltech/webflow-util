@@ -93,7 +93,7 @@ export class Sa5Url {
             ); 
         }        
 
-//        console.log("post config", this.config)
+//        console.log("post config", this.config)  
 
     }
 
@@ -161,8 +161,31 @@ export class Sa5Url {
 
             //    new WfuTargetLinks().init();
 
-        }
+        } 
 
+        /**
+         * Append query-string to parent link 
+         */
+
+        // Add query param to link
+        // Not specifically kiosk 
+
+        // const dataElements = document.querySelectorAll<HTMLDataElement>('data[action="add-query"]');
+
+        // dataElements.forEach((dataElement) => {
+        //   const param = dataElement.getAttribute("param");
+        //   const value = dataElement.getAttribute("value");
+
+        //   if (param && value) {
+        //     const parentLink = dataElement.closest("a") as HTMLAnchorElement | null;
+
+        //     if (parentLink && parentLink.href) {
+        //       const url = new URL(parentLink.href);
+        //       url.searchParams.set(param, value);
+        //       parentLink.href = url.toString();
+        //     }
+        //   }
+        // });        
 
     }
 
