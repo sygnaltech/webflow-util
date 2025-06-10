@@ -21,14 +21,19 @@ import { Sa5Scripts } from './webflow-core/scripts'
 
 
 interface KioskConfig {
+
   // "@context": string;
   // "@type": string;
   // "@version": string;
+
+  // Required 
   homePath: string;
   userAgent: string;
-  inactivityTimer?: number; // Optional property
-}
 
+  // Optional 
+  inactivityTimer?: number; 
+
+}
 
 
 const defaultConfig: KioskConfig = {
@@ -148,6 +153,24 @@ export class Sa5Kiosk {
         let core: Sa5Core = Sa5Core.startup();
 
         this.loadConfig(); 
+
+        if(this.isKioskMode) {
+          const showElements = document.querySelectorAll<HTMLElement>(".kiosk-show");
+          showElements.forEach((element) => {
+            element.classList.remove("kiosk-show");
+          });
+
+          document.body.classList.add("kiosk");
+
+        } else {
+          const hideElements = document.querySelectorAll<HTMLElement>(".kiosk-hide");
+          hideElements.forEach((element) => {
+            element.classList.remove("kiosk-hide");
+          });
+        }
+
+        // Init Inactivity Timer 
+
         if (this.kioskConfig.inactivityTimer)
           this.initializeInactivityTimer(); 
 
@@ -157,6 +180,7 @@ export class Sa5Kiosk {
      * Initializes the inactivity timer for the kiosk.
      */
     initializeInactivityTimer(): void {
+
       // Validate if we are in kiosk mode based on the user agent
       if (!this.isKioskMode()) {
         this.debug.debug("Inactivity timer not needed. Not in kiosk mode.");

@@ -251,7 +251,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.1";
+  var VERSION = "5.8.2";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -864,6 +864,18 @@
     init() {
       let core = Sa5Core.startup();
       this.loadConfig();
+      if (this.isKioskMode) {
+        const showElements = document.querySelectorAll(".kiosk-show");
+        showElements.forEach((element) => {
+          element.classList.remove("kiosk-show");
+        });
+        document.body.classList.add("kiosk");
+      } else {
+        const hideElements = document.querySelectorAll(".kiosk-hide");
+        hideElements.forEach((element) => {
+          element.classList.remove("kiosk-hide");
+        });
+      }
       if (this.kioskConfig.inactivityTimer)
         this.initializeInactivityTimer();
     }

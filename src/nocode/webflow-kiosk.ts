@@ -1,6 +1,6 @@
 
 /*
- * webflow-kiosk
+ * sa5-kiosk
  * 
  * Sygnal Technology Group
  * https://www.sygnal.com
@@ -15,13 +15,11 @@ import { Sa5Kiosk } from '../webflow-kiosk';
 
 const init = () => { 
 
-//    new Sa5Core().init();
-let core: Sa5Core = Sa5Core.startup();
+    let core: Sa5Core = Sa5Core.startup();
 
     // Initialize debugging
     let debug = new Sa5Debug("sa5-kiosk");
     debug.debug (`Initializing v${VERSION}`);
-
 
     const sa5Kiosk = new Sa5Kiosk();
     sa5Kiosk.init();
