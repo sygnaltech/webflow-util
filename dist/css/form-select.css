@@ -11,4 +11,4 @@ select[multiple][wfu-form-select-theme=blue-padded] option {
 select[multiple][wfu-form-select-theme=blue-padded] option:checked {
   background-color: #1967D2;
   color: white;
-}/*# sourceMappingURL=form-select.css.map */
+}

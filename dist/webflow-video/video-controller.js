@@ -127,7 +127,7 @@
   })(Sa5Attribute || {});
 
   // src/version.ts
-  var VERSION = "5.8.2";
+  var VERSION = "5.8.3";
 
   // src/storage-utils.ts
   var StorageUtils = class {

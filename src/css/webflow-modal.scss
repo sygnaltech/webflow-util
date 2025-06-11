@@ -3,8 +3,9 @@
  * Webflow modal
  */
 
- @use '../webflow-modal/modal';
-
+@use '../webflow-modal/modal';
+@use '../webflow-core/preload';
+ 
 // override editor warning on small screen 
 // also Search engine results warning
 // "Unsupported Page"

@@ -251,7 +251,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.2";
+  var VERSION = "5.8.3";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -920,20 +920,24 @@
   var Sa5Dismiss = class {
     constructor(element) {
       this._element = element;
+      this.debug = new Sa5Debug("sa5-dismiss");
+      this.debug.debug(`Initializing v${VERSION}`);
     }
-    getModalKeyName() {
+    getKeyName() {
       return `wfu-dismiss_${this._name}`;
     }
     isDismissed() {
       const dismissed = getCookie(
-        this.getModalKeyName()
+        this.getKeyName()
       );
+      this.debug.debug("is-dismissed", this._name, this.getKeyName(), dismissed);
       return dismissed;
     }
-    dismiss(val, duration) {
+    dismiss(duration) {
+      this.debug.debug("dismissed", this._name, this.getKeyName(), duration);
       setCookie(
-        this.getModalKeyName(),
-        val,
+        this.getKeyName(),
+        "true",
         {
           expires: duration
         }
@@ -941,7 +945,7 @@
     }
     unDismiss() {
       removeCookie(
-        this.getModalKeyName()
+        this.getKeyName()
       );
     }
     init() {
@@ -955,17 +959,19 @@
       this._element.removeAttribute(
         "wfu-dismiss-trigger" /* ATTR_DISMISS_TRIGGER */
       );
-      document.querySelectorAll(
-        Sa5Attribute.getBracketed("wfu-dismiss-close" /* ATTR_DISMISS_CLOSE */)
-      ).forEach((element) => {
+      const selector3 = Sa5Attribute.getBracketed("wfu-dismiss-close" /* ATTR_DISMISS_CLOSE */);
+      const nodes = Array.from(this._element.querySelectorAll(selector3));
+      if (this._element.matches(selector3)) {
+        nodes.unshift(this._element);
+      }
+      nodes.forEach((element) => {
+        this.debug.debug("Installing close button.");
         element.addEventListener("click", () => {
+          this.debug.debug("Close button clicked.");
           const modalClose = element;
           const modal = modalClose.closest(
             Sa5Attribute.getBracketed("wfu-dismiss" /* ATTR_DISMISS */)
           );
-          const modalCloseVal = modalClose.getAttribute(
-            "wfu-dismiss-close" /* ATTR_DISMISS_CLOSE */
-          ) || "true";
           const modalCloseType = modal.getAttribute(
             "wfu-dismiss-close-type" /* ATTR_DISMISS_CLOSE_TYPE */
           ) || "auto";
@@ -973,7 +979,6 @@
             "wfu-dismiss-suppress-days" /* ATTR_DISMISS_DAYS */
           )) || 9999;
           this.dismiss(
-            modalCloseVal,
             modalSuppressDuration
           );
           switch (modalCloseType) {
@@ -986,6 +991,7 @@
           }
         });
       });
+      this._element.removeAttribute("wfu-preload" /* ATTR_PRELOAD */);
     }
   };
 
