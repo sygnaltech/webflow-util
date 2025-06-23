@@ -89,7 +89,7 @@ export class Sa5Kiosk {
           // Parse its JSON content
           try {
             const configData: unknown = JSON.parse(kioskConfigScript.textContent || '');
-            this.debug.debug('Parsed configuration:', configData);
+            this.debug.debug('Parsed configuration:', JSON.stringify(configData,null,1));
 
             // Optionally: Narrow type if you know the shape of the config object
             // Example: Check if configData is of type { homePath: string; userAgent: string }
@@ -97,10 +97,10 @@ export class Sa5Kiosk {
 
               // Merge the default configuration with the parsed configuration
               const mergedConfig: KioskConfig = { ...defaultConfig, ...configData };
-              this.debug.debug('Merged configuration:', mergedConfig);
+              this.debug.debug('Merged configuration:', JSON.stringify(mergedConfig,null,1));
 
+              // Save the config
               this.kioskConfig = mergedConfig; 
-//              return mergedConfig; // Return the merged configuration
 
             } else {
               console.error('Invalid KioskConfig format:', configData);
@@ -154,19 +154,30 @@ export class Sa5Kiosk {
 
         this.loadConfig(); 
 
-        if(this.isKioskMode) {
+        if(this.isKioskMode()) {
+
+          this.debug.debug("INIT - KIOSK MODE!")
+
+          // Add 'kiosk' class to <body> 
+          // to support custom CSS 
+          document.body.classList.add("kiosk");
+
+          // Show kiosk-specific elements 
           const showElements = document.querySelectorAll<HTMLElement>(".kiosk-show");
           showElements.forEach((element) => {
             element.classList.remove("kiosk-show");
           });
 
-          document.body.classList.add("kiosk");
-
         } else {
+
+          this.debug.debug("INIT - DESKTOP MODE!")
+
+          // Show non-kiosk elements
           const hideElements = document.querySelectorAll<HTMLElement>(".kiosk-hide");
           hideElements.forEach((element) => {
             element.classList.remove("kiosk-hide");
           });
+
         }
 
         // Init Inactivity Timer 
@@ -209,6 +220,8 @@ export class Sa5Kiosk {
       // Check if the browser's user agent matches the kioskConfig user agent
       const currentUserAgent = navigator.userAgent;
     
+      this.debug.debug("Checking kiosk mode", new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent), currentUserAgent);
+
       // Use case-insensitive comparison for matching
       return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
     }

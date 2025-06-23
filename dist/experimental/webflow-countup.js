@@ -341,7 +341,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.3";
+  var VERSION = "5.8.4";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {

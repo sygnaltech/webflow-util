@@ -251,7 +251,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.3";
+  var VERSION = "5.8.4";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -842,10 +842,10 @@
         this.debug.debug("Found the specific KioskConfig script:", kioskConfigScript);
         try {
           const configData = JSON.parse(kioskConfigScript.textContent || "");
-          this.debug.debug("Parsed configuration:", configData);
+          this.debug.debug("Parsed configuration:", JSON.stringify(configData, null, 1));
           if (isKioskConfig(configData)) {
             const mergedConfig = { ...defaultConfig, ...configData };
-            this.debug.debug("Merged configuration:", mergedConfig);
+            this.debug.debug("Merged configuration:", JSON.stringify(mergedConfig, null, 1));
             this.kioskConfig = mergedConfig;
           } else {
             console.error("Invalid KioskConfig format:", configData);
@@ -864,13 +864,15 @@
     init() {
       let core = Sa5Core.startup();
       this.loadConfig();
-      if (this.isKioskMode) {
+      if (this.isKioskMode()) {
+        this.debug.debug("INIT - KIOSK MODE!");
+        document.body.classList.add("kiosk");
         const showElements = document.querySelectorAll(".kiosk-show");
         showElements.forEach((element) => {
           element.classList.remove("kiosk-show");
         });
-        document.body.classList.add("kiosk");
       } else {
+        this.debug.debug("INIT - DESKTOP MODE!");
         const hideElements = document.querySelectorAll(".kiosk-hide");
         hideElements.forEach((element) => {
           element.classList.remove("kiosk-hide");
@@ -894,6 +896,7 @@
     }
     isKioskMode() {
       const currentUserAgent = navigator.userAgent;
+      this.debug.debug("Checking kiosk mode", new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent), currentUserAgent);
       return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
     }
     resetInactivityTimer() {
