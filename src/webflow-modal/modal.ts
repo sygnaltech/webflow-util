@@ -14,6 +14,8 @@ import { Sa5Debug } from '../webflow-core/debug';
 import { gsap } from "gsap";
 import { Sa5ModalController, ModalRule } from './modal-controller';
 import { Sa5ModalGateController } from './modal-gate-controller';
+import { Utils } from 'handlebars';
+import { parseDuration } from '../utils';
 
 /**
  * EVENTS
@@ -57,11 +59,41 @@ export class Sa5Modal {
     suppressDuration: string; // SA5 duration 
     name: string;  
 
+    //#region EVENTS
+
     private closeResolver?: (result: boolean) => void; // Resolver for Promise    
 
+    //#endregion
+
+    //#region PROPERTYS
+
+    /**
+     * Returns the modal's key for storage. 
+     */
     get key(): string {
         return `sa5-modal_${this.name}`; 
     }
+
+    /**
+     * Determines if the modal is currently suppressed. 
+     * @returns true if suppressed 
+     */
+    get isSuppressed(): boolean {
+        switch (this.suppressMode) {
+            case ModalSuppressMode.Session:
+                return sessionStorage.getItem(this.key) === 'true';
+            case ModalSuppressMode.Forever:
+            case ModalSuppressMode.Duration:
+                return this.getCookie(this.key) === 'true';
+            case ModalSuppressMode.None:
+            default:
+                return false;
+        }
+    }
+
+    //#endregion 
+
+    //#region CONSTRUCTOR 
 
     constructor(elem: HTMLElement, controller?: Sa5ModalController, config: Partial<Sa5ModalConfig> = {}) {
 
@@ -86,6 +118,10 @@ export class Sa5Modal {
         let core: Sa5Core = Sa5Core.startup(); 
 
     }
+
+    //#endregion 
+
+    //#region METHODS
 
     private normalizeConfig(config: Partial<Sa5ModalConfig>): Partial<Sa5ModalConfig> {
         if (config.mode && typeof config.mode === 'string') {
@@ -165,30 +201,83 @@ export class Sa5Modal {
         debug.debug ("Modal initialized.", this.config);
 
         // Name
-        if(this.elem.hasAttribute("wfu-modal")) {
-            this.name = this.elem.getAttribute("wfu-modal");
+        if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL)) { //  "wfu-modal" 
+            this.name = this.elem.getAttribute(Sa5Attribute.ATTR_MODAL);
         }
 
         // Trigger: Timer
-        if(this.elem.hasAttribute("wfu-modal-trigger-timer")) {
-            this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
+        if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_TRIGGER_TIMER)) { // "wfu-modal-trigger-timer" 
+            const modalTriggerDelay = this.elem.getAttribute(Sa5Attribute.ATTR_MODAL_TRIGGER_TIMER); 
+//            parseDuration(modalTriggerDelay, "ms"); 
+            console.log("trigger timer found", modalTriggerDelay, parseDuration(modalTriggerDelay, "ms"))
+            this.timer = parseDuration(modalTriggerDelay, "ms"); 
         }
 
         // Suppress
-        if(this.elem.hasAttribute("wfu-modal-suppress")) {
+        if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS)) { //  "wfu-modal-suppress" 
 
-            const suppressValue = this.elem.getAttribute('wfu-modal-suppress');
+            const suppressValue = this.elem.getAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS); 
 
             if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue as ModalSuppressMode)) {
                 this.suppressMode = suppressValue as ModalSuppressMode;
             } else {
                 this.suppressMode = ModalSuppressMode.Duration;
-                this.suppressDuration = suppressValue || '';
+                this.suppressDuration = '1d'; // suppressValue || '';
             }
 
 
 //            this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
         }
+
+        // Suppress Duration
+        if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS_DURATION)) { //  "wfu-modal-suppress-duration" 
+            this.suppressDuration = this.elem.getAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS_DURATION) || '1d'; 
+        }
+
+        // Check for additional close buttons 
+
+        // Setup close buttons 
+        let closeButtons: Array<HTMLElement> = Array.from(
+            this.elem.querySelectorAll( 
+                Sa5Attribute.getBracketed(
+                    Sa5Attribute.ATTR_MODAL_CLOSE // "wfu-modal-close" 
+                )
+            ));
+        closeButtons.forEach(element => { 
+            element.addEventListener("click", async (e) => { 
+
+                // Initialize suppression settings to modal defaults 
+                let suppressMode = this.suppressMode;
+                let suppressDuration = this.suppressDuration; 
+
+                console.log("Closing modal")
+
+                // Suppress
+                if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS)) { //  "wfu-modal-suppress" 
+
+                    const suppressValue = element.getAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS); 
+
+                    if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue as ModalSuppressMode)) {
+                        suppressMode = suppressValue as ModalSuppressMode;
+                    } else {
+                        suppressMode = ModalSuppressMode.Duration;
+                        suppressDuration = '1d'; // suppressValue || '';
+                    }
+
+                }
+
+                // Suppress Duration
+                if(this.elem.hasAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS_DURATION)) { //  "wfu-modal-suppress-duration" 
+                    suppressDuration = element.getAttribute(Sa5Attribute.ATTR_MODAL_SUPPRESS_DURATION) || '1d'; 
+                }
+
+                // Close modal 
+                this.close(suppressMode, suppressDuration);
+                
+            });
+        }); 
+
+
 
 
         // // Setup gate buttons 
@@ -254,10 +343,19 @@ export class Sa5Modal {
             }
         }
 
+        // Exit if modal is suppressed 
+        // unless this is a forced display situation  
         if(!force) {
-            if(this.isSuppressed())
+            if(this.isSuppressed)
                 return; // skip open, suppressed
         }
+
+
+
+
+
+
+
 
         return new Promise<boolean>((resolve) => { 
 
@@ -288,13 +386,14 @@ export class Sa5Modal {
             // Suppress
             switch (this.suppressMode) {
                 case ModalSuppressMode.Forever:
-                    this.setCookie(this.key, 'true', Infinity);
+                    this.setCookie(this.key, 'true', '10y'); // Infinity);
                     break;
                 case ModalSuppressMode.Session:
                     sessionStorage.setItem(this.key, 'true');
                     break;
                 case ModalSuppressMode.Duration:
                     // Handle duration if needed
+                    this.setCookie(this.key, 'true', this.suppressDuration);
                     break;
                 default:
                 case ModalSuppressMode.None:
@@ -306,7 +405,11 @@ export class Sa5Modal {
 
     }
 
-    close(openGate: boolean = false) {
+    close(
+        suppressMode: ModalSuppressMode = ModalSuppressMode.None,
+        suppressDuration: string = '1d', // SA5 duration 
+        openGate: boolean = false
+    ) {
 
         // If this modal is configured for view gate, 
         // open the gate 
@@ -317,6 +420,29 @@ export class Sa5Modal {
 
 //         }
 
+
+        // Suppress modal 
+        switch (suppressMode) {
+            case ModalSuppressMode.Forever:
+                console.log(`Suppressing modal ${this.name} for 10y`); 
+                this.setCookie(this.key, 'true', '10y'); // Infinity);
+                break; 
+            case ModalSuppressMode.Session:
+                console.log(`Suppressing modal ${this.name} for session`); 
+                sessionStorage.setItem(this.key, 'true');
+                break;
+            case ModalSuppressMode.Duration:
+                // Handle duration if needed
+                console.log(`Suppressing modal ${this.name} for ${suppressDuration}`); 
+                this.setCookie(this.key, 'true', suppressDuration);
+                break;
+            default:
+            case ModalSuppressMode.None:
+                // Do nothing
+                break;
+        } 
+
+        // Close modal visually 
         const overlayId = this.modalContainer.dataset.overlayId;
         const overlay = document.getElementById(overlayId);
         if (overlay) {
@@ -339,26 +465,20 @@ export class Sa5Modal {
 
     }
 
-    isSuppressed(): boolean {
-        switch (this.suppressMode) {
-            case ModalSuppressMode.Forever:
-                return this.getCookie(this.key) === 'true';
-            case ModalSuppressMode.Session:
-                return sessionStorage.getItem(this.key) === 'true';
-            case ModalSuppressMode.Duration:
-                // Implement logic for duration if needed
-                return false;
-            default:
-            case ModalSuppressMode.None:
-                return false;
-        }
-    }
+    /**
+     * Sets the suppression cookie 
+     * @param name Cookie name
+     * @param value Cookie value to set 
+     * @param duration Cookie duration. SA5 duration, defaults to days when no unit specified. 
+     */
+    setCookie(name: string, value: string, duration: string) {
 
-    setCookie(name: string, value: string, days: number) {
+        const ms: number = parseDuration(duration, 'd'); 
+
         let expires = '';
-        if (days) {
+        if (ms) { // days) {
             const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            date.setTime(date.getTime() + ms); // (days * 24 * 60 * 60 * 1000));
             expires = `; expires=${date.toUTCString()}`;
         }
         document.cookie = `${name}=${value || ''}${expires}; path=/`;
@@ -374,6 +494,8 @@ export class Sa5Modal {
         }
         return null;
     }
+
+    //#endregion 
 
 }
 

@@ -675,3 +675,42 @@ export function shuffleArray(array: any[]) {
 
 
 
+
+/**
+ * Parses a duration string into milliseconds. 
+ * @param input The duration with an optional multiplier, e.g. 10, 10ms, 5h, 2y 
+ * @param defaultUnit The multiplier to apply when no unit is specified. Defaults to ms 
+ * @returns Duration in ms  
+ */
+export function parseDuration(input: string, defaultUnit: string = "ms"): number {
+  const cleaned = input.replace(/\s+/g, ''); // Remove all whitespace
+  const regex = /^(\d+)(ms|s|m|h|d|w|M|y)?$/;
+  const match = cleaned.match(regex);
+
+  if (!match) {
+    throw new Error(`Invalid duration format: "${input}"`);
+  }
+
+  const value = parseInt(match[1], 10);
+  const unit = match[2] ?? defaultUnit; // Use provided default unit or "ms"
+
+  const multipliers: Record<string, number> = {
+    ms: 1,
+    s: 1000,
+    m: 60 * 1000,
+    h: 60 * 60 * 1000,
+    d: 24 * 60 * 60 * 1000,
+    w: 7 * 24 * 60 * 60 * 1000,
+    M: 30 * 24 * 60 * 60 * 1000,
+    y: 365 * 24 * 60 * 60 * 1000
+  };
+
+  if (!(unit in multipliers)) {
+    throw new Error(`Unknown duration unit: "${unit}"`);
+  }
+
+  return value * multipliers[unit];
+}
+
+
+

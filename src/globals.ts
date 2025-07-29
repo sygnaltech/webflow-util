@@ -147,14 +147,17 @@ export enum Sa5Attribute {
     // Modals
     ATTR_MODAL = 'wfu-modal', 
     ATTR_MODAL_TRIGGER_CLICK = 'wfu-modal-trigger-click',
+    ATTR_MODAL_TRIGGER_TIMER = 'wfu-modal-trigger-timer', 
     ATTR_MODAL_STATE = 'wfu-modal-state', // INTERNAL - hidden 
+    ATTR_MODAL_SUPPRESS = 'wfu-modal-suppress', 
+    ATTR_MODAL_SUPPRESS_DURATION = 'wfu-modal-suppress-duration', 
     ATTR_MODAL_GATE = 'wfu-modal-gate', 
     ATTR_MODAL_GATE_VIEW = 'wfu-modal-gate-view', 
     ATTR_MODAL_GATE_BUTTON = 'wfu-modal-gate-button', 
     ATTR_MODAL_GATE_FORM = 'wfu-modal-gate-form', 
 
     // ATTR_MODAL_TRIGGER = 'wfu-modal-trigger',
-    // ATTR_MODAL_CLOSE = 'wfu-modal-close',
+    ATTR_MODAL_CLOSE = 'wfu-modal-close',
     // ATTR_MODAL_CLOSE_TYPE = 'wfu-modal-close-type',
     // ATTR_MODAL_SUPPRESS_DAYS = 'wfu-modal-suppress-days',
 

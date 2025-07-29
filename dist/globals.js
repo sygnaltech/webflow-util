@@ -103,11 +103,15 @@
     Sa5Attribute2["ATTR_DISMISS_DAYS"] = "wfu-dismiss-suppress-days";
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
     Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
+    Sa5Attribute2["ATTR_MODAL_TRIGGER_TIMER"] = "wfu-modal-trigger-timer";
     Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS"] = "wfu-modal-suppress";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS_DURATION"] = "wfu-modal-suppress-duration";
     Sa5Attribute2["ATTR_MODAL_GATE"] = "wfu-modal-gate";
     Sa5Attribute2["ATTR_MODAL_GATE_VIEW"] = "wfu-modal-gate-view";
     Sa5Attribute2["ATTR_MODAL_GATE_BUTTON"] = "wfu-modal-gate-button";
     Sa5Attribute2["ATTR_MODAL_GATE_FORM"] = "wfu-modal-gate-form";
+    Sa5Attribute2["ATTR_MODAL_CLOSE"] = "wfu-modal-close";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";

@@ -81,11 +81,15 @@
     Sa5Attribute2["ATTR_DISMISS_DAYS"] = "wfu-dismiss-suppress-days";
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
     Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
+    Sa5Attribute2["ATTR_MODAL_TRIGGER_TIMER"] = "wfu-modal-trigger-timer";
     Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS"] = "wfu-modal-suppress";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS_DURATION"] = "wfu-modal-suppress-duration";
     Sa5Attribute2["ATTR_MODAL_GATE"] = "wfu-modal-gate";
     Sa5Attribute2["ATTR_MODAL_GATE_VIEW"] = "wfu-modal-gate-view";
     Sa5Attribute2["ATTR_MODAL_GATE_BUTTON"] = "wfu-modal-gate-button";
     Sa5Attribute2["ATTR_MODAL_GATE_FORM"] = "wfu-modal-gate-form";
+    Sa5Attribute2["ATTR_MODAL_CLOSE"] = "wfu-modal-close";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -251,7 +255,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.4";
+  var VERSION = "5.8.5";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -5333,6 +5337,32 @@
     }
   };
 
+  // src/utils.ts
+  function parseDuration(input, defaultUnit = "ms") {
+    const cleaned = input.replace(/\s+/g, "");
+    const regex = /^(\d+)(ms|s|m|h|d|w|M|y)?$/;
+    const match = cleaned.match(regex);
+    if (!match) {
+      throw new Error(`Invalid duration format: "${input}"`);
+    }
+    const value = parseInt(match[1], 10);
+    const unit = match[2] ?? defaultUnit;
+    const multipliers = {
+      ms: 1,
+      s: 1e3,
+      m: 60 * 1e3,
+      h: 60 * 60 * 1e3,
+      d: 24 * 60 * 60 * 1e3,
+      w: 7 * 24 * 60 * 60 * 1e3,
+      M: 30 * 24 * 60 * 60 * 1e3,
+      y: 365 * 24 * 60 * 60 * 1e3
+    };
+    if (!(unit in multipliers)) {
+      throw new Error(`Unknown duration unit: "${unit}"`);
+    }
+    return value * multipliers[unit];
+  }
+
   // src/webflow-modal/modal.ts
   var ModalSuppressMode = /* @__PURE__ */ ((ModalSuppressMode2) => {
     ModalSuppressMode2["None"] = "none";
@@ -5358,6 +5388,18 @@
     }
     get key() {
       return `sa5-modal_${this.name}`;
+    }
+    get isSuppressed() {
+      switch (this.suppressMode) {
+        case "session" /* Session */:
+          return sessionStorage.getItem(this.key) === "true";
+        case "forever" /* Forever */:
+        case "duration" /* Duration */:
+          return this.getCookie(this.key) === "true";
+        case "none" /* None */:
+        default:
+          return false;
+      }
     }
     normalizeConfig(config3) {
       if (config3.mode && typeof config3.mode === "string") {
@@ -5411,21 +5453,53 @@
     init() {
       let debug = new Sa5Debug("sa5-modal");
       debug.debug("Modal initialized.", this.config);
-      if (this.elem.hasAttribute("wfu-modal")) {
-        this.name = this.elem.getAttribute("wfu-modal");
+      if (this.elem.hasAttribute("wfu-modal" /* ATTR_MODAL */)) {
+        this.name = this.elem.getAttribute("wfu-modal" /* ATTR_MODAL */);
       }
-      if (this.elem.hasAttribute("wfu-modal-trigger-timer")) {
-        this.timer = Number(this.elem.getAttribute("wfu-modal-trigger-timer"));
+      if (this.elem.hasAttribute("wfu-modal-trigger-timer" /* ATTR_MODAL_TRIGGER_TIMER */)) {
+        const modalTriggerDelay = this.elem.getAttribute("wfu-modal-trigger-timer" /* ATTR_MODAL_TRIGGER_TIMER */);
+        console.log("trigger timer found", modalTriggerDelay, parseDuration(modalTriggerDelay, "ms"));
+        this.timer = parseDuration(modalTriggerDelay, "ms");
       }
-      if (this.elem.hasAttribute("wfu-modal-suppress")) {
-        const suppressValue = this.elem.getAttribute("wfu-modal-suppress");
+      if (this.elem.hasAttribute("wfu-modal-suppress" /* ATTR_MODAL_SUPPRESS */)) {
+        const suppressValue = this.elem.getAttribute("wfu-modal-suppress" /* ATTR_MODAL_SUPPRESS */);
         if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue)) {
           this.suppressMode = suppressValue;
         } else {
           this.suppressMode = "duration" /* Duration */;
-          this.suppressDuration = suppressValue || "";
+          this.suppressDuration = "1d";
         }
       }
+      if (this.elem.hasAttribute("wfu-modal-suppress-duration" /* ATTR_MODAL_SUPPRESS_DURATION */)) {
+        this.suppressDuration = this.elem.getAttribute("wfu-modal-suppress-duration" /* ATTR_MODAL_SUPPRESS_DURATION */) || "1d";
+      }
+      let closeButtons = Array.from(
+        this.elem.querySelectorAll(
+          Sa5Attribute.getBracketed(
+            "wfu-modal-close" /* ATTR_MODAL_CLOSE */
+          )
+        )
+      );
+      closeButtons.forEach((element) => {
+        element.addEventListener("click", async (e) => {
+          let suppressMode = this.suppressMode;
+          let suppressDuration = this.suppressDuration;
+          console.log("Closing modal");
+          if (this.elem.hasAttribute("wfu-modal-suppress" /* ATTR_MODAL_SUPPRESS */)) {
+            const suppressValue = element.getAttribute("wfu-modal-suppress" /* ATTR_MODAL_SUPPRESS */);
+            if (suppressValue && Object.values(ModalSuppressMode).includes(suppressValue)) {
+              suppressMode = suppressValue;
+            } else {
+              suppressMode = "duration" /* Duration */;
+              suppressDuration = "1d";
+            }
+          }
+          if (this.elem.hasAttribute("wfu-modal-suppress-duration" /* ATTR_MODAL_SUPPRESS_DURATION */)) {
+            suppressDuration = element.getAttribute("wfu-modal-suppress-duration" /* ATTR_MODAL_SUPPRESS_DURATION */) || "1d";
+          }
+          this.close(suppressMode, suppressDuration);
+        });
+      });
       document.body.appendChild(this.modalContainer);
       if (this.timer) {
         setTimeout(() => {
@@ -5445,7 +5519,7 @@
         }
       }
       if (!force) {
-        if (this.isSuppressed())
+        if (this.isSuppressed)
           return;
       }
       return new Promise((resolve) => {
@@ -5468,12 +5542,13 @@
         this.modalContainer.dataset.overlayId = overlayId;
         switch (this.suppressMode) {
           case "forever" /* Forever */:
-            this.setCookie(this.key, "true", Infinity);
+            this.setCookie(this.key, "true", "10y");
             break;
           case "session" /* Session */:
             sessionStorage.setItem(this.key, "true");
             break;
           case "duration" /* Duration */:
+            this.setCookie(this.key, "true", this.suppressDuration);
             break;
           default:
           case "none" /* None */:
@@ -5481,7 +5556,24 @@
         }
       });
     }
-    close(openGate = false) {
+    close(suppressMode = "none" /* None */, suppressDuration = "1d", openGate = false) {
+      switch (suppressMode) {
+        case "forever" /* Forever */:
+          console.log(`Suppressing modal ${this.name} for 10y`);
+          this.setCookie(this.key, "true", "10y");
+          break;
+        case "session" /* Session */:
+          console.log(`Suppressing modal ${this.name} for session`);
+          sessionStorage.setItem(this.key, "true");
+          break;
+        case "duration" /* Duration */:
+          console.log(`Suppressing modal ${this.name} for ${suppressDuration}`);
+          this.setCookie(this.key, "true", suppressDuration);
+          break;
+        default:
+        case "none" /* None */:
+          break;
+      }
       const overlayId = this.modalContainer.dataset.overlayId;
       const overlay = document.getElementById(overlayId);
       if (overlay) {
@@ -5500,24 +5592,12 @@
         this.closeResolver = void 0;
       }
     }
-    isSuppressed() {
-      switch (this.suppressMode) {
-        case "forever" /* Forever */:
-          return this.getCookie(this.key) === "true";
-        case "session" /* Session */:
-          return sessionStorage.getItem(this.key) === "true";
-        case "duration" /* Duration */:
-          return false;
-        default:
-        case "none" /* None */:
-          return false;
-      }
-    }
-    setCookie(name, value, days) {
+    setCookie(name, value, duration) {
+      const ms = parseDuration(duration, "d");
       let expires = "";
-      if (days) {
+      if (ms) {
         const date = new Date();
-        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
+        date.setTime(date.getTime() + ms);
         expires = `; expires=${date.toUTCString()}`;
       }
       document.cookie = `${name}=${value || ""}${expires}; path=/`;
@@ -5598,7 +5678,7 @@
             console.error(`Requested modal ${modalKey} not found.`);
             return;
           }
-          modal.display();
+          modal.display(true);
         });
       });
       const gateController = new Sa5ModalGateController(this);

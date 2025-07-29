@@ -258,5 +258,29 @@
     }
     return array;
   }
+  function parseDuration(input, defaultUnit = "ms") {
+    const cleaned = input.replace(/\s+/g, "");
+    const regex = /^(\d+)(ms|s|m|h|d|w|M|y)?$/;
+    const match = cleaned.match(regex);
+    if (!match) {
+      throw new Error(`Invalid duration format: "${input}"`);
+    }
+    const value = parseInt(match[1], 10);
+    const unit = match[2] ?? defaultUnit;
+    const multipliers = {
+      ms: 1,
+      s: 1e3,
+      m: 60 * 1e3,
+      h: 60 * 60 * 1e3,
+      d: 24 * 60 * 60 * 1e3,
+      w: 7 * 24 * 60 * 60 * 1e3,
+      M: 30 * 24 * 60 * 60 * 1e3,
+      y: 365 * 24 * 60 * 60 * 1e3
+    };
+    if (!(unit in multipliers)) {
+      throw new Error(`Unknown duration unit: "${unit}"`);
+    }
+    return value * multipliers[unit];
+  }
 })();
 //# sourceMappingURL=utils.js.map

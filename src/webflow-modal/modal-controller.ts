@@ -197,7 +197,7 @@ export class Sa5ModalController {
                     return; 
                 }
 
-                modal.display();
+                modal.display(true); // force  
     
             }); 
 
