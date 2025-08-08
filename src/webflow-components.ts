@@ -8,7 +8,7 @@
 
 
 export class CoreComponent {
-    root: Element;
+  root: Element;
   
   constructor(scriptElement: HTMLScriptElement) {
     this.root = scriptElement.parentElement!.parentElement!;
@@ -16,77 +16,79 @@ export class CoreComponent {
 
   init() {
     this.applyDynamicAttrs();
-//    this.cleanupDirectives(); 
+    this.cleanupDirectives(); 
   }
 
-private applyDynamicAttrs(): void {
-  const allElements = this.root.querySelectorAll('*');
+  private applyDynamicAttrs(): void {
+    const allElements = this.root.querySelectorAll('*');
 
-  for (const el of [this.root, ...allElements]) {
-    for (const attr of Array.from(el.attributes)) {
-      const name = attr.name;
-      const val = attr.value;
+    for (const el of [this.root, ...allElements]) {
+      for (const attr of Array.from(el.attributes)) {
+        const name = attr.name;
+        const val = attr.value;
 
-      // Boolean attribute logic: x:*:bool-truthy
-      if (name.startsWith('x:') && name.endsWith(':bool-truthy')) {
-        const actualAttr = name.slice(2, -12);
-        if (this.isTruthy(val)) {
-          el.setAttribute(actualAttr, '');
-        } else {
-          el.removeAttribute(actualAttr);
+        // Boolean attribute logic: x:*:bool-truthy
+        if (name.startsWith('x:') && name.endsWith(':bool-truthy')) {
+          const actualAttr = name.slice(2, -12);
+          if (this.isTruthy(val)) {
+            el.setAttribute(actualAttr, '');
+          } else {
+            el.removeAttribute(actualAttr);
+          }
+        }
+
+        // "from" attribute logic: x:*:from
+        if (name.startsWith('x:') && name.endsWith(':from')) {
+          const targetAttr = name.slice(2, -5); // removes 'x:' and ':from'
+
+          const match = val.match(/^([+-])\[(.+)\]$/);
+          if (!match) continue;
+
+          const direction = match[1]; // '+' or '-'
+          const sourceAttr = match[2];
+
+          let sibling: Element | null = null;
+          if (direction === '+') sibling = el.nextElementSibling;
+          if (direction === '-') sibling = el.previousElementSibling;
+          if (!sibling) continue;
+
+          const sourceValue = sibling.getAttribute(sourceAttr);
+          if (sourceValue !== null) {
+            el.setAttribute(targetAttr, sourceValue);
+          } else {
+            el.removeAttribute(targetAttr);
+          }
+          
         }
       }
+    }
+  }
 
-      // "from" attribute logic: x:*:from
-      if (name.startsWith('x:') && name.endsWith(':from')) {
-        const targetAttr = name.slice(2, -5); // removes 'x:' and ':from'
+  private cleanupDirectives(): void {
+    const allElements = this.root.querySelectorAll('*');
 
-        const match = val.match(/^([+-])\[(.+)\]$/);
-        if (!match) continue;
+    for (const el of [this.root, ...allElements]) {
 
-        const direction = match[1]; // '+' or '-'
-        const sourceAttr = match[2];
+      // Remove elements with cc-remove
+      if (el.hasAttribute('cc-remove')) {
+        el.remove();
+        continue; // skip further processing
+      } 
 
-        let sibling: Element | null = null;
-        if (direction === '+') sibling = el.nextElementSibling;
-        if (direction === '-') sibling = el.previousElementSibling;
-        if (!sibling) continue;
+      // Unwrap elements with cc-unwrap
+      if (el.hasAttribute('cc-unwrap')) {
+        const parent = el.parentElement;
+        if (!parent) continue;
 
-        const sourceValue = sibling.getAttribute(sourceAttr);
-        if (sourceValue !== null) {
-          el.setAttribute(targetAttr, sourceValue);
-        } else {
-          el.removeAttribute(targetAttr);
+        while (el.firstChild) {
+          parent.insertBefore(el.firstChild, el);
         }
-        
-      }
+
+        el.remove();
+      } 
+
     }
   }
-}
-
-private cleanupDirectives(): void {
-  const allElements = this.root.querySelectorAll('*');
-
-  for (const el of [this.root, ...allElements]) {
-    // Remove elements with cc-remove
-    if (el.hasAttribute('cc-remove')) {
-      el.remove();
-      continue; // skip further processing
-    }
-
-    // Unwrap elements with cc-unwrap
-    if (el.hasAttribute('cc-unwrap')) {
-      const parent = el.parentElement;
-      if (!parent) continue;
-
-      while (el.firstChild) {
-        parent.insertBefore(el.firstChild, el);
-      }
-
-      el.remove();
-    }
-  }
-}
 
   private isTruthy(value: string | null): boolean {
     if (!value) return false;

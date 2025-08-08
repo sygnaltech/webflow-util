@@ -6,6 +6,7 @@
     }
     init() {
       this.applyDynamicAttrs();
+      this.cleanupDirectives();
     }
     applyDynamicAttrs() {
       const allElements = this.root.querySelectorAll("*");
