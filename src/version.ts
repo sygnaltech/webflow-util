@@ -1,4 +1,4 @@
 
-export const VERSION = '5.8.7'; // Update this manually on each release
+export const VERSION = '5.8.8'; // Update this manually on each release
 
 

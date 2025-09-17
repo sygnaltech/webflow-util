@@ -97,11 +97,11 @@
  * apply skeleton loader effect to elements targeted for parsing by WFU.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Redacted&display=swap');
 
  
 .w-richtext[wfu-lists-loading] li {
-    font-family: 'Redacted', cursive;
+//    font-family: 'Redacted', cursive;
     color: black;
     em {
         font-style: normal;

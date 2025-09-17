@@ -8,7 +8,6 @@
  * the imported file have to be accessed with a namespace based on the filename. 
  * This helps to prevent naming conflicts and makes the code easier to understand.
  */
-@import url("https://fonts.googleapis.com/css2?family=Redacted&display=swap");
 /* IMPORTANT 
    1. For this to work smoothly we need consistent specificity, so we run with; {0,0,2} 
       which is one [] plus one :nth-child()  
@@ -815,7 +814,6 @@ markdown {
  * apply skeleton loader effect to elements targeted for parsing by WFU.
  */
 .w-richtext[wfu-lists-loading] li {
-  font-family: "Redacted", cursive;
   color: black;
   display: inline-block;
   animation: skeleton-loading 1s linear infinite alternate;
