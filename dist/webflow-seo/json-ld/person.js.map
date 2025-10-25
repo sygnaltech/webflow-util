@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../../src/webflow-seo/json-ld/person.ts"],
-  "sourcesContent": ["\nexport class LdJsonPerson {\n\n    name;\n    url;\n  \n    constructor(name = undefined, url = undefined) { \n        \n        this[\"@type\"] = \"Person\";\n        this.name = name; \n        this.url = url; \n    }\n  \n  }\n  "],
+  "sourcesContent": ["\r\nexport class LdJsonPerson {\r\n\r\n    name;\r\n    url;\r\n  \r\n    constructor(name = undefined, url = undefined) { \r\n        \r\n        this[\"@type\"] = \"Person\";\r\n        this.name = name; \r\n        this.url = url; \r\n    }\r\n  \r\n  }\r\n  "],
   "mappings": ";;AACO,MAAM,eAAN,MAAmB;AAAA,IAKtB,YAAY,OAAO,QAAW,MAAM,QAAW;AAE3C,WAAK,WAAW;AAChB,WAAK,OAAO;AACZ,WAAK,MAAM;AAAA,IACf;AAAA,EAEF;",
   "names": []
 }

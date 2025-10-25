@@ -255,7 +255,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.8";
+  var VERSION = "5.8.9";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -863,11 +863,13 @@
       function isKioskConfig(obj) {
         return typeof obj === "object" && obj !== null && ("homePath" in obj ? typeof obj.homePath === "string" : true) && ("userAgent" in obj ? typeof obj.userAgent === "string" : true) && ("inactivityTimer" in obj ? typeof obj.inactivityTimer === "string" : true);
       }
-      this.kioskConfig = defaultConfig;
+      if (!this.kioskConfig)
+        this.kioskConfig = defaultConfig;
     }
     init() {
       let core = Sa5Core.startup();
       this.loadConfig();
+      this.processKioskQueryParam();
       if (this.isKioskMode()) {
         this.debug.debug("INIT - KIOSK MODE!");
         document.body.classList.add("kiosk");
@@ -899,9 +901,17 @@
       this.resetInactivityTimer();
     }
     isKioskMode() {
+      const cookieVal = this.getCookie("sa5_kiosk");
+      if (cookieVal !== null && cookieVal !== void 0) {
+        const result = this.stringToBoolean(cookieVal);
+        this.debug.debug("Kiosk mode via cookie override", result, cookieVal);
+        console.log(`[sa5-kiosk] Kiosk mode determined by cookie override: ${result} (sa5_kiosk=${cookieVal})`);
+        return result;
+      }
       const currentUserAgent = navigator.userAgent;
-      this.debug.debug("Checking kiosk mode", new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent), currentUserAgent);
-      return new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
+      const uaMatch = new RegExp(this.kioskConfig.userAgent, "i").test(currentUserAgent);
+      this.debug.debug("Kiosk mode via user agent", uaMatch, currentUserAgent);
+      return uaMatch;
     }
     resetInactivityTimer() {
       const timeoutDuration = (this.kioskConfig.inactivityTimer || 180) * 1e3;
@@ -925,6 +935,50 @@
       events.forEach((event) => {
         window.addEventListener(event, () => this.resetInactivityTimer(), { passive: true });
       });
+    }
+    processKioskQueryParam() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("kiosk"))
+        return;
+      const val = params.get("kiosk");
+      if (!val)
+        return;
+      if (val.toLowerCase() === "clear") {
+        this.deleteCookie("sa5_kiosk");
+        this.debug.debug("Kiosk cookie cleared via query param");
+        console.log("[sa5-kiosk] Kiosk override cookie cleared via query param");
+        return;
+      }
+      const boolVal = this.stringToBoolean(val);
+      this.setCookie("sa5_kiosk", boolVal ? "true" : "false", 365);
+      this.debug.debug("Kiosk cookie set via query param", boolVal);
+      console.log(`[sa5-kiosk] Kiosk override set via query param: ${boolVal}`);
+    }
+    stringToBoolean(str) {
+      if (!str)
+        return false;
+      const s = String(str).toLowerCase();
+      return s === "1" || s === "true" || s === "yes" || s === "on";
+    }
+    getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ")
+          c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+          return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+    setCookie(name, value, days = 365) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1e3);
+      document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+    }
+    deleteCookie(name) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
     }
   };
   Sa5Core.startup(Sa5Kiosk);

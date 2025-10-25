@@ -662,6 +662,42 @@
     }
   });
 
+  // src/storage-utils.ts
+  var StorageUtils = class {
+    static get localStorageAvailable() {
+      try {
+        const test = "__test__";
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    static get sessionStorageAvailable() {
+      try {
+        const test = "__test__";
+        sessionStorage.setItem(test, test);
+        sessionStorage.removeItem(test);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    static get cookiesAvailable() {
+      try {
+        const test = "__test__=1";
+        document.cookie = test + "; path=/";
+        const cookies = document.cookie;
+        const available = cookies.includes("__test__=1");
+        document.cookie = "__test__=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        return available;
+      } catch {
+        return false;
+      }
+    }
+  };
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -670,9 +706,11 @@
       this._label = label;
     }
     get persistentDebug() {
-      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+      return StorageUtils.localStorageAvailable ? Boolean(localStorage.getItem(this.localStorageDebugFlag)) : false;
     }
     set persistentDebug(active) {
+      if (!StorageUtils.localStorageAvailable)
+        return;
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
         console.debug(`sa5-core debug enabled (persistent).`);
@@ -682,6 +720,8 @@
       }
     }
     get enabled() {
+      if (!StorageUtils.localStorageAvailable)
+        return false;
       var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
       wfuDebugValue = wfuDebugValue || this._enabled;
       return wfuDebugValue;
@@ -697,9 +737,26 @@
       if (this.enabled)
         console.groupEnd();
     }
-    debug(...args) {
+    debug2(...args) {
       if (this.enabled)
-        console.debug(this._label, ...args);
+        console.debug.apply(console, [this._label, ...args]);
+    }
+    debug(...args) {
+      if (this.enabled) {
+        let formattedMessage = "";
+        let styles = [];
+        for (let i = 0; i < args.length; i++) {
+          if (typeof args[i] === "string" && args[i].includes("%c") && typeof args[i + 1] === "string") {
+            formattedMessage += args[i] + " ";
+            styles.push(args[i + 1]);
+            i++;
+          } else {
+            formattedMessage += "%c" + args[i] + " ";
+            styles.push("");
+          }
+        }
+        console.debug(formattedMessage.trim(), ...styles);
+      }
     }
     static getStyleString(elem) {
       let styleString = "";
@@ -878,24 +935,18 @@
         case "to":
           formattedDate = date.toNow(!this.suffix);
           break;
-        case "relative":
-          formattedDate = "rel";
-          break;
         case "date":
         default:
           if (this.locale) {
-            console.log(`Current locale: ${import_dayjs2.default.locale()}`);
-            console.log("Loading locale for", this.locale, "with format", this.formatString);
-            console.log("date1", this.locale, this.formatString);
+            this.debug.debug(`Current locale is: ${import_dayjs2.default.locale()}`);
+            this.debug.debug("Loading locale for", this.locale, "with format", this.formatString);
             await this.loadLocale(this.locale);
-            console.log("current locale", import_dayjs2.default.locale());
-            console.log(`Locale after loading: ${import_dayjs2.default.locale()}`);
+          } else {
+            this.debug.debug("No current locale.");
           }
-          formattedDate = date.format(this.formatString);
-          console.log("Using format string:", this.formatString);
-          console.log("Final formatted date:", formattedDate);
-          formattedDate = date.format(this.formatString);
-          console.log(this.formatString, formattedDate);
+          formattedDate = (0, import_dayjs2.default)().format(this.formatString);
+          this.debug.debug("Using format string:", this.formatString);
+          this.debug.debug("Final formatted date:", formattedDate);
           break;
       }
       return formattedDate;
@@ -904,7 +955,7 @@
       try {
         const response = await fetch(`https://unpkg.com/dayjs/locale/${locale}.js`);
         const scriptText = await response.text();
-        console.log(scriptText);
+        this.debug.debug(scriptText);
         const scriptWrapper = new Function("require", "module", "exports", "define", "globalThis", scriptText);
         scriptWrapper(
           (mod) => mod === "dayjs" ? import_dayjs2.default : {},
@@ -914,9 +965,8 @@
           globalThis
         );
         import_dayjs2.default.locale(locale);
-        console.log("locale SET AS", locale);
       } catch (error) {
-        console.error(`Locale ${locale} could not be loaded, falling back to default.`);
+        console.error(`Locale ${locale} could not be loaded, falling back to English as default.`);
         import_dayjs2.default.locale("en");
       }
     }

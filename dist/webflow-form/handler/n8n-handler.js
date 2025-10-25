@@ -1,4 +1,40 @@
 (() => {
+  // src/storage-utils.ts
+  var StorageUtils = class {
+    static get localStorageAvailable() {
+      try {
+        const test = "__test__";
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    static get sessionStorageAvailable() {
+      try {
+        const test = "__test__";
+        sessionStorage.setItem(test, test);
+        sessionStorage.removeItem(test);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    static get cookiesAvailable() {
+      try {
+        const test = "__test__=1";
+        document.cookie = test + "; path=/";
+        const cookies = document.cookie;
+        const available = cookies.includes("__test__=1");
+        document.cookie = "__test__=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        return available;
+      } catch {
+        return false;
+      }
+    }
+  };
+
   // src/webflow-core/debug.ts
   var Sa5Debug = class {
     constructor(label) {
@@ -7,9 +43,11 @@
       this._label = label;
     }
     get persistentDebug() {
-      return Boolean(localStorage.getItem(this.localStorageDebugFlag));
+      return StorageUtils.localStorageAvailable ? Boolean(localStorage.getItem(this.localStorageDebugFlag)) : false;
     }
     set persistentDebug(active) {
+      if (!StorageUtils.localStorageAvailable)
+        return;
       if (active) {
         localStorage.setItem(this.localStorageDebugFlag, "true");
         console.debug(`sa5-core debug enabled (persistent).`);
@@ -19,6 +57,8 @@
       }
     }
     get enabled() {
+      if (!StorageUtils.localStorageAvailable)
+        return false;
       var wfuDebugValue = Boolean(localStorage.getItem(this.localStorageDebugFlag));
       wfuDebugValue = wfuDebugValue || this._enabled;
       return wfuDebugValue;
@@ -34,9 +74,26 @@
       if (this.enabled)
         console.groupEnd();
     }
-    debug(...args) {
+    debug2(...args) {
       if (this.enabled)
-        console.debug(this._label, ...args);
+        console.debug.apply(console, [this._label, ...args]);
+    }
+    debug(...args) {
+      if (this.enabled) {
+        let formattedMessage = "";
+        let styles = [];
+        for (let i = 0; i < args.length; i++) {
+          if (typeof args[i] === "string" && args[i].includes("%c") && typeof args[i + 1] === "string") {
+            formattedMessage += args[i] + " ";
+            styles.push(args[i + 1]);
+            i++;
+          } else {
+            formattedMessage += "%c" + args[i] + " ";
+            styles.push("");
+          }
+        }
+        console.debug(formattedMessage.trim(), ...styles);
+      }
     }
     static getStyleString(elem) {
       let styleString = "";
@@ -63,6 +120,7 @@
     Sa5Attribute2["ATTR_VIDEO_YOUTUBE_NOREL"] = "wfu-youtube-norel";
     Sa5Attribute2["ATTR_VIDEO_DATA_POSTER_URL"] = "wfu-data-poster-url";
     Sa5Attribute2["ATTR_DESIGN"] = "wfu-design";
+    Sa5Attribute2["ATTR_ELEMENT"] = "wfu-element";
     Sa5Attribute2["ATTR_ELEMENT_SLIDER"] = "wfu-slider";
     Sa5Attribute2["ATTR_ELEMENT_SLIDE_NAME"] = "wfu-slide-name";
     Sa5Attribute2["ATTR_ELEMENT_TABS"] = "wfu-tabs";
@@ -73,6 +131,10 @@
     Sa5Attribute2["ATTR_ELEMENT_DECK_TARGET"] = "wfu-deck-target";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ACTION"] = "wfu-deck-action";
     Sa5Attribute2["ATTR_ELEMENT_DECK_ITEM"] = "wfu-deck-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION"] = "wfu-action";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TARGET"] = "wfu-action-target";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_ITEM"] = "wfu-action-item";
+    Sa5Attribute2["ATTR_ELEMENT_ACTION_TRIGGER"] = "wfu-action-trigger";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN"] = "wfu-dropdown";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_NAME"] = "wfu-dropdown-name";
     Sa5Attribute2["ATTR_ELEMENT_DROPDOWN_INIT"] = "wfu-dropdown-init";
@@ -126,7 +188,15 @@
     Sa5Attribute2["ATTR_DISMISS_DAYS"] = "wfu-dismiss-suppress-days";
     Sa5Attribute2["ATTR_MODAL"] = "wfu-modal";
     Sa5Attribute2["ATTR_MODAL_TRIGGER_CLICK"] = "wfu-modal-trigger-click";
+    Sa5Attribute2["ATTR_MODAL_TRIGGER_TIMER"] = "wfu-modal-trigger-timer";
     Sa5Attribute2["ATTR_MODAL_STATE"] = "wfu-modal-state";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS"] = "wfu-modal-suppress";
+    Sa5Attribute2["ATTR_MODAL_SUPPRESS_DURATION"] = "wfu-modal-suppress-duration";
+    Sa5Attribute2["ATTR_MODAL_GATE"] = "wfu-modal-gate";
+    Sa5Attribute2["ATTR_MODAL_GATE_VIEW"] = "wfu-modal-gate-view";
+    Sa5Attribute2["ATTR_MODAL_GATE_BUTTON"] = "wfu-modal-gate-button";
+    Sa5Attribute2["ATTR_MODAL_GATE_FORM"] = "wfu-modal-gate-form";
+    Sa5Attribute2["ATTR_MODAL_CLOSE"] = "wfu-modal-close";
     Sa5Attribute2["ATTR_FORMAT"] = "wfu-format";
     Sa5Attribute2["ATTR_FORMAT_DATE"] = "wfu-format-date";
     Sa5Attribute2["ATTR_FORMAT_HANDLER"] = "wfu-format-handler";
@@ -184,11 +254,499 @@
     }
   };
 
+  // src/version.ts
+  var VERSION = "5.8.9";
+
+  // src/webflow-core/events/actions/actionBase.ts
+  var Sa5EventsActionBase = class {
+    constructor(core, debug) {
+      this.core = core;
+      this.debug = debug;
+    }
+    getEventName(elem, attr) {
+      let eventName = elem.getAttribute(attr);
+      const eventNs = elem.getAttribute(attr + ":ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+    debugTrigger(actionName, eventName, ...args) {
+      const TRIGGER_STYLE = "background-color: lightblue;";
+      const ARROW_STYLE = "color: red;";
+      const ACTION_STYLE = "background-color: lightgreen;";
+      const EVENT_STYLE = "background-color: lightgrey;";
+      this.debug.debug(`%c ${eventName}`, EVENT_STYLE, "%c \u2794", ARROW_STYLE, `%c ${actionName}`, ACTION_STYLE, "", ...args);
+    }
+    init() {
+    }
+  };
+
+  // src/webflow-core/events/actions/actionScriptBase.ts
+  var Sa5EventsActionScriptBase = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    getEventName(elem) {
+      let eventName = elem.getAttribute("event");
+      const eventNs = elem.getAttribute("ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+  };
+
+  // src/webflow-core/events/actions/alert.ts
+  var Sa5EventsActionAlert = class extends Sa5EventsActionScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll('script[handler="action.alert"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        try {
+          const jsonData = JSON.parse(elem.textContent.trim());
+          if (!jsonData.message) {
+            console.error("No alert message defined:", elem);
+            return;
+          }
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} alert", eventName);
+            alert(jsonData.message);
+          });
+        } catch (error) {
+          console.error("Invalid JSON in script tag:", elem, error);
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/actions/class.ts
+  var Sa5EventsActionClass = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-class-add],[sa-action-class-remove],[sa-action-class-toggle]");
+      actionElems.forEach((elem) => {
+        const className = elem.getAttribute("sa-action-class-data");
+        if (elem.hasAttribute("sa-action-class-add")) {
+          const eventName = this.getEventName(elem, "sa-action-class-add");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} add class", eventName);
+              elem.classList.add(className);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-class-remove")) {
+          const eventName = this.getEventName(elem, "sa-action-class-remove");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} remove class", eventName);
+              elem.classList.remove(className);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-class-toggle")) {
+          const eventName = this.getEventName(elem, "sa-action-class-toggle");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debug.debug("Action: toggle class", elem);
+              if (elem.classList.contains(className))
+                elem.classList.remove(className);
+              else
+                elem.classList.add(className);
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/actions/click.ts
+  var Sa5EventsActionClick = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-click]");
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-action-click");
+        if (eventName) {
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} click", eventName);
+            elem.click();
+          });
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/actions/visibility.ts
+  var Sa5EventsActionVisibility = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-display-show],[sa-action-display-hide],[sa-action-display-toggle]");
+      actionElems.forEach((elem) => {
+        const displayMode = elem.getAttribute("sa-attribute-display:mode") || "block";
+        if (elem.hasAttribute("sa-action-display-show")) {
+          const eventName = this.getEventName(elem, "sa-action-display-show");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - show element", eventName);
+              elem.style.display = displayMode;
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-display-hide")) {
+          const eventName = this.getEventName(elem, "sa-action-display-hide");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - hide element", eventName);
+              elem.style.display = "none";
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-action-display-toggle")) {
+          const eventName = this.getEventName(elem, "sa-action-display-toggle");
+          if (eventName) {
+            this.core.events.addEventHandler(eventName, () => {
+              this.debugTrigger("\u{1F551} visibility - toggle element", eventName);
+              elem.style.display = elem.style.display === "none" ? displayMode : "none";
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/triggers/triggerBase.ts
+  var Sa5EventsTriggerBase = class {
+    constructor(core, debug) {
+      this.core = core;
+      this.debug = debug;
+    }
+    getEventName(elem, attr) {
+      let eventName = elem.getAttribute(attr);
+      const eventNs = elem.getAttribute(attr + ":ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+    debugTrigger(triggerName, eventName, ...args) {
+      const TRIGGER_STYLE = "background-color: lightblue;";
+      const ARROW_STYLE = "color: red;";
+      const ACTION_STYLE = "background-color: lightgreen;";
+      const EVENT_STYLE = "background-color: lightgrey;";
+      this.debug.debug(`%c ${triggerName}`, TRIGGER_STYLE, "%c \u2794", ARROW_STYLE, `%c ${eventName}`, EVENT_STYLE, "", ...args);
+    }
+    init() {
+    }
+  };
+
+  // src/webflow-core/events/triggers/click.ts
+  var Sa5EventsTriggerClick = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-click]");
+      elems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-trigger-click");
+        if (eventName) {
+          elem.addEventListener("click", () => {
+            this.debugTrigger("\u2197 click", eventName);
+            this.core.events.executeEvent(eventName);
+          });
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/triggers/triggerScriptBase.ts
+  var Sa5EventsTriggerScriptBase = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    getEventName(elem) {
+      let eventName = elem.getAttribute("event");
+      const eventNs = elem.getAttribute("ns");
+      if (eventNs)
+        eventName = eventNs + "." + eventName;
+      return eventName;
+    }
+    mergeConfig(defaults, overrides) {
+      const result = { ...defaults };
+      for (const key in overrides) {
+        if (overrides[key] !== void 0 && overrides[key] !== null) {
+          result[key] = overrides[key];
+        }
+      }
+      return result;
+    }
+    coerceBoolean(value) {
+      if (value == null || value === "" || value === false || value === 0) {
+        return false;
+      }
+      if (typeof value === "string") {
+        const normalized = value.trim().toLowerCase();
+        return !(normalized === "no" || normalized === "off");
+      }
+      return true;
+    }
+  };
+
+  // src/webflow-core/events/triggers/exit-intent.ts
+  var Sa5EventsTriggerExitIntent = class extends Sa5EventsTriggerScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+      this.exitTriggered = false;
+      this.eventNames = [];
+    }
+    init() {
+      this.setupExitIntentListener();
+      const actionElems = document.querySelectorAll('script[handler="trigger.exit-intent"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        if (eventName) {
+          this.eventNames.push(eventName);
+          try {
+            const jsonData = JSON.parse(elem.textContent.trim());
+          } catch (error) {
+            console.error("Invalid JSON in script tag:", elem, error);
+          }
+        }
+      });
+    }
+    setupExitIntentListener() {
+      document.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+      document.addEventListener("visibilitychange", this.onVisibilityChange.bind(this));
+    }
+    onMouseLeave(event) {
+      if (event.clientY <= 0) {
+        this.triggerExitIntent("mouse-exit");
+      }
+    }
+    onVisibilityChange() {
+      if (document.hidden) {
+        this.triggerExitIntent("tab-switch");
+      }
+    }
+    triggerExitIntent(source) {
+      if (this.exitTriggered)
+        return;
+      this.exitTriggered = true;
+      this.debugTrigger(`\u{1F6AA} Exit intent detected via: ${source}`, source);
+      this.eventNames.forEach((eventName) => {
+        console.log(`Processing event: ${eventName}`);
+        this.core.events.executeEvent(eventName);
+      });
+    }
+  };
+
+  // src/webflow-core/events/triggers/hover.ts
+  var Sa5EventsTriggerHover = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-mouseenter],[sa-trigger-mouseleave]");
+      elems.forEach((elem) => {
+        if (elem.hasAttribute("sa-trigger-mouseenter")) {
+          const eventName = this.getEventName(elem, "sa-trigger-mouseenter");
+          if (eventName) {
+            elem.addEventListener("mouseenter", () => {
+              this.debugTrigger("\u2197 mouseenter", eventName);
+              this.core.events.executeEvent(eventName);
+            });
+          }
+        }
+        if (elem.hasAttribute("sa-trigger-mouseleave")) {
+          const eventNameOut = this.getEventName(elem, "sa-trigger-mouseleave");
+          if (eventNameOut) {
+            elem.addEventListener("mouseleave", () => {
+              this.debugTrigger("\u2198 mouseleave", eventNameOut);
+              this.core.events.executeEvent(eventNameOut);
+            });
+          }
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/triggers/scroll-into-view.ts
+  var Sa5EventsTriggerScrollIntoView = class extends Sa5EventsTriggerBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const elems = document.querySelectorAll("[sa-trigger-scrollintoview]");
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5
+      };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const elem = entry.target;
+            const eventName = this.getEventName(elem, "sa-trigger-scrollintoview");
+            if (eventName) {
+              this.debugTrigger("\u2198 scroll into view", eventName);
+              this.core.events.executeEvent(eventName);
+              observer.unobserve(elem);
+            }
+          }
+        });
+      }, observerOptions);
+      elems.forEach((elem) => observer.observe(elem));
+    }
+  };
+
+  // src/webflow-core/events/triggers/timer.ts
+  var Sa5EventsTriggerTimer = class extends Sa5EventsTriggerScriptBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll('script[handler="trigger.timer"]');
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem);
+        try {
+          const jsonData = JSON.parse(elem.textContent.trim());
+          if (!jsonData.timer) {
+            console.error("No timer defined:", elem);
+            return;
+          }
+          const timerDuration = jsonData.timer * 1e3;
+          const timerRepeat = jsonData.timerRepeat ? jsonData.timerRepeat * 1e3 : null;
+          setTimeout(() => {
+            this.debugTrigger("\u{1F551} timer", eventName, "(first)");
+            this.core.events.executeEvent(eventName);
+            if (timerRepeat) {
+              setInterval(() => {
+                this.debugTrigger("\u{1F551} timer", eventName, "(additional)");
+                this.core.events.executeEvent(eventName);
+              }, timerRepeat);
+            }
+          }, timerDuration);
+        } catch (error) {
+          console.error("Invalid JSON in script tag:", elem, error);
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events/actions/scroll-into-view.ts
+  var Sa5EventsActionScrollIntoView = class extends Sa5EventsActionBase {
+    constructor(core, debug) {
+      super(core, debug);
+    }
+    init() {
+      const actionElems = document.querySelectorAll("[sa-action-scrollintoview]");
+      actionElems.forEach((elem) => {
+        const eventName = this.getEventName(elem, "sa-action-scrollintoview");
+        if (eventName) {
+          const behavior = elem.getAttribute("sa-action-scrollintoview:behavior") || "smooth";
+          const block = elem.getAttribute("sa-action-scrollintoview:block") || "center";
+          const inline = elem.getAttribute("sa-action-scrollintoview:inline") || "nearest";
+          this.core.events.addEventHandler(eventName, () => {
+            this.debugTrigger("\u{1F551} scroll into view", eventName);
+            elem.scrollIntoView({
+              behavior,
+              block,
+              inline
+            });
+          });
+        }
+      });
+    }
+  };
+
+  // src/webflow-core/events.ts
+  var Sa5Event = class {
+    constructor(name) {
+      this.handlers = /* @__PURE__ */ new Set();
+      this.name = name;
+    }
+    addHandler(handler, ...args) {
+      this.handlers.add({ handler, args });
+    }
+    removeHandler(handler) {
+      this.handlers.forEach((h) => {
+        if (h.handler === handler) {
+          this.handlers.delete(h);
+        }
+      });
+    }
+    execute() {
+      this.handlers.forEach(({ handler, args }) => handler(...args));
+    }
+    hasHandlers() {
+      return this.handlers.size > 0;
+    }
+  };
+  var Sa5EventRegistry = class extends Map {
+    constructor() {
+      super();
+    }
+    getEvent(eventName) {
+      return this.get(eventName);
+    }
+    addEvent(eventName) {
+      if (!this.has(eventName)) {
+        this.set(eventName, new Sa5Event(eventName));
+      }
+    }
+    removeEvent(eventName) {
+      this.delete(eventName);
+    }
+    executeEvent(eventName) {
+      this.get(eventName)?.execute();
+    }
+    addEventHandler(eventName, handler, ...args) {
+      if (!this.has(eventName)) {
+        this.addEvent(eventName);
+      }
+      this.get(eventName)?.addHandler(handler, ...args);
+    }
+    clearHandler(eventName, handler) {
+      const event = this.get(eventName);
+      if (event) {
+        event.removeHandler(handler);
+        if (!event.hasHandlers()) {
+          this.delete(eventName);
+        }
+      }
+    }
+    init(core) {
+      let debug = new Sa5Debug("sa5-events");
+      debug.debug(`Initializing v${VERSION}`);
+      new Sa5EventsTriggerClick(core, debug).init();
+      new Sa5EventsActionClick(core, debug).init();
+      new Sa5EventsActionAlert(core, debug).init();
+      new Sa5EventsTriggerScrollIntoView(core, debug).init();
+      new Sa5EventsActionScrollIntoView(core, debug).init();
+      new Sa5EventsActionClass(core, debug).init();
+      new Sa5EventsTriggerTimer(core, debug).init();
+      new Sa5EventsTriggerHover(core, debug).init();
+      new Sa5EventsTriggerExitIntent(core, debug).init();
+      new Sa5EventsActionVisibility(core, debug).init();
+    }
+  };
+
   // src/webflow-core.ts
   var Sa5Core = class {
     constructor() {
       this.handlers = [];
+      this.controllers = {};
       new Sa5Designer().init();
+    }
+    setController(name, controller) {
+      this.controllers[name] = controller;
     }
     getHandlers(name) {
       return this.handlers.filter((item) => item[0] === name).map((item) => item[1]);
@@ -200,6 +758,8 @@
     init() {
       this.initDebugMode();
       this.initAsync();
+      this.events = new Sa5EventRegistry();
+      this.events.init(this);
     }
     async initAsync() {
       this.initScriptInjectionsAsync();
@@ -265,12 +825,44 @@
   };
   Sa5Core.startup();
 
+  // src/webflow-form/checkbox.ts
+  var Sa5FormCheckbox = class {
+    constructor(elem, config = {}) {
+      this.checkbox = elem;
+      this.config = config;
+    }
+    init() {
+    }
+    process() {
+      if (!this.checkbox.checked && this.isCandidateForRemoval()) {
+        this.checkbox.parentNode?.removeChild(
+          this.checkbox
+        );
+      }
+    }
+    isCandidateForRemoval() {
+      let element = this.checkbox;
+      while (element) {
+        if (element.hasAttribute("wfu-form-checkbox") && element.getAttribute("wfu-form-checkbox") === "remove-unchecked") {
+          return true;
+        }
+        element = element.parentElement;
+      }
+      return false;
+    }
+  };
+
   // src/webflow-form.ts
   var Sa5Form = class {
     get redirect() {
       return this.formElement.getAttribute("redirect");
     }
-    constructor(element) {
+    constructor(element, config = {}) {
+      this.config = {
+        formSubmitSuccessCallback: config.formSubmitSuccessCallback,
+        formSubmitFailCallback: config.formSubmitFailCallback,
+        debug: config.debug ?? false
+      };
       this.debug = new Sa5Debug("sa5-form");
       this.debug.debug("Initializing");
       if (element.tagName == "FORM")
@@ -279,15 +871,60 @@
         this.formBlockElement = element;
       this.formElement = this.formBlockElement.querySelector("form");
       this.isValid = true;
+      const submitButton = this.formElement.querySelector('input[type="submit"]');
+      this.submitButtonReadyMessage = submitButton?.getAttribute("value");
+      this.submitButtonWaitMessage = submitButton?.getAttribute("data-wait");
+    }
+    onFormSubmitSuccess(data) {
+      let core = Sa5Core.startup();
+      const formSubmitSuccess = core.getHandlers("formSubmitSuccess" /* EVENT_FORM_SUBMIT_SUCCESS */);
+      formSubmitSuccess.forEach((f) => {
+        f(this, data);
+      });
+    }
+    onFormSubmitFail(data) {
+      let core = Sa5Core.startup();
+      const formSubmitFail = core.getHandlers("formSubmitFail" /* EVENT_FORM_SUBMIT_FAIL */);
+      formSubmitFail.forEach((f) => {
+        f(this, data);
+      });
     }
     init() {
+      console.log("INIT FORM");
+      let core = Sa5Core.startup();
+      this.formElement.addEventListener("submit", (event) => {
+        if (!this.formElement.checkValidity()) {
+          event.preventDefault();
+          this.formElement.reportValidity();
+          return;
+        }
+        this.preSubmit();
+      });
     }
-    submitButtonWaitMessage() {
+    preSubmit() {
+      const checkboxes = this.formElement.querySelectorAll("input[type='checkbox']");
+      checkboxes.forEach((elem) => {
+        let checkbox = new Sa5FormCheckbox(elem);
+        checkbox.process();
+      });
+    }
+    setSubmitButtonWaitMessage() {
+      console.log("wait message");
       const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
       submitButtons.forEach((button) => {
-        const waitMessage = button.getAttribute("data-wait");
-        if (waitMessage) {
-          button.value = waitMessage;
+        const message = this.submitButtonWaitMessage;
+        if (message) {
+          button.value = message;
+        }
+      });
+    }
+    setSubmitButtonReadyMessage() {
+      console.log("ready message");
+      const submitButtons = this.formElement.querySelectorAll('input[type="submit"]');
+      submitButtons.forEach((button) => {
+        const message = this.submitButtonReadyMessage;
+        if (message) {
+          button.value = message;
         }
       });
     }
@@ -300,15 +937,16 @@
           this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "none";
+          this.setSubmitButtonReadyMessage();
           break;
         case 1 /* Success */:
           if (this.redirect) {
-            console.log("redirecting");
-            this.submitButtonWaitMessage();
+            this.debug.debug("Redirecting to " + this.redirect);
+            this.setSubmitButtonReadyMessage();
             window.location.href = this.redirect;
             return;
           }
-          let successMessage = error.querySelector(
+          let successMessage = success.querySelector(
             Sa5Attribute.getBracketed("wfu-form-message" /* ATTR_FORM_MESSAGE */)
           );
           if (successMessage)
@@ -316,6 +954,7 @@
           this.formElement.style.display = "none";
           success.style.display = "block";
           error.style.display = "none";
+          this.setSubmitButtonReadyMessage();
           break;
         case 2 /* Error */:
           let errorMessage = error.querySelector(
@@ -323,9 +962,10 @@
           );
           if (errorMessage)
             errorMessage.innerHTML = message;
-          this.formElement.style.display = "none";
+          this.formElement.style.display = "block";
           success.style.display = "none";
           error.style.display = "block";
+          this.setSubmitButtonReadyMessage();
           break;
       }
     }
@@ -341,26 +981,41 @@
       let action = this.form.formElement.getAttribute("action");
       this.debug.debug("action", action);
       let waitMessage = this.form.formElement.querySelector("input[type=submit]").getAttribute("data-wait");
-      this.debug.debug(`waitMessage: ${waitMessage}`);
     }
-    handleResponseJSON(data, status, response) {
+    handleResponseJSON(data, requestStatus, response) {
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response execution status: ${requestStatus}`);
       this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
       if (response.status >= 200 && response.status < 300) {
-        this.form.setMode(1 /* Success */);
+        this.form.setMode(
+          1 /* Success */,
+          data?.message
+        );
+        this.form.onFormSubmitSuccess(data);
       } else {
-        this.form.setMode(2 /* Error */);
+        this.form.setMode(
+          2 /* Error */,
+          data?.message
+        );
+        this.form.onFormSubmitFail(data);
       }
     }
-    handleResponseText(data, status, response) {
+    handleResponseText(data, requestStatus, response) {
       this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-      this.debug.debug(`Webhook response status: ${status}`);
+      this.debug.debug(`Webhook response status: ${requestStatus}`);
       this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
       if (response.status >= 200 && response.status < 300) {
-        this.form.setMode(1 /* Success */);
+        this.form.setMode(
+          1 /* Success */,
+          data?.message
+        );
+        this.form.onFormSubmitSuccess(data);
       } else {
-        this.form.setMode(2 /* Error */);
+        this.form.setMode(
+          2 /* Error */,
+          data?.message
+        );
+        this.form.onFormSubmitFail(data);
       }
     }
     handleFailResponse(jqxhr, settings, ex) {
@@ -382,6 +1037,7 @@
       this.debug.debug("WFU Handle Form submit to webhook (success response).");
       this.form.formElement.addEventListener("submit", async (e) => {
         e.preventDefault();
+        this.form.setSubmitButtonWaitMessage();
         this.debug.debug("Posting data.");
         this.debug.debug(`Webhook - ${this.form.formElement.getAttribute("action")}`);
         let formData = new FormData(this.form.formElement);
@@ -405,22 +1061,6 @@
   var WfuFormHandlerN8N = class extends WfuFormHandler {
     constructor(form, config) {
       super(form, config);
-    }
-    handleResponseJSON(data, status, response) {
-      this.debug.debug(`Webhook response data: ${JSON.stringify(data)}`);
-      this.debug.debug(`Webhook response status: ${status}`);
-      this.debug.debug(`Webhook response xhr: ${JSON.stringify(response)}`);
-      if (response.status >= 200 && response.status < 300) {
-        this.form.setMode(
-          1 /* Success */,
-          response.responseJSON?.message
-        );
-      } else {
-        this.form.setMode(
-          2 /* Error */,
-          response.responseJSON?.message
-        );
-      }
     }
     handleFailResponse(jqxhr, settings, ex) {
       this.debug.debug(`Webhook response FAILED jqxhr: ${JSON.stringify(jqxhr)}`);
