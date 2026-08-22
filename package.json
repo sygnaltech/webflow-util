@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "serve -p 4000",
+    "serve": "serve -p 21000",
     "tsbuild": "tsc --watch",
     "build": "node scripts/esbuild.js",
     "watch": "node scripts/esbuild.js --watch",

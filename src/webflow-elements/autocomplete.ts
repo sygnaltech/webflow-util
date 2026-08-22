@@ -53,6 +53,11 @@ export class Sa5Autocomplete extends Sa5Dropdown {
 //    private _element: HTMLElement;
     private _elementInput: HTMLElement;
 
+    private _queryTimer: number | undefined;
+
+    // Delay after typing stops, before the query is published
+    private _queryDelayMs: number = 500;
+
     valid: boolean = false;
 
     //#region PROPERTYS
@@ -109,9 +114,14 @@ export class Sa5Autocomplete extends Sa5Dropdown {
 
     }
   
-    displayMatchingElements(matchingString: string) {
+    /**
+     * Show items matching the input text
+     * @param matchingString
+     * @returns the number of items left visible
+     */
+    displayMatchingElements(matchingString: string): number {
 
-        // console.log("updating", matchingString); 
+        // console.log("updating", matchingString);
         
         // TODO: ensure it's visible
         
@@ -141,17 +151,40 @@ export class Sa5Autocomplete extends Sa5Dropdown {
 //        const elements = document.querySelectorAll(`[${AUTOCOMPLETE_LIST}] [${AUTOCOMPLETE_MATCH}]`);
         
         // Loop through all elements and check if the attribute value contains the matching string (case-insensitive)
+        let matchCount = 0;
         elements.forEach(element => {
             const attributeValue = element.getAttribute(Sa5Attribute.ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH)?.toLowerCase();
             console.log(lowerCaseMatchingString, attributeValue);
             if (attributeValue && attributeValue.includes(lowerCaseMatchingString)) {
 
             // Make matching items it visible
-            const itemLayout = element.getAttribute(Sa5Attribute.ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT) || 'block'; 
+            const itemLayout = element.getAttribute(Sa5Attribute.ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT) || 'block';
             (element as HTMLElement).style.display = itemLayout;
+            matchCount++;
             }
         });
-    }    
+
+        return matchCount;
+    }
+
+    /**
+     * Publish the current query onto the dropdown element, as analytics
+     * capture attributes.
+     *
+     * PostHog autocapture merges data-ph-capture-attribute-* from every
+     * ancestor of the clicked element, so item clicks and site-search
+     * clicks within this dropdown carry the query that produced them.
+     * No analytics library is referenced here - these are just attributes.
+     *
+     * @param query the current input text
+     * @param matchCount the number of items visible for that text
+     */
+    publishQuery(query: string, matchCount: number): void {
+
+        super.element.setAttribute('data-ph-capture-attribute-autocomplete-query', query);
+        super.element.setAttribute('data-ph-capture-attribute-autocomplete-results', String(matchCount));
+
+    }
       
     private setupListeners(): void {
 
@@ -160,8 +193,14 @@ export class Sa5Autocomplete extends Sa5Dropdown {
         if (inputElement) {
           // Add event listener for input changes
           inputElement.addEventListener('input', () => {
-            this.displayMatchingElements(inputElement.value);
+            const matchCount = this.displayMatchingElements(inputElement.value);
             super.open();
+
+            // Publish the query once typing settles
+            clearTimeout(this._queryTimer);
+            this._queryTimer = window.setTimeout(() => {
+                this.publishQuery(inputElement.value, matchCount);
+            }, this._queryDelayMs);
           });
         } else {
           console.error("no input element found for autocomplete."); 

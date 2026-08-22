@@ -333,7 +333,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.9";
+  var VERSION = "5.8.10";
 
   // src/webflow-modal/dismiss.ts
   var Sa5Dismiss = class {

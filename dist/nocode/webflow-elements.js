@@ -255,7 +255,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.9";
+  var VERSION = "5.8.10";
 
   // src/webflow-core/events/actions/actionBase.ts
   var Sa5EventsActionBase = class {
@@ -1638,6 +1638,7 @@
   var Sa5Autocomplete = class extends Sa5Dropdown {
     constructor(element) {
       super(element);
+      this._queryDelayMs = 500;
       this.valid = false;
       this.init();
     }
@@ -1666,21 +1667,32 @@
       elements.forEach((element) => {
         element.style.display = "none";
       });
+      let matchCount = 0;
       elements.forEach((element) => {
         const attributeValue = element.getAttribute("wfu-autocomplete-item-match" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_MATCH */)?.toLowerCase();
         console.log(lowerCaseMatchingString, attributeValue);
         if (attributeValue && attributeValue.includes(lowerCaseMatchingString)) {
           const itemLayout = element.getAttribute("wfu-autocomplete-item-layout" /* ATTR_ELEMENT_AUTOCOMPLETE_ITEM_LAYOUT */) || "block";
           element.style.display = itemLayout;
+          matchCount++;
         }
       });
+      return matchCount;
+    }
+    publishQuery(query, matchCount) {
+      super.element.setAttribute("data-ph-capture-attribute-autocomplete-query", query);
+      super.element.setAttribute("data-ph-capture-attribute-autocomplete-results", String(matchCount));
     }
     setupListeners() {
       const inputElement = super.elementToggle.querySelector(`[${"wfu-autocomplete-input" /* ATTR_ELEMENT_AUTOCOMPLETE_INPUT */}]`);
       if (inputElement) {
         inputElement.addEventListener("input", () => {
-          this.displayMatchingElements(inputElement.value);
+          const matchCount = this.displayMatchingElements(inputElement.value);
           super.open();
+          clearTimeout(this._queryTimer);
+          this._queryTimer = window.setTimeout(() => {
+            this.publishQuery(inputElement.value, matchCount);
+          }, this._queryDelayMs);
         });
       } else {
         console.error("no input element found for autocomplete.");

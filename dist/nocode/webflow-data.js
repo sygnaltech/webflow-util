@@ -19,7 +19,7 @@
   };
 
   // src/version.ts
-  var VERSION = "5.8.9";
+  var VERSION = "5.8.10";
 
   // src/globals.ts
   var Sa5Attribute;
